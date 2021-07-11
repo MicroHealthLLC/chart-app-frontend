@@ -45,11 +45,22 @@
           >Polar Area</v-btn
         >
       </v-btn-toggle>
+
       <div class="chart mt-4">
+        <div v-if="headers.length > 0 && chartType === 'Data Table'">
+          <v-data-table
+            v-model="selected"
+            :headers="headers"
+            :items="items"
+            :item-key="headers[0].text"
+            :single-select="false"
+            show-select
+          ></v-data-table>
+        </div>
         <Component
-          v-if="data.length > 0"
+          v-else-if="data.length > 0 && chartType !== 'Data Table'"
           :is="graphType"
-          :chartData="data"
+          :chartData="selected"
           :options="chartOptions"
           :height="600"
           :index="index"
@@ -74,7 +85,7 @@
 </template>
 
 <script>
-import DataTable from "../components/DataTable";
+// import DataTable from "../components/DataTable";
 import LineChart from "../components/LineChart";
 import BarChart from "../components/BarChart";
 import RadarChart from "../components/RadarChart";
@@ -116,13 +127,14 @@ export default {
         dateNF: "mm/dd/yyyy",
       },
       index: 0,
+      headers: [],
+      items: [],
+      selected: [],
     };
   },
   computed: {
     graphType() {
-      if (this.chartType === "Data Table") {
-        return DataTable;
-      } else if (this.chartType === "Line") {
+      if (this.chartType === "Line") {
         return LineChart;
       } else if (this.chartType === "Bar") {
         return BarChart;
@@ -135,7 +147,7 @@ export default {
       } else if (this.chartType === "Polar Area") {
         return PolarAreaChart;
       } else {
-        return DataTable;
+        return LineChart;
       }
     },
     circleChart() {
@@ -155,6 +167,9 @@ export default {
       console.log("CLEAR!!!");
       this.file = null;
       this.data = [];
+      this.selected = [];
+      this.headers = [];
+      this.items = [];
     },
     toggleDataTable() {
       this.chartType = "Data Table";
@@ -179,6 +194,18 @@ export default {
     },
     uploadData(data) {
       console.log(data);
+
+      const keys = Object.keys(data[0]);
+
+      this.headers = keys.map((item) => ({
+        text: item,
+        value: item,
+      }));
+
+      this.items = data;
+
+      this.selected = data;
+
       this.data = data;
     },
     changeChartData() {
