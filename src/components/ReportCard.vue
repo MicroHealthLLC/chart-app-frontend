@@ -1,0 +1,69 @@
+<template>
+  <v-card class="report-card">
+    <v-card-title>
+      <v-icon class="mr-4" color="info">{{ chartIcon }}</v-icon>
+      <div>
+        <h5>{{ report.title }}</h5>
+      </div>
+    </v-card-title>
+    <v-card-text>
+      <ul class="mb-4">
+        <li><strong>Data Set:</strong> {{ report.data_set }}</li>
+        <li><strong>Channel:</strong> {{ report.channel }}</li>
+      </ul>
+      <v-chip
+        v-for="(tag, index) in report.tags"
+        :key="index"
+        class="mr-1"
+        x-small
+        >{{ tag }}</v-chip
+      >
+    </v-card-text>
+  </v-card>
+</template>
+
+<script>
+export default {
+  name: "ReportCard",
+  props: {
+    report: {
+      type: Object,
+    },
+  },
+  computed: {
+    chartIcon() {
+      return this.report.chart_type === "line"
+        ? "mdi-chart-line"
+        : this.report.chart_type === "pie"
+        ? "mdi-chart-pie"
+        : this.report.chart_type === "donut"
+        ? "mdi-chart-donut"
+        : this.report.chart_type === "table"
+        ? "mdi-table-large"
+        : this.report.chart_type === "curve"
+        ? "mdi-chart-bell-curve-cumulative"
+        : "mdi-chart-line";
+    },
+  },
+};
+</script>
+
+<style scoped>
+.report-card {
+  width: 32%;
+  border: 1px solid lightgray;
+  border-left: 3px solid #1976d2 !important;
+  margin-bottom: 10px;
+}
+.report-card ul,
+.details {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  transition: ease;
+}
+.report-card:hover {
+  transform: scale(1.05);
+  cursor: pointer;
+}
+</style>

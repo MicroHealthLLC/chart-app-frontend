@@ -2,9 +2,7 @@
   <v-app>
     <Sidebar />
     <v-main class="main-container mx-auto">
-      <v-card class="ma-5 card">
-        <router-view class="pa-5" />
-      </v-card>
+      <router-view class="pa-5" />
     </v-main>
   </v-app>
 </template>
@@ -29,9 +27,9 @@ export default {
   width: 100%;
   max-width: 1400px;
 }
-.card {
+/* .card {
   height: calc(100vh - 40px);
   overflow-y: auto;
   overflow-x: hidden;
-}
+} */
 </style>

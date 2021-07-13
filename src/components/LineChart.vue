@@ -48,7 +48,7 @@ export default {
         data: data,
         backgroundColor: this.colors[index],
         borderColor: this.colors[index],
-        // lineTension: 0,
+        lineTension: 0,
         // fill: false,
       });
     });
