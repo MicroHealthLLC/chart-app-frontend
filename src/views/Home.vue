@@ -2,7 +2,7 @@
   <v-row>
     <v-col class="col-9">
       <!-- PUBLIC REPORTS -->
-      <h3>Public Reports</h3>
+      <h3><router-link to="/public-reports">Public Reports</router-link></h3>
       <v-divider class="mb-4"></v-divider>
 
       <div
@@ -28,7 +28,9 @@
         >
       </div>
       <!-- PERSONAL REPORTS -->
-      <h3 class="mt-4">Personal Reports</h3>
+      <h3 class="mt-4">
+        <router-link to="/personal-reports">Personal Reports</router-link>
+      </h3>
       <v-divider class="mb-4"></v-divider>
 
       <div
@@ -54,7 +56,9 @@
         >
       </div>
       <!-- GROUP REPORTS -->
-      <h3 class="mt-4">Group Reports</h3>
+      <h3 class="mt-4">
+        <router-link to="/group-reports">Group Reports</router-link>
+      </h3>
       <v-divider class="mb-4"></v-divider>
 
       <div
@@ -149,7 +153,7 @@
         ></v-card
       >
 
-      <v-btn class="float-right" color="primary" text>More News</v-btn>
+      <v-btn class="float-right" to="/news" color="primary" text>More News</v-btn>
     </v-col>
   </v-row>
 </template>
@@ -256,6 +260,10 @@ export default {
 </script>
 
 <style scoped>
+.v-application a {
+  text-decoration: none;
+  color: unset;
+}
 .details {
   list-style: none;
   margin: 0;

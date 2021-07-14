@@ -1,7 +1,17 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
+import News from "../views/News.vue";
 import AddDataSet from "../views/AddDataSet.vue";
+import PublicReports from "../views/PublicReports.vue"
+import PersonalReports from "../views/PersonalReports.vue";
+import GroupReports from "../views/GroupReports.vue";
+
+import Channels from "../views/Channels.vue";
+import Channel from "../views/Channel.vue";
+import ChannelReports from "../views/ChannelReports.vue";
+import Report from "../views/Report.vue";
+
 
 Vue.use(VueRouter);
 
@@ -12,9 +22,49 @@ const routes = [
     component: Home,
   },
   {
+    path: "/news",
+    name: "News",
+    component: News
+  },
+  {
     path: "/add-data-set",
     name: "AddDataSet",
     component: AddDataSet,
+  },
+  {
+    path: "/public-reports",
+    name: "PublicReports",
+    component: PublicReports,
+  },
+  {
+    path: "/personal-reports",
+    name: "PersonalReports",
+    component: PersonalReports,
+  },
+  {
+    path: "/group-reports",
+    name: "GroupReports",
+    component: GroupReports,
+  },
+  {
+    path: "/channels",
+    name: "Channels",
+    component: Channels,
+  },
+  {
+    path: "/channels/:channelId",
+    name: "Channel",
+    component: Channel,
+  },
+  {
+    path: "/channels/:channelId/reports",
+    name: "ChannelReports",
+    component: ChannelReports,
+  },
+  {
+    path: "/channels/:channelId/reports/:reportId",
+    name: "Report",
+    component: Report,
   },
   // {
   //   path: "/about",
