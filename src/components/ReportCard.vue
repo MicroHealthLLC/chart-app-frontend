@@ -50,7 +50,7 @@ export default {
 
 <style scoped>
 .report-card {
-  width: 32%;
+  /* width: 32%; */
   border: 1px solid lightgray;
   border-left: 3px solid #1976d2 !important;
   margin-bottom: 10px;

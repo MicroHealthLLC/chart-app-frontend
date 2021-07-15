@@ -5,23 +5,17 @@
       <h3><router-link to="/public-reports">Public Reports</router-link></h3>
       <v-divider class="mb-4"></v-divider>
 
-      <div
-        class="
-          d-flex
-          flex-row flex-wrap
-          justify-space-between
-          align-content-space-between
-        "
-      >
+      <div class="grid">
         <ReportCard
-          v-for="(report, index) in publicReports"
+          v-for="(report, index) in latestReports.public"
           :report="report"
           :key="index"
         ></ReportCard>
-
+      </div>
+      <div class="d-flex justify-end">
         <v-btn
-          v-if="publicReports.length >= 6"
-          class="ml-auto"
+          v-if="latestReports.public.length >= 6"
+          class="d-flex-end"
           color="primary"
           text
           >View All</v-btn
@@ -33,27 +27,21 @@
       </h3>
       <v-divider class="mb-4"></v-divider>
 
-      <div
-        class="
-          d-flex
-          flex-row flex-wrap
-          justify-space-between
-          align-content-space-between
-        "
-      >
+      <div class="grid">
         <ReportCard
-          v-for="(report, index) in personalReports"
+          v-for="(report, index) in latestReports.personal"
           :report="report"
           :key="index"
         ></ReportCard>
-
-        <v-btn
-          v-if="personalReports.length >= 6"
-          class="ml-auto"
-          color="primary"
-          text
-          >View All</v-btn
-        >
+        <div class="d-flex justify-end">
+          <v-btn
+            v-if="latestReports.personal.length >= 6"
+            class="ml-auto"
+            color="primary"
+            text
+            >View All</v-btn
+          >
+        </div>
       </div>
       <!-- GROUP REPORTS -->
       <h3 class="mt-4">
@@ -61,29 +49,24 @@
       </h3>
       <v-divider class="mb-4"></v-divider>
 
-      <div
-        class="
-          d-flex
-          flex-row flex-wrap
-          justify-space-between
-          align-content-space-between
-        "
-      >
+      <div class="grid">
         <ReportCard
-          v-for="(report, index) in groupReports"
+          v-for="(report, index) in latestReports.group"
           :report="report"
           :key="index"
         ></ReportCard>
-
-        <v-btn
-          v-if="groupReports.length >= 6"
-          class="ml-auto"
-          color="primary"
-          text
-          >View All</v-btn
-        >
+        <div class="d-flex justify-end">
+          <v-btn
+            v-if="latestReports.group.length >= 6"
+            class="ml-auto"
+            color="primary"
+            text
+            >View All</v-btn
+          >
+        </div>
       </div>
     </v-col>
+    <!-- DETAILS -->
     <v-col class="col-3">
       <h3>Details</h3>
       <v-divider class="mb-4"></v-divider>
@@ -153,12 +136,15 @@
         ></v-card
       >
 
-      <v-btn class="float-right" to="/news" color="primary" text>More News</v-btn>
+      <v-btn class="float-right" to="/news" color="primary" text
+        >More News</v-btn
+      >
     </v-col>
   </v-row>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import ReportCard from "./../components/ReportCard";
 
 export default {
@@ -167,94 +153,10 @@ export default {
     ReportCard,
   },
   data() {
-    return {
-      publicReports: [
-        {
-          title: "Report 1",
-          data_set: "Data Set 1",
-          channel: "Channel 1",
-          date: "June 15, 2021",
-          tags: ["Employee Data", "Company Reports"],
-          chart_type: "line",
-        },
-        {
-          title: "Report 2",
-          data_set: "Data Set 2",
-          channel: "Channel 2",
-          date: "June 16, 2021",
-          tags: ["Monthly", "Sales"],
-          chart_type: "pie",
-        },
-        {
-          title: "Report 3",
-          data_set: "Data Set 3",
-          channel: "Channel 3",
-          date: "June 17, 2021",
-          tags: ["Weekly", "Sales"],
-          chart_type: "bar",
-        },
-        {
-          title: "Report 4",
-          data_set: "Data Set 4",
-          channel: "Channel 4",
-          date: "June 10, 2021",
-          tags: ["Employee Data"],
-          chart_type: "donut",
-        },
-        {
-          title: "Report 5",
-          data_set: "Data Set 5",
-          channel: "Channel 5",
-          date: "June 15, 2021",
-          tags: ["Company Reports", "Weekly"],
-          chart_type: "table",
-        },
-        {
-          title: "Report 6",
-          data_set: "Data Set 6",
-          channel: "Channel 6",
-          date: "June 18, 2021",
-          tags: ["Performance", "Sales", "Monthly"],
-          chart_type: "curve",
-        },
-      ],
-      personalReports: [
-        {
-          title: "Report 7",
-          data_set: "Data Set 7",
-          channel: "Channel 7",
-          date: "June 1, 2021",
-          tags: ["Performance", "Sales", "Monthly"],
-          chart_type: "curve",
-        },
-        {
-          title: "Report 8",
-          data_set: "Data Set 8",
-          channel: "Channel 8",
-          date: "June 3, 2021",
-          tags: ["Sales", "Monthly"],
-          chart_type: "donut",
-        },
-        {
-          title: "Report 9",
-          data_set: "Data Set 9",
-          channel: "Channel 9",
-          date: "June 3, 2021",
-          tags: ["Sales", "Weekly"],
-          chart_type: "pie",
-        },
-      ],
-      groupReports: [
-        {
-          title: "Report 10",
-          data_set: "Data Set 10",
-          channel: "Channel 10",
-          date: "June 29, 2021",
-          tags: ["Employee Data", "Monthly"],
-          chart_type: "pie",
-        },
-      ],
-    };
+    return {};
+  },
+  computed: {
+    ...mapGetters(["latestReports"]),
   },
 };
 </script>
@@ -273,5 +175,13 @@ export default {
 .v-card__title {
   line-height: 1;
   word-break: normal;
+}
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 10px;
+}
+.btn-container {
+  width: 100%;
 }
 </style>

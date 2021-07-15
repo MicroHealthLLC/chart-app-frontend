@@ -41,7 +41,34 @@
           <v-list-item-title>{{ item.title }}</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
+
+      <v-list-group
+        v-for="item in channelItems"
+        :key="item.title"
+        :prepend-icon="item.icon"
+        no-action
+        class="nav-group"
+      >
+        <template v-slot:activator>
+          <v-list-item-content>
+            <v-list-item-title v-text="item.title"></v-list-item-title>
+          </v-list-item-content>
+        </template>
+
+        <v-list-item
+          v-for="child in item.channels"
+          :key="child.title"
+          :to="`/channels/${child.id}`"
+          link
+          dense
+        >
+          <v-list-item-content>
+            <v-list-item-title v-text="child.title"></v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list-group>
     </v-list>
+
     <template v-slot:append>
       <div>
         <v-divider></v-divider>
@@ -69,6 +96,8 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   data() {
     return {
@@ -79,15 +108,47 @@ export default {
         { title: "Add Data Set", icon: "mdi-plus", route: "/add-data-set" },
         { title: "Create Channel", icon: "mdi-playlist-plus" },
         { title: "Request Channel", icon: "mdi-forwardburger" },
-        { title: "Public", icon: "mdi-account-group" },
-        { title: "Personal", icon: "mdi-shield-account" },
-        { title: "Group", icon: "mdi-account-multiple" },
+      ],
+      channelItems: [
+        {
+          title: "Public",
+          icon: "mdi-account-group",
+          channels: [],
+        },
+        {
+          title: "Personal",
+          icon: "mdi-shield-account",
+          channels: [],
+        },
+        {
+          title: "Group",
+          icon: "mdi-account-multiple",
+          channels: [],
+        },
         { title: "Administration", icon: "mdi-account-cog" },
       ],
       right: null,
     };
   },
+  computed: {
+    ...mapGetters(["channels"]),
+  },
+  created() {
+    this.channels.public.forEach((channel) =>
+      this.channelItems[0].channels.push(channel)
+    );
+    this.channels.personal.forEach((channel) =>
+      this.channelItems[1].channels.push(channel)
+    );
+    this.channels.group.forEach((channel) =>
+      this.channelItems[2].channels.push(channel)
+    );
+  },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.nav-group.v-list-group--active {
+  color: #ffffff !important;
+}
+</style>
