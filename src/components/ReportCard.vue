@@ -1,5 +1,5 @@
 <template>
-  <v-card class="report-card">
+  <v-card class="report-card" @click="toReport">
     <v-card-title>
       <v-icon class="mr-4" color="info">{{ chartIcon }}</v-icon>
       <div>
@@ -8,8 +8,8 @@
     </v-card-title>
     <v-card-text>
       <ul class="mb-4">
-        <li><strong>Data Set:</strong> {{ report.data_set }}</li>
-        <li><strong>Channel:</strong> {{ report.channel }}</li>
+        <li><strong>Data Set:</strong> {{ report.data_set.title }}</li>
+        <li><strong>Channel:</strong> {{ report.channel.title }}</li>
       </ul>
       <v-chip
         v-for="(tag, index) in report.tags"
@@ -42,7 +42,16 @@ export default {
         ? "mdi-table-large"
         : this.report.chart_type === "curve"
         ? "mdi-chart-bell-curve-cumulative"
+        : this.report.chart_type === "polar-area"
+        ? "mdi-chart-pie"
         : "mdi-chart-line";
+    },
+  },
+  methods: {
+    toReport() {
+      this.$router.push(
+        `/channels/${this.report.channel.id}/reports/${this.report.id}`
+      );
     },
   },
 };

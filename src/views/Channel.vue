@@ -56,7 +56,7 @@ export default {
     ...mapGetters(["channels", "channelReports"]),
     reports() {
       return this.channelReports.filter(
-        (report) => report.channel_id == this.$route.params.channelId
+        (report) => report.channel.id == this.$route.params.channelId
       );
     },
   },
