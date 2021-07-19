@@ -77,11 +77,6 @@
             dense
           ></v-select>
         </div>
-        <div>
-          <v-select>
-            
-          </v-select>
-        </div>
       </div>
     </v-col>
   </v-row>
@@ -95,6 +90,7 @@ import RadarChart from "../components/RadarChart";
 import DoughnutChart from "../components/DoughnutChart";
 import PieChart from "../components/PieChart";
 import PolarAreaChart from "../components/PolarAreaChart";
+import Table from "../components/Table";
 
 export default {
   data() {
@@ -117,6 +113,7 @@ export default {
         { text: "Donut", value: "donut" },
         { text: "Pie", value: "pie" },
         { text: "Polar Area", value: "polar-area" },
+        { text: "Table", value: "table" },
       ],
       index: 0,
     };
@@ -142,6 +139,8 @@ export default {
         return PieChart;
       } else if (this.report.chart_type === "polar-area") {
         return PolarAreaChart;
+      } else if (this.report.chart_type === "table") {
+        return Table;
       } else {
         return LineChart;
       }

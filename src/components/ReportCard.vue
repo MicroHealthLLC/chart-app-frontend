@@ -34,6 +34,8 @@ export default {
     chartIcon() {
       return this.report.chart_type === "line"
         ? "mdi-chart-line"
+        : this.report.chart_type === "bar"
+        ? "mdi-chart-bar"
         : this.report.chart_type === "pie"
         ? "mdi-chart-pie"
         : this.report.chart_type === "donut"
