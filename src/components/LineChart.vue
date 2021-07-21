@@ -15,6 +15,9 @@ export default {
     options: {
       type: Object,
     },
+    graphType: {
+      type: String,
+    },
   },
   data() {
     return {
@@ -30,41 +33,50 @@ export default {
       ],
     };
   },
-  mounted() {
-    // const label = Object.keys(this.chartData[0])[1];
-    const labels = this.chartData.map((item) => Object.values(item)[0]);
-    console.log(labels)
-    
-    const keys = Object.keys(this.chartData[0]).slice(1);
-    console.log(keys);
+  methods: {
+    loadChart() {
+      const labels = this.chartData.map((item) => Object.values(item)[0]);
 
-    const dataSets = [];
+      const keys = Object.keys(this.chartData[0]).slice(1);
 
-    keys.forEach((item, index) => {
-      const data = this.chartData.map((item) => Object.values(item)[index + 1]);
+      const dataSets = [];
+      const lineTension = this.graphType == "curve" ? 0.25 : 0;
 
-      dataSets.push({
-        label: item,
-        data: data,
-        backgroundColor: this.colors[index],
-        borderColor: this.colors[index],
-        lineTension: 0,
-        // fill: false,
+      keys.forEach((item, index) => {
+        const data = this.chartData.map(
+          (item) => Object.values(item)[index + 1]
+        );
+
+        dataSets.push({
+          label: item,
+          data: data,
+          backgroundColor: this.colors[index],
+          borderColor: this.colors[index],
+          lineTension: lineTension,
+          fill: true,
+        });
       });
-    });
 
-    this.renderChart(
-      {
-        labels: labels,
-        datasets: [...dataSets],
-      },
-      this.options
-    );
+      this.renderChart(
+        {
+          labels: labels,
+          datasets: [...dataSets],
+        },
+        this.options
+      );
+    },
+  },
+  computed: {},
+  mounted() {
+    this.loadChart();
   },
   watch: {
     options() {
-      console.log("CHANGESSS")
-    }
-  }
+      console.log("Options Changed...");
+    },
+    graphType() {
+      this.loadChart();
+    },
+  },
 };
 </script>

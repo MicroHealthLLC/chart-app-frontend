@@ -102,7 +102,7 @@ export default new Vuex.Store({
         channel: { id: 2, title: "Channel 2" },
         date: "June 18, 2021",
         tags: ["Performance", "Sales", "Monthly"],
-        chart_type: "curve",
+        chart_type: "radar",
       },
       {
         id: 7,
@@ -260,7 +260,7 @@ export default new Vuex.Store({
           channel: { id: 2, title: "Channel 2" },
           date: "June 18, 2021",
           tags: ["Performance", "Sales", "Monthly"],
-          chart_type: "curve",
+          chart_type: "radar",
         },
       ],
       personal: [

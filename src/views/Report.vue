@@ -10,9 +10,11 @@
 
       <v-card class="pa-4 mb-4">
         <Component
+          v-if="report.chart_type"
           :is="graphType"
           :chartData="activeDataSet"
           :options="chartOptions"
+          :graphType="report.chart_type"
           :height="600"
           :index="index"
           class="mb-4"
@@ -104,10 +106,11 @@ export default {
           display: true,
           text: ["", ""],
         },
-        bezierCurve: false,
+        // bezierCurve: false,
       },
       chartTypes: [
         { text: "Line", value: "line" },
+        { text: "Curve", value: "curve" },
         { text: "Bar", value: "bar" },
         { text: "Radar", value: "radar" },
         { text: "Donut", value: "donut" },

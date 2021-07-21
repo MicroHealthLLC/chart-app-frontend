@@ -15,6 +15,7 @@
       <div class="d-flex justify-end">
         <v-btn
           v-if="latestReports.public.length >= 6"
+          to="/public-reports"
           class="d-flex-end"
           color="primary"
           text
@@ -36,6 +37,7 @@
         <div class="d-flex justify-end">
           <v-btn
             v-if="latestReports.personal.length >= 6"
+            to="/personal-reports"
             class="ml-auto"
             color="primary"
             text
@@ -58,6 +60,7 @@
         <div class="d-flex justify-end">
           <v-btn
             v-if="latestReports.group.length >= 6"
+            to="/group-reports"
             class="ml-auto"
             color="primary"
             text

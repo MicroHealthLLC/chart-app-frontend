@@ -46,6 +46,8 @@ export default {
         ? "mdi-chart-bell-curve-cumulative"
         : this.report.chart_type === "polar-area"
         ? "mdi-chart-pie"
+        : this.report.chart_type === "radar"
+        ? "mdi-hexagon-slice-2"
         : "mdi-chart-line";
     },
   },
