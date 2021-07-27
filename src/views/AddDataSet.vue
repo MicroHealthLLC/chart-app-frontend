@@ -1,77 +1,88 @@
 <template>
-  <v-card class="card ma-5">
-    <v-row>
-      <v-col class="col-12"
-        ><h2 class="d-inline-block">Add Data Set</h2>
-        <div class="float-right">
-          <v-btn class="px-5 mr-2" color="primary" depressed small>Save</v-btn>
-          <v-btn small outlined>Cancel</v-btn>
-        </div>
-      </v-col>
-      <v-col class="col-6">
-        <v-text-field
-          v-model="chartOptions.title.text[0]"
-          label="Title"
-          dense
-        ></v-text-field>
-        <v-text-field label="Description" dense></v-text-field>
-      </v-col>
-      <v-col class="col-6">
-        <v-select
-          label="Channel"
-          prepend-icon="mdi-playlist-star"
-          dense
-        ></v-select>
-        <v-file-input
-          placeholder="Please choose a file..."
-          type="file"
-          @change.native="onChange"
-          @click:clear="clear"
-          dense />
-        <xlsx-read :options="readOptions" :file="file">
-          <xlsx-json
-            :options="readOptions"
-            @parsed="uploadData"
-          ></xlsx-json> </xlsx-read
-      ></v-col>
-      <v-col class="col-12">
-        <v-btn-toggle color="primary" mandatory>
-          <v-btn class="mt-4" @click="toggleDataTable" small>Data Table</v-btn>
-          <v-btn class="mt-4" @click="toggleLineChart" small>Line</v-btn>
-          <v-btn class="mt-4" @click="toggleBarChart" small>Bar</v-btn>
-          <v-btn class="mt-4" @click="toggleRadarChart" small>Radar</v-btn>
-          <v-btn class="mt-4" @click="toggleDonutChart" small>Donut</v-btn>
-          <v-btn class="mt-4" @click="togglePieChart" small>Pie</v-btn>
-          <v-btn class="mt-4" @click="togglePolarAreaChart" small
-            >Polar Area</v-btn
+  <v-row>
+    <!-- Title -->
+    <v-col class="col-12">
+      <div class="d-flex justify-space-between">
+        <h3>Add Data Set</h3>
+        <div>
+          <v-btn class="px-5 mr-2 mb-2" color="primary" depressed small
+            >Save</v-btn
           >
+          <v-btn class="mb-2" small outlined>Cancel</v-btn>
+        </div>
+      </div>
+      <v-divider></v-divider>
+    </v-col>
+    <!-- Form Fields -->
+    <v-col class="col-6">
+      <v-text-field
+        v-model="chartOptions.title.text[0]"
+        label="Title"
+        dense
+      ></v-text-field>
+      <v-text-field label="Description" dense></v-text-field>
+    </v-col>
+    <v-col class="col-6">
+      <v-select
+        label="Channel"
+        prepend-icon="mdi-playlist-star"
+        :items="combinedChannels"
+        item-text="title"
+        multiple
+        small-chips
+        dense
+      ></v-select>
+      <v-file-input
+        placeholder="Please choose a file..."
+        type="file"
+        @change.native="onChange"
+        @click:clear="clear"
+        dense />
+      <xlsx-read :options="readOptions" :file="file">
+        <xlsx-json
+          :options="readOptions"
+          @parsed="uploadData"
+        ></xlsx-json> </xlsx-read
+    ></v-col>
+    <!-- Chart Preview -->
+    <v-col class="col-12">
+      <v-card class="d-flex flex-column preview-container">
+        <!-- Chart Buttons -->
+        <v-btn-toggle class="ma-4" color="primary" mandatory>
+          <v-btn @click="toggleDataTable" small>Data Table</v-btn>
+          <v-btn @click="toggleLineChart" small>Line</v-btn>
+          <v-btn @click="toggleBarChart" small>Bar</v-btn>
+          <v-btn @click="toggleRadarChart" small>Radar</v-btn>
+          <v-btn @click="toggleDonutChart" small>Donut</v-btn>
+          <v-btn @click="togglePieChart" small>Pie</v-btn>
+          <v-btn @click="togglePolarAreaChart" small>Polar Area</v-btn>
         </v-btn-toggle>
-
-        <div class="chart mt-4">
-          <div v-if="headers.length > 0 && chartType === 'Data Table'">
-            <v-data-table
-              v-model="selected"
-              :headers="headers"
-              :items="items"
-              :item-key="headers[0].text"
-              :single-select="false"
-              show-select
-            ></v-data-table>
-          </div>
+        <!-- Table Preview -->
+        <div
+          class="ma-4"
+          v-if="headers.length > 0 && chartType === 'Data Table'"
+        >
+          <v-data-table
+            v-model="selected"
+            :headers="headers"
+            :items="items"
+            :item-key="headers[0].text"
+            :single-select="false"
+            show-select
+          ></v-data-table>
+        </div>
+        <!-- Chart Previews -->
+        <div
+          v-else-if="data.length > 0 && chartType !== 'Data Table'"
+          class="ma-4"
+        >
           <Component
-            v-else-if="data.length > 0 && chartType !== 'Data Table'"
             :is="graphType"
             :chartData="selected"
             :options="chartOptions"
             :height="600"
             :index="index"
           ></Component>
-          <div v-else class="fill-height d-flex justify-center align-center">
-            <p class="text-center placeholder-text">
-              <v-icon class="placeholder-icon">mdi-chart-areaspline</v-icon>
-              Please load a data set to view preview...
-            </p>
-          </div>
           <v-btn
             v-if="circleChart"
             class="float-right"
@@ -81,9 +92,16 @@
             >Next Category <v-icon small>mdi-arrow-right</v-icon></v-btn
           >
         </div>
-      </v-col>
-    </v-row>
-  </v-card>
+        <!-- Placeholder Message -->
+        <div v-else class="d-flex flex-grow-1 justify-center align-center ma-4">
+          <p class="text-center placeholder-text">
+            <v-icon class="placeholder-icon">mdi-chart-areaspline</v-icon>
+            Please load a data set to view preview...
+          </p>
+        </div>
+      </v-card>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
@@ -96,6 +114,7 @@ import PieChart from "../components/PieChart";
 import PolarAreaChart from "../components/PolarAreaChart";
 import { XlsxRead } from "vue-xlsx";
 import { XlsxJson } from "vue-xlsx";
+import { mapGetters } from "vuex";
 
 export default {
   name: "AddDataSet",
@@ -135,6 +154,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(["channels"]),
     graphType() {
       if (this.chartType === "Line") {
         return LineChart;
@@ -159,6 +179,13 @@ export default {
           this.chartType == "Polar Area") &&
         this.data.length > 0
       );
+    },
+    combinedChannels() {
+      return [
+        ...this.channels.public,
+        ...this.channels.personal,
+        ...this.channels.group,
+      ];
     },
   },
   methods: {
@@ -218,14 +245,8 @@ export default {
 </script>
 
 <style scoped>
-.card {
-  height: calc(100vh - 40px);
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-.chart {
-  width: 100%;
-  height: 600px;
+.preview-container {
+  height: 750px;
 }
 .placeholder-text,
 .placeholder-icon {

@@ -7,6 +7,7 @@ import PublicReports from "../views/PublicReports.vue"
 import PersonalReports from "../views/PersonalReports.vue";
 import GroupReports from "../views/GroupReports.vue";
 
+import AddChannel from "../views/AddChannel.vue"
 import Channels from "../views/Channels.vue";
 import Channel from "../views/Channel.vue";
 import ChannelReports from "../views/ChannelReports.vue";
@@ -45,6 +46,11 @@ const routes = [
     path: "/group-reports",
     name: "GroupReports",
     component: GroupReports,
+  },
+  {
+    path: "/add-channel",
+    name: "AddChannel",
+    component: AddChannel
   },
   {
     path: "/channels",

@@ -106,7 +106,7 @@ export default {
       items: [
         { title: "Home", icon: "mdi-home", route: "/" },
         { title: "Add Data Set", icon: "mdi-plus", route: "/add-data-set" },
-        { title: "Create Channel", icon: "mdi-playlist-plus" },
+        { title: "Create Channel", icon: "mdi-playlist-plus", route: "/add-channel" },
         { title: "Request Channel", icon: "mdi-forwardburger" },
       ],
       channelItems: [
