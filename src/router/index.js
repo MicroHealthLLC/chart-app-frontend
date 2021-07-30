@@ -2,7 +2,11 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import News from "../views/News.vue";
+
 import AddDataSet from "../views/AddDataSet.vue";
+import DataSet from "../views/DataSet.vue"
+import DataSets from "../views/DataSets.vue";
+
 import PublicReports from "../views/PublicReports.vue"
 import PersonalReports from "../views/PersonalReports.vue";
 import GroupReports from "../views/GroupReports.vue";
@@ -25,12 +29,22 @@ const routes = [
   {
     path: "/news",
     name: "News",
-    component: News
+    component: News,
   },
   {
     path: "/add-data-set",
     name: "AddDataSet",
     component: AddDataSet,
+  },
+  {
+    path: "/data-sets",
+    name: "DataSets",
+    component: DataSets,
+  },
+  {
+    path: "/data-sets/:dataSetId",
+    name: "DataSet",
+    component: DataSet,
   },
   {
     path: "/public-reports",
@@ -50,7 +64,7 @@ const routes = [
   {
     path: "/add-channel",
     name: "AddChannel",
-    component: AddChannel
+    component: AddChannel,
   },
   {
     path: "/channels",

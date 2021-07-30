@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters } from "vuex";
 
 export default {
   data() {
@@ -12,18 +12,30 @@ export default {
       items: [],
     };
   },
+  methods: {
+    loadTable() {
+      const data = JSON.parse(this.activeReport.data_set.data).data;
+
+      const keys = Object.keys(data[0]);
+
+      this.headers = keys.map((item) => ({
+        text: item,
+        value: item,
+      }));
+
+      this.items = data;
+    },
+  },
   computed: {
-    ...mapGetters(["activeDataSet"])
+    ...mapGetters(["activeReport"]),
   },
   mounted() {
-    const keys = Object.keys(this.activeDataSet[0]);
-
-    this.headers = keys.map((item) => ({
-      text: item,
-      value: item,
-    }));
-
-    this.items = this.activeDataSet;
+    this.loadTable();
+  },
+  watch: {
+    "activeReport.data_set"() {
+      this.loadTable();
+    },
   },
 };
 </script>

@@ -33,80 +33,59 @@ export default {
       ],
     };
   },
-  mounted() {
-    // const label = Object.keys(this.chartData[0])[1];
-    const labels = this.chartData.map((item) => Object.values(item)[0]);
+  methods: {
+    loadChart() {
+      // const label = Object.keys(this.chartData[0])[1];
+      const labels = this.chartData.map((item) => Object.values(item)[0]);
 
-    const keys = Object.keys(this.chartData[0]).slice(1);
-    console.log(keys);
+      const keys = Object.keys(this.chartData[0]).slice(1);
 
-    const dataSets = [];
+      const dataSets = [];
 
-    keys.forEach((item, index) => {
-      const data = this.chartData.map((item) => Object.values(item)[index + 1]);
+      keys.forEach((item, index) => {
+        const data = this.chartData.map(
+          (item) => Object.values(item)[index + 1]
+        );
 
-      dataSets.push({
-        label: item,
-        data: data,
-        backgroundColor: this.colors,
+        dataSets.push({
+          label: item,
+          data: data,
+          backgroundColor: this.colors,
+        });
       });
-    });
 
-    this.options.title.text[1] = keys[this.index];
+      this.options.title.text[1] = keys[this.index];
 
-    this.options.tooltips = {
-      callbacks: {
-        title: () => {
-          return keys[this.index];
+      this.options.tooltips = {
+        callbacks: {
+          title: () => {
+            return keys[this.index];
+          },
         },
-      },
-    };
+      };
 
-    this.renderChart(
-      {
-        labels: labels,
-        datasets: [...dataSets.slice(this.index, this.index + 1)],
-      },
-      this.options
-    );
+      this.renderChart(
+        {
+          labels: labels,
+          datasets: [...dataSets.slice(this.index, this.index + 1)],
+        },
+        this.options
+      );
+    },
+  },
+  mounted() {
+    this.loadChart();
   },
   beforeDestroy() {
-    console.log("THIS IS BEFORE DESTROY");
     this.options.title.text[1] = "";
     this.options.tooltips = {};
   },
   watch: {
-    index: {
-      handler() {
-        const labels = this.chartData.map((item) => Object.values(item)[0]);
-
-        const keys = Object.keys(this.chartData[0]).slice(1);
-        console.log(keys);
-
-        const dataSets = [];
-
-        keys.forEach((item, index) => {
-          const data = this.chartData.map(
-            (item) => Object.values(item)[index + 1]
-          );
-
-          dataSets.push({
-            label: item,
-            data: data,
-            backgroundColor: this.colors,
-          });
-        });
-
-        this.options.title.text[1] = keys[this.index];
-
-        this.renderChart(
-          {
-            labels: labels,
-            datasets: [...dataSets.slice(this.index, this.index + 1)],
-          },
-          this.options
-        );
-      },
+    index() {
+      this.loadChart();
+    },
+    chartData() {
+      this.loadChart();
     },
   },
 };

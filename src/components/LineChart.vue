@@ -77,6 +77,9 @@ export default {
     graphType() {
       this.loadChart();
     },
+    chartData() {
+      this.loadChart();
+    },
   },
 };
 </script>

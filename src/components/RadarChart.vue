@@ -23,39 +23,49 @@ export default {
       ],
     };
   },
-  mounted() {
-    // const label = Object.keys(this.chartData[0])[1];
-    const labels = this.chartData.map((item) => Object.values(item)[0]);
+  methods: {
+    loadChart() {
+      const labels = this.chartData.map((item) => Object.values(item)[0]);
 
-    const keys = Object.keys(this.chartData[0]).slice(1);
-    console.log(keys);
+      const keys = Object.keys(this.chartData[0]).slice(1);
 
-    const dataSets = [];
+      const dataSets = [];
 
-    this.options.tooltips = {
-      callbacks: {
-        title: (tooltipItem, data) => data.labels[tooltipItem[0].index],
-      },
-    };
+      this.options.tooltips = {
+        callbacks: {
+          title: (tooltipItem, data) => data.labels[tooltipItem[0].index],
+        },
+      };
 
-    keys.forEach((item, index) => {
-      const data = this.chartData.map((item) => Object.values(item)[index + 1]);
+      keys.forEach((item, index) => {
+        const data = this.chartData.map(
+          (item) => Object.values(item)[index + 1]
+        );
 
-      dataSets.push({
-        label: item,
-        data: data,
-        backgroundColor: this.colors[index],
-        // borderColor: this.colors[index],
+        dataSets.push({
+          label: item,
+          data: data,
+          backgroundColor: this.colors[index],
+          // borderColor: this.colors[index],
+        });
       });
-    });
 
-    this.renderChart(
-      {
-        labels: labels,
-        datasets: [...dataSets],
-      },
-      this.options
-    );
+      this.renderChart(
+        {
+          labels: labels,
+          datasets: [...dataSets],
+        },
+        this.options
+      );
+    },
+  },
+  mounted() {
+    this.loadChart();
+  },
+  watch: {
+    chartData() {
+      this.loadChart();
+    },
   },
 };
 </script>

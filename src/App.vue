@@ -1,13 +1,22 @@
 <template>
-  <v-app>
+  <v-app v-if="channels.length > 0">
     <Sidebar />
     <v-main class="main-container mx-auto">
+      <v-snackbar v-model="snackbar.show" color="success" outlined text top
+        >{{ snackbar.message
+        }}<template v-slot:action="{ attrs }">
+          <v-btn color="success" text v-bind="attrs" @click="CLOSE_SNACKBAR">
+            Close
+          </v-btn>
+        </template></v-snackbar
+      >
       <router-view class="pa-5" />
     </v-main>
   </v-app>
 </template>
 
 <script>
+import { mapActions, mapGetters, mapMutations } from "vuex";
 import Sidebar from "./components/Sidebar";
 export default {
   components: { Sidebar },
@@ -16,6 +25,16 @@ export default {
   data: () => ({
     //
   }),
+  methods: {
+    ...mapActions(["fetchChannels"]),
+    ...mapMutations(["CLOSE_SNACKBAR"]),
+  },
+  computed: {
+    ...mapGetters(["channels", "snackbar"]),
+  },
+  created() {
+    this.fetchChannels();
+  },
 };
 </script>
 

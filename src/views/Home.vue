@@ -5,22 +5,29 @@
       <h3><router-link to="/public-reports">Public Reports</router-link></h3>
       <v-divider class="mb-4"></v-divider>
 
-      <div class="grid">
+      <div v-if="publicReports.length > 0" class="grid">
         <ReportCard
-          v-for="(report, index) in latestReports.public"
+          v-for="(report, index) in publicReports"
           :report="report"
           :key="index"
         ></ReportCard>
+        <div class="d-flex justify-end">
+          <v-btn
+            v-if="reports.length >= 6"
+            to="/public-reports"
+            class="d-flex-end"
+            color="primary"
+            text
+            >View All</v-btn
+          >
+        </div>
       </div>
-      <div class="d-flex justify-end">
-        <v-btn
-          v-if="latestReports.public.length >= 6"
-          to="/public-reports"
-          class="d-flex-end"
-          color="primary"
-          text
-          >View All</v-btn
-        >
+      <div
+        v-else
+        class="placeholder d-flex flex-column justify-center align-center"
+      >
+        <p class="font-weight-light">No Public Reports to show...</p>
+        <v-btn text small color="primary">Add a Report</v-btn>
       </div>
       <!-- PERSONAL REPORTS -->
       <h3 class="mt-4">
@@ -28,15 +35,15 @@
       </h3>
       <v-divider class="mb-4"></v-divider>
 
-      <div class="grid">
+      <div v-if="personalReports.length > 0" class="grid">
         <ReportCard
-          v-for="(report, index) in latestReports.personal"
+          v-for="(report, index) in personalReports"
           :report="report"
           :key="index"
         ></ReportCard>
         <div class="d-flex justify-end">
           <v-btn
-            v-if="latestReports.personal.length >= 6"
+            v-if="reports.length >= 6"
             to="/personal-reports"
             class="ml-auto"
             color="primary"
@@ -45,21 +52,28 @@
           >
         </div>
       </div>
+      <div
+        v-else
+        class="placeholder d-flex flex-column justify-center align-center"
+      >
+        <p class="font-weight-light">No Personal Reports to show...</p>
+        <v-btn text small color="primary">Add a Report</v-btn>
+      </div>
       <!-- GROUP REPORTS -->
       <h3 class="mt-4">
         <router-link to="/group-reports">Group Reports</router-link>
       </h3>
       <v-divider class="mb-4"></v-divider>
 
-      <div class="grid">
+      <div v-if="groupReports.length > 0" class="grid">
         <ReportCard
-          v-for="(report, index) in latestReports.group"
+          v-for="(report, index) in groupReports"
           :report="report"
           :key="index"
         ></ReportCard>
         <div class="d-flex justify-end">
           <v-btn
-            v-if="latestReports.group.length >= 6"
+            v-if="reports.length >= 6"
             to="/group-reports"
             class="ml-auto"
             color="primary"
@@ -67,6 +81,13 @@
             >View All</v-btn
           >
         </div>
+      </div>
+      <div
+        v-else
+        class="placeholder d-flex flex-column justify-center align-center"
+      >
+        <p class="font-weight-light">No Group Reports to show...</p>
+        <v-btn text small color="primary">Add a Report</v-btn>
       </div>
     </v-col>
     <!-- DETAILS -->
@@ -79,16 +100,17 @@
             ><v-icon small>mdi-file-chart-outline</v-icon> Total
             Reports:</strong
           >
-          105
+          {{ reports.length }}
         </li>
         <li>
-          <strong><v-icon small>mdi-menu</v-icon> Channels:</strong> 52
+          <strong><v-icon small>mdi-menu</v-icon> Channels:</strong>
+          {{ channels.length }}
         </li>
         <li>
           <strong
             ><v-icon small>mdi-account-group</v-icon> Active Users:</strong
           >
-          12
+          1
         </li>
       </ul>
       <h3 class="mt-4">News</h3>
@@ -147,7 +169,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import ReportCard from "./../components/ReportCard";
 
 export default {
@@ -156,10 +178,33 @@ export default {
     ReportCard,
   },
   data() {
-    return {};
+    return {
+      publicReports: [],
+      personalReports: [],
+      groupReports: [],
+    };
   },
   computed: {
-    ...mapGetters(["latestReports"]),
+    ...mapGetters(["channels", "reports"]),
+  },
+  methods: {
+    ...mapActions(["fetchReports"]),
+  },
+  mounted() {
+    this.fetchReports();
+  },
+  watch: {
+    reports() {
+      this.reports.forEach((report) => {
+        if (report.channel.category == "public") {
+          this.publicReports.push(report);
+        } else if (report.channel.category == "personal") {
+          this.personalReports.push(report);
+        } else if (report.channel.category == "group") {
+          this.groupReports.push(report);
+        }
+      });
+    },
   },
 };
 </script>
@@ -186,5 +231,8 @@ export default {
 }
 .btn-container {
   width: 100%;
+}
+.placeholder {
+  height: 150px;
 }
 </style>

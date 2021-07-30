@@ -58,12 +58,14 @@
         <v-list-item
           v-for="child in item.channels"
           :key="child.title"
-          :to="`/channels/${child.id}`"
+          :to="`/channels/${child.id}/reports`"
           link
           dense
         >
           <v-list-item-content>
-            <v-list-item-title v-text="child.title"></v-list-item-title>
+            <v-list-item-title>- {{
+              child.title
+            }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list-group>
@@ -106,7 +108,11 @@ export default {
       items: [
         { title: "Home", icon: "mdi-home", route: "/" },
         { title: "Add Data Set", icon: "mdi-plus", route: "/add-data-set" },
-        { title: "Create Channel", icon: "mdi-playlist-plus", route: "/add-channel" },
+        {
+          title: "Create Channel",
+          icon: "mdi-playlist-plus",
+          route: "/add-channel",
+        },
         { title: "Request Channel", icon: "mdi-forwardburger" },
       ],
       channelItems: [
@@ -133,16 +139,43 @@ export default {
   computed: {
     ...mapGetters(["channels"]),
   },
-  created() {
-    this.channels.public.forEach((channel) =>
-      this.channelItems[0].channels.push(channel)
-    );
-    this.channels.personal.forEach((channel) =>
-      this.channelItems[1].channels.push(channel)
-    );
-    this.channels.group.forEach((channel) =>
-      this.channelItems[2].channels.push(channel)
-    );
+  mounted() {
+    // this.channels.public.forEach((channel) =>
+    //   this.channelItems[0].channels.push(channel)
+    // );
+    // this.channels.personal.forEach((channel) =>
+    //   this.channelItems[1].channels.push(channel)
+    // );
+    // this.channels.group.forEach((channel) =>
+    //   this.channelItems[2].channels.push(channel)
+    // );
+
+    this.channels.forEach((channel) => {
+      if (channel.category == "public") {
+        this.channelItems[0].channels.push(channel);
+      } else if (channel.category == "personal") {
+        this.channelItems[1].channels.push(channel);
+      } else if (channel.category == "group") {
+        this.channelItems[2].channels.push(channel);
+      }
+    });
+  },
+  watch: {
+    channels() {
+      this.channelItems[0].channels = [];
+      this.channelItems[1].channels = [];
+      this.channelItems[2].channels = [];
+
+      this.channels.forEach((channel) => {
+        if (channel.category == "public") {
+          this.channelItems[0].channels.push(channel);
+        } else if (channel.category == "personal") {
+          this.channelItems[1].channels.push(channel);
+        } else if (channel.category == "group") {
+          this.channelItems[2].channels.push(channel);
+        }
+      });
+    },
   },
 };
 </script>

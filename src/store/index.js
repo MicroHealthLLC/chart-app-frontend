@@ -1,313 +1,191 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import axios from "axios";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    channels: {
-      public: [
-        {
-          title: "Channel 1",
-          id: 1,
-          type: "public",
-          description: "This is the description for Channel 1.",
-        },
-        {
-          title: "Channel 2",
-          id: 2,
-          type: "public",
-          description: "This is the description for Channel 2.",
-        },
-      ],
-      personal: [
-        {
-          title: "Channel 3",
-          id: 3,
-          type: "personal",
-          description: "This is the description for Channel 3.",
-        },
-        {
-          title: "Channel 4",
-          id: 4,
-          type: "personal",
-          description: "This is the description for Channel 4.",
-        },
-      ],
-      group: [
-        {
-          title: "Channel 5",
-          id: 5,
-          type: "group",
-          description: "This is the description for Channel 5.",
-        },
-        {
-          title: "Channel 6",
-          id: 6,
-          type: "group",
-          description: "This is the description for Channel 6.",
-        },
-      ],
+    channel: {
+      title: "",
+      category: "public",
+      description: "",
+      reports: [],
     },
-    channel_reports: [
-      {
-        id: 1,
-        title: "Report 1",
-        data_set: { id: 1, title: "Data Set 1" },
-        channel: { id: 1, title: "Channel 1" },
-        date: "June 15, 2021",
-        tags: ["Employee Data", "Company Reports"],
-        chart_type: "line",
-      },
-      {
-        id: 2,
-        title: "Report 2",
-        data_set: { id: 2, title: "Data Set 2" },
-        channel: { id: 2, title: "Channel 2" },
-        date: "June 16, 2021",
-        tags: ["Monthly", "Sales"],
-        chart_type: "pie",
-      },
-      {
-        id: 3,
-        title: "Report 3",
-        data_set: { id: 3, title: "Data Set 3" },
-        channel: { id: 1, title: "Channel 1" },
-        date: "June 17, 2021",
-        tags: ["Weekly", "Sales"],
-        chart_type: "bar",
-      },
-      {
-        id: 4,
-        title: "Report 4",
-        data_set: { id: 4, title: "Data Set 4" },
-        channel: { id: 2, title: "Channel 2" },
-        date: "June 10, 2021",
-        tags: ["Employee Data"],
-        chart_type: "donut",
-      },
-      {
-        id: 5,
-        title: "Report 5",
-        data_set: { id: 5, title: "Data Set 5" },
-        channel: { id: 1, title: "Channel 1" },
-        date: "June 15, 2021",
-        tags: ["Company Reports", "Weekly"],
-        chart_type: "table",
-      },
-      {
-        id: 6,
-        title: "Report 6",
-        data_set: { id: 6, title: "Data Set 6" },
-        channel: { id: 2, title: "Channel 2" },
-        date: "June 18, 2021",
-        tags: ["Performance", "Sales", "Monthly"],
-        chart_type: "radar",
-      },
-      {
-        id: 7,
-        title: "Report 7",
-        data_set: { id: 7, title: "Data Set 7" },
-        channel: { id: 3, title: "Channel 3" },
-        date: "June 1, 2021",
-        tags: ["Performance", "Sales", "Monthly"],
-        chart_type: "curve",
-      },
-      {
-        id: 8,
-        title: "Report 8",
-        data_set: { id: 8, title: "Data Set 8" },
-        channel: { id: 4, title: "Channel 4" },
-        date: "June 3, 2021",
-        tags: ["Sales", "Monthly"],
-        chart_type: "donut",
-      },
-      {
-        id: 9,
-        title: "Report 9",
-        data_set: { id: 9, title: "Data Set 9" },
-        channel: { id: 3, title: "Channel 3" },
-        date: "June 3, 2021",
-        tags: ["Sales", "Weekly"],
-        chart_type: "pie",
-      },
-      {
-        id: 10,
-        title: "Report 10",
-        data_set: { id: 10, title: "Data Set 10" },
-        channel: { id: 5, title: "Channel 5" },
-        date: "June 29, 2021",
-        tags: ["Employee Data", "Monthly"],
-        chart_type: "polar-area",
-      },
-    ],
-    active_data_set: [
-      {
-        Person: "Andrew",
-        "Tasks Completed": 25,
-        "Issues Resolved": 5,
-        "Risks Mitigated": 0,
-        "Lessons Learned": 10,
-      },
-      {
-        Person: "Christopher",
-        "Tasks Completed": 6,
-        "Issues Resolved": 2,
-        "Risks Mitigated": 4,
-        "Lessons Learned": 4,
-      },
-      {
-        Person: "Daisy",
-        "Tasks Completed": 22,
-        "Issues Resolved": 4,
-        "Risks Mitigated": 0,
-        "Lessons Learned": 9,
-      },
-      {
-        Person: "Kyle",
-        "Tasks Completed": 17,
-        "Issues Resolved": 3,
-        "Risks Mitigated": 6,
-        "Lessons Learned": 0,
-      },
-      {
-        Person: "Jimmy",
-        "Tasks Completed": 33,
-        "Issues Resolved": 7,
-        "Risks Mitigated": 6,
-        "Lessons Learned": 2,
-      },
-      {
-        Person: "Darren",
-        "Tasks Completed": 11,
-        "Issues Resolved": 9,
-        "Risks Mitigated": 7,
-        "Lessons Learned": 3,
-      },
-      {
-        Person: "Jennifer",
-        "Tasks Completed": 4,
-        "Issues Resolved": 0,
-        "Risks Mitigated": 7,
-        "Lessons Learned": 8,
-      },
-    ],
-    data_sets: [
-      { id: 1, title: "Data Set 1" },
-      { id: 2, title: "Data Set 2" },
-      { id: 3, title: "Data Set 3" },
-      { id: 4, title: "Data Set 4" },
-      { id: 5, title: "Data Set 5" },
-      { id: 6, title: "Data Set 6" },
-      { id: 7, title: "Data Set 7" },
-      { id: 8, title: "Data Set 8" },
-      { id: 9, title: "Data Set 9" },
-      { id: 10, title: "Data Set 10" },
-    ],
-    active_report: {},
+    channels: [],
+    channel_reports: [],
+    active_data_set: {
+      title: "",
+      description: "",
+      data: "",
+    },
+    data_sets: [],
+    active_report: {
+      title: "",
+      description: "",
+      chart_type: "line",
+      data_set: { data: 'data:[{"One":1}, {"Two":2}]' },
+    },
     reports: [],
-    latest_reports: {
-      public: [
-        {
-          id: 1,
-          title: "Report 1",
-          data_set: { id: 1, title: "Data Set 1" },
-          channel: { id: 1, title: "Channel 1" },
-          date: "June 15, 2021",
-          tags: ["Employee Data", "Company Reports"],
-          chart_type: "line",
-        },
-        {
-          id: 2,
-          title: "Report 2",
-          data_set: { id: 2, title: "Data Set 2" },
-          channel: { id: 2, title: "Channel 2" },
-          date: "June 16, 2021",
-          tags: ["Monthly", "Sales"],
-          chart_type: "pie",
-        },
-        {
-          id: 3,
-          title: "Report 3",
-          data_set: { id: 3, title: "Data Set 3" },
-          channel: { id: 1, title: "Channel 1" },
-          date: "June 17, 2021",
-          tags: ["Weekly", "Sales"],
-          chart_type: "bar",
-        },
-        {
-          id: 4,
-          title: "Report 4",
-          data_set: { id: 4, title: "Data Set 4" },
-          channel: { id: 2, title: "Channel 2" },
-          date: "June 10, 2021",
-          tags: ["Employee Data"],
-          chart_type: "donut",
-        },
-        {
-          id: 5,
-          title: "Report 5",
-          data_set: { id: 5, title: "Data Set 5" },
-          channel: { id: 1, title: "Channel 1" },
-          date: "June 15, 2021",
-          tags: ["Company Reports", "Weekly"],
-          chart_type: "table",
-        },
-        {
-          id: 6,
-          title: "Report 6",
-          data_set: { id: 6, title: "Data Set 6" },
-          channel: { id: 2, title: "Channel 2" },
-          date: "June 18, 2021",
-          tags: ["Performance", "Sales", "Monthly"],
-          chart_type: "radar",
-        },
-      ],
-      personal: [
-        {
-          id: 7,
-          title: "Report 7",
-          data_set: { id: 7, title: "Data Set 7" },
-          channel: { id: 3, title: "Channel 3" },
-          date: "June 1, 2021",
-          tags: ["Performance", "Sales", "Monthly"],
-          chart_type: "curve",
-        },
-        {
-          id: 8,
-          title: "Report 8",
-          data_set: { id: 8, title: "Data Set 8" },
-          channel: { id: 4, title: "Channel 4" },
-          date: "June 3, 2021",
-          tags: ["Sales", "Monthly"],
-          chart_type: "donut",
-        },
-        {
-          id: 9,
-          title: "Report 9",
-          data_set: { id: 9, title: "Data Set 9" },
-          channel: { id: 3, title: "Channel 3" },
-          date: "June 3, 2021",
-          tags: ["Sales", "Weekly"],
-          chart_type: "pie",
-        },
-      ],
-      group: [
-        {
-          id: 10,
-          title: "Report 10",
-          data_set: { id: 10, title: "Data Set 10" },
-          channel: { id: 5, title: "Channel 5" },
-          date: "June 29, 2021",
-          tags: ["Employee Data", "Monthly"],
-          chart_type: "polar-area",
-        },
-      ],
+    latest_reports: {},
+    snackbar: {
+      show: false,
+      message: "",
     },
   },
-  actions: {},
-  mutations: {},
+  actions: {
+    addChannel({ commit, getters }, channel) {
+      axios({
+        method: "POST",
+        url: "http://localhost:3000/v1/channels",
+        data: channel,
+      }).then((res) => {
+        commit("SET_CHANNEL", res.data);
+        commit("SET_CHANNELS", [...getters.channels, res.data]);
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Channel added successfully!",
+        });
+      });
+    },
+    fetchChannel({ commit }, id) {
+      axios({
+        method: "GET",
+        url: `http://localhost:3000/v1/channels/${id}`,
+      })
+        .then((res) => {
+          commit("SET_CHANNEL", res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    fetchChannels({ commit }) {
+      axios({
+        method: "GET",
+        url: "http://localhost:3000/v1/channels",
+      })
+        .then((res) => {
+          commit("SET_CHANNELS", res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    updateChannel({ commit }, channel) {
+      axios({
+        method: "PATCH",
+        url: `http://localhost:3000/v1/channels/${channel.id}`,
+        data: channel,
+      }).then((res) => {
+        commit("SET_CHANNEL", res.data);
+        // TODO: Update state.channels for Sidebar
+        // commit("SET_CHANNELS", [...getters.channels, res.data]);
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Channel updated successfully!",
+        });
+      });
+    },
+    fetchReports({ commit }) {
+      axios({
+        method: "GET",
+        url: "http://localhost:3000/v1/reports",
+      }).then((res) => {
+        commit("SET_REPORTS", res.data);
+      });
+    },
+    fetchDataSet({ commit }, id) {
+      axios({
+        method: "GET",
+        url: `http://localhost:3000/v1/data_sets/${id}`,
+      }).then((res) => {
+        commit("SET_ACTIVE_DATA_SET", res.data);
+      });
+    },
+    fetchDataSets({ commit }) {
+      axios({
+        method: "GET",
+        url: "http://localhost:3000/v1/data_sets",
+      }).then((res) => {
+        commit("SET_DATA_SETS", res.data);
+      });
+    },
+    addDataSet({ commit }, dataSet) {
+      axios({
+        method: "POST",
+        url: "http://localhost:3000/v1/data_sets",
+        data: dataSet,
+      }).then((res) => {
+        commit("SET_ACTIVE_DATA_SET", res.data);
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Data Set added successfully!",
+        });
+      });
+    },
+    updateDataSet({ commit }, dataSet) {
+      axios({
+        method: "PATCH",
+        url: `http://localhost:3000/v1/data_sets/${dataSet.id}`,
+        data: dataSet,
+      }).then((res) => {
+        commit("SET_ACTIVE_DATA_SET", res.data);
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Data Set updated successfully!",
+        });
+      });
+    },
+    fetchReport({ commit }, id) {
+      axios({
+        method: "GET",
+        url: `http://localhost:3000/v1/reports/${id}`,
+      }).then((res) => {
+        commit("SET_ACTIVE_REPORT", res.data);
+      });
+    },
+    addReport({ commit }, report) {
+      axios({
+        method: "POST",
+        url: "http://localhost:3000/v1/reports",
+        data: report,
+      }).then((res) => {
+        commit("SET_ACTIVE_REPORT", res.data);
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Report added successfully!",
+        });
+      });
+    },
+    updateReport({ commit }, report) {
+      axios({
+        method: "PATCH",
+        url: `http://localhost:3000/v1/reports/${report.id}`,
+        data: report,
+      }).then((res) => {
+        commit("SET_ACTIVE_REPORT", res.data);
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Report updated successfully!",
+        });
+      });
+    },
+  },
+  mutations: {
+    SET_CHANNEL: (state, channel) => (state.channel = channel),
+    SET_CHANNELS: (state, channels) => (state.channels = channels),
+    SET_REPORTS: (state, reports) => (state.reports = reports),
+    SET_ACTIVE_DATA_SET: (state, dataSet) => (state.active_data_set = dataSet),
+    SET_ACTIVE_REPORT: (state, report) => (state.active_report = report),
+    SET_DATA_SETS: (state, dataSets) => (state.data_sets = dataSets),
+    SET_REPORT_DATA_SET: (state, dataSet) =>
+      (state.active_report.data_set = dataSet),
+    SET_SNACKBAR: (state, snackbar) => (state.snackbar = snackbar),
+    CLOSE_SNACKBAR: (state) => (state.snackbar.show = false),
+  },
   getters: {
+    channel: (state) => state.channel,
     channels: (state) => state.channels,
     channelReports: (state) => state.channel_reports,
     activeDataSet: (state) => state.active_data_set,
@@ -315,6 +193,7 @@ export default new Vuex.Store({
     activeReport: (state) => state.active_report,
     reports: (state) => state.reports,
     latestReports: (state) => state.latest_reports,
+    snackbar: (state) => state.snackbar,
   },
   modules: {},
 });
