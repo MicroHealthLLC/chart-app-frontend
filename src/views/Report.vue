@@ -22,7 +22,7 @@
         <Component
           v-if="activeReport.id || activeReport.data_set.id"
           :is="graphType"
-          :chartData="convertedChartData"
+          :chartData="activeReport.data_set.data"
           :options="chartOptions"
           :graphType="activeReport.chart_type"
           :height="600"
@@ -163,7 +163,7 @@ export default {
     ...mapMutations(["SET_ACTIVE_REPORT", "SET_REPORT_DATA_SET"]),
     changeChartData() {
       this.index =
-        (this.index + 1) % (Object.keys(this.convertedChartData[0]).length - 1);
+        (this.index + 1) % (Object.keys(this.activeReport.data_set.data[0]).length - 1);
     },
     saveReport() {
       if (this.activeReport.id) {
@@ -213,9 +213,6 @@ export default {
         this.activeReport.chart_type == "polar-area"
       );
     },
-    convertedChartData() {
-      return JSON.parse(this.activeReport.data_set.data).data;
-    },
   },
   beforeMount() {
     if (this.$route.params.reportId != "new") {
@@ -225,7 +222,7 @@ export default {
         title: "",
         description: "",
         chart_type: "line",
-        data_set: { data: 'data:[{"One":1}, {"Two":2}]' },
+        data_set: { data: [] },
         channel_id: parseInt(this.$route.params.channelId),
       });
     }

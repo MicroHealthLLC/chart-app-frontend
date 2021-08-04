@@ -17,14 +17,14 @@ export default new Vuex.Store({
     active_data_set: {
       title: "",
       description: "",
-      data: "",
+      data: [],
     },
     data_sets: [],
     active_report: {
       title: "",
       description: "",
       chart_type: "line",
-      data_set: { data: 'data:[{"One":1}, {"Two":2}]' },
+      data_set: { data: [] },
     },
     reports: [],
     latest_reports: {},

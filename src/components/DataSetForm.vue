@@ -241,11 +241,10 @@ export default {
       this.index = (this.index + 1) % (Object.keys(this.data[0]).length - 1);
     },
     saveDataSet() {
-      let data = JSON.stringify({ data: this.data });
       let dataSet = {
         title: this.activeDataSet.title,
         description: this.activeDataSet.description,
-        data: data,
+        data: this.data,
       };
 
       if (this.activeDataSet.id) {
@@ -258,13 +257,13 @@ export default {
   },
   mounted() {
     if (this.$route.name == "DataSet") {
-      this.data = JSON.parse(this.activeDataSet.data).data;
+      this.data = this.activeDataSet.data;
       this.uploadData(this.data);
     }
   },
   watch: {
     activeDataSet() {
-      this.data = JSON.parse(this.activeDataSet.data).data;
+      this.data = this.activeDataSet.data;
       this.uploadData(this.data);
     },
   },
