@@ -123,7 +123,7 @@ import PieChart from "../components/PieChart";
 import PolarAreaChart from "../components/PolarAreaChart";
 import { XlsxRead } from "vue-xlsx";
 import { XlsxJson } from "vue-xlsx";
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "DataSetForm",
@@ -192,6 +192,7 @@ export default {
   },
   methods: {
     ...mapActions(["addDataSet", "updateDataSet"]),
+    ...mapMutations(["SET_ACTIVE_DATA_SET"]),
     onChange(event) {
       this.file = event.target.files ? event.target.files[0] : null;
     },
@@ -260,6 +261,10 @@ export default {
       this.data = this.activeDataSet.data;
       this.uploadData(this.data);
     }
+  },
+  beforeDestroy() {
+    // Reset form
+    this.SET_ACTIVE_DATA_SET({ title: "", description: "", data: [] });
   },
   watch: {
     activeDataSet() {

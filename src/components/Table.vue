@@ -14,7 +14,7 @@ export default {
   },
   methods: {
     loadTable() {
-      const data = JSON.parse(this.activeReport.data_set.data).data;
+      const data = this.activeReport.data_set.data;
 
       const keys = Object.keys(data[0]);
 
