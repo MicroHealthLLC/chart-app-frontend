@@ -25,6 +25,7 @@ export default new Vuex.Store({
       description: "",
       chart_type: "line",
       data_set: { data: [] },
+      tags: []
     },
     reports: [],
     latest_reports: {},
@@ -32,6 +33,7 @@ export default new Vuex.Store({
       show: false,
       message: "",
     },
+    tags: [],
   },
   actions: {
     addChannel({ commit, getters }, channel) {
@@ -171,6 +173,14 @@ export default new Vuex.Store({
         });
       });
     },
+    fetchTags({ commit }) {
+      axios({
+        method: "GET",
+        url: "http://localhost:3000/v1/tags",
+      }).then((res) => {
+        commit("SET_TAGS", res.data);
+      });
+    },
   },
   mutations: {
     SET_CHANNEL: (state, channel) => (state.channel = channel),
@@ -183,6 +193,7 @@ export default new Vuex.Store({
       (state.active_report.data_set = dataSet),
     SET_SNACKBAR: (state, snackbar) => (state.snackbar = snackbar),
     CLOSE_SNACKBAR: (state) => (state.snackbar.show = false),
+    SET_TAGS: (state, tags) => (state.tags = tags),
   },
   getters: {
     channel: (state) => state.channel,
@@ -194,6 +205,7 @@ export default new Vuex.Store({
     reports: (state) => state.reports,
     latestReports: (state) => state.latest_reports,
     snackbar: (state) => state.snackbar,
+    tags: (state) => state.tags,
   },
   modules: {},
 });

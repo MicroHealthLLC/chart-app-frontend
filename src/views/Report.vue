@@ -113,6 +113,19 @@
             dense
           ></v-textarea>
         </div>
+        <div class="tags">
+          <v-select
+            v-model="activeReport.tags"
+            :items="tags"
+            item-text="title"
+            item-value="title"
+            chips
+            label="Tags"
+            multiple
+            dense
+          >
+          </v-select>
+        </div>
       </div>
     </v-col>
   </v-row>
@@ -157,13 +170,15 @@ export default {
     ...mapActions([
       "fetchDataSets",
       "fetchReport",
+      "fetchTags",
       "addReport",
       "updateReport",
     ]),
     ...mapMutations(["SET_ACTIVE_REPORT", "SET_REPORT_DATA_SET"]),
     changeChartData() {
       this.index =
-        (this.index + 1) % (Object.keys(this.activeReport.data_set.data[0]).length - 1);
+        (this.index + 1) %
+        (Object.keys(this.activeReport.data_set.data[0]).length - 1);
     },
     saveReport() {
       if (this.activeReport.id) {
@@ -186,6 +201,7 @@ export default {
       "channels",
       "channelReports",
       "dataSets",
+      "tags",
     ]),
     graphType() {
       if (this.activeReport.chart_type === "line") {
@@ -226,8 +242,9 @@ export default {
         channel_id: parseInt(this.$route.params.channelId),
       });
     }
-
+    // TODO: Combine API calls below into one
     this.fetchDataSets();
+    this.fetchTags();
 
     // this.chartOptions.title.text[0] = this.activeReport.title;
   },
@@ -240,7 +257,8 @@ export default {
   grid-template-columns: 1fr 1fr;
   grid-gap: 10px;
 }
-.description {
+.description,
+.tags {
   grid-column: 1 / span 2;
 }
 .place-holder {
