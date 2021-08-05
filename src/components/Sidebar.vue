@@ -1,12 +1,5 @@
 <template>
-  <v-navigation-drawer
-    v-model="drawer"
-    app
-    permanent
-    color="primary"
-    :mini-variant.sync="mini"
-    dark
-  >
+  <v-navigation-drawer v-model="drawer" app permanent :mini-variant.sync="mini">
     <v-list>
       <v-list-item>
         <v-list-item-icon class="clickable" @click.stop="mini = !mini">
@@ -15,7 +8,7 @@
         <v-list-item-content>
           <v-list-item-title class="text-h6"
             >mRMS
-            <v-icon small
+            <v-icon color="primary" small
               >mdi-chart-timeline-variant-shimmer</v-icon
             ></v-list-item-title
           >
@@ -32,6 +25,7 @@
         :key="item.title"
         link
         :to="item.route"
+        active-class="active-nav-item"
       >
         <v-list-item-icon>
           <v-icon>{{ item.icon }}</v-icon>
@@ -39,6 +33,24 @@
 
         <v-list-item-content>
           <v-list-item-title>{{ item.title }}</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-divider></v-divider>
+
+      <div class="ml-2 mt-2 text-caption">Channels</div>
+
+      <v-list-item link to="/add-channel" active-class="active-nav-item">
+        <v-list-item-icon><v-icon>mdi-playlist-plus</v-icon></v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-title>Create Channel</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-list-item exact-path to="/channels" active-class="active-nav-item">
+        <v-list-item-icon><v-icon>mdi-forwardburger</v-icon></v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-title>Request Channel</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
 
@@ -63,9 +75,7 @@
           dense
         >
           <v-list-item-content>
-            <v-list-item-title>- {{
-              child.title
-            }}</v-list-item-title>
+            <v-list-item-title>{{ child.title }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list-group>
@@ -107,13 +117,13 @@ export default {
       drawer: true,
       items: [
         { title: "Home", icon: "mdi-home", route: "/" },
-        { title: "Add Data Set", icon: "mdi-plus", route: "/add-data-set" },
+        { title: "Add Report", icon: "mdi-chart-box-plus-outline" },
         {
-          title: "Create Channel",
-          icon: "mdi-playlist-plus",
-          route: "/add-channel",
+          title: "Add Data Set",
+          icon: "mdi-table-large-plus",
+          route: "/add-data-set",
         },
-        { title: "Request Channel", icon: "mdi-forwardburger" },
+        { title: "Data Sets", icon: "mdi-equalizer", route: "/data-sets" },
       ],
       channelItems: [
         {
@@ -131,7 +141,7 @@ export default {
           icon: "mdi-account-multiple",
           channels: [],
         },
-        { title: "Administration", icon: "mdi-account-cog" },
+        // { title: "Administration", icon: "mdi-account-cog" },
       ],
       right: null,
     };
@@ -140,16 +150,6 @@ export default {
     ...mapGetters(["channels"]),
   },
   mounted() {
-    // this.channels.public.forEach((channel) =>
-    //   this.channelItems[0].channels.push(channel)
-    // );
-    // this.channels.personal.forEach((channel) =>
-    //   this.channelItems[1].channels.push(channel)
-    // );
-    // this.channels.group.forEach((channel) =>
-    //   this.channelItems[2].channels.push(channel)
-    // );
-
     this.channels.forEach((channel) => {
       if (channel.category == "public") {
         this.channelItems[0].channels.push(channel);
@@ -182,6 +182,9 @@ export default {
 
 <style scoped>
 .nav-group.v-list-group--active {
-  color: #ffffff !important;
+  /* color: #ffffff !important; */
+}
+.active-nav-item {
+  color: #1976d2 !important;
 }
 </style>
