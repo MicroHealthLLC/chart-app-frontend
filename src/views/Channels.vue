@@ -18,6 +18,7 @@
             <v-icon color="primary" small @click="deleteItem(item)">
               mdi-delete
             </v-icon>
+            <v-btn class="ml-2" depressed outlined x-small>Request Access</v-btn>
           </template>
         </v-data-table>
       </v-card>
