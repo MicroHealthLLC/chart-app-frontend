@@ -231,15 +231,22 @@ export default {
     },
   },
   beforeMount() {
-    if (this.$route.params.reportId != "new") {
+    if (this.$route.name == "Report" && this.$route.params.reportId != "new") {
       this.fetchReport(this.$route.params.reportId);
-    } else {
+    } else if (this.$route.name == "Report") {
       this.SET_ACTIVE_REPORT({
         title: "",
         description: "",
         chart_type: "line",
         data_set: { data: [] },
         channel_id: parseInt(this.$route.params.channelId),
+      });
+    } else {
+      this.SET_ACTIVE_REPORT({
+        title: "",
+        description: "",
+        chart_type: "line",
+        data_set: { data: [] },
       });
     }
     // TODO: Combine API calls below into one

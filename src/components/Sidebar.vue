@@ -117,7 +117,7 @@ export default {
       drawer: true,
       items: [
         { title: "Home", icon: "mdi-home", route: "/" },
-        { title: "Add Report", icon: "mdi-chart-box-plus-outline" },
+        { title: "Add Report", icon: "mdi-chart-box-plus-outline", route: "/add-report" },
         {
           title: "Add Data Set",
           icon: "mdi-table-large-plus",

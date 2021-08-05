@@ -77,6 +77,11 @@ const routes = [
     component: Channel,
   },
   {
+    path: "/add-report",
+    name: "AddReport",
+    component: Report
+  },
+  {
     path: "/channels/:channelId/reports",
     name: "ChannelReports",
     component: ChannelReports,
