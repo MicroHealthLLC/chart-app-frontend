@@ -115,7 +115,7 @@
       </ul>
       <h3 class="mt-4">News</h3>
       <v-divider class="mb-4"></v-divider>
-      <v-card class="mb-2" color="#708ea7" dark
+      <v-card class="mb-2" color="#5e93be" dark
         ><v-card-title class="d-flex flex-row flex-nowrap"
           ><v-icon class="mr-3">mdi-account-circle</v-icon>
           <span
@@ -130,7 +130,7 @@
           reprehenderit quam exercitationem quas commodi officia porro harum
           pariatur repellat sed minus!</v-card-text
         ></v-card
-      ><v-card class="mb-2" color="#708ea7" dark
+      ><v-card class="mb-2" color="#5e93be" dark
         ><v-card-title class="d-flex flex-row flex-nowrap"
           ><v-icon class="mr-3">mdi-account-circle</v-icon>
           <span
@@ -145,7 +145,7 @@
           harum pariatur repellat sed minus!</v-card-text
         ></v-card
       >
-      <v-card class="mb-2" color="#708ea7" dark
+      <v-card class="mb-2" color="#5e93be" dark
         ><v-card-title class="d-flex flex-row flex-nowrap"
           ><v-icon class="mr-3">mdi-account-circle</v-icon>
           <span

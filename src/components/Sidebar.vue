@@ -38,7 +38,7 @@
 
       <v-divider></v-divider>
 
-      <div class="ml-2 mt-2 text-caption">Channels</div>
+      <div v-show="!mini" class="ml-2 mt-2 text-caption">Channels</div>
 
       <v-list-item link to="/add-channel" active-class="active-nav-item">
         <v-list-item-icon><v-icon>mdi-playlist-plus</v-icon></v-list-item-icon>
