@@ -15,9 +15,6 @@ export default {
     options: {
       type: Object,
     },
-    index: {
-      type: Number,
-    },
   },
   data() {
     return {
@@ -31,6 +28,7 @@ export default {
         "rgba(202, 103, 2, 0.75)",
         "rgba(174, 32, 18, 0.75)",
       ],
+      index: 0,
     };
   },
   methods: {

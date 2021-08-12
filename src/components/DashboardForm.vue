@@ -2,7 +2,8 @@
   <v-row>
     <v-col class="col-12">
       <div class="d-flex justify-space-between">
-        <h3>Add Dashboard</h3>
+        <h3 v-if="$route.params.dashboardId == 'new'">Add Dashboard</h3>
+        <h3 v-else>{{ activeDashboard.title }}</h3>
         <div>
           <v-btn class="px-5 mr-2 mb-2" color="primary" depressed small
             >Save</v-btn
@@ -33,14 +34,23 @@
       <v-card class="pa-4 mb-4">
         <Component
           :is="graphType(report)"
+          :ref="'chart' + index"
           :chartData="report.data_set.data"
           :options="chartOptions"
           :graphType="report.chart_type"
           :height="350"
-          :index="dataIndex"
           class="mb-4"
         >
         </Component>
+        <div class="d-flex justify-end">
+          <v-btn
+            v-if="['donut', 'pie', 'polar-area'].includes(report.chart_type)"
+            @click="changeChartData($refs['chart' + index])"
+            outlined
+            small
+            >Next Category <v-icon small>mdi-arrow-right</v-icon></v-btn
+          >
+        </div>
       </v-card>
     </v-col>
 
@@ -65,6 +75,7 @@
             v-model="activeDashboard.channel_id"
             :items="channels"
             item-text="title"
+            item-value="id"
             label="Channel"
             dense
           ></v-select>
@@ -148,6 +159,10 @@ export default {
       } else {
         return LineChart;
       }
+    },
+    changeChartData(ref) {
+      ref[0].index =
+        (ref[0].index + 1) % (Object.keys(ref[0].chartData[0]).length - 1);
     },
   },
   beforeMount() {

@@ -22,11 +22,11 @@
         <Component
           v-if="activeReport.id || activeReport.data_set.id"
           :is="graphType"
+          ref="chart"
           :chartData="activeReport.data_set.data"
           :options="chartOptions"
           :graphType="activeReport.chart_type"
           :height="600"
-          :index="index"
           class="mb-4"
         >
         </Component>
@@ -163,7 +163,6 @@ export default {
         { text: "Polar Area", value: "polar-area" },
         { text: "Table", value: "table" },
       ],
-      index: 0,
     };
   },
   methods: {
@@ -176,9 +175,9 @@ export default {
     ]),
     ...mapMutations(["SET_ACTIVE_REPORT", "SET_REPORT_DATA_SET"]),
     changeChartData() {
-      this.index =
-        (this.index + 1) %
-        (Object.keys(this.activeReport.data_set.data[0]).length - 1);
+      this.$refs.chart.index =
+        (this.$refs.chart.index + 1) %
+        (Object.keys(this.$refs.chart.chartData[0]).length - 1);
     },
     saveReport() {
       if (this.activeReport.id) {

@@ -87,10 +87,10 @@
         >
           <Component
             :is="graphType"
+            ref="chart"
             :chartData="selected"
             :options="chartOptions"
             :height="600"
-            :index="index"
           ></Component>
           <v-btn
             v-if="circleChart"
@@ -156,7 +156,6 @@ export default {
         raw: false,
         dateNF: "mm/dd/yyyy",
       },
-      index: 0,
       headers: [],
       items: [],
       selected: [],
@@ -239,7 +238,9 @@ export default {
       this.data = data;
     },
     changeChartData() {
-      this.index = (this.index + 1) % (Object.keys(this.data[0]).length - 1);
+      this.$refs.chart.index =
+        (this.$refs.chart.index + 1) %
+        (Object.keys(this.$refs.chart.chartData[0]).length - 1);
     },
     saveDataSet() {
       let dataSet = {
