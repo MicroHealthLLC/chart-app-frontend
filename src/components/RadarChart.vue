@@ -4,18 +4,24 @@ import { Radar } from "vue-chartjs";
 export default {
   extends: Radar,
   props: {
-    label: {
-      type: String,
-    },
     chartData: {
       type: Array,
     },
-    options: {
-      type: Object,
+    title: {
+      type: String,
+      default: "",
     },
   },
   data() {
     return {
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        title: {
+          display: true,
+          text: ["", ""],
+        },
+      },
       colors: [
         "rgba(57, 62, 70, 0.5)",
         "rgba(0, 173, 181, 0.5)",
@@ -49,6 +55,8 @@ export default {
           // borderColor: this.colors[index],
         });
       });
+
+      this.options.title.text[0] = this.title;
 
       this.renderChart(
         {

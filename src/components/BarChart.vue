@@ -4,18 +4,24 @@ import { Bar } from "vue-chartjs";
 export default {
   extends: Bar,
   props: {
-    label: {
-      type: String,
-    },
     chartData: {
       type: Array,
     },
-    options: {
-      type: Object,
+    title: {
+      type: String,
+      default: "",
     },
   },
   data() {
     return {
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        title: {
+          display: true,
+          text: ["", ""],
+        },
+      },
       colors: [
         "rgba(0, 18, 25, 0.75)",
         "rgba(0, 95, 115, 0.75)",
@@ -30,7 +36,6 @@ export default {
   },
   methods: {
     loadChart() {
-      // const label = Object.keys(this.chartData[0])[1];
       const labels = this.chartData.map((item) => Object.values(item)[0]);
 
       const keys = Object.keys(this.chartData[0]).slice(1);
@@ -49,6 +54,8 @@ export default {
           borderColor: this.colors[index],
         });
       });
+
+      this.options.title.text[0] = this.title;
 
       this.renderChart(
         {

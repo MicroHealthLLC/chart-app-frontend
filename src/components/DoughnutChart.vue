@@ -6,18 +6,24 @@ export default {
   extends: Doughnut,
   mixins: [reactiveProp],
   props: {
-    label: {
-      type: String,
-    },
     chartData: {
       type: Array,
     },
-    options: {
-      type: Object,
+    title: {
+      type: String,
+      default: "",
     },
   },
   data() {
     return {
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        title: {
+          display: true,
+          text: ["", ""],
+        },
+      },
       colors: [
         "rgba(0, 18, 25, 0.75)",
         "rgba(0, 95, 115, 0.75)",
@@ -28,7 +34,7 @@ export default {
         "rgba(202, 103, 2, 0.75)",
         "rgba(174, 32, 18, 0.75)",
       ],
-      index: 0
+      index: 0,
     };
   },
   methods: {
@@ -52,6 +58,7 @@ export default {
         });
       });
 
+      this.options.title.text[0] = this.title;
       this.options.title.text[1] = keys[this.index];
 
       this.options.tooltips = {

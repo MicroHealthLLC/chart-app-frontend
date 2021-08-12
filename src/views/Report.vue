@@ -21,12 +21,12 @@
       <v-card class="pa-4 mb-4">
         <Component
           v-if="activeReport.id || activeReport.data_set.id"
-          :is="graphType"
           ref="chart"
+          :is="graphType"
           :chartData="activeReport.data_set.data"
-          :options="chartOptions"
           :graphType="activeReport.chart_type"
           :height="600"
+          :title="activeReport.title"
           class="mb-4"
         >
         </Component>
@@ -142,17 +142,9 @@ import PolarAreaChart from "../components/PolarAreaChart";
 import Table from "../components/Table";
 
 export default {
+  name: "Report",
   data() {
     return {
-      chartOptions: {
-        responsive: true,
-        maintainAspectRatio: false,
-        title: {
-          display: true,
-          text: ["", ""],
-        },
-        // bezierCurve: false,
-      },
       chartTypes: [
         { text: "Line", value: "line" },
         { text: "Curve", value: "curve" },

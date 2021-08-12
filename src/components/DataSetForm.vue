@@ -86,10 +86,9 @@
           class="ma-4"
         >
           <Component
-            :is="graphType"
             ref="chart"
+            :is="graphType"
             :chartData="selected"
-            :options="chartOptions"
             :height="600"
           ></Component>
           <v-btn

@@ -33,11 +33,11 @@
     >
       <v-card class="pa-4 mb-4">
         <Component
-          :is="graphType(report)"
           :ref="'chart' + index"
+          :is="graphType(report)"
           :chartData="report.data_set.data"
-          :options="chartOptions"
           :graphType="report.chart_type"
+          :title="report.title"
           :height="350"
           class="mb-4"
         >
@@ -107,7 +107,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 import LineChart from "../components/LineChart";
 import BarChart from "../components/BarChart";
 import RadarChart from "../components/RadarChart";
@@ -119,16 +119,6 @@ import Table from "../components/Table";
 export default {
   data() {
     return {
-      chartOptions: {
-        responsive: true,
-        maintainAspectRatio: false,
-        title: {
-          display: true,
-          text: ["", ""],
-        },
-        // bezierCurve: false,
-      },
-      dataIndex: 0,
       layouts: [
         { text: "Layout 1", value: "layout-1" },
         { text: "Layout 2", value: "layout-2" },
@@ -141,6 +131,7 @@ export default {
   },
   methods: {
     ...mapActions(["fetchChannel", "fetchDashboard"]),
+    ...mapMutations(["SET_ACTIVE_DASHBOARD"]),
     graphType(report) {
       if (report.chart_type === "line") {
         return LineChart;
@@ -168,6 +159,14 @@ export default {
   beforeMount() {
     if (this.$route.params.dashboardId != "new") {
       this.fetchDashboard(this.$route.params.dashboardId);
+    } else {
+      this.SET_ACTIVE_DASHBOARD({
+        title: "",
+        description: "",
+        reports: [],
+        tags: [],
+        layout: "layout-1",
+      });
     }
 
     this.fetchChannel(this.$route.params.channelId);

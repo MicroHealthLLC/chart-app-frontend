@@ -6,21 +6,28 @@ export default {
   extends: Line,
   mixins: [reactiveProp],
   props: {
-    label: {
-      type: String,
-    },
     chartData: {
       type: Array,
-    },
-    options: {
-      type: Object,
     },
     graphType: {
       type: String,
     },
+    title: {
+      type: String,
+      default: "",
+    },
   },
   data() {
     return {
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        title: {
+          display: true,
+          text: ["", ""],
+        },
+        // bezierCurve: false,
+      },
       colors: [
         "rgba(0, 18, 25, 0.75)",
         "rgba(0, 95, 115, 0.75)",
@@ -56,6 +63,8 @@ export default {
           fill: true,
         });
       });
+
+      this.options.title.text[0] = this.title;
 
       this.renderChart(
         {
