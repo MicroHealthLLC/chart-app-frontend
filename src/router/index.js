@@ -4,19 +4,23 @@ import Home from "../views/Home.vue";
 import News from "../views/News.vue";
 
 import AddDataSet from "../views/AddDataSet.vue";
-import DataSet from "../views/DataSet.vue"
+import DataSet from "../views/DataSet.vue";
 import DataSets from "../views/DataSets.vue";
 
-import PublicReports from "../views/PublicReports.vue"
+import PublicReports from "../views/PublicReports.vue";
 import PersonalReports from "../views/PersonalReports.vue";
 import GroupReports from "../views/GroupReports.vue";
 
-import AddChannel from "../views/AddChannel.vue"
+import AddChannel from "../views/AddChannel.vue";
 import Channels from "../views/Channels.vue";
 import Channel from "../views/Channel.vue";
 import ChannelReports from "../views/ChannelReports.vue";
 import Report from "../views/Report.vue";
 
+import AddDashboard from "../views/AddDashboard.vue"
+import Dashboards from "../views/Dashboards.vue";
+import Dashboard from "../views/Dashboard.vue";
+import ChannelDashboards from "../views/ChannelDashboards.vue";
 
 Vue.use(VueRouter);
 
@@ -73,13 +77,14 @@ const routes = [
   },
   {
     path: "/channels/:channelId",
+    redirect: "/channels/:channelId/reports",
     name: "Channel",
     component: Channel,
   },
   {
     path: "/add-report",
     name: "AddReport",
-    component: Report
+    component: Report,
   },
   {
     path: "/channels/:channelId/reports",
@@ -90,6 +95,26 @@ const routes = [
     path: "/channels/:channelId/reports/:reportId",
     name: "Report",
     component: Report,
+  },
+  {
+    path: "/add-dashboard",
+    name: "AddDashboard",
+    component: AddDashboard,
+  },
+  {
+    path: "/dashboards",
+    name: "Dashboards",
+    component: Dashboards,
+  },
+  {
+    path: "/channels/:channelId/dashboards/:dashboardId",
+    name: "Dashboard",
+    component: Dashboard,
+  },
+  {
+    path: "/channels/:channelId/dashboards",
+    name: "ChannelDashboards",
+    component: ChannelDashboards,
   },
   // {
   //   path: "/about",

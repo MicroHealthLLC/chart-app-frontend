@@ -25,7 +25,15 @@ export default new Vuex.Store({
       description: "",
       chart_type: "line",
       data_set: { data: [] },
-      tags: []
+      tags: [],
+    },
+    dashboards: [],
+    active_dashboard: {
+      title: "",
+      description: "",
+      reports: [],
+      tags: [],
+      layout: "layout-1"
     },
     reports: [],
     latest_reports: {},
@@ -181,6 +189,22 @@ export default new Vuex.Store({
         commit("SET_TAGS", res.data);
       });
     },
+    fetchDashboards({ commit }) {
+      axios({
+        method: "GET",
+        url: "http://localhost:3000/v1/dashboards",
+      }).then((res) => {
+        commit("SET_DASHBOARDS", res.data);
+      });
+    },
+    fetchDashboard({ commit }, id) {
+      axios({
+        method: "GET",
+        url: `http://localhost:3000/v1/dashboards/${id}`,
+      }).then((res) => {
+        commit("SET_ACTIVE_DASHBOARD", res.data);
+      });
+    },
   },
   mutations: {
     SET_CHANNEL: (state, channel) => (state.channel = channel),
@@ -194,6 +218,9 @@ export default new Vuex.Store({
     SET_SNACKBAR: (state, snackbar) => (state.snackbar = snackbar),
     CLOSE_SNACKBAR: (state) => (state.snackbar.show = false),
     SET_TAGS: (state, tags) => (state.tags = tags),
+    SET_DASHBOARDS: (state, dashboards) => (state.dashboards = dashboards),
+    SET_ACTIVE_DASHBOARD: (state, dashboard) =>
+      (state.active_dashboard = dashboard),
   },
   getters: {
     channel: (state) => state.channel,
@@ -206,6 +233,8 @@ export default new Vuex.Store({
     latestReports: (state) => state.latest_reports,
     snackbar: (state) => state.snackbar,
     tags: (state) => state.tags,
+    dashboards: (state) => state.dashboards,
+    activeDashboard: (state) => state.active_dashboard,
   },
   modules: {},
 });

@@ -53,10 +53,10 @@
           <v-list-item-title>Request Channel</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
-
+      <!-- Public, Personal, and Group -->
       <v-list-group
-        v-for="item in channelItems"
-        :key="item.title"
+        v-for="(item, index) in channelItems"
+        :key="index"
         :prepend-icon="item.icon"
         no-action
         class="nav-group"
@@ -68,9 +68,34 @@
         </template>
 
         <v-list-item
-          v-for="child in item.channels"
-          :key="child.title"
-          :to="`/channels/${child.id}/reports`"
+          v-for="(child, index) in item.channels"
+          :key="index"
+          :to="`/channels/${child.id}`"
+          link
+          dense
+        >
+          <v-list-item-content>
+            <v-list-item-title>{{ child.title }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list-group>
+      <!-- Dashboards - Links to channel/id/dashboards -->
+      <v-list-group
+        v-if="dashboardChannels.length > 0"
+        prepend-icon="mdi-monitor-dashboard"
+        no-action
+        class="nav-group"
+      >
+        <template v-slot:activator>
+          <v-list-item-content>
+            <v-list-item-title>Dashboards</v-list-item-title>
+          </v-list-item-content>
+        </template>
+
+        <v-list-item
+          v-for="(child, index) in dashboardChannels"
+          :key="index"
+          :to="`/channels/${child.id}/dashboards`"
           link
           dense
         >
@@ -80,7 +105,7 @@
         </v-list-item>
       </v-list-group>
     </v-list>
-
+    <!-- Profile and Logout Nav Items -->
     <template v-slot:append>
       <div>
         <v-divider></v-divider>
@@ -117,7 +142,11 @@ export default {
       drawer: true,
       items: [
         { title: "Home", icon: "mdi-home", route: "/" },
-        { title: "Add Report", icon: "mdi-chart-box-plus-outline", route: "/add-report" },
+        {
+          title: "Add Report",
+          icon: "mdi-chart-box-plus-outline",
+          route: "/add-report",
+        },
         {
           title: "Add Data Set",
           icon: "mdi-table-large-plus",
@@ -148,6 +177,9 @@ export default {
   },
   computed: {
     ...mapGetters(["channels"]),
+    dashboardChannels() {
+      return this.channels.filter((channel) => channel.dashboards.length > 0);
+    },
   },
   mounted() {
     this.channels.forEach((channel) => {

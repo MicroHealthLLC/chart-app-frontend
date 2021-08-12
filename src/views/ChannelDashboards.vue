@@ -10,26 +10,26 @@
           depressed
           color="primary"
           small
-          :to="`/channels/${$route.params.channelId}/reports/new`"
-          >New Report <v-icon right dark>mdi-plus</v-icon></v-btn
+          :to="`/channels/${$route.params.channelId}/dashboards/new`"
+          >New Dashboard <v-icon right dark>mdi-plus</v-icon></v-btn
         >
       </div>
 
       <v-divider class="mb-4"></v-divider>
 
-      <div v-if="channel.reports.length > 0" class="grid">
-        <ReportCard
-          v-for="(report, index) in channel.reports"
-          :report="report"
+      <div v-if="channel.dashboards.length > 0" class="grid">
+        <DashboardCard
+          v-for="(dashboard, index) in channel.dashboards"
+          :dashboard="dashboard"
           :key="index"
-        ></ReportCard>
+        ></DashboardCard>
       </div>
       <div
         v-else
         class="placeholder d-flex flex-column justify-center align-center"
       >
-        <p class="font-weight-light">No Personal Reports to show...</p>
-        <v-btn text small color="primary">Add a Report</v-btn>
+        <p class="font-weight-light">No Personal Dashboards to show...</p>
+        <v-btn text small color="primary">Add a Dashboard</v-btn>
       </div>
     </v-col>
     <v-col class="col-3">
@@ -61,11 +61,11 @@
           {{ channel.description }}
         </li>
       </ul>
-      <!-- Dashboards -->
+      <!-- Reports -->
       <div class="d-flex justify-space-between mt-4">
         <h3 class="mb-2">
-          <router-link :to="`/channels/${$route.params.channelId}/dashboards`"
-            >Dashboards</router-link
+          <router-link :to="`/channels/${$route.params.channelId}/reports`"
+            >Reports</router-link
           >
         </h3>
         <v-btn class="btn-bg" small icon color="primary"
@@ -74,22 +74,23 @@
       </div>
 
       <v-divider class="mb-4"></v-divider>
-
-      <router-link
-        v-for="(dashboard, index) in channel.dashboards"
-        :key="index"
-        :to="`/channels/${$route.params.channelId}/dashboards/${dashboard.id}`"
-        ><v-icon small color="primary">mdi-monitor-dashboard</v-icon>
-        {{ dashboard.title }}</router-link
-      >
+      <ul>
+        <li v-for="(report, index) in channel.reports" :key="index">
+          <router-link
+            :to="`/channels/${$route.params.channelId}/reports/${report.id}`"
+            ><v-icon small color="primary">mdi-file-chart-outline</v-icon>
+            {{ report.title }}</router-link
+          >
+        </li>
+      </ul>
 
       <v-btn
         class="mt-4"
         outlined
         small
         block
-        :to="`/channels/${$route.params.channelId}/dashboards`"
-        >All Dashboards</v-btn
+        :to="`/channels/${$route.params.channelId}/reports`"
+        >All Reports</v-btn
       >
     </v-col>
   </v-row>
@@ -97,12 +98,12 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import ReportCard from "./../components/ReportCard";
+import DashboardCard from "./../components/DashboardCard";
 
 export default {
-  name: "ChannelReports",
+  name: "ChannelDashboards",
   components: {
-    ReportCard,
+    DashboardCard,
   },
   computed: {
     ...mapGetters(["channel", "dashboards"]),
@@ -136,8 +137,7 @@ ul {
 .placeholder {
   height: 150px;
 }
-h3 a,
-a {
+h3 a, a {
   text-decoration: none;
   color: unset;
 }
