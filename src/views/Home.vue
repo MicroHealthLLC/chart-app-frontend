@@ -13,7 +13,7 @@
         ></ReportCard>
         <div class="d-flex justify-end">
           <v-btn
-            v-if="reports.length >= 6"
+            v-if="publicReports.length >= 6"
             to="/public-reports"
             class="d-flex-end"
             color="primary"
@@ -43,7 +43,7 @@
         ></ReportCard>
         <div class="d-flex justify-end">
           <v-btn
-            v-if="reports.length >= 6"
+            v-if="personalReports.length >= 6"
             to="/personal-reports"
             class="ml-auto"
             color="primary"
@@ -73,7 +73,7 @@
         ></ReportCard>
         <div class="d-flex justify-end">
           <v-btn
-            v-if="reports.length >= 6"
+            v-if="groupReports.length >= 6"
             to="/group-reports"
             class="ml-auto"
             color="primary"
