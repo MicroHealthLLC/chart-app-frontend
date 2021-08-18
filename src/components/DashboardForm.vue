@@ -5,7 +5,12 @@
         <h3 v-if="$route.params.dashboardId == 'new'">Add Dashboard</h3>
         <h3 v-else>{{ activeDashboard.title }}</h3>
         <div>
-          <v-btn class="px-5 mr-2 mb-2" color="primary" depressed small
+          <v-btn
+            class="px-5 mr-2 mb-2"
+            @click="saveDashboard"
+            color="primary"
+            depressed
+            small
             >Save</v-btn
           >
           <v-btn class="mb-2" small outlined>Cancel</v-btn>
@@ -31,7 +36,7 @@
       v-for="(report, index) in activeDashboard.reports"
       :key="index"
     >
-      <v-card class="pa-4 mb-4">
+      <v-card class="pa-4 mb-4" height="100%">
         <Component
           :ref="'chart' + index"
           :is="graphType(report)"
@@ -44,7 +49,7 @@
         </Component>
         <div class="d-flex justify-end">
           <v-btn
-            v-if="['donut', 'pie', 'polar-area'].includes(report.chart_type)"
+            v-show="['donut', 'pie', 'polar-area'].includes(report.chart_type)"
             @click="changeChartData($refs['chart' + index])"
             outlined
             small
@@ -95,6 +100,7 @@
             v-model="activeDashboard.reports"
             :items="channel.reports"
             item-text="title"
+            item-value="id"
             label="Reports"
             multiple
             return-object
@@ -130,7 +136,7 @@ export default {
     ...mapGetters(["activeDashboard", "channel", "channels"]),
   },
   methods: {
-    ...mapActions(["fetchChannel", "fetchDashboard"]),
+    ...mapActions(["addDashboard", "fetchChannel", "fetchDashboard", "updateDashboard"]),
     ...mapMutations(["SET_ACTIVE_DASHBOARD"]),
     graphType(report) {
       if (report.chart_type === "line") {
@@ -154,6 +160,23 @@ export default {
     changeChartData(ref) {
       ref[0].index =
         (ref[0].index + 1) % (Object.keys(ref[0].chartData[0]).length - 1);
+    },
+    saveDashboard() {
+      let data = {
+        title: this.activeDashboard.title,
+        description: this.activeDashboard.description,
+        channel_id: this.activeDashboard.channel_id,
+        layout: this.activeDashboard.layout,
+        report_ids: this.activeDashboard.reports.map((report) => report.id),
+        tags: this.activeDashboard.tags,
+      };
+
+      if (this.activeDashboard.id) {
+        data.id = this.activeDashboard.id;
+        this.updateDashboard(data);
+      } else {
+        this.addDashboard(data);
+      }
     },
   },
   beforeMount() {

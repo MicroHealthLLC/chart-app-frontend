@@ -118,10 +118,11 @@
             v-model="activeReport.tags"
             :items="tags"
             item-text="title"
-            item-value="title"
+            item-value="id"
             chips
             label="Tags"
             multiple
+            return-object
             dense
           >
           </v-select>
@@ -172,10 +173,20 @@ export default {
         (Object.keys(this.$refs.chart.chartData[0]).length - 1);
     },
     saveReport() {
+      let data = {
+        title: this.activeReport.title,
+        description: this.activeReport.description,
+        channel_id: this.activeReport.channel_id,
+        chart_type: this.activeReport.chart_type,
+        data_set_id: this.activeReport.data_set_id,
+        tag_ids: this.activeReport.tags.map((tag) => tag.id),
+      };
+
       if (this.activeReport.id) {
-        this.updateReport(this.activeReport);
+        data.id = this.activeReport.id;
+        this.updateReport(data);
       } else {
-        this.addReport(this.activeReport);
+        this.addReport(data);
       }
     },
     updateChartData() {

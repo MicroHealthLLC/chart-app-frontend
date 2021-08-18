@@ -28,6 +28,32 @@ export default {
         commit("SET_ACTIVE_DASHBOARD", res.data);
       });
     },
+    addDashboard({ commit }, dashboard) {
+      axios({
+        method: "POST",
+        url: "http://localhost:3000/v1/dashboards",
+        data: dashboard,
+      }).then((res) => {
+        commit("SET_ACTIVE_DASHBOARD", res.data);
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Dashboard added successfully!",
+        });
+      });
+    },
+    updateDashboard({ commit }, dashboard) {
+      axios({
+        method: "PATCH",
+        url: `http://localhost:3000/v1/dashboards/${dashboard.id}`,
+        data: dashboard,
+      }).then((res) => {
+        commit("SET_ACTIVE_DASHBOARD", res.data);
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Dashboard updated successfully!",
+        });
+      });
+    },
   },
   mutations: {
     SET_DASHBOARDS: (state, dashboards) => (state.dashboards = dashboards),
