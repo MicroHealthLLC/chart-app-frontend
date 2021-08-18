@@ -133,11 +133,16 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["activeDashboard", "channel", "channels"]),
+    ...mapGetters(["activeDashboard", "channel", "channels", "statusCode"]),
   },
   methods: {
-    ...mapActions(["addDashboard", "fetchChannel", "fetchDashboard", "updateDashboard"]),
-    ...mapMutations(["SET_ACTIVE_DASHBOARD"]),
+    ...mapActions([
+      "addDashboard",
+      "fetchChannel",
+      "fetchDashboard",
+      "updateDashboard",
+    ]),
+    ...mapMutations(["SET_ACTIVE_DASHBOARD", "SET_STATUS_CODE"]),
     graphType(report) {
       if (report.chart_type === "line") {
         return LineChart;
@@ -193,6 +198,16 @@ export default {
     }
 
     this.fetchChannel(this.$route.params.channelId);
+  },
+  watch: {
+    statusCode() {
+      if (this.statusCode == 201) {
+        this.$router.push(
+          `/channels/${this.$route.params.channelId}/dashboards/${this.activeDashboard.id}`
+        );
+        this.SET_STATUS_CODE(0);
+      }
+    },
   },
 };
 </script>

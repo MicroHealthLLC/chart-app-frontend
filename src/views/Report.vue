@@ -166,7 +166,11 @@ export default {
       "addReport",
       "updateReport",
     ]),
-    ...mapMutations(["SET_ACTIVE_REPORT", "SET_REPORT_DATA_SET"]),
+    ...mapMutations([
+      "SET_ACTIVE_REPORT",
+      "SET_REPORT_DATA_SET",
+      "SET_STATUS_CODE",
+    ]),
     changeChartData() {
       this.$refs.chart.index =
         (this.$refs.chart.index + 1) %
@@ -204,6 +208,7 @@ export default {
       "channelReports",
       "dataSets",
       "tags",
+      "statusCode",
     ]),
     graphType() {
       if (this.activeReport.chart_type === "line") {
@@ -256,6 +261,16 @@ export default {
     this.fetchTags();
 
     // this.chartOptions.title.text[0] = this.activeReport.title;
+  },
+  watch: {
+    statusCode() {
+      if (this.statusCode == 201) {
+        this.$router.push(
+          `/channels/${this.$route.params.channelId}/reports/${this.activeReport.id}`
+        );
+        this.SET_STATUS_CODE(0);
+      }
+    },
   },
 };
 </script>

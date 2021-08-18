@@ -75,13 +75,15 @@
 
       <v-divider class="mb-4"></v-divider>
 
-      <router-link
-        v-for="(dashboard, index) in channel.dashboards"
-        :key="index"
-        :to="`/channels/${$route.params.channelId}/dashboards/${dashboard.id}`"
-        ><v-icon small color="primary">mdi-monitor-dashboard</v-icon>
-        {{ dashboard.title }}</router-link
-      >
+      <ul>
+        <li v-for="(dashboard, index) in channel.dashboards" :key="index">
+          <router-link
+            :to="`/channels/${$route.params.channelId}/dashboards/${dashboard.id}`"
+            ><v-icon small color="primary">mdi-monitor-dashboard</v-icon>
+            {{ dashboard.title }}</router-link
+          >
+        </li>
+      </ul>
 
       <v-btn
         class="mt-4"

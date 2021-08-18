@@ -74,6 +74,7 @@
       </div>
 
       <v-divider class="mb-4"></v-divider>
+      
       <ul>
         <li v-for="(report, index) in channel.reports" :key="index">
           <router-link

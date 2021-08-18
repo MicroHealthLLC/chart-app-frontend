@@ -41,6 +41,7 @@ export default {
           show: true,
           message: "Report added successfully!",
         });
+        commit("SET_STATUS_CODE", res.status);
       });
     },
     updateReport({ commit }, report) {

@@ -39,6 +39,7 @@ export default {
           show: true,
           message: "Dashboard added successfully!",
         });
+        commit("SET_STATUS_CODE", res.status);
       });
     },
     updateDashboard({ commit }, dashboard) {

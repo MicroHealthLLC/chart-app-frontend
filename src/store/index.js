@@ -11,6 +11,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    status_code: 0,
     tags: [],
   },
   actions: {
@@ -24,9 +25,11 @@ export default new Vuex.Store({
     },
   },
   mutations: {
+    SET_STATUS_CODE: (state, code) => (state.status_code = code),
     SET_TAGS: (state, tags) => (state.tags = tags),
   },
   getters: {
+    statusCode: (state) => state.status_code,
     tags: (state) => state.tags,
   },
   modules: {
