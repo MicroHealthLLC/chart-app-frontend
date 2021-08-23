@@ -13,14 +13,27 @@
             small
             >Save</v-btn
           >
-          <v-btn class="mb-2" @click="$router.go(-1)" small outlined>Cancel</v-btn>
+          <v-btn class="mb-2" @click="$router.go(-1)" small outlined
+            >Cancel</v-btn
+          >
         </div>
       </div>
 
       <v-divider></v-divider>
     </v-col>
     <!-- Dashboard Preview -->
+    <v-col v-if="activeDashboard.reports.length == 0" class="cold-md-12">
+      <v-card>
+        <div class="place-holder d-flex justify-center align-center">
+          <p class="text-center placeholder-text mb-0">
+            <v-icon class="placeholder-icon">mdi-chart-areaspline</v-icon>
+            Please add a Report to view preview...
+          </p>
+        </div>
+      </v-card>
+    </v-col>
     <v-col
+      v-else
       :class="[
         {
           'col-md-12': index == 0 && activeDashboard.layout == 'layout-1',
@@ -44,9 +57,7 @@
             ></template
           >
           <v-card class="description-tooltip">
-            <v-card-title class="text-subtitle-2">
-              Description
-            </v-card-title>
+            <v-card-title class="text-subtitle-2"> Description </v-card-title>
             <v-card-text>
               {{ report.description }}
             </v-card-text>
@@ -123,6 +134,29 @@
             dense
           ></v-select>
         </div>
+        <div class="description">
+          <v-text-field
+            v-model="activeDashboard.description"
+            label="Description"
+            dense
+          ></v-text-field>
+        </div>
+        <div class="tags">
+          <v-select
+            v-model="activeDashboard.tags"
+            :items="tags"
+            item-text="title"
+            item-value="id"
+            chips
+            color="info"
+            label="Tags"
+            multiple
+            deletable-chips
+            return-object
+            dense
+          >
+          </v-select>
+        </div>
       </div>
     </v-col>
   </v-row>
@@ -149,13 +183,20 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["activeDashboard", "channel", "channels", "statusCode"]),
+    ...mapGetters([
+      "activeDashboard",
+      "channel",
+      "channels",
+      "statusCode",
+      "tags",
+    ]),
   },
   methods: {
     ...mapActions([
       "addDashboard",
       "fetchChannel",
       "fetchDashboard",
+      "fetchTags",
       "updateDashboard",
     ]),
     ...mapMutations(["SET_ACTIVE_DASHBOARD", "SET_STATUS_CODE"]),
@@ -189,7 +230,7 @@ export default {
         channel_id: this.activeDashboard.channel_id,
         layout: this.activeDashboard.layout,
         report_ids: this.activeDashboard.reports.map((report) => report.id),
-        tags: this.activeDashboard.tags,
+        tag_ids: this.activeDashboard.tags.map((tag) => tag.id),
       };
 
       if (this.activeDashboard.id) {
@@ -214,6 +255,7 @@ export default {
     }
 
     this.fetchChannel(this.$route.params.channelId);
+    this.fetchTags();
   },
   watch: {
     statusCode() {
@@ -234,7 +276,9 @@ export default {
   grid-template-columns: 1fr 1fr;
   grid-gap: 10px;
 }
-.reports {
+.reports,
+.description,
+.tags {
   grid-column: 1 / span 2;
 }
 .chart-card {
@@ -247,5 +291,12 @@ export default {
 }
 .description-tooltip {
   max-width: 300px;
+}
+.place-holder {
+  height: 400px;
+}
+.placeholder-text,
+.placeholder-icon {
+  color: #1976d2;
 }
 </style>
