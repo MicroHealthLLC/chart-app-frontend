@@ -27,6 +27,15 @@ export default {
           text: ["", ""],
         },
         // bezierCurve: false,
+        tooltips: {
+          intersect: false,
+          mode: "index",
+        },
+        plugins: {
+          tooltip: {
+            position: "nearest",
+          },
+        },
       },
       colors: [
         "rgba(0, 18, 25, 0.75)",

@@ -12,7 +12,7 @@
             small
             >Save</v-btn
           >
-          <v-btn class="mb-2" outlined small>Back</v-btn>
+          <v-btn class="mb-2" @click="$router.go(-1)" outlined small>Back</v-btn>
         </div>
       </div>
 
@@ -25,7 +25,7 @@
           :is="graphType"
           :chartData="activeReport.data_set.data"
           :graphType="activeReport.chart_type"
-          :height="600"
+          :height="350"
           :title="activeReport.title"
           class="mb-4"
         >
@@ -120,8 +120,10 @@
             item-text="title"
             item-value="id"
             chips
+            color="info"
             label="Tags"
             multiple
+            deletable-chips
             return-object
             dense
           >

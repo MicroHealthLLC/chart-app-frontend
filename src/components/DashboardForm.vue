@@ -13,7 +13,7 @@
             small
             >Save</v-btn
           >
-          <v-btn class="mb-2" small outlined>Cancel</v-btn>
+          <v-btn class="mb-2" @click="$router.go(-1)" small outlined>Cancel</v-btn>
         </div>
       </div>
 
@@ -37,6 +37,22 @@
       :key="index"
     >
       <v-card class="pa-4 mb-4" height="100%">
+        <v-menu offset-y>
+          <template v-slot:activator="{ on, attrs }"
+            ><v-btn class="chart-menu" icon v-bind="attrs" v-on="on"
+              ><v-icon>mdi-dots-horizontal</v-icon></v-btn
+            ></template
+          >
+          <v-card class="description-tooltip">
+            <v-card-title class="text-subtitle-2">
+              Description
+            </v-card-title>
+            <v-card-text>
+              {{ report.description }}
+            </v-card-text>
+          </v-card>
+        </v-menu>
+
         <Component
           :ref="'chart' + index"
           :is="graphType(report)"
@@ -223,5 +239,13 @@ export default {
 }
 .chart-card {
   height: 350px;
+}
+.chart-menu {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+.description-tooltip {
+  max-width: 300px;
 }
 </style>

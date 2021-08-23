@@ -11,7 +11,7 @@
           :report="report"
           :key="index"
         ></ReportCard>
-        <div class="d-flex justify-end">
+        <div class="d-flex justify-end btn-container">
           <v-btn
             v-if="publicReports.length >= 6"
             to="/public-reports"
@@ -41,7 +41,7 @@
           :report="report"
           :key="index"
         ></ReportCard>
-        <div class="d-flex justify-end">
+        <div class="d-flex justify-end btn-container">
           <v-btn
             v-if="personalReports.length >= 6"
             to="/personal-reports"
@@ -71,7 +71,7 @@
           :report="report"
           :key="index"
         ></ReportCard>
-        <div class="d-flex justify-end">
+        <div class="d-flex justify-end btn-container">
           <v-btn
             v-if="groupReports.length >= 6"
             to="/group-reports"
@@ -234,5 +234,8 @@ export default {
 }
 .placeholder {
   height: 150px;
+}
+.btn-container {
+  grid-column: 1 / span 3;
 }
 </style>

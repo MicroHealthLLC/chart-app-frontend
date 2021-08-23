@@ -16,6 +16,7 @@
         :key="index"
         class="mr-1"
         x-small
+        color="info"
         >{{ tag.title }}</v-chip
       >
     </v-card-text>
