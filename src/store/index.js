@@ -4,6 +4,7 @@ import axios from "axios";
 import channelStore from "./modules/channel-store";
 import dashboardStore from "./modules/dashboard-store";
 import datasetStore from "./modules/dataset-store";
+import newsStore from "./modules/news-store";
 import snackbarStore from "./modules/snackbar-store";
 import reportStore from "./modules/report-store";
 
@@ -36,6 +37,7 @@ export default new Vuex.Store({
     channelStore,
     dashboardStore,
     datasetStore,
+    newsStore,
     snackbarStore,
     reportStore,
   },

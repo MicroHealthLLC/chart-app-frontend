@@ -115,51 +115,12 @@
       </ul>
       <h3 class="mt-4">News</h3>
       <v-divider class="mb-4"></v-divider>
-      <v-card class="mb-2" color="#5e93be" dark
-        ><v-card-title class="d-flex flex-row flex-nowrap"
-          ><v-icon class="mr-3">mdi-account-circle</v-icon>
-          <span
-            ><h5>News Title 3</h5>
-            <p class="text-caption mb-0">Christopher Calderon</p>
-            <p class="text-caption mb-0">1 Month ago</p></span
-          ></v-card-title
-        ><v-divider></v-divider
-        ><v-card-text class="text-caption"
-          >Lorem ipsum dolor sit, amet consectetur adipisicing elit. Non eveniet
-          dolore magnam delectus soluta quis, deserunt quod quisquam
-          reprehenderit quam exercitationem quas commodi officia porro harum
-          pariatur repellat sed minus!</v-card-text
-        ></v-card
-      ><v-card class="mb-2" color="#5e93be" dark
-        ><v-card-title class="d-flex flex-row flex-nowrap"
-          ><v-icon class="mr-3">mdi-account-circle</v-icon>
-          <span
-            ><h5>News Title 2</h5>
-            <p class="text-caption mb-0">Christopher Calderon</p>
-            <p class="text-caption mb-0">1 Month ago</p></span
-          ></v-card-title
-        ><v-divider></v-divider
-        ><v-card-text class="text-caption"
-          >Non eveniet dolore magnam delectus soluta quis, deserunt quod
-          quisquam reprehenderit quam exercitationem quas commodi officia porro
-          harum pariatur repellat sed minus!</v-card-text
-        ></v-card
-      >
-      <v-card class="mb-2" color="#5e93be" dark
-        ><v-card-title class="d-flex flex-row flex-nowrap"
-          ><v-icon class="mr-3">mdi-account-circle</v-icon>
-          <span
-            ><h5>News Title 1</h5>
-            <p class="text-caption mb-0">Christopher Calderon</p>
-            <p class="text-caption mb-0">5 Month ago</p></span
-          ></v-card-title
-        ><v-divider></v-divider
-        ><v-card-text class="text-caption"
-          >Non eveniet dolore magnam delectus soluta quis, deserunt quod
-          quisquam reprehenderit quam exercitationem quas commodi officia porro
-          harum pariatur repellat sed minus!</v-card-text
-        ></v-card
-      >
+
+      <NewsCard
+        v-for="(newsReport, index) in news"
+        :key="index"
+        :newsReport="newsReport"
+      ></NewsCard>
 
       <v-btn class="float-right" to="/news" color="primary" text
         >More News</v-btn
@@ -170,12 +131,14 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import NewsCard from "../components/NewsCard";
 import ReportCard from "./../components/ReportCard";
 
 export default {
   name: "Home",
   components: {
     ReportCard,
+    NewsCard,
   },
   data() {
     return {
@@ -185,13 +148,14 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["channels", "reports"]),
+    ...mapGetters(["channels", "news", "reports"]),
   },
   methods: {
-    ...mapActions(["fetchReports"]),
+    ...mapActions(["fetchNews", "fetchReports"]),
   },
-  mounted() {
+  beforeMount() {
     this.fetchReports();
+    this.fetchNews();
   },
   watch: {
     reports() {

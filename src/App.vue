@@ -1,5 +1,5 @@
 <template>
-  <v-app v-if="channels.length > 0">
+  <v-app>
     <Sidebar />
     <v-main class="main-container mx-auto">
       <v-snackbar v-model="snackbar.show" color="success" outlined text top
