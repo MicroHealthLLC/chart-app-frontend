@@ -18,41 +18,64 @@
       </div>
       <v-divider></v-divider>
     </v-col>
-    <!-- Form Fields -->
-    <v-col class="col-6">
-      <v-text-field
-        v-model="activeDataSet.title"
-        label="Title"
+    <v-col>
+      <v-alert
+        v-if="!formValid && submitAttempted"
+        type="error"
         dense
-      ></v-text-field>
-      <v-text-field
-        v-model="activeDataSet.description"
-        label="Description"
-        dense
-      ></v-text-field>
+        dismissible
+        >Please fix highlighted fields below before sumbitting Report</v-alert
+      >
+      <!-- Form Fields -->
+      <v-form v-model="formValid" ref="form">
+        <div class="grid">
+          <div>
+            <v-text-field
+              v-model="activeDataSet.title"
+              label="Title"
+              dense
+              required
+              :rules="[(v) => !!v || 'Title is required']"
+            ></v-text-field>
+          </div>
+          <div>
+            <v-select
+              label="Channel"
+              prepend-icon="mdi-playlist-star"
+              :items="channels"
+              item-text="title"
+              multiple
+              small-chips
+              dense
+            ></v-select>
+          </div>
+          <div>
+            <v-text-field
+              v-model="activeDataSet.description"
+              label="Description"
+              dense
+            ></v-text-field>
+          </div>
+          <div>
+            <v-file-input
+              placeholder="Please choose a file..."
+              type="file"
+              @change.native="onChange"
+              @click:clear="clear"
+              dense
+              required
+              :rules="[(v) => !!v || 'Data File is required']"
+            />
+            <xlsx-read :options="readOptions" :file="file">
+              <xlsx-json
+                :options="readOptions"
+                @parsed="uploadData"
+              ></xlsx-json>
+            </xlsx-read>
+          </div>
+        </div>
+      </v-form>
     </v-col>
-    <v-col class="col-6">
-      <v-select
-        label="Channel"
-        prepend-icon="mdi-playlist-star"
-        :items="channels"
-        item-text="title"
-        multiple
-        small-chips
-        dense
-      ></v-select>
-      <v-file-input
-        placeholder="Please choose a file..."
-        type="file"
-        @change.native="onChange"
-        @click:clear="clear"
-        dense />
-      <xlsx-read :options="readOptions" :file="file">
-        <xlsx-json
-          :options="readOptions"
-          @parsed="uploadData"
-        ></xlsx-json> </xlsx-read
-    ></v-col>
     <!-- Chart Preview -->
     <v-col class="col-12">
       <v-card class="d-flex flex-column preview-container">
@@ -158,6 +181,8 @@ export default {
       headers: [],
       items: [],
       selected: [],
+      formValid: true,
+      submitAttempted: false,
     };
   },
   computed: {
@@ -242,17 +267,22 @@ export default {
         (Object.keys(this.$refs.chart.chartData[0]).length - 1);
     },
     saveDataSet() {
-      let dataSet = {
-        title: this.activeDataSet.title,
-        description: this.activeDataSet.description,
-        data: this.data,
-      };
+      this.$refs.form.validate();
+      this.submitAttempted = true;
 
-      if (this.activeDataSet.id) {
-        dataSet.id = this.activeDataSet.id;
-        this.updateDataSet(dataSet);
-      } else {
-        this.addDataSet(dataSet);
+      if (this.formValid) {
+        let dataSet = {
+          title: this.activeDataSet.title,
+          description: this.activeDataSet.description,
+          data: this.data,
+        };
+
+        if (this.activeDataSet.id) {
+          dataSet.id = this.activeDataSet.id;
+          this.updateDataSet(dataSet);
+        } else {
+          this.addDataSet(dataSet);
+        }
       }
     },
   },
@@ -282,5 +312,10 @@ export default {
 .placeholder-text,
 .placeholder-icon {
   color: #1976d2;
+}
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 10px;
 }
 </style>

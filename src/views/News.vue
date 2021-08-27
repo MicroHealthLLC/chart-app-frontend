@@ -25,16 +25,25 @@
       <!-- Modal form for news -->
       <v-dialog v-model="dialog" width="50%">
         <v-card>
-          <v-toolbar color="info" dark>
+          <v-toolbar class="mb-4" color="info" dark>
             <h3 v-if="activeNews.id">Update News</h3>
             <h3 v-else>Add News</h3>
           </v-toolbar>
           <v-card-text>
-            <v-text-field
-              v-model="activeNews.title"
-              label="Title"
-            ></v-text-field>
-            <v-textarea v-model="activeNews.body" label="Body"></v-textarea>
+            <v-form ref="form">
+              <v-text-field
+                v-model="activeNews.title"
+                label="Title"
+                required
+                :rules="[(v) => !!v || 'Title is required']"
+              ></v-text-field>
+              <v-textarea
+                v-model="activeNews.body"
+                label="Body"
+                required
+                :rules="[(v) => !!v || 'Body is required']"
+              ></v-textarea>
+            </v-form>
           </v-card-text>
           <v-card-actions class="justify-end">
             <v-btn @click="closeDialog" outlined small>Close</v-btn>
@@ -92,6 +101,7 @@ export default {
       this.dialog = true;
     },
     closeDialog() {
+      this.$refs.form.resetValidation();
       this.dialog = false;
       this.SET_ACTIVE_NEWS({
         title: "",
@@ -107,10 +117,12 @@ export default {
       console.log(`DELETE ${item.title}`);
     },
     saveNews() {
-      if (this.activeNews.id) {
-        this.updateNews(this.activeNews);
-      } else {
-        this.addNews(this.activeNews);
+      if (this.$refs.form.validate()) {
+        if (this.activeNews.id) {
+          this.updateNews(this.activeNews);
+        } else {
+          this.addNews(this.activeNews);
+        }
       }
     },
   },

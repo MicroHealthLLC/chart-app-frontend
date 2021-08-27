@@ -2,7 +2,8 @@
   <v-row>
     <v-col>
       <div class="d-flex justify-space-between">
-        <h3>{{ activeReport.title }}</h3>
+        <h3 v-if="activeReport.title">{{ activeReport.title }}</h3>
+        <h3 v-else class="placeholder-title">(Report Title)</h3>
         <div>
           <v-btn
             class="px-5 mr-2 mb-2"
@@ -12,11 +13,21 @@
             small
             >Save</v-btn
           >
-          <v-btn class="mb-2" @click="$router.go(-1)" outlined small>Back</v-btn>
+          <v-btn class="mb-2" @click="$router.go(-1)" outlined small
+            >Back</v-btn
+          >
         </div>
       </div>
 
       <v-divider class="mb-4"></v-divider>
+
+      <v-alert
+        v-if="!formValid && submitAttempted"
+        type="error"
+        dense
+        dismissible
+        >Please fix highlighted fields below before sumbitting Report</v-alert
+      >
 
       <v-card class="pa-4 mb-4">
         <Component
@@ -50,86 +61,93 @@
 
       <h3>Report Details</h3>
       <v-divider class="mb-8"></v-divider>
-
-      <div class="grid">
-        <div>
-          <v-text-field
-            v-model="activeReport.title"
-            label="Title"
-            dense
-          ></v-text-field>
-        </div>
-        <div>
-          <v-text-field
-            value="Christopher Calderon"
-            label="Created By"
-            dense
-          ></v-text-field>
-        </div>
-        <div>
-          <v-select
-            v-model="activeReport.channel_id"
-            :items="channels"
-            item-text="title"
-            item-value="id"
-            label="Channel"
-            dense
-          ></v-select>
-        </div>
-        <div>
-          <v-text-field
-            value="Christopher Calderon"
-            label="Last Updated By"
-            dense
-          ></v-text-field>
-        </div>
-        <div>
-          <v-select
-            v-model="activeReport.data_set_id"
-            :items="dataSets"
-            item-text="title"
-            item-value="id"
-            label="Data Set"
-            dense
-            @change="updateChartData"
-          ></v-select>
-        </div>
-        <div>
-          <v-select
-            v-model="activeReport.chart_type"
-            :items="chartTypes"
-            item-text="text"
-            item-value="value"
-            label="Chart Type"
-            dense
-          ></v-select>
-        </div>
-        <div class="description">
-          <v-textarea
-            v-model="activeReport.description"
-            label="Description"
-            rows="1"
-            auto-grow
-            dense
-          ></v-textarea>
-        </div>
-        <div class="tags">
-          <v-select
-            v-model="activeReport.tags"
-            :items="tags"
-            item-text="title"
-            item-value="id"
-            chips
-            color="info"
-            label="Tags"
-            multiple
-            deletable-chips
-            return-object
-            dense
-          >
-          </v-select>
-        </div>
-      </div>
+      <!-- Form Fields -->
+      <v-form v-model="formValid" ref="form"
+        ><div class="grid">
+          <div>
+            <v-text-field
+              v-model="activeReport.title"
+              label="Title"
+              dense
+              required
+              :rules="[(v) => !!v || 'Title is required']"
+            ></v-text-field>
+          </div>
+          <div>
+            <v-text-field
+              value="Christopher Calderon"
+              label="Created By"
+              dense
+            ></v-text-field>
+          </div>
+          <div>
+            <v-select
+              v-model="activeReport.channel_id"
+              :items="channels"
+              item-text="title"
+              item-value="id"
+              label="Channel"
+              dense
+              required
+              :rules="[(v) => !!v || 'Channel is required']"
+            ></v-select>
+          </div>
+          <div>
+            <v-text-field
+              value="Christopher Calderon"
+              label="Last Updated By"
+              dense
+            ></v-text-field>
+          </div>
+          <div>
+            <v-select
+              v-model="activeReport.data_set_id"
+              :items="dataSets"
+              item-text="title"
+              item-value="id"
+              label="Data Set"
+              dense
+              @change="updateChartData"
+              required
+              :rules="[(v) => !!v || 'Data Set is required']"
+            ></v-select>
+          </div>
+          <div>
+            <v-select
+              v-model="activeReport.chart_type"
+              :items="chartTypes"
+              item-text="text"
+              item-value="value"
+              label="Chart Type"
+              dense
+            ></v-select>
+          </div>
+          <div class="description">
+            <v-textarea
+              v-model="activeReport.description"
+              label="Description"
+              rows="1"
+              auto-grow
+              dense
+            ></v-textarea>
+          </div>
+          <div class="tags">
+            <v-select
+              v-model="activeReport.tags"
+              :items="tags"
+              item-text="title"
+              item-value="id"
+              chips
+              color="info"
+              label="Tags"
+              multiple
+              deletable-chips
+              return-object
+              dense
+            >
+            </v-select>
+          </div></div
+      ></v-form>
     </v-col>
   </v-row>
 </template>
@@ -148,6 +166,8 @@ export default {
   name: "Report",
   data() {
     return {
+      formValid: true,
+      submitAttempted: false,
       chartTypes: [
         { text: "Line", value: "line" },
         { text: "Curve", value: "curve" },
@@ -179,20 +199,25 @@ export default {
         (Object.keys(this.$refs.chart.chartData[0]).length - 1);
     },
     saveReport() {
-      let data = {
-        title: this.activeReport.title,
-        description: this.activeReport.description,
-        channel_id: this.activeReport.channel_id,
-        chart_type: this.activeReport.chart_type,
-        data_set_id: this.activeReport.data_set_id,
-        tag_ids: this.activeReport.tags.map((tag) => tag.id),
-      };
+      this.$refs.form.validate();
+      this.submitAttempted = true;
 
-      if (this.activeReport.id) {
-        data.id = this.activeReport.id;
-        this.updateReport(data);
-      } else {
-        this.addReport(data);
+      if (this.formValid) {
+        let data = {
+          title: this.activeReport.title,
+          description: this.activeReport.description,
+          channel_id: this.activeReport.channel_id,
+          chart_type: this.activeReport.chart_type,
+          data_set_id: this.activeReport.data_set_id,
+          tag_ids: this.activeReport.tags.map((tag) => tag.id),
+        };
+
+        if (this.activeReport.id) {
+          data.id = this.activeReport.id;
+          this.updateReport(data);
+        } else {
+          this.addReport(data);
+        }
       }
     },
     updateChartData() {
@@ -249,6 +274,7 @@ export default {
         chart_type: "line",
         data_set: { data: [] },
         channel_id: parseInt(this.$route.params.channelId),
+        tags: [],
       });
     } else {
       this.SET_ACTIVE_REPORT({
@@ -256,6 +282,7 @@ export default {
         description: "",
         chart_type: "line",
         data_set: { data: [] },
+        tags: [],
       });
     }
     // TODO: Combine API calls below into one
@@ -286,6 +313,9 @@ export default {
 .description,
 .tags {
   grid-column: 1 / span 2;
+}
+.placeholder-title {
+  color: gray;
 }
 .place-holder {
   height: 300px;

@@ -20,7 +20,17 @@
       </div>
 
       <v-divider></v-divider>
+
+      <v-alert
+        v-if="!formValid && submitAttempted"
+        class="mt-2 mb-0"
+        type="error"
+        dense
+        dismissible
+        >Please fix highlighted fields below before sumbitting Report</v-alert
+      >
     </v-col>
+
     <!-- Dashboard Preview -->
     <v-col v-if="activeDashboard.reports.length == 0" class="cold-md-12">
       <v-card>
@@ -89,75 +99,86 @@
     <v-col class="col-12">
       <h3>Dashboard Details</h3>
       <v-divider class="mb-4"></v-divider>
-
-      <div class="grid">
-        <div>
-          <v-text-field v-model="activeDashboard.title" label="Title" dense>
-          </v-text-field>
+      <v-form v-model="formValid" ref="form">
+        <div class="grid">
+          <div>
+            <v-text-field
+              v-model="activeDashboard.title"
+              label="Title"
+              dense
+              required
+              :rules="[(v) => !!v || 'Title is required']"
+            >
+            </v-text-field>
+          </div>
+          <div>
+            <v-text-field
+              value="Christopher Calderon"
+              label="Created By"
+              dense
+            ></v-text-field>
+          </div>
+          <div>
+            <v-select
+              v-model="activeDashboard.channel_id"
+              :items="channels"
+              item-text="title"
+              item-value="id"
+              label="Channel"
+              dense
+              required
+              :rules="[(v) => !!v || 'Channel is required']"
+            ></v-select>
+          </div>
+          <div>
+            <v-select
+              v-model="activeDashboard.layout"
+              :items="layouts"
+              item-text="text"
+              item-value="value"
+              label="Layout"
+              dense
+            ></v-select>
+          </div>
+          <div class="reports">
+            <v-select
+              v-model="activeDashboard.reports"
+              :items="channel.reports"
+              item-text="title"
+              item-value="id"
+              label="Reports"
+              multiple
+              return-object
+              dense
+              required
+              :rules="[(v) => v.length > 0 || 'At least 1 report is required']"
+            ></v-select>
+          </div>
+          <div class="description">
+            <v-text-field
+              v-model="activeDashboard.description"
+              label="Description"
+              dense
+            ></v-text-field>
+          </div>
+          <div class="tags">
+            <v-select
+              v-model="activeDashboard.tags"
+              :items="tags"
+              item-text="title"
+              item-value="id"
+              chips
+              color="info"
+              label="Tags"
+              multiple
+              deletable-chips
+              return-object
+              dense
+            >
+            </v-select>
+          </div>
         </div>
-        <div>
-          <v-text-field
-            value="Christopher Calderon"
-            label="Created By"
-            dense
-          ></v-text-field>
-        </div>
-        <div>
-          <v-select
-            v-model="activeDashboard.channel_id"
-            :items="channels"
-            item-text="title"
-            item-value="id"
-            label="Channel"
-            dense
-          ></v-select>
-        </div>
-        <div>
-          <v-select
-            v-model="activeDashboard.layout"
-            :items="layouts"
-            item-text="text"
-            item-value="value"
-            label="Layout"
-            dense
-          ></v-select>
-        </div>
-        <div class="reports">
-          <v-select
-            v-model="activeDashboard.reports"
-            :items="channel.reports"
-            item-text="title"
-            item-value="id"
-            label="Reports"
-            multiple
-            return-object
-            dense
-          ></v-select>
-        </div>
-        <div class="description">
-          <v-text-field
-            v-model="activeDashboard.description"
-            label="Description"
-            dense
-          ></v-text-field>
-        </div>
-        <div class="tags">
-          <v-select
-            v-model="activeDashboard.tags"
-            :items="tags"
-            item-text="title"
-            item-value="id"
-            chips
-            color="info"
-            label="Tags"
-            multiple
-            deletable-chips
-            return-object
-            dense
-          >
-          </v-select>
-        </div>
-      </div>
+      </v-form>
     </v-col>
   </v-row>
 </template>
@@ -175,6 +196,8 @@ import Table from "../components/Table";
 export default {
   data() {
     return {
+      formValid: true,
+      submitAttempted: false,
       layouts: [
         { text: "Layout 1", value: "layout-1" },
         { text: "Layout 2", value: "layout-2" },
@@ -224,20 +247,25 @@ export default {
         (ref[0].index + 1) % (Object.keys(ref[0].chartData[0]).length - 1);
     },
     saveDashboard() {
-      let data = {
-        title: this.activeDashboard.title,
-        description: this.activeDashboard.description,
-        channel_id: this.activeDashboard.channel_id,
-        layout: this.activeDashboard.layout,
-        report_ids: this.activeDashboard.reports.map((report) => report.id),
-        tag_ids: this.activeDashboard.tags.map((tag) => tag.id),
-      };
+      this.$refs.form.validate();
+      this.submitAttempted = true;
 
-      if (this.activeDashboard.id) {
-        data.id = this.activeDashboard.id;
-        this.updateDashboard(data);
-      } else {
-        this.addDashboard(data);
+      if (this.formValid) {
+        let data = {
+          title: this.activeDashboard.title,
+          description: this.activeDashboard.description,
+          channel_id: this.activeDashboard.channel_id,
+          layout: this.activeDashboard.layout,
+          report_ids: this.activeDashboard.reports.map((report) => report.id),
+          tag_ids: this.activeDashboard.tags.map((tag) => tag.id),
+        };
+
+        if (this.activeDashboard.id) {
+          data.id = this.activeDashboard.id;
+          this.updateDashboard(data);
+        } else {
+          this.addDashboard(data);
+        }
       }
     },
   },
