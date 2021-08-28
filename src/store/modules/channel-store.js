@@ -11,7 +11,7 @@ export default {
     channels: [],
   },
   actions: {
-    addChannel({ commit, getters }, channel) {
+    addChannel({ commit, dispatch, getters }, channel) {
       axios({
         method: "POST",
         url: "http://localhost:3000/v1/channels",
@@ -23,6 +23,8 @@ export default {
           show: true,
           message: "Channel added successfully!",
         });
+        // Used to update changes made necessary for sidebar
+        dispatch("fetchChannels");
       });
     },
     fetchChannel({ commit }, id) {
@@ -49,7 +51,7 @@ export default {
           console.log(err);
         });
     },
-    updateChannel({ commit }, channel) {
+    updateChannel({ commit, dispatch }, channel) {
       axios({
         method: "PATCH",
         url: `http://localhost:3000/v1/channels/${channel.id}`,
@@ -62,6 +64,8 @@ export default {
           show: true,
           message: "Channel updated successfully!",
         });
+        // Used to update changes made necessary for sidebar
+        dispatch("fetchChannels");
       });
     },
   },

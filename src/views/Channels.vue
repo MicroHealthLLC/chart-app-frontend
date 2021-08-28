@@ -3,7 +3,7 @@
     <v-col>
       <div class="d-flex justify-space-between">
         <h3>Channels</h3>
-        <v-btn class="mb-2" color="primary" small to="/add-data-set"
+        <v-btn class="mb-2" color="primary" small to="/add-channel"
           >Add Channel <v-icon small>mdi-plus</v-icon></v-btn
         >
       </div>

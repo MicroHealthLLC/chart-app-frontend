@@ -17,35 +17,44 @@
           <v-btn class="mb-2" small outlined>Cancel</v-btn>
         </div>
       </div>
-      <v-divider></v-divider>
+
+      <v-divider class="mb-4"></v-divider>
+
+      <!-- Form Fields -->
+      <v-card class="pa-4">
+        <v-form class="grid mt-4">
+          <div>
+            <v-text-field v-model="channel.title" label="Title" dense>
+            </v-text-field>
+          </div>
+          <div>
+            <v-select
+              v-model="channel.category"
+              label="Channel Type"
+              :items="[
+                { title: 'Public', value: 'public' },
+                { title: 'Personal', value: 'personal' },
+                { title: 'Group', value: 'group' },
+              ]"
+              item-text="title"
+              item-value="value"
+              dense
+            ></v-select>
+          </div>
+          <div class="description">
+            <v-textarea
+              v-model="channel.description"
+              label="Description"
+              dense
+              outlined
+              clearable
+              background-color="grey lighten-5"
+              auto-grow
+            ></v-textarea>
+          </div>
+        </v-form>
+      </v-card>
     </v-col>
-    <!-- Form Fields -->
-    <v-col class="col-6">
-      <v-text-field v-model="channel.title" label="Title" dense> </v-text-field>
-    </v-col>
-    <v-col class="col-6">
-      <v-select
-        v-model="channel.category"
-        label="Channel Type"
-        :items="[
-          { title: 'Public', value: 'public' },
-          { title: 'Personal', value: 'personal' },
-          { title: 'Group', value: 'group' },
-        ]"
-        item-text="title"
-        item-value="value"
-        dense
-      ></v-select>
-    </v-col>
-    <v-col class="col-12 py-0"
-      ><v-textarea
-        v-model="channel.description"
-        class="pt-0"
-        label="Description"
-        rows="1"
-        dense
-      ></v-textarea
-    ></v-col>
   </v-row>
 </template>
 
@@ -75,4 +84,13 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 10px;
+}
+.description {
+  grid-column: 1 / span 2;
+}
+</style>
