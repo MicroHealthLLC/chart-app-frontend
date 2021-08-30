@@ -53,7 +53,15 @@
         </div>
 
         <div class="d-flex justify-end mb-4">
-          <v-btn v-if="activeReport.data_set.data[0] && Object.keys(activeReport.data_set.data[0]).length > 2 && circleChart" @click="changeChartData" outlined small
+          <v-btn
+            v-if="
+              activeReport.data_set.data[0] &&
+              Object.keys(activeReport.data_set.data[0]).length > 2 &&
+              circleChart
+            "
+            @click="changeChartData"
+            outlined
+            small
             >Next Category <v-icon small>mdi-arrow-right</v-icon></v-btn
           >
         </div>
@@ -172,6 +180,7 @@ export default {
       chartTypes: [
         { text: "Line", value: "line" },
         { text: "Curve", value: "curve" },
+        { text: "Area", value: "area" },
         { text: "Bar", value: "bar" },
         { text: "Radar", value: "radar" },
         { text: "Donut", value: "donut" },

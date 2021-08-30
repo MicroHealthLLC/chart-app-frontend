@@ -111,6 +111,7 @@ export default {
 
       const dataSets = [];
       const lineTension = this.graphType == "curve" ? 0.25 : 0;
+      const fill = this.graphType == "area" ? true : false;
 
       keys.forEach((item, index) => {
         const data = this.chartData.map(
@@ -123,7 +124,7 @@ export default {
           backgroundColor: this.colors[1][index],
           borderColor: this.colors[0][index],
           lineTension: lineTension,
-          fill: true,
+          fill: fill,
         });
       });
 
