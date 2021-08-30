@@ -102,8 +102,13 @@
       <v-card>
         <v-toolbar color="info" dark>Edit Channel Details</v-toolbar>
         <v-card-text>
-          <v-form ref="form" class="mt-4">
-            <v-text-field v-model="title" label="Title"></v-text-field>
+          <v-form v-model="formValid" ref="form" class="mt-4">
+            <v-text-field
+              v-model="title"
+              label="Title"
+              required
+              :rules="[(v) => !!v || 'Title is required']"
+            ></v-text-field>
             <v-select
               v-model="category"
               label="Channel Type"
@@ -121,6 +126,8 @@
               background-color="grey lighten-5"
               outlined
               auto-grow
+              required
+              :rules="[(v) => !!v || 'Description is required']"
             ></v-textarea>
           </v-form>
         </v-card-text>
@@ -143,6 +150,7 @@ export default {
   name: "ChannelDashboards",
   data() {
     return {
+      formValid: true,
       showForm: false,
       title: "",
       category: "",
@@ -164,12 +172,16 @@ export default {
       this.showForm = false;
     },
     editChannel() {
-      this.updateChannel({
-        id: this.channel.id,
-        title: this.title,
-        category: this.category,
-        description: this.description,
-      });
+      this.$refs.form.validate();
+
+      if (this.formValid) {
+        this.updateChannel({
+          id: this.channel.id,
+          title: this.title,
+          category: this.category,
+          description: this.description,
+        });
+      }
     },
   },
   beforeMount() {
