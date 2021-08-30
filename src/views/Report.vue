@@ -53,7 +53,7 @@
         </div>
 
         <div class="d-flex justify-end mb-4">
-          <v-btn v-if="circleChart" @click="changeChartData" outlined small
+          <v-btn v-if="activeReport.data_set.data[0] && Object.keys(activeReport.data_set.data[0]).length > 2 && circleChart" @click="changeChartData" outlined small
             >Next Category <v-icon small>mdi-arrow-right</v-icon></v-btn
           >
         </div>
@@ -90,6 +90,7 @@
               dense
               required
               :rules="[(v) => !!v || 'Channel is required']"
+              :readonly="newChannelReport"
             ></v-select>
           </div>
           <div>
@@ -262,6 +263,9 @@ export default {
         this.activeReport.chart_type == "pie" ||
         this.activeReport.chart_type == "polar-area"
       );
+    },
+    newChannelReport() {
+      return this.$route.params.reportId == "new";
     },
   },
   beforeMount() {

@@ -27,7 +27,7 @@
         class="placeholder d-flex flex-column justify-center align-center"
       >
         <p class="font-weight-light">No Public Reports to show...</p>
-        <v-btn text small color="primary">Add a Report</v-btn>
+        <v-btn text small color="primary" to="/add-report">Add a Report</v-btn>
       </div>
       <!-- PERSONAL REPORTS -->
       <h3 class="mt-4">
@@ -57,7 +57,7 @@
         class="placeholder d-flex flex-column justify-center align-center"
       >
         <p class="font-weight-light">No Personal Reports to show...</p>
-        <v-btn text small color="primary">Add a Report</v-btn>
+        <v-btn text small color="primary" to="/add-report">Add a Report</v-btn>
       </div>
       <!-- GROUP REPORTS -->
       <h3 class="mt-4">
@@ -87,7 +87,7 @@
         class="placeholder d-flex flex-column justify-center align-center"
       >
         <p class="font-weight-light">No Group Reports to show...</p>
-        <v-btn text small color="primary">Add a Report</v-btn>
+        <v-btn text small color="primary" to="/add-report">Add a Report</v-btn>
       </div>
     </v-col>
     <!-- DETAILS -->

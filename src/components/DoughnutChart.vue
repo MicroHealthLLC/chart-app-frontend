@@ -90,6 +90,7 @@ export default {
       this.loadChart();
     },
     chartData() {
+      this.index = 0;
       this.loadChart();
     },
   },

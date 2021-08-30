@@ -29,7 +29,13 @@
         class="placeholder d-flex flex-column justify-center align-center"
       >
         <p class="font-weight-light">No Reports to show...</p>
-        <v-btn text small color="primary">Add a Report</v-btn>
+        <v-btn
+          text
+          small
+          color="primary"
+          :to="`/channels/${$route.params.channelId}/reports/new`"
+          >Add a Report</v-btn
+        >
       </div>
     </v-col>
     <!-- Details -->
@@ -44,7 +50,10 @@
       <v-divider class="mb-4"></v-divider>
 
       <ul class="text-caption details">
-        <li><strong>Category:</strong> {{ channel.category }}</li>
+        <li>
+          <strong>Category:</strong>
+          <span class="category">{{ channel.category }}</span>
+        </li>
         <li>
           <strong
             ><v-icon small>mdi-file-chart-outline</v-icon> Total
@@ -206,5 +215,8 @@ h3 a:hover {
 }
 .btn-bg {
   background-color: lightgray;
+}
+.category {
+  text-transform: capitalize;
 }
 </style>

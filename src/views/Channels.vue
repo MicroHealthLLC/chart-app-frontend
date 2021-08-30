@@ -9,6 +9,7 @@
       </div>
 
       <v-divider class="mb-4"></v-divider>
+
       <v-card>
         <v-data-table :headers="headers" :items="channels">
           <template v-slot:item.actions="{ item }">
@@ -83,5 +84,8 @@ export default {
 <style>
 td.text-start:first-child {
   font-weight: 600;
+}
+td.text-start:nth-child(3) {
+  text-transform: capitalize;
 }
 </style>
