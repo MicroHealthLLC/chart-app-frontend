@@ -51,7 +51,7 @@
 
       <ul class="text-caption details">
         <li>
-          <strong>Category:</strong>
+          <strong>Category: </strong>
           <span class="category">{{ channel.category }}</span>
         </li>
         <li>
@@ -73,7 +73,12 @@
             >Dashboards</router-link
           >
         </h3>
-        <v-btn class="btn-bg" small icon color="primary"
+        <v-btn
+          class="btn-bg"
+          small
+          icon
+          color="primary"
+          :to="`/channels/${$route.params.channelId}/dashboards/new`"
           ><v-icon>mdi-plus</v-icon></v-btn
         >
       </div>

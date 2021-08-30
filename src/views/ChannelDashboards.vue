@@ -43,7 +43,10 @@
       <v-divider class="mb-4"></v-divider>
 
       <ul class="text-caption details">
-        <li><strong>Category:</strong> {{ channel.category }}</li>
+        <li>
+          <strong>Category: </strong>
+          <span class="category">{{ channel.category }}</span>
+        </li>
         <li>
           <strong
             ><v-icon small>mdi-file-chart-outline</v-icon> Total
@@ -63,7 +66,12 @@
             >Reports</router-link
           >
         </h3>
-        <v-btn class="btn-bg" small icon color="primary"
+        <v-btn
+          class="btn-bg"
+          small
+          icon
+          color="primary"
+          :to="`/channels/${$route.params.channelId}/reports/new`"
           ><v-icon>mdi-plus</v-icon></v-btn
         >
       </div>
@@ -205,5 +213,8 @@ h3 a:hover {
 }
 .btn-bg {
   background-color: lightgray;
+}
+.category {
+  text-transform: capitalize;
 }
 </style>

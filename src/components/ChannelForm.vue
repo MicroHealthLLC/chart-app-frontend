@@ -22,9 +22,15 @@
 
       <!-- Form Fields -->
       <v-card class="pa-4">
-        <v-form class="grid mt-4">
+        <v-form v-model="formValid" ref="form" class="grid mt-4">
           <div>
-            <v-text-field v-model="channel.title" label="Title" dense>
+            <v-text-field
+              v-model="channel.title"
+              label="Title"
+              dense
+              required
+              :rules="[(v) => !!v || 'Title is required']"
+            >
             </v-text-field>
           </div>
           <div>
@@ -50,6 +56,8 @@
               clearable
               background-color="grey lighten-5"
               auto-grow
+              required
+              :rules="[(v) => !!v || 'Description is required']"
             ></v-textarea>
           </div>
         </v-form>
@@ -63,21 +71,29 @@ import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "ChannelForm",
+  data() {
+    return {
+      formValid: true,
+    };
+  },
   computed: {
     ...mapGetters(["channel"]),
   },
   methods: {
     ...mapActions(["addChannel", "updateChannel"]),
     saveChannel() {
-      if (this.channel.id) {
-        this.updateChannel({
-          id: this.channel.id,
-          title: this.channel.title,
-          category: this.channel.category,
-          description: this.channel.description,
-        });
-      } else {
-        this.addChannel(this.channel);
+      this.$refs.form.validate();
+      if (this.formValid) {
+        if (this.channel.id) {
+          this.updateChannel({
+            id: this.channel.id,
+            title: this.channel.title,
+            category: this.channel.category,
+            description: this.channel.description,
+          });
+        } else {
+          this.addChannel(this.channel);
+        }
       }
     },
   },
