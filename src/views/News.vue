@@ -12,6 +12,11 @@
 
       <v-card>
         <v-data-table :headers="headers" :items="news">
+          <!-- Formatted Date -->
+          <template v-slot:item.created_at="{ item }">
+            <span>{{ new Date(item.created_at).toLocaleDateString() }}</span>
+          </template>
+          <!-- Action Buttons -->
           <template v-slot:item.actions="{ item }">
             <v-icon color="primary" small class="mr-2" @click="editItem(item)">
               mdi-pencil
@@ -75,13 +80,13 @@ export default {
         {
           text: "Date Added",
           sortable: true,
-          value: "updated_at",
+          value: "created_at",
         },
         {
           text: "Body",
           sortable: false,
           value: "body",
-          width: "50%",
+          width: "40%",
         },
         {
           text: "Actions",

@@ -12,6 +12,10 @@
 
       <v-card>
         <v-data-table :headers="headers" :items="channels">
+          <!-- Formatted Date -->
+          <template v-slot:item.created_at="{ item }">
+            <span>{{ new Date(item.created_at).toLocaleDateString() }}</span>
+          </template>
           <template v-slot:item.actions="{ item }">
             <v-icon color="primary" small class="mr-2" @click="editItem(item)">
               mdi-pencil
@@ -19,7 +23,9 @@
             <v-icon color="primary" small @click="deleteItem(item)">
               mdi-delete
             </v-icon>
-            <v-btn class="ml-2" depressed outlined x-small>Request Access</v-btn>
+            <!-- <v-btn class="ml-2" depressed outlined x-small
+              >Request Access</v-btn
+            > -->
           </template>
         </v-data-table>
       </v-card>
@@ -39,6 +45,7 @@ export default {
           text: "Title",
           sortable: true,
           value: "title",
+          width: "25%",
         },
         {
           text: "Date Added",
@@ -54,6 +61,7 @@ export default {
           text: "Description",
           sortable: false,
           value: "description",
+          width: "40%",
         },
         {
           text: "Actions",

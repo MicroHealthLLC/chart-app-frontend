@@ -11,6 +11,11 @@
       <v-divider class="mb-4"></v-divider>
       <v-card>
         <v-data-table :headers="headers" :items="dataSets">
+          <!-- Formatted Date -->
+          <template v-slot:item.created_at="{ item }">
+            <span>{{ new Date(item.created_at).toLocaleDateString() }}</span>
+          </template>
+          <!-- Action Buttons -->
           <template v-slot:item.actions="{ item }">
             <v-icon color="primary" small class="mr-2" @click="editItem(item)">
               mdi-pencil
@@ -37,6 +42,7 @@ export default {
           text: "Title",
           sortable: true,
           value: "title",
+          width: "25%",
         },
         {
           text: "Date Added",
@@ -47,6 +53,7 @@ export default {
           text: "Description",
           sortable: false,
           value: "description",
+          width: "40%",
         },
         {
           text: "Actions",
