@@ -57,6 +57,17 @@ export default {
         });
       });
     },
+    deleteReport({commit}, id) {
+      axios({
+        method: "DELETE",
+        url: `http://localhost:3000/v1/reports/${id}`,
+      }).then(() => {
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Report successfully deleted."
+        })
+      })
+    }
   },
   mutations: {
     SET_REPORTS: (state, reports) => (state.reports = reports),

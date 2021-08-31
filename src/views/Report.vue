@@ -157,6 +157,39 @@
             </v-select>
           </div></div
       ></v-form>
+      <!-- Delete Button -->
+      <div v-if="activeReport.id" class="d-flex justify-end mt-4">
+        <v-btn
+          @click="deleteDialog = true"
+          small
+          color="error"
+          depressed
+          outlined
+          >Delete Report</v-btn
+        >
+      </div>
+      <!-- Delete Prompt -->
+      <v-dialog v-model="deleteDialog" max-width="400">
+        <v-card>
+          <v-card-title>Delete {{ activeReport.title }}?</v-card-title>
+          <v-divider class="mx-4 mb-2"></v-divider>
+          <v-card-text
+            >Are you sure you would like to delete this report?</v-card-text
+          >
+          <v-card-actions class="d-flex justify-end">
+            <v-btn
+              @click="deleteDialog = false"
+              small
+              outlined
+              color="secondary"
+              >Cancel</v-btn
+            >
+            <v-btn @click="removeReport" small depressed color="error"
+              >Delete</v-btn
+            >
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-col>
   </v-row>
 </template>
@@ -177,6 +210,7 @@ export default {
     return {
       formValid: true,
       submitAttempted: false,
+      deleteDialog: false,
       chartTypes: [
         { text: "Line", value: "line" },
         { text: "Curve", value: "curve" },
@@ -197,6 +231,7 @@ export default {
       "fetchTags",
       "addReport",
       "updateReport",
+      "deleteReport",
     ]),
     ...mapMutations([
       "SET_ACTIVE_REPORT",
@@ -235,6 +270,10 @@ export default {
         (dataSet) => dataSet.id == this.activeReport.data_set_id
       );
       this.SET_REPORT_DATA_SET(dataSet);
+    },
+    removeReport() {
+      this.deleteReport(this.activeReport.id);
+      this.$router.push(`/channels/${this.$route.params.channelId}/reports`);
     },
   },
   computed: {
