@@ -55,6 +55,17 @@ export default {
         });
       });
     },
+    deleteDashboard({ commit }, id) {
+      axios({
+        method: "DELETE",
+        url: `http://localhost:3000/v1/dashboards/${id}`,
+      }).then(() => {
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Dashboard successfully deleted.",
+        });
+      });
+    },
   },
   mutations: {
     SET_DASHBOARDS: (state, dashboards) => (state.dashboards = dashboards),

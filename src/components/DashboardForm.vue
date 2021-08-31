@@ -155,11 +155,13 @@
             ></v-select>
           </div>
           <div class="description">
-            <v-text-field
+            <v-textarea
               v-model="activeDashboard.description"
               label="Description"
+              rows="1"
+              auto-grow
               dense
-            ></v-text-field>
+            ></v-textarea>
           </div>
           <div class="tags">
             <v-select
@@ -179,6 +181,39 @@
           </div>
         </div>
       </v-form>
+      <!-- Delete Button -->
+      <div v-if="activeDashboard.id" class="d-flex justify-end mt-4">
+        <v-btn
+          @click="deleteDialog = true"
+          small
+          color="error"
+          depressed
+          outlined
+          >Delete Dashboard</v-btn
+        >
+      </div>
+      <!-- Delete Prompt -->
+      <v-dialog v-model="deleteDialog" max-width="400">
+        <v-card>
+          <v-card-title>Delete {{ activeDashboard.title }}?</v-card-title>
+          <v-divider class="mx-4 mb-2"></v-divider>
+          <v-card-text
+            >Are you sure you would like to delete this dashboard?</v-card-text
+          >
+          <v-card-actions class="d-flex justify-end">
+            <v-btn
+              @click="deleteDialog = false"
+              small
+              outlined
+              color="secondary"
+              >Cancel</v-btn
+            >
+            <v-btn @click="removeDashboard" small depressed color="error"
+              >Delete</v-btn
+            >
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-col>
   </v-row>
 </template>
@@ -198,6 +233,7 @@ export default {
     return {
       formValid: true,
       submitAttempted: false,
+      deleteDialog: false,
       layouts: [
         { text: "Layout 1", value: "layout-1" },
         { text: "Layout 2", value: "layout-2" },
@@ -221,6 +257,7 @@ export default {
       "fetchDashboard",
       "fetchTags",
       "updateDashboard",
+      "deleteDashboard",
     ]),
     ...mapMutations(["SET_ACTIVE_DASHBOARD", "SET_STATUS_CODE"]),
     graphType(report) {
@@ -267,6 +304,10 @@ export default {
           this.addDashboard(data);
         }
       }
+    },
+    removeDashboard() {
+      this.deleteDashboard(this.activeDashboard.id);
+      this.$router.push(`/channels/${this.$route.params.channelId}/dashboards`);
     },
   },
   beforeMount() {
