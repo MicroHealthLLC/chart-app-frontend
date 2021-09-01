@@ -30,6 +30,10 @@
       >
 
       <v-card class="pa-4 mb-4">
+        <v-btn @click="fullscreenReport" class="chart-menu" icon>
+          <v-icon>mdi-fullscreen</v-icon>
+        </v-btn>
+        <!-- Chart -->
         <Component
           v-if="activeReport.id || activeReport.data_set.id"
           ref="chart"
@@ -41,7 +45,7 @@
           class="mb-4"
         >
         </Component>
-
+        <!-- Placeholder -->
         <div
           v-else
           class="place-holder d-flex justify-center align-center ma-4"
@@ -51,7 +55,7 @@
             Please load a data set to view preview...
           </p>
         </div>
-
+        <!-- Category Toggle Button -->
         <div class="d-flex justify-end mb-4">
           <v-btn
             v-if="
@@ -190,6 +194,43 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+      <!-- Fullscreen Report Modal -->
+      <v-dialog v-model="fullscreen" fullscreen eager>
+        <v-card>
+          <v-toolbar class="px-5" color="info" dark>
+            <h3>{{ activeReport.title }}</h3>
+            <v-spacer></v-spacer>
+            <v-btn @click="fullscreen = false" icon
+              ><v-icon>mdi-close-thick</v-icon></v-btn
+            >
+          </v-toolbar>
+          <Component
+            v-show="fullscreen"
+            ref="fullscreenchart"
+            :is="graphType"
+            :chartData="activeReport.data_set.data"
+            :graphType="activeReport.chart_type"
+            :height="screenHeight"
+            :title="activeReport.title"
+            class="pa-6"
+          >
+          </Component>
+          <!-- Category Toggle Button -->
+          <div class="d-flex justify-end pr-6">
+            <v-btn
+              v-if="
+                activeReport.data_set.data[0] &&
+                Object.keys(activeReport.data_set.data[0]).length > 2 &&
+                circleChart
+              "
+              @click="changeChartData"
+              outlined
+              small
+              >Next Category <v-icon small>mdi-arrow-right</v-icon></v-btn
+            >
+          </div>
+        </v-card>
+      </v-dialog>
     </v-col>
   </v-row>
 </template>
@@ -211,6 +252,7 @@ export default {
       formValid: true,
       submitAttempted: false,
       deleteDialog: false,
+      fullscreen: false,
       chartTypes: [
         { text: "Line", value: "line" },
         { text: "Curve", value: "curve" },
@@ -242,6 +284,10 @@ export default {
       this.$refs.chart.index =
         (this.$refs.chart.index + 1) %
         (Object.keys(this.$refs.chart.chartData[0]).length - 1);
+
+      this.$refs.fullscreenchart.index =
+        (this.$refs.fullscreenchart.index + 1) %
+        (Object.keys(this.$refs.fullscreenchart.chartData[0]).length - 1);
     },
     saveReport() {
       this.$refs.form.validate();
@@ -274,6 +320,12 @@ export default {
     removeReport() {
       this.deleteReport(this.activeReport.id);
       this.$router.push(`/channels/${this.$route.params.channelId}/reports`);
+    },
+    fullscreenReport() {
+      this.fullscreen = true;
+      setTimeout(() => {
+        this.$refs.fullscreenchart.loadChart();
+      }, 100);
     },
   },
   computed: {
@@ -314,6 +366,9 @@ export default {
     },
     newChannelReport() {
       return this.$route.params.reportId == "new";
+    },
+    screenHeight() {
+      return window.innerHeight - 200;
     },
   },
   beforeMount() {
@@ -375,5 +430,10 @@ export default {
 .placeholder-text,
 .placeholder-icon {
   color: #1976d2;
+}
+.chart-menu {
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 </style>
