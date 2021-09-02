@@ -8,6 +8,7 @@ export default {
       chart_type: "line",
       data_set: { data: [] },
       tags: [],
+      color_scheme_id: 1,
     },
     channel_reports: [],
     reports: [],
@@ -57,17 +58,17 @@ export default {
         });
       });
     },
-    deleteReport({commit}, id) {
+    deleteReport({ commit }, id) {
       axios({
         method: "DELETE",
         url: `http://localhost:3000/v1/reports/${id}`,
       }).then(() => {
         commit("SET_SNACKBAR", {
           show: true,
-          message: "Report successfully deleted."
-        })
-      })
-    }
+          message: "Report successfully deleted.",
+        });
+      });
+    },
   },
   mutations: {
     SET_REPORTS: (state, reports) => (state.reports = reports),

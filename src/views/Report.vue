@@ -35,10 +35,14 @@
         </v-btn>
         <!-- Chart -->
         <Component
-          v-if="activeReport.id || activeReport.data_set.id"
+          v-if="
+            (activeReport.id || activeReport.data_set.id) &&
+            activeReport.data_set.data.length > 0
+          "
           ref="chart"
           :is="graphType"
           :chartData="activeReport.data_set.data"
+          :chartColors="colorScheme"
           :graphType="activeReport.chart_type"
           :height="350"
           :title="activeReport.title"
@@ -159,6 +163,18 @@
               dense
             >
             </v-select>
+          </div>
+          <div>
+            <v-select
+              v-model="activeReport.color_scheme_id"
+              label="Color Scheme"
+              :items="colors"
+              item-text="title"
+              item-value="id"
+              dense
+              return-object
+              @change="updateColors"
+            ></v-select>
           </div></div
       ></v-form>
       <!-- Delete Button -->
@@ -205,10 +221,15 @@
             >
           </v-toolbar>
           <Component
-            v-show="fullscreen"
+            v-if="
+              (activeReport.id || activeReport.data_set.id) &&
+              activeReport.data_set.data.length > 0 &&
+              fullscreen
+            "
             ref="fullscreenchart"
             :is="graphType"
             :chartData="activeReport.data_set.data"
+            :chartColors="colorScheme"
             :graphType="activeReport.chart_type"
             :height="screenHeight"
             :title="activeReport.title"
@@ -263,6 +284,24 @@ export default {
         { text: "Pie", value: "pie" },
         { text: "Polar Area", value: "polar-area" },
         { text: "Table", value: "table" },
+      ],
+      colorScheme: [
+        [
+          "rgba(30, 144, 255, 0.75)", // Blue (DodgerBlue)
+          "rgba(65, 105, 225, 0.75)", // Blue (RoyalBlue)
+          "rgba(100, 149, 237, 0.75)", // Blue (CornflowerBlue)
+          "rgba(70, 130, 180, 0.75)", // Blue (SteelBlue)
+          "rgba(176, 196, 222, 0.75)", // Blue (LightSteelBlue)
+          "rgba(135, 206, 250, 0.75)", // Blue (LightSkyBlue)
+        ],
+        [
+          "rgba(30, 144, 255, 0.25)", // Blue (DodgerBlue)
+          "rgba(65, 105, 225, 0.25)", // Blue (RoyalBlue)
+          "rgba(100, 149, 237, 0.25)", // Blue (CornflowerBlue)
+          "rgba(70, 130, 180, 0.25)", // Blue (SteelBlue)
+          "rgba(176, 196, 222, 0.25)", // Blue (LightSteelBlue)
+          "rgba(135, 206, 250, 0.25)", // Blue (LightSkyBlue)
+        ],
       ],
     };
   },
@@ -327,6 +366,9 @@ export default {
         this.$refs.fullscreenchart.loadChart();
       }, 100);
     },
+    updateColors(selectedScheme) {
+      this.colorScheme = selectedScheme.scheme;
+    },
   },
   computed: {
     ...mapGetters([
@@ -334,6 +376,7 @@ export default {
       "activeReport",
       "channels",
       "channelReports",
+      "colors",
       "dataSets",
       "tags",
       "statusCode",
@@ -382,6 +425,7 @@ export default {
         data_set: { data: [] },
         channel_id: parseInt(this.$route.params.channelId),
         tags: [],
+        color_scheme_id: 1,
       });
     } else {
       this.SET_ACTIVE_REPORT({
@@ -390,6 +434,7 @@ export default {
         chart_type: "line",
         data_set: { data: [] },
         tags: [],
+        color_scheme_id: 1,
       });
     }
     // TODO: Combine API calls below into one
@@ -397,6 +442,11 @@ export default {
     this.fetchTags();
 
     // this.chartOptions.title.text[0] = this.activeReport.title;
+  },
+  mounted() {
+    this.colorScheme = this.colors.find(
+      (scheme) => scheme.id == this.activeReport.color_scheme_id
+    ).scheme;
   },
   watch: {
     statusCode() {

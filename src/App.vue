@@ -46,9 +46,4 @@ export default {
   width: 100%;
   max-width: 1400px;
 }
-/* .card {
-  height: calc(100vh - 40px);
-  overflow-y: auto;
-  overflow-x: hidden;
-} */
 </style>
