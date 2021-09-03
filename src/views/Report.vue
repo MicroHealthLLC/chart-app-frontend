@@ -38,7 +38,7 @@
           v-if="
             (activeReport.id || activeReport.data_set.id) &&
             activeReport.data_set.data.length > 0 &&
-            colorScheme
+            reportLoaded
           "
           ref="chart"
           :is="graphType"
@@ -173,7 +173,6 @@
               item-text="title"
               item-value="id"
               dense
-              return-object
               @change="updateColors"
             ></v-select>
           </div></div
@@ -325,6 +324,7 @@ export default {
           chart_type: this.activeReport.chart_type,
           data_set_id: this.activeReport.data_set_id,
           tag_ids: this.activeReport.tags.map((tag) => tag.id),
+          color_scheme_id: this.activeReport.color_scheme_id,
         };
 
         if (this.activeReport.id) {
@@ -351,8 +351,10 @@ export default {
         this.$refs.fullscreenchart.loadChart();
       }, 100);
     },
-    updateColors(selectedScheme) {
-      this.colorScheme = selectedScheme.scheme;
+    updateColors(selectedSchemeId) {
+      this.colorScheme = this.colors.find(
+        (color) => selectedSchemeId == color.id
+      ).scheme;
     },
   },
   computed: {
@@ -363,6 +365,7 @@ export default {
       "channelReports",
       "colors",
       "dataSets",
+      "reportLoaded",
       "tags",
       "statusCode",
     ]),
@@ -441,6 +444,11 @@ export default {
         );
         this.SET_STATUS_CODE(0);
       }
+    },
+    reportLoaded() {
+      this.colorScheme = this.colors.find(
+        (scheme) => scheme.id == this.activeReport.color_scheme_id
+      ).scheme;
     },
   },
 };
