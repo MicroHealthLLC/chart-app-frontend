@@ -37,7 +37,8 @@
         <Component
           v-if="
             (activeReport.id || activeReport.data_set.id) &&
-            activeReport.data_set.data.length > 0
+            activeReport.data_set.data.length > 0 &&
+            colorScheme
           "
           ref="chart"
           :is="graphType"
@@ -224,7 +225,8 @@
             v-if="
               (activeReport.id || activeReport.data_set.id) &&
               activeReport.data_set.data.length > 0 &&
-              fullscreen
+              fullscreen &&
+              colorScheme
             "
             ref="fullscreenchart"
             :is="graphType"
@@ -285,24 +287,7 @@ export default {
         { text: "Polar Area", value: "polar-area" },
         { text: "Table", value: "table" },
       ],
-      colorScheme: [
-        [
-          "rgba(30, 144, 255, 0.75)", // Blue (DodgerBlue)
-          "rgba(65, 105, 225, 0.75)", // Blue (RoyalBlue)
-          "rgba(100, 149, 237, 0.75)", // Blue (CornflowerBlue)
-          "rgba(70, 130, 180, 0.75)", // Blue (SteelBlue)
-          "rgba(176, 196, 222, 0.75)", // Blue (LightSteelBlue)
-          "rgba(135, 206, 250, 0.75)", // Blue (LightSkyBlue)
-        ],
-        [
-          "rgba(30, 144, 255, 0.25)", // Blue (DodgerBlue)
-          "rgba(65, 105, 225, 0.25)", // Blue (RoyalBlue)
-          "rgba(100, 149, 237, 0.25)", // Blue (CornflowerBlue)
-          "rgba(70, 130, 180, 0.25)", // Blue (SteelBlue)
-          "rgba(176, 196, 222, 0.25)", // Blue (LightSteelBlue)
-          "rgba(135, 206, 250, 0.25)", // Blue (LightSkyBlue)
-        ],
-      ],
+      colorScheme: [],
     };
   },
   methods: {
