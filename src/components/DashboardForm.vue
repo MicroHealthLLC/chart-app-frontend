@@ -32,7 +32,10 @@
     </v-col>
 
     <!-- Dashboard Preview -->
-    <v-col v-if="activeDashboard.reports.length == 0" class="cold-md-12">
+    <v-col
+      v-if="activeDashboard.reports.length == 0"
+      class="cold-md-12"
+    >
       <v-card>
         <div class="place-holder d-flex justify-center align-center">
           <p class="text-center placeholder-text mb-0">
@@ -78,6 +81,7 @@
           :ref="'chart' + index"
           :is="graphType(report)"
           :chartData="report.data_set.data"
+          :chartColors="colorScheme(report.color_scheme_id)"
           :graphType="report.chart_type"
           :title="report.title"
           :height="350"
@@ -246,6 +250,7 @@ export default {
       "activeDashboard",
       "channel",
       "channels",
+      "colors",
       "statusCode",
       "tags",
     ]),
@@ -308,6 +313,13 @@ export default {
     removeDashboard() {
       this.deleteDashboard(this.activeDashboard.id);
       this.$router.push(`/channels/${this.$route.params.channelId}/dashboards`);
+    },
+    colorScheme(schemeId) {
+      if (schemeId) {
+        return this.colors.find((scheme) => scheme.id == schemeId).scheme;
+      } else {
+        return this.colors[0].scheme;
+      }
     },
   },
   beforeMount() {
