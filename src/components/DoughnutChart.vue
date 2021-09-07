@@ -13,6 +13,9 @@ export default {
       type: String,
       default: "",
     },
+    chartColors: {
+      type: Array,
+    },
   },
   data() {
     return {
@@ -24,37 +27,6 @@ export default {
           text: ["", ""],
         },
       },
-      colors: [
-        "rgba(255, 69, 0, 0.75)", // Red (OrangeRed)
-        "rgba(255, 165, 0, 0.75)", // Yellow (Orange)
-        "rgba(154, 205, 50, 0.75)", // Green (YellowGreen)
-        "rgba(30, 144, 255, 0.75)", // Blue (DodgerBlue)
-
-        "rgba(255, 99, 71, 0.75)", // Red (Tomato)
-        "rgba(255, 215, 0, 0.75)", // Yellow (Gold)
-        "rgba(102, 205, 170, 0.75)", // Green (MediumAquaMarine)
-        "rgba(65, 105, 225, 0.75)", // Blue (RoyalBlue)
-
-        "rgba(255, 127, 80, 0.75)", // Red (Coral)
-        "rgba(238, 232, 170, 0.75)", // Yellow (PaleGoldenrod)
-        "rgba(32, 178, 170, 0.75)", // Green (LightSeaGreen)
-        "rgba(100, 149, 237, 0.75)", // Blue (CornflowerBlue)
-
-        "rgba(178, 34, 34, 0.75)", // Red (FireBrick)
-        "rgba(255, 218, 185, 0.75)", // Yellow (PeachPuff)
-        "rgba(144, 238, 144, 0.75)", // Green (LightGreen)
-        "rgba(70, 130, 180, 0.75)", // Blue (SteelBlue)
-
-        "rgba(255, 0, 0, 0.75)", // Red (Red)
-        "rgba(255, 255, 0, 0.75)", // Yellow (Yellow)
-        "rgba(50, 205, 50, 0.75)", // Green (LimeGreen)
-        "rgba(176, 196, 222, 0.75)", // Blue (LightSteelBlue)
-
-        "rgba(220, 20, 60, 0.75)", // Red (Crimson)
-        "rgba(240, 230, 140, 0.75)", // Yellow (Khaki)
-        "rgba(60, 179, 113, 0.75)", // Green (MediumSeaGreen)
-        "rgba(135, 206, 250, 0.75)", // Blue (LightSkyBlue)
-      ],
       index: 0,
     };
   },
@@ -75,7 +47,7 @@ export default {
         dataSets.push({
           label: item,
           data: data,
-          backgroundColor: this.colors,
+          backgroundColor: this.chartColors[0],
         });
       });
 
@@ -112,6 +84,9 @@ export default {
     },
     chartData() {
       this.index = 0;
+      this.loadChart();
+    },
+    chartColors() {
       this.loadChart();
     },
   },

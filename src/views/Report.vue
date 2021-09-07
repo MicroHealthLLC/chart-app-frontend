@@ -35,10 +35,15 @@
         </v-btn>
         <!-- Chart -->
         <Component
-          v-if="activeReport.id || activeReport.data_set.id"
+          v-if="
+            (activeReport.id || activeReport.data_set.id) &&
+            activeReport.data_set.data.length > 0 &&
+            reportLoaded
+          "
           ref="chart"
           :is="graphType"
           :chartData="activeReport.data_set.data"
+          :chartColors="colorScheme"
           :graphType="activeReport.chart_type"
           :height="350"
           :title="activeReport.title"
@@ -159,6 +164,17 @@
               dense
             >
             </v-select>
+          </div>
+          <div>
+            <v-select
+              v-model="activeReport.color_scheme_id"
+              label="Color Scheme"
+              :items="colors"
+              item-text="title"
+              item-value="id"
+              dense
+              @change="updateColors"
+            ></v-select>
           </div></div
       ></v-form>
       <!-- Delete Button -->
@@ -205,10 +221,16 @@
             >
           </v-toolbar>
           <Component
-            v-show="fullscreen"
+            v-if="
+              (activeReport.id || activeReport.data_set.id) &&
+              activeReport.data_set.data.length > 0 &&
+              fullscreen &&
+              colorScheme
+            "
             ref="fullscreenchart"
             :is="graphType"
             :chartData="activeReport.data_set.data"
+            :chartColors="colorScheme"
             :graphType="activeReport.chart_type"
             :height="screenHeight"
             :title="activeReport.title"
@@ -264,6 +286,7 @@ export default {
         { text: "Polar Area", value: "polar-area" },
         { text: "Table", value: "table" },
       ],
+      colorScheme: [],
     };
   },
   methods: {
@@ -303,6 +326,7 @@ export default {
           chart_type: this.activeReport.chart_type,
           data_set_id: this.activeReport.data_set_id,
           tag_ids: this.activeReport.tags.map((tag) => tag.id),
+          color_scheme_id: this.activeReport.color_scheme_id,
         };
 
         if (this.activeReport.id) {
@@ -329,6 +353,11 @@ export default {
         this.$refs.fullscreenchart.loadChart();
       }, 100);
     },
+    updateColors(selectedSchemeId) {
+      this.colorScheme = this.colors.find(
+        (color) => selectedSchemeId == color.id
+      ).scheme;
+    },
   },
   computed: {
     ...mapGetters([
@@ -336,7 +365,9 @@ export default {
       "activeReport",
       "channels",
       "channelReports",
+      "colors",
       "dataSets",
+      "reportLoaded",
       "tags",
       "statusCode",
     ]),
@@ -384,6 +415,7 @@ export default {
         data_set: { data: [] },
         channel_id: parseInt(this.$route.params.channelId),
         tags: [],
+        color_scheme_id: 1,
       });
     } else {
       this.SET_ACTIVE_REPORT({
@@ -392,6 +424,7 @@ export default {
         chart_type: "line",
         data_set: { data: [] },
         tags: [],
+        color_scheme_id: 1,
       });
     }
     // TODO: Combine API calls below into one
@@ -399,6 +432,11 @@ export default {
     this.fetchTags();
 
     // this.chartOptions.title.text[0] = this.activeReport.title;
+  },
+  mounted() {
+    this.colorScheme = this.colors.find(
+      (scheme) => scheme.id == this.activeReport.color_scheme_id
+    ).scheme;
   },
   watch: {
     statusCode() {
@@ -408,6 +446,11 @@ export default {
         );
         this.SET_STATUS_CODE(0);
       }
+    },
+    reportLoaded() {
+      this.colorScheme = this.colors.find(
+        (scheme) => scheme.id == this.activeReport.color_scheme_id
+      ).scheme;
     },
   },
 };
