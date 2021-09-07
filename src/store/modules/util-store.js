@@ -321,6 +321,22 @@ export default {
           ],
         ],
       },
+      {
+        id: 6,
+        title: "Green/Red",
+        scheme: [
+          ["rgba(0, 128, 0, 0.75)", "rgba(255, 0, 0, 0.75)"],
+          ["rgba(0, 128, 0, 0.5)", "rgba(255, 0, 0, 0.5)"],
+        ],
+      },
+      {
+        id: 7,
+        title: "Red/Green",
+        scheme: [
+          ["rgba(255, 0, 0, 0.75)", "rgba(0, 128, 0, 0.75)"],
+          ["rgba(255, 0, 0, 0.5)", "rgba(0, 128, 0, 0.5)"],
+        ],
+      },
     ],
   },
   actions: {},
