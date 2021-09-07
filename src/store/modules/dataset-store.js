@@ -1,4 +1,5 @@
 import axios from "axios";
+const BASE_URL = process.env.VUE_APP_BASE_API_URL;
 
 export default {
   state: {
@@ -13,7 +14,7 @@ export default {
     fetchDataSet({ commit }, id) {
       axios({
         method: "GET",
-        url: `http://localhost:3000/v1/data_sets/${id}`,
+        url: `${BASE_URL}/v1/data_sets/${id}`,
       }).then((res) => {
         commit("SET_ACTIVE_DATA_SET", res.data);
       });
@@ -21,7 +22,7 @@ export default {
     fetchDataSets({ commit }) {
       axios({
         method: "GET",
-        url: "http://localhost:3000/v1/data_sets",
+        url: `${BASE_URL}/v1/data_sets`,
       }).then((res) => {
         commit("SET_DATA_SETS", res.data);
       });
@@ -29,7 +30,7 @@ export default {
     addDataSet({ commit }, dataSet) {
       axios({
         method: "POST",
-        url: "http://localhost:3000/v1/data_sets",
+        url: `${BASE_URL}/v1/data_sets`,
         data: dataSet,
       }).then((res) => {
         commit("SET_ACTIVE_DATA_SET", res.data);
@@ -42,7 +43,7 @@ export default {
     updateDataSet({ commit }, dataSet) {
       axios({
         method: "PATCH",
-        url: `http://localhost:3000/v1/data_sets/${dataSet.id}`,
+        url: `${BASE_URL}/v1/data_sets/${dataSet.id}`,
         data: dataSet,
       }).then((res) => {
         commit("SET_ACTIVE_DATA_SET", res.data);
