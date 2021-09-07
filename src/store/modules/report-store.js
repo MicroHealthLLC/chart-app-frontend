@@ -1,4 +1,5 @@
 import axios from "axios";
+const BASE_URL = process.env.VUE_APP_BASE_API_URL;
 
 export default {
   state: {
@@ -19,7 +20,7 @@ export default {
     fetchReports({ commit }) {
       axios({
         method: "GET",
-        url: "http://localhost:3000/v1/reports",
+        url: `${BASE_URL}/v1/reports`,
       }).then((res) => {
         commit("SET_REPORTS", res.data);
       });
@@ -28,7 +29,7 @@ export default {
       commit("TOGGLE_REPORT_LOADED", false);
       axios({
         method: "GET",
-        url: `http://localhost:3000/v1/reports/${id}`,
+        url: `${BASE_URL}/v1/reports/${id}`,
       })
         .then((res) => {
           commit("SET_ACTIVE_REPORT", res.data);
@@ -38,7 +39,7 @@ export default {
     addReport({ commit }, report) {
       axios({
         method: "POST",
-        url: "http://localhost:3000/v1/reports",
+        url: `${BASE_URL}/v1/reports`,
         data: report,
       }).then((res) => {
         commit("SET_ACTIVE_REPORT", res.data);
@@ -52,7 +53,7 @@ export default {
     updateReport({ commit }, report) {
       axios({
         method: "PATCH",
-        url: `http://localhost:3000/v1/reports/${report.id}`,
+        url: `${BASE_URL}/v1/reports/${report.id}`,
         data: report,
       }).then((res) => {
         commit("SET_ACTIVE_REPORT", res.data);
@@ -65,7 +66,7 @@ export default {
     deleteReport({ commit }, id) {
       axios({
         method: "DELETE",
-        url: `http://localhost:3000/v1/reports/${id}`,
+        url: `${BASE_URL}/v1/reports/${id}`,
       }).then(() => {
         commit("SET_SNACKBAR", {
           show: true,

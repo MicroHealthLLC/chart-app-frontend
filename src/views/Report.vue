@@ -245,7 +245,7 @@
                 Object.keys(activeReport.data_set.data[0]).length > 2 &&
                 circleChart
               "
-              @click="changeChartData"
+              @click="changeFSChartData"
               outlined
               small
               >Next Category <v-icon small>mdi-arrow-right</v-icon></v-btn
@@ -307,7 +307,9 @@ export default {
       this.$refs.chart.index =
         (this.$refs.chart.index + 1) %
         (Object.keys(this.$refs.chart.chartData[0]).length - 1);
-
+    },
+    // FS = Full Screen
+    changeFSChartData() {
       this.$refs.fullscreenchart.index =
         (this.$refs.fullscreenchart.index + 1) %
         (Object.keys(this.$refs.fullscreenchart.chartData[0]).length - 1);

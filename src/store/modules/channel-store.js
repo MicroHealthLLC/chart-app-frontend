@@ -1,4 +1,5 @@
 import axios from "axios";
+const BASE_URL = process.env.VUE_APP_BASE_API_URL;
 
 export default {
   state: {
@@ -14,7 +15,7 @@ export default {
     addChannel({ commit, dispatch, getters }, channel) {
       axios({
         method: "POST",
-        url: "http://localhost:3000/v1/channels",
+        url: `${BASE_URL}/v1/channels`,
         data: channel,
       }).then((res) => {
         commit("SET_CHANNEL", res.data);
@@ -30,7 +31,7 @@ export default {
     fetchChannel({ commit }, id) {
       axios({
         method: "GET",
-        url: `http://localhost:3000/v1/channels/${id}`,
+        url: `${BASE_URL}/v1/channels/${id}`,
       })
         .then((res) => {
           commit("SET_CHANNEL", res.data);
@@ -42,7 +43,7 @@ export default {
     fetchChannels({ commit }) {
       axios({
         method: "GET",
-        url: "http://localhost:3000/v1/channels",
+        url: `${BASE_URL}/v1/channels`,
       })
         .then((res) => {
           commit("SET_CHANNELS", res.data);
@@ -54,7 +55,7 @@ export default {
     updateChannel({ commit, dispatch }, channel) {
       axios({
         method: "PATCH",
-        url: `http://localhost:3000/v1/channels/${channel.id}`,
+        url: `${BASE_URL}/v1/channels/${channel.id}`,
         data: channel,
       }).then((res) => {
         commit("SET_CHANNEL", res.data);

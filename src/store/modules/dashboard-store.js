@@ -1,4 +1,5 @@
 import axios from "axios";
+const BASE_URL = process.env.VUE_APP_BASE_API_URL;
 
 export default {
   state: {
@@ -15,7 +16,7 @@ export default {
     fetchDashboards({ commit }) {
       axios({
         method: "GET",
-        url: "http://localhost:3000/v1/dashboards",
+        url: `${BASE_URL}/v1/dashboards`,
       }).then((res) => {
         commit("SET_DASHBOARDS", res.data);
       });
@@ -23,7 +24,7 @@ export default {
     fetchDashboard({ commit }, id) {
       axios({
         method: "GET",
-        url: `http://localhost:3000/v1/dashboards/${id}`,
+        url: `${BASE_URL}/v1/dashboards/${id}`,
       }).then((res) => {
         commit("SET_ACTIVE_DASHBOARD", res.data);
       });
@@ -31,7 +32,7 @@ export default {
     addDashboard({ commit }, dashboard) {
       axios({
         method: "POST",
-        url: "http://localhost:3000/v1/dashboards",
+        url: `${BASE_URL}/v1/dashboards`,
         data: dashboard,
       }).then((res) => {
         commit("SET_ACTIVE_DASHBOARD", res.data);
@@ -45,7 +46,7 @@ export default {
     updateDashboard({ commit }, dashboard) {
       axios({
         method: "PATCH",
-        url: `http://localhost:3000/v1/dashboards/${dashboard.id}`,
+        url: `${BASE_URL}/v1/dashboards/${dashboard.id}`,
         data: dashboard,
       }).then((res) => {
         commit("SET_ACTIVE_DASHBOARD", res.data);
@@ -58,7 +59,7 @@ export default {
     deleteDashboard({ commit }, id) {
       axios({
         method: "DELETE",
-        url: `http://localhost:3000/v1/dashboards/${id}`,
+        url: `${BASE_URL}/v1/dashboards/${id}`,
       }).then(() => {
         commit("SET_SNACKBAR", {
           show: true,

@@ -1,4 +1,5 @@
 import axios from "axios";
+const BASE_URL = process.env.VUE_APP_BASE_API_URL;
 
 export default {
   state: {
@@ -12,7 +13,7 @@ export default {
     fetchNews({ commit }) {
       axios({
         method: "GET",
-        url: "http://localhost:3000/v1/news",
+        url: `${BASE_URL}/v1/news`,
       }).then((res) => {
         commit("SET_NEWS", res.data);
       });
@@ -20,7 +21,7 @@ export default {
     addNews({ commit }, news) {
       axios({
         method: "POST",
-        url: "http://localhost:3000/v1/news",
+        url: `${BASE_URL}/v1/news`,
         data: news,
       }).then((res) => {
         commit("ADD_NEWS", res.data);
@@ -33,7 +34,7 @@ export default {
     updateNews({ commit }, news) {
       axios({
         method: "PATCH",
-        url: `http://localhost:3000/v1/news/${news.id}`,
+        url: `${BASE_URL}/v1/news/${news.id}`,
         data: news,
       }).then((res) => {
         commit("UPDATE_NEWS", res.data);
