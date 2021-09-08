@@ -112,6 +112,7 @@
             ref="chart"
             :is="graphType"
             :chartData="selected"
+            :chartColors="colors[0].scheme"
             :height="600"
           ></Component>
           <v-btn
@@ -186,7 +187,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["activeDataSet", "channels"]),
+    ...mapGetters(["activeDataSet", "channels", "colors"]),
     graphType() {
       if (this.chartType === "Line") {
         return LineChart;
