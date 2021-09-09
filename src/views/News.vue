@@ -21,14 +21,14 @@
             <v-icon color="primary" small class="mr-2" @click="editItem(item)">
               mdi-pencil
             </v-icon>
-            <v-icon color="primary" small @click="deleteItem(item)">
+            <v-icon color="primary" small @click="openDeleteDialog(item)">
               mdi-delete
             </v-icon>
           </template>
         </v-data-table>
       </v-card>
       <!-- Modal form for news -->
-      <v-dialog v-model="dialog" width="50%">
+      <v-dialog v-model="dialog" @click:outside="closeDialog" width="50%">
         <v-card>
           <v-toolbar class="mb-4" color="info" dark>
             <h3 v-if="activeNews.id">Update News</h3>
@@ -58,6 +58,28 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+      <!-- Delete Prompt -->
+      <v-dialog
+        v-model="deleteDialog"
+        @click:outside="closeDeleteDialog"
+        max-width="400"
+      >
+        <v-card>
+          <v-card-title>Delete {{ deleteableNews.title }}?</v-card-title>
+          <v-divider class="mx-4 mb-2"></v-divider>
+          <v-card-text
+            >Are you sure you would like to delete this News?</v-card-text
+          >
+          <v-card-actions class="d-flex justify-end">
+            <v-btn @click="closeDeleteDialog" small outlined color="secondary"
+              >Cancel</v-btn
+            >
+            <v-btn @click="removeNews" small depressed color="error"
+              >Delete</v-btn
+            >
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-col>
   </v-row>
 </template>
@@ -70,6 +92,8 @@ export default {
   data() {
     return {
       dialog: false,
+      deleteDialog: false,
+      deleteableNews: {},
       headers: [
         {
           text: "Title",
@@ -100,7 +124,7 @@ export default {
     ...mapGetters(["activeNews", "news"]),
   },
   methods: {
-    ...mapActions(["addNews", "fetchNews", "updateNews"]),
+    ...mapActions(["addNews", "deleteNews", "fetchNews", "updateNews"]),
     ...mapMutations(["SET_ACTIVE_NEWS"]),
     openDialog() {
       this.dialog = true;
@@ -114,12 +138,8 @@ export default {
       });
     },
     editItem(item) {
-      console.log(`EDIT ${item.title}`);
       this.SET_ACTIVE_NEWS(item);
       this.dialog = true;
-    },
-    deleteItem(item) {
-      console.log(`DELETE ${item.title}`);
     },
     saveNews() {
       if (this.$refs.form.validate()) {
@@ -129,6 +149,18 @@ export default {
           this.addNews(this.activeNews);
         }
       }
+    },
+    openDeleteDialog(news) {
+      this.deleteDialog = true;
+      this.deleteableNews = news;
+    },
+    closeDeleteDialog() {
+      this.deleteDialog = false;
+      this.deleteableNews = {};
+    },
+    removeNews() {
+      this.deleteNews(this.deleteableNews.id);
+      this.deleteDialog = false;
     },
   },
   beforeMount() {

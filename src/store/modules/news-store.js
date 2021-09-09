@@ -44,6 +44,18 @@ export default {
         });
       });
     },
+    deleteNews({ commit }, id) {
+      axios({
+        method: "DELETE",
+        url: `${BASE_URL}/v1/news/${id}`,
+      }).then(() => {
+        commit("DELETE_NEWS", id);
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "News successfully deleted.",
+        });
+      });
+    },
   },
   mutations: {
     SET_NEWS: (state, news) => (state.news = news),
@@ -54,6 +66,10 @@ export default {
         (newsReport) => newsReport.id == news.id
       );
       state.news[index] = news;
+    },
+    DELETE_NEWS: (state, id) => {
+      let index = state.news.findIndex((newsReport) => newsReport.id == id);
+      state.news.splice(index, 1);
     },
   },
   getters: {
