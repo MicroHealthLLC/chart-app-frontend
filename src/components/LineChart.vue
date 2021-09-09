@@ -37,6 +37,15 @@ export default {
             position: "nearest",
           },
         },
+        scales: {
+          yAxes: [
+            {
+              ticks: {
+                beginAtZero: true,
+              },
+            },
+          ],
+        },
       },
     };
   },

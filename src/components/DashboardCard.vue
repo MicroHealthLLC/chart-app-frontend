@@ -2,12 +2,12 @@
   <v-card class="dashboard-card" @click="toDashboard">
     <v-card-title>
       <v-icon class="mr-4" color="info">mdi-monitor-dashboard</v-icon>
-      <div>
-        <h5>{{ dashboard.title }}</h5>
-      </div>
+      <span class="text-subtitle-2 font-weight-bold">
+        {{ dashboard.title }}
+      </span>
     </v-card-title>
     <v-card-text>
-      <ul class="mb-4">
+      <ul class="mb-4 text-caption">
         <li><strong>Channel:</strong> {{ dashboard.channel.title }}</li>
         <li><strong>Reports:</strong> {{ dashboard.reports.length }}</li>
       </ul>
@@ -55,5 +55,10 @@ export default {
 .dashboard-card:hover {
   transform: scale(1.05);
   cursor: pointer;
+}
+.v-card__title {
+  word-break: normal;
+  line-height: 1.5rem;
+  flex-wrap: unset;
 }
 </style>

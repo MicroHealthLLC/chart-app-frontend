@@ -24,6 +24,15 @@ export default {
           display: true,
           text: ["", ""],
         },
+        scales: {
+          yAxes: [
+            {
+              ticks: {
+                beginAtZero: true,
+              },
+            },
+          ],
+        },
       },
     };
   },

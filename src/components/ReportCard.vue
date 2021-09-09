@@ -2,12 +2,12 @@
   <v-card class="report-card" @click="toReport">
     <v-card-title>
       <v-icon class="mr-4" color="info">{{ chartIcon }}</v-icon>
-      <div>
-        <h5>{{ report.title }}</h5>
-      </div>
+      <span class="text-subtitle-2 font-weight-bold">
+        {{ report.title }}
+      </span>
     </v-card-title>
     <v-card-text>
-      <ul class="mb-4">
+      <ul class="mb-4 text-caption">
         <li><strong>Data Set:</strong> {{ report.data_set.title }}</li>
         <li><strong>Channel:</strong> {{ report.channel.title }}</li>
       </ul>
@@ -79,5 +79,10 @@ export default {
 .report-card:hover {
   transform: scale(1.05);
   cursor: pointer;
+}
+.v-card__title {
+  word-break: normal;
+  line-height: 1.5rem;
+  flex-wrap: unset;
 }
 </style>
