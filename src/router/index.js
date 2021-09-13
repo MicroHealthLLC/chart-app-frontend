@@ -1,5 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+
+import Login from "../views/Login.vue";
 import Home from "../views/Home.vue";
 import News from "../views/News.vue";
 
@@ -17,7 +19,7 @@ import Channel from "../views/Channel.vue";
 import ChannelReports from "../views/ChannelReports.vue";
 import Report from "../views/Report.vue";
 
-import AddDashboard from "../views/AddDashboard.vue"
+import AddDashboard from "../views/AddDashboard.vue";
 import Dashboards from "../views/Dashboards.vue";
 import Dashboard from "../views/Dashboard.vue";
 import ChannelDashboards from "../views/ChannelDashboards.vue";
@@ -25,6 +27,11 @@ import ChannelDashboards from "../views/ChannelDashboards.vue";
 Vue.use(VueRouter);
 
 const routes = [
+  {
+    path: "/login",
+    name: "Login",
+    component: Login,
+  },
   {
     path: "/",
     name: "Home",

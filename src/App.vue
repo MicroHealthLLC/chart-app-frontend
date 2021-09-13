@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <Sidebar />
+    <Sidebar v-if="$route.name != 'Login'" />
     <v-main class="main-container mx-auto">
       <v-snackbar v-model="snackbar.show" color="success" outlined text top
         >{{ snackbar.message
