@@ -118,7 +118,7 @@
               <v-list-item-title>Profile</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item link>
+          <v-list-item @click="logOutUser" link>
             <v-list-item-icon>
               <v-icon>mdi-logout</v-icon>
             </v-list-item-icon>
@@ -174,6 +174,14 @@ export default {
       ],
       right: null,
     };
+  },
+  methods: {
+    logOutUser() {
+      localStorage.removeItem("mRmsToken");
+      localStorage.removeItem("mRmsId");
+
+      this.$router.push("/login");
+    },
   },
   computed: {
     ...mapGetters(["channels"]),

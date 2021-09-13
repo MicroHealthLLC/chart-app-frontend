@@ -7,6 +7,7 @@ import datasetStore from "./modules/dataset-store";
 import newsStore from "./modules/news-store";
 import snackbarStore from "./modules/snackbar-store";
 import reportStore from "./modules/report-store";
+import userStore from "./modules/user-store";
 import utilStore from "./modules/util-store";
 
 Vue.use(Vuex);
@@ -41,6 +42,7 @@ export default new Vuex.Store({
     newsStore,
     snackbarStore,
     reportStore,
+    userStore,
     utilStore,
   },
 });

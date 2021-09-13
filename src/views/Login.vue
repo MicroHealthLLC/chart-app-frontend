@@ -32,7 +32,7 @@
             ></v-text-field>
           </v-card-text>
           <v-card-actions>
-            <v-btn color="primary" width="100%">Login</v-btn>
+            <v-btn @click="login" color="primary" width="100%">Login</v-btn>
           </v-card-actions>
           <div class="px-3 mt-5 mb-2">
             <span class="text-caption">Need help logging in?</span>
@@ -44,12 +44,41 @@
 </template>
 
 <script>
+import axios from "axios";
+import { mapActions, mapMutations } from "vuex";
+
 export default {
   data() {
     return {
       email: "",
       password: "",
     };
+  },
+  methods: {
+    ...mapActions(["fetchChannels"]),
+    ...mapMutations(["SET_USER"]),
+    login() {
+      // Submit credentials to backend API
+      axios({
+        method: "POST",
+        url: `${process.env.VUE_APP_BASE_API_URL}/v1/login`,
+        data: { email: this.email, password: this.password },
+      }).then((res) => {
+        // Store JWT token and user id locally
+        localStorage.setItem("mRmsToken", res.data.token);
+        localStorage.setItem("mRmsId", res.data.user.id);
+        //Configure Axios header to user token
+        axios.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${localStorage.getItem("mRmsToken")}`;
+        // Set current user
+        this.SET_USER(res.data.user);
+        // Set channels for sidebar navigation
+        this.fetchChannels();
+        // Navigate to home page
+        this.$router.push("/");
+      });
+    },
   },
 };
 </script>

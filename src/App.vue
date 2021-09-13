@@ -18,6 +18,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import Sidebar from "./components/Sidebar";
+
 export default {
   components: { Sidebar },
   name: "App",
@@ -26,14 +27,17 @@ export default {
     //
   }),
   methods: {
-    ...mapActions(["fetchChannels"]),
+    ...mapActions(["fetchChannels", "fetchCurrentUser"]),
     ...mapMutations(["CLOSE_SNACKBAR"]),
   },
   computed: {
     ...mapGetters(["channels", "snackbar"]),
   },
   created() {
-    this.fetchChannels();
+    if (localStorage.getItem("mRmsToken") && localStorage.getItem("mRmsId")) {
+      this.fetchCurrentUser(localStorage.getItem("mRmsId"));
+      this.fetchChannels();
+    }
   },
 };
 </script>
