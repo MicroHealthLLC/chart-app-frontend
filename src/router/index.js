@@ -1,5 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import userStore from "../store/modules/user-store";
 
 import Login from "../views/Login.vue";
 import Home from "../views/Home.vue";
@@ -123,22 +124,25 @@ const routes = [
     name: "ChannelDashboards",
     component: ChannelDashboards,
   },
-  // {
-  //   path: "/about",
-  //   name: "About",
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   component: function () {
-  //     return import(/* webpackChunkName: "about" */ "../views/About.vue");
-  //   },
-  // },
 ];
 
 const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if (
+    to.name !== "Login" &&
+    !userStore.state.user.isAuthenticated &&
+    !localStorage.getItem("mRmsToken") &&
+    !localStorage.getItem("mRmsId")
+  ) {
+    next({ name: "Login" });
+  } else {
+    next();
+  }
 });
 
 export default router;

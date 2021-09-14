@@ -3,7 +3,9 @@ const BASE_URL = process.env.VUE_APP_BASE_API_URL;
 
 export default {
   state: {
-    user: {},
+    user: {
+      isAuthenticated: false,
+    },
   },
   actions: {
     fetchCurrentUser({ commit }, id) {

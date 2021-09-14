@@ -133,7 +133,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 
 export default {
   data() {
@@ -176,10 +176,19 @@ export default {
     };
   },
   methods: {
+    ...mapMutations(["SET_SNACKBAR", "SET_USER"]),
     logOutUser() {
+      // Remove JWT tokem and user id from local storage
       localStorage.removeItem("mRmsToken");
       localStorage.removeItem("mRmsId");
-
+      // Display successful logout message
+      this.SET_SNACKBAR({
+        show: true,
+        message: "Logout successful!",
+      });
+      // Reset user to base state for authentication check in router guard
+      this.SET_USER({ isAuthenticated: false });
+      // Redirect to login page
       this.$router.push("/login");
     },
   },
