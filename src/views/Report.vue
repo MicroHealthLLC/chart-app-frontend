@@ -92,9 +92,10 @@
           </div>
           <div>
             <v-text-field
-              value="Christopher Calderon"
+              v-model="createdBy"
               label="Created By"
               dense
+              readonly
             ></v-text-field>
           </div>
           <div>
@@ -112,9 +113,10 @@
           </div>
           <div>
             <v-text-field
-              value="Christopher Calderon"
+              v-model="updatedBy"
               label="Last Updated By"
               dense
+              readonly
             ></v-text-field>
           </div>
           <div>
@@ -175,8 +177,9 @@
               dense
               @change="updateColors"
             ></v-select>
-          </div></div
-      ></v-form>
+          </div>
+        </div>
+      </v-form>
       <!-- Delete Button -->
       <div v-if="activeReport.id" class="d-flex justify-end mt-4">
         <v-btn
@@ -327,12 +330,14 @@ export default {
           data_set_id: this.activeReport.data_set_id,
           tag_ids: this.activeReport.tags.map((tag) => tag.id),
           color_scheme_id: this.activeReport.color_scheme_id,
+          last_updated_by: `${this.user.first_name} ${this.user.last_name}`,
         };
 
         if (this.activeReport.id) {
           data.id = this.activeReport.id;
           this.updateReport(data);
         } else {
+          data.user_id = this.user.id;
           this.addReport(data);
         }
       }
@@ -370,6 +375,7 @@ export default {
       "reportLoaded",
       "tags",
       "statusCode",
+      "user",
     ]),
     graphType() {
       if (this.activeReport.chart_type === "line") {
@@ -403,6 +409,24 @@ export default {
     screenHeight() {
       return window.innerHeight - 200;
     },
+    createdBy() {
+      if (this.activeReport.id) {
+        return `${this.activeReport.user.first_name} ${
+          this.activeReport.user.last_name
+        } on ${new Date(this.activeReport.created_at).toLocaleString()}`;
+      } else {
+        return `${this.activeReport.user.first_name} ${this.activeReport.user.last_name}`;
+      }
+    },
+    updatedBy() {
+      if (this.activeReport.id) {
+        return `${this.activeReport.last_updated_by} on ${new Date(
+          this.activeReport.updated_at
+        ).toLocaleString()}`;
+      } else {
+        return `${this.activeReport.user.first_name} ${this.activeReport.user.last_name}`;
+      }
+    },
   },
   beforeMount() {
     if (this.$route.name == "Report" && this.$route.params.reportId != "new") {
@@ -416,6 +440,11 @@ export default {
         channel_id: parseInt(this.$route.params.channelId),
         tags: [],
         color_scheme_id: 1,
+        user: {
+          first_name: this.user.first_name,
+          last_name: this.user.last_name,
+        },
+        updated_at: "",
       });
     } else {
       this.SET_ACTIVE_REPORT({
@@ -425,13 +454,16 @@ export default {
         data_set: { data: [] },
         tags: [],
         color_scheme_id: 1,
+        user: {
+          first_name: this.user.first_name,
+          last_name: this.user.last_name,
+        },
+        updated_at: "",
       });
     }
     // TODO: Combine API calls below into one
     this.fetchDataSets();
     this.fetchTags();
-
-    // this.chartOptions.title.text[0] = this.activeReport.title;
   },
   mounted() {
     this.colorScheme = this.colors.find(

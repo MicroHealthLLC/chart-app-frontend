@@ -10,6 +10,12 @@ export default {
       data_set: { data: [] },
       tags: [],
       color_scheme_id: 1,
+      user: {
+        first_name: "",
+        last_name: "",
+      },
+      last_updated_by: "",
+      updated_at: "",
     },
     channel_reports: [],
     reports: [],

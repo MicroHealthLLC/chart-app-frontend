@@ -13,7 +13,7 @@ export default {
         method: "GET",
         url: `${BASE_URL}/v1/users/${id}`,
       }).then((res) => {
-        commit("SET_USER", res.data);
+        commit("SET_USER", res.data.user);
       });
     },
   },
