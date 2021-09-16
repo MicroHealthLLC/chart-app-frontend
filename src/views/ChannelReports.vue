@@ -51,10 +51,6 @@
 
       <ul class="text-caption details">
         <li>
-          <strong>Category: </strong>
-          <span class="category">{{ channel.category }}</span>
-        </li>
-        <li>
           <strong
             ><v-icon small>mdi-file-chart-outline</v-icon> Total
             Reports:</strong
@@ -64,6 +60,16 @@
         <li>
           <strong> <v-icon small>mdi-text</v-icon> Description:</strong>
           {{ channel.description }}
+        </li>
+        <li>
+          <strong>Category: </strong>
+          <span class="category">{{ channel.category }}</span>
+        </li>
+        <li>
+          <strong>Created By: </strong>
+          <span class="category"
+            >{{ channel.user.first_name }} {{ channel.user.last_name }}</span
+          >
         </li>
       </ul>
       <!-- Dashboards -->
