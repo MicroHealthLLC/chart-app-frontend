@@ -32,10 +32,7 @@
     </v-col>
 
     <!-- Dashboard Preview -->
-    <v-col
-      v-if="activeDashboard.reports.length == 0"
-      class="cold-md-12"
-    >
+    <v-col v-if="activeDashboard.reports.length == 0" class="cold-md-12">
       <v-card>
         <div class="place-holder d-flex justify-center align-center">
           <p class="text-center placeholder-text mb-0">
@@ -117,9 +114,10 @@
           </div>
           <div>
             <v-text-field
-              value="Christopher Calderon"
+              v-model="createdBy"
               label="Created By"
               dense
+              readonly
             ></v-text-field>
           </div>
           <div>
@@ -135,14 +133,12 @@
             ></v-select>
           </div>
           <div>
-            <v-select
-              v-model="activeDashboard.layout"
-              :items="layouts"
-              item-text="text"
-              item-value="value"
-              label="Layout"
+            <v-text-field
+              v-model="updatedBy"
+              label="Last Updated By"
               dense
-            ></v-select>
+              readonly
+            ></v-text-field>
           </div>
           <div class="reports">
             <v-select
@@ -182,6 +178,16 @@
               dense
             >
             </v-select>
+          </div>
+          <div>
+            <v-select
+              v-model="activeDashboard.layout"
+              :items="layouts"
+              item-text="text"
+              item-value="value"
+              label="Layout"
+              dense
+            ></v-select>
           </div>
         </div>
       </v-form>
@@ -253,7 +259,26 @@ export default {
       "colors",
       "statusCode",
       "tags",
+      "user",
     ]),
+    createdBy() {
+      if (this.activeDashboard.id) {
+        return `${this.activeDashboard.user.first_name} ${
+          this.activeDashboard.user.last_name
+        } on ${new Date(this.activeDashboard.created_at).toLocaleString()}`;
+      } else {
+        return `${this.activeDashboard.user.first_name} ${this.activeDashboard.user.last_name}`;
+      }
+    },
+    updatedBy() {
+      if (this.activeDashboard.id) {
+        return `${this.activeDashboard.last_updated_by} on ${new Date(
+          this.activeDashboard.updated_at
+        ).toLocaleString()}`;
+      } else {
+        return `${this.activeDashboard.user.first_name} ${this.activeDashboard.user.last_name}`;
+      }
+    },
   },
   methods: {
     ...mapActions([
@@ -300,12 +325,14 @@ export default {
           layout: this.activeDashboard.layout,
           report_ids: this.activeDashboard.reports.map((report) => report.id),
           tag_ids: this.activeDashboard.tags.map((tag) => tag.id),
+          last_updated_by: `${this.user.first_name} ${this.user.last_name}`,
         };
 
         if (this.activeDashboard.id) {
           data.id = this.activeDashboard.id;
           this.updateDashboard(data);
         } else {
+          data.user_id = this.user.id;
           this.addDashboard(data);
         }
       }
@@ -332,6 +359,12 @@ export default {
         reports: [],
         tags: [],
         layout: "layout-1",
+        user: {
+          first_name: this.user.first_name,
+          last_name: this.user.last_name,
+        },
+        last_updated_by: "",
+        updated_at: "",
       });
     }
 

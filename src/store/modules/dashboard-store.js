@@ -10,6 +10,12 @@ export default {
       reports: [],
       tags: [],
       layout: "layout-1",
+      user: {
+        first_name: "",
+        last_name: "",
+      },
+      last_updated_by: "",
+      updated_at: "",
     },
   },
   actions: {
