@@ -113,7 +113,9 @@
           1
         </li>
       </ul>
+      <!-- NEWS -->
       <h3 class="mt-4">News</h3>
+      
       <v-divider class="mb-4"></v-divider>
 
       <NewsCard
