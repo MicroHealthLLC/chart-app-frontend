@@ -81,4 +81,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+::v-deep .text-start:first-child {
+  font-weight: 600;
+}
+</style>

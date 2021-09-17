@@ -121,7 +121,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["activeNews", "news"]),
+    ...mapGetters(["activeNews", "news", "user"]),
   },
   methods: {
     ...mapActions(["addNews", "deleteNews", "fetchNews", "updateNews"]),
@@ -143,11 +143,17 @@ export default {
     },
     saveNews() {
       if (this.$refs.form.validate()) {
+        let data = {
+          ...this.activeNews,
+        };
+
         if (this.activeNews.id) {
-          this.updateNews(this.activeNews);
+          this.updateNews(data);
         } else {
-          this.addNews(this.activeNews);
+          data.user_id = this.user.id;
+          this.addNews(data);
         }
+        this.dialog = false;
       }
     },
     openDeleteDialog(news) {
@@ -169,4 +175,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+::v-deep .text-start:first-child {
+  font-weight: 600;
+}
+</style>

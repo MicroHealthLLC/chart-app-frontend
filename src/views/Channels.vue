@@ -89,11 +89,11 @@ export default {
 };
 </script>
 
-<style>
-td.text-start:first-child {
+<style scoped>
+::v-deep .text-start:first-child {
   font-weight: 600;
 }
-td.text-start:nth-child(3) {
+::v-deep .text-start:nth-child(3) {
   text-transform: capitalize;
 }
 </style>
