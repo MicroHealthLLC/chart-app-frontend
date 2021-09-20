@@ -3,7 +3,8 @@
     <!-- Title -->
     <v-col class="col-12">
       <div class="d-flex justify-space-between">
-        <h3>Add Data Set</h3>
+        <h3 v-if="activeDataSet.id">{{ activeDataSet.title }}</h3>
+        <h3 v-else>Add Data Set</h3>
         <div>
           <v-btn
             @click="saveDataSet"
@@ -39,15 +40,8 @@
             ></v-text-field>
           </div>
           <div>
-            <v-select
-              label="Channel"
-              prepend-icon="mdi-playlist-star"
-              :items="channels"
-              item-text="title"
-              multiple
-              small-chips
-              dense
-            ></v-select>
+            <v-text-field v-model="createdBy" label="Created By" dense>
+            </v-text-field>
           </div>
           <div>
             <v-text-field
@@ -72,6 +66,20 @@
                 @parsed="uploadData"
               ></xlsx-json>
             </xlsx-read>
+          </div>
+          <div class="channels">
+            <v-select
+              v-model="activeDataSet.channels"
+              label="Channels"
+              :items="channels"
+              item-text="title"
+              item-value="id"
+              multiple
+              small-chips
+              dense
+              deletable-chips
+              return-object
+            ></v-select>
           </div>
         </div>
       </v-form>
@@ -187,7 +195,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["activeDataSet", "channels", "colors"]),
+    ...mapGetters(["activeDataSet", "channels", "colors", "user"]),
     graphType() {
       if (this.chartType === "Line") {
         return LineChart;
@@ -212,6 +220,15 @@ export default {
           this.chartType == "Polar Area") &&
         this.data.length > 0
       );
+    },
+    createdBy() {
+      if (this.activeDataSet.id) {
+        return `${this.activeDataSet.user.first_name} ${
+          this.activeDataSet.user.last_name
+        } on ${new Date(this.activeDataSet.created_at).toLocaleString()}`;
+      } else {
+        return `${this.activeDataSet.user.first_name} ${this.activeDataSet.user.last_name}`;
+      }
     },
   },
   methods: {
@@ -276,26 +293,18 @@ export default {
           title: this.activeDataSet.title,
           description: this.activeDataSet.description,
           data: this.data,
+          channel_ids: this.activeDataSet.channels.map((channel) => channel.id),
         };
 
         if (this.activeDataSet.id) {
           dataSet.id = this.activeDataSet.id;
           this.updateDataSet(dataSet);
         } else {
+          dataSet.user_id = this.user.id;
           this.addDataSet(dataSet);
         }
       }
     },
-  },
-  mounted() {
-    if (this.$route.name == "DataSet") {
-      this.data = this.activeDataSet.data;
-      this.uploadData(this.data);
-    }
-  },
-  beforeDestroy() {
-    // Reset form
-    this.SET_ACTIVE_DATA_SET({ title: "", description: "", data: [] });
   },
   watch: {
     activeDataSet() {
@@ -318,5 +327,8 @@ export default {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 10px;
+}
+.channels {
+  grid-column: 1 / span 2;
 }
 </style>

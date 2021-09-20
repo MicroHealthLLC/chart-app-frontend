@@ -7,6 +7,11 @@ export default {
       title: "",
       description: "",
       data: [],
+      channels: [],
+      user: {
+        first_name: "",
+        last_name: "",
+      },
     },
     data_sets: [],
   },

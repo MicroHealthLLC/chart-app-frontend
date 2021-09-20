@@ -70,6 +70,7 @@ export default {
     ...mapActions(["fetchDataSets"]),
     editItem(item) {
       console.log(`EDIT ${item.title}`);
+      this.$router.push(`/data-sets/${item.id}`);
     },
     deleteItem(item) {
       console.log(`DELETE ${item.title}`);
