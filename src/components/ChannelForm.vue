@@ -77,7 +77,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["channel"]),
+    ...mapGetters(["channel", "user"]),
   },
   methods: {
     ...mapActions(["addChannel", "updateChannel"]),
@@ -92,7 +92,7 @@ export default {
             description: this.channel.description,
           });
         } else {
-          this.addChannel(this.channel);
+          this.addChannel({ ...this.channel, user_id: this.user.id });
         }
       }
     },
