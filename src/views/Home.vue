@@ -150,7 +150,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["channels", "news", "reports"]),
+    ...mapGetters(["channels", "news", "reports", "user"]),
   },
   methods: {
     ...mapActions(["fetchNews", "fetchReports"]),
@@ -165,7 +165,9 @@ export default {
         if (report.channel.category == "public") {
           this.publicReports.push(report);
         } else if (report.channel.category == "personal") {
-          this.personalReports.push(report);
+          if(report.user_id == this.user.id) {
+            this.personalReports.push(report);
+          }
         } else if (report.channel.category == "group") {
           this.groupReports.push(report);
         }
