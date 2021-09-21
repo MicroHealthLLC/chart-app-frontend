@@ -43,14 +43,14 @@
             <v-text-field v-model="createdBy" label="Created By" dense>
             </v-text-field>
           </div>
-          <div>
+          <div :class="{ description: activeDataSet.id }">
             <v-text-field
               v-model="activeDataSet.description"
               label="Description"
               dense
             ></v-text-field>
           </div>
-          <div>
+          <div v-if="!activeDataSet.id">
             <v-file-input
               placeholder="Please choose a file..."
               type="file"
@@ -79,6 +79,10 @@
               dense
               deletable-chips
               return-object
+              required
+              :rules="[(v) => v.length > 0 || 'At least 1 Channel is required']"
+              hint="Please select all Channels that have access to this Data Set"
+              persistent-hint
             ></v-select>
           </div>
         </div>
@@ -195,7 +199,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["activeDataSet", "channels", "colors", "user"]),
+    ...mapGetters(["activeDataSet", "channels", "colors", "statusCode", "user"]),
     graphType() {
       if (this.chartType === "Line") {
         return LineChart;
@@ -233,7 +237,7 @@ export default {
   },
   methods: {
     ...mapActions(["addDataSet", "updateDataSet"]),
-    ...mapMutations(["SET_ACTIVE_DATA_SET"]),
+    ...mapMutations(["SET_ACTIVE_DATA_SET", "SET_STATUS_CODE"]),
     onChange(event) {
       this.file = event.target.files ? event.target.files[0] : null;
     },
@@ -311,6 +315,14 @@ export default {
       this.data = this.activeDataSet.data;
       this.uploadData(this.data);
     },
+    statusCode() {
+      if (this.statusCode == 201) {
+        this.$router.push(
+          `/data-sets/${this.activeDataSet.id}`
+        );
+        this.SET_STATUS_CODE(0);
+      }
+    },
   },
 };
 </script>
@@ -328,7 +340,19 @@ export default {
   grid-template-columns: 1fr 1fr;
   grid-gap: 10px;
 }
-.channels {
+.channels,
+.description {
   grid-column: 1 / span 2;
+}
+div >>> .v-select__selections {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+div >>> .v-select__selections .v-chip {
+  color: white;
+  background-color: #1976d2;
+}
+div >>> .v-select__selections .v-chip .v-icon {
+  color: white;
 }
 </style>

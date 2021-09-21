@@ -43,6 +43,7 @@ export default {
           show: true,
           message: "Data Set added successfully!",
         });
+        commit("SET_STATUS_CODE", res.status);
       });
     },
     updateDataSet({ commit }, dataSet) {
