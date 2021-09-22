@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapActions, mapMutations } from "vuex";
 import ChannelForm from "./../components/ChannelForm.vue";
 
 export default {
@@ -11,7 +11,11 @@ export default {
     ChannelForm,
   },
   methods: {
+    ...mapActions(["fetchUsers"]),
     ...mapMutations(["SET_CHANNEL"]),
+  },
+  beforeMount() {
+    this.fetchUsers();
   },
   mounted() {
     this.SET_CHANNEL({ title: "", category: "public", description: "" });

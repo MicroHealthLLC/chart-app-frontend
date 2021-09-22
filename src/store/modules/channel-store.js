@@ -24,6 +24,7 @@ export default {
           show: true,
           message: "Channel added successfully!",
         });
+        commit("SET_STATUS_CODE", res.status);
         // Used to update changes made necessary for sidebar
         dispatch("fetchChannels");
       });

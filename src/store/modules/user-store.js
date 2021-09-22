@@ -6,8 +6,17 @@ export default {
     user: {
       isAuthenticated: false,
     },
+    users: [],
   },
   actions: {
+    fetchUsers({ commit }) {
+      axios({
+        method: "GET",
+        url: `${BASE_URL}/v1/users`,
+      }).then((res) => {
+        commit("SET_USERS", res.data);
+      });
+    },
     fetchCurrentUser({ commit }, id) {
       axios({
         method: "GET",
@@ -27,8 +36,10 @@ export default {
   },
   mutations: {
     SET_USER: (state, user) => (state.user = user),
+    SET_USERS: (state, users) => (state.users = users),
   },
   getters: {
     user: (state) => state.user,
+    users: (state) => state.users,
   },
 };

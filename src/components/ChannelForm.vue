@@ -47,6 +47,23 @@
               dense
             ></v-select>
           </div>
+          <div v-if="channel.category == 'group'" class="users">
+            <v-select
+              :items="users"
+              :item-text="(user) => `${user.first_name} ${user.last_name}`"
+              item-value="id"
+              label="Users"
+              hint="Please add all members who will have access to this Channel"
+              persistent-hint
+              multiple
+              chips
+              deletable-chips
+              return-object
+              dense
+              required
+              :rules="usersRules"
+            ></v-select>
+          </div>
           <div class="description">
             <v-textarea
               v-model="channel.description"
@@ -74,10 +91,16 @@ export default {
   data() {
     return {
       formValid: true,
+      usersRules: [
+        (v) => v.length > 0 || "At least 1 user is required",
+        (v) =>
+          v.map((user) => user.id).includes(this.user.id) ||
+          "You must be included in the group",
+      ],
     };
   },
   computed: {
-    ...mapGetters(["channel", "user"]),
+    ...mapGetters(["channel", "statusCode", "user", "users"]),
   },
   methods: {
     ...mapActions(["addChannel", "updateChannel"]),
@@ -97,6 +120,14 @@ export default {
       }
     },
   },
+  watch: {
+    statusCode() {
+      if (this.statusCode == 201) {
+        this.$router.push(`/channels/${this.channel.id}/reports`);
+        this.SET_STATUS_CODE(0);
+      }
+    },
+  },
 };
 </script>
 
@@ -106,7 +137,8 @@ export default {
   grid-template-columns: 1fr 1fr;
   grid-gap: 10px;
 }
-.description {
+.description,
+.users {
   grid-column: 1 / span 2;
 }
 </style>
