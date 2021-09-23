@@ -38,9 +38,9 @@
               v-model="channel.category"
               label="Channel Type"
               :items="[
-                { title: 'Public', value: 'public' },
-                { title: 'Personal', value: 'personal' },
-                { title: 'Group', value: 'group' },
+                { title: 'Public', value: 2 },
+                { title: 'Personal', value: 1 },
+                { title: 'Group', value: 0 },
               ]"
               item-text="title"
               item-value="value"
