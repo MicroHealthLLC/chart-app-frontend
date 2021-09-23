@@ -47,7 +47,7 @@
               dense
             ></v-select>
           </div>
-          <div v-if="channel.category == 'group'" class="users">
+          <div v-if="channel.category == 0" class="users">
             <v-select
               :items="users"
               :item-text="(user) => `${user.first_name} ${user.last_name}`"

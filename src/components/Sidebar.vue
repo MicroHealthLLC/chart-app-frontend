@@ -200,11 +200,11 @@ export default {
   },
   mounted() {
     this.channels.forEach((channel) => {
-      if (channel.category == "public") {
+      if (channel.category == 2) {
         this.channelItems[0].channels.push(channel);
-      } else if (channel.category == "personal") {
+      } else if (channel.category == 1) {
         this.channelItems[1].channels.push(channel);
-      } else if (channel.category == "group") {
+      } else if (channel.category == 0) {
         this.channelItems[2].channels.push(channel);
       }
     });
@@ -216,11 +216,11 @@ export default {
       this.channelItems[2].channels = [];
 
       this.channels.forEach((channel) => {
-        if (channel.category == "public") {
+        if (channel.category == 2) {
           this.channelItems[0].channels.push(channel);
-        } else if (channel.category == "personal") {
+        } else if (channel.category == 1) {
           this.channelItems[1].channels.push(channel);
-        } else if (channel.category == "group") {
+        } else if (channel.category == 0) {
           this.channelItems[2].channels.push(channel);
         }
       });
