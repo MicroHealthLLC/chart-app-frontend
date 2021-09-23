@@ -161,15 +161,9 @@ export default {
   },
   watch: {
     reports() {
-      this.reports.forEach((report) => {
-        if (report.channel.category == "public") {
-          this.publicReports.push(report);
-        } else if (report.channel.category == "personal") {
-          this.personalReports.push(report);
-        } else if (report.channel.category == "group") {
-          this.groupReports.push(report);
-        }
-      });
+      this.publicReports = JSON.parse(this.reports.public);
+      this.personalReports = JSON.parse(this.reports.personal);
+      this.groupReports = JSON.parse(this.reports.group);
     },
   },
 };
