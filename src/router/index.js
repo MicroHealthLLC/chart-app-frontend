@@ -18,6 +18,7 @@ import AddChannel from "../views/AddChannel.vue";
 import Channels from "../views/Channels.vue";
 import Channel from "../views/Channel.vue";
 import ChannelReports from "../views/ChannelReports.vue";
+import AddReport from "../views/AddReport.vue";
 import Report from "../views/Report.vue";
 
 import AddDashboard from "../views/AddDashboard.vue";
@@ -92,7 +93,7 @@ const routes = [
   {
     path: "/add-report",
     name: "AddReport",
-    component: Report,
+    component: AddReport,
   },
   {
     path: "/channels/:channelId/reports",
