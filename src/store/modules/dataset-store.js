@@ -14,6 +14,7 @@ export default {
       },
     },
     data_sets: [],
+    channel_data_sets: [],
   },
   actions: {
     fetchDataSet({ commit }, id) {
@@ -30,6 +31,14 @@ export default {
         url: `${BASE_URL}/v1/data_sets`,
       }).then((res) => {
         commit("SET_DATA_SETS", res.data);
+      });
+    },
+    fetchChannelDataSets({ commit }, id) {
+      axios({
+        method: "GET",
+        url: `${BASE_URL}/v1/channels/${id}/data_sets`,
+      }).then((res) => {
+        commit("SET_CHANNEL_DATA_SETS", res.data);
       });
     },
     addDataSet({ commit }, dataSet) {
@@ -63,9 +72,12 @@ export default {
   mutations: {
     SET_ACTIVE_DATA_SET: (state, dataSet) => (state.active_data_set = dataSet),
     SET_DATA_SETS: (state, dataSets) => (state.data_sets = dataSets),
+    SET_CHANNEL_DATA_SETS: (state, dataSets) =>
+      (state.channel_data_sets = dataSets),
   },
   getters: {
     activeDataSet: (state) => state.active_data_set,
     dataSets: (state) => state.data_sets,
+    channelDataSets: (state) => state.channel_data_sets,
   },
 };
