@@ -18,7 +18,11 @@ export default {
       updated_at: "",
     },
     channel_reports: [],
-    reports: [],
+    reports: {
+      public: [],
+      personal: [],
+      group: [],
+    },
     latest_reports: {},
     report_loaded: true,
   },
