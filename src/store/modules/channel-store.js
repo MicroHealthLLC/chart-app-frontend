@@ -5,7 +5,7 @@ export default {
   state: {
     channel: {
       title: "",
-      category: "public",
+      category: "public_channel",
       description: "",
       reports: [],
     },

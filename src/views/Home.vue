@@ -5,15 +5,15 @@
       <h3><router-link to="/public-reports">Public Reports</router-link></h3>
       <v-divider class="mb-4"></v-divider>
 
-      <div v-if="publicReports.length > 0" class="grid">
+      <div v-if="reports.public.length > 0" class="grid">
         <ReportCard
-          v-for="(report, index) in publicReports"
+          v-for="(report, index) in reports.public"
           :report="report"
           :key="index"
         ></ReportCard>
         <div class="d-flex justify-end btn-container">
           <v-btn
-            v-if="publicReports.length >= 6"
+            v-if="reports.public.length >= 6"
             to="/public-reports"
             class="d-flex-end"
             color="primary"
@@ -35,15 +35,15 @@
       </h3>
       <v-divider class="mb-4"></v-divider>
 
-      <div v-if="personalReports.length > 0" class="grid">
+      <div v-if="reports.personal.length > 0" class="grid">
         <ReportCard
-          v-for="(report, index) in personalReports"
+          v-for="(report, index) in reports.personal"
           :report="report"
           :key="index"
         ></ReportCard>
         <div class="d-flex justify-end btn-container">
           <v-btn
-            v-if="personalReports.length >= 6"
+            v-if="reports.personal.length >= 6"
             to="/personal-reports"
             class="ml-auto"
             color="primary"
@@ -65,15 +65,15 @@
       </h3>
       <v-divider class="mb-4"></v-divider>
 
-      <div v-if="groupReports.length > 0" class="grid">
+      <div v-if="reports.group.length > 0" class="grid">
         <ReportCard
-          v-for="(report, index) in groupReports"
+          v-for="(report, index) in reports.group"
           :report="report"
           :key="index"
         ></ReportCard>
         <div class="d-flex justify-end btn-container">
           <v-btn
-            v-if="groupReports.length >= 6"
+            v-if="reports.group.length >= 6"
             to="/group-reports"
             class="ml-auto"
             color="primary"
@@ -100,7 +100,7 @@
             ><v-icon small>mdi-file-chart-outline</v-icon> Total
             Reports:</strong
           >
-          {{ reports.length }}
+          {{ reportCount }}
         </li>
         <li>
           <strong><v-icon small>mdi-menu</v-icon> Channels:</strong>
@@ -115,7 +115,7 @@
       </ul>
       <!-- NEWS -->
       <h3 class="mt-4">News</h3>
-      
+
       <v-divider class="mb-4"></v-divider>
 
       <NewsCard
@@ -142,15 +142,15 @@ export default {
     ReportCard,
     NewsCard,
   },
-  data() {
-    return {
-      publicReports: [],
-      personalReports: [],
-      groupReports: [],
-    };
-  },
   computed: {
     ...mapGetters(["channels", "news", "reports"]),
+    reportCount() {
+      return (
+        this.reports.public.length +
+        this.reports.personal.length +
+        this.reports.group.length
+      );
+    },
   },
   methods: {
     ...mapActions(["fetchNews", "fetchReports"]),
@@ -158,19 +158,6 @@ export default {
   beforeMount() {
     this.fetchReports();
     this.fetchNews();
-  },
-  watch: {
-    reports() {
-      this.reports.forEach((report) => {
-        if (report.channel.category == "public") {
-          this.publicReports.push(report);
-        } else if (report.channel.category == "personal") {
-          this.personalReports.push(report);
-        } else if (report.channel.category == "group") {
-          this.groupReports.push(report);
-        }
-      });
-    },
   },
 };
 </script>
