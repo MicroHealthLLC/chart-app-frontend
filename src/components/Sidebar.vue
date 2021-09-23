@@ -191,6 +191,17 @@ export default {
       // Redirect to login page
       this.$router.push("/login");
     },
+    updateChannels() {
+      this.channels.forEach((channel) => {
+        if (channel.category == "public_channel") {
+          this.channelItems[0].channels.push(channel);
+        } else if (channel.category == "personal_channel") {
+          this.channelItems[1].channels.push(channel);
+        } else if (channel.category == "group_channel") {
+          this.channelItems[2].channels.push(channel);
+        }
+      });
+    },
   },
   computed: {
     ...mapGetters(["channels"]),
@@ -199,15 +210,7 @@ export default {
     },
   },
   mounted() {
-    this.channels.forEach((channel) => {
-      if (channel.category == "public") {
-        this.channelItems[0].channels.push(channel);
-      } else if (channel.category == "personal") {
-        this.channelItems[1].channels.push(channel);
-      } else if (channel.category == "group") {
-        this.channelItems[2].channels.push(channel);
-      }
-    });
+    this.updateChannels();
   },
   watch: {
     channels() {
@@ -215,15 +218,7 @@ export default {
       this.channelItems[1].channels = [];
       this.channelItems[2].channels = [];
 
-      this.channels.forEach((channel) => {
-        if (channel.category == "public") {
-          this.channelItems[0].channels.push(channel);
-        } else if (channel.category == "personal") {
-          this.channelItems[1].channels.push(channel);
-        } else if (channel.category == "group") {
-          this.channelItems[2].channels.push(channel);
-        }
-      });
+      this.updateChannels();
     },
   },
 };

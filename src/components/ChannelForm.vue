@@ -38,16 +38,16 @@
               v-model="channel.category"
               label="Channel Type"
               :items="[
-                { title: 'Public', value: 'public' },
-                { title: 'Personal', value: 'personal' },
-                { title: 'Group', value: 'group' },
+                { title: 'Public', value: 'public_channel' },
+                { title: 'Personal', value: 'personal_channel' },
+                { title: 'Group', value: 'group_channel' },
               ]"
               item-text="title"
               item-value="value"
               dense
             ></v-select>
           </div>
-          <div v-if="channel.category == 'group'" class="users">
+          <div v-if="channel.category == 'group_channel'" class="users">
             <v-select
               :items="users"
               :item-text="(user) => `${user.first_name} ${user.last_name}`"
@@ -111,12 +111,21 @@ export default {
           this.updateChannel({
             id: this.channel.id,
             title: this.channel.title,
-            category: this.channel.category,
+            category: this.categoryEnum(),
             description: this.channel.description,
           });
         } else {
           this.addChannel({ ...this.channel, user_id: this.user.id });
         }
+      }
+    },
+    categoryEnum() {
+      if (this.channel.category == "group_channel") {
+        return 0;
+      } else if (this.channel.category == "personal_channel") {
+        return 1;
+      } else {
+        return 2;
       }
     },
   },

@@ -126,9 +126,9 @@
               v-model="category"
               label="Channel Type"
               :items="[
-                { title: 'Public', value: 'public' },
-                { title: 'Personal', value: 'personal' },
-                { title: 'Group', value: 'group' },
+                { title: 'Public', value: 'public_channel' },
+                { title: 'Personal', value: 'personal_channel' },
+                { title: 'Group', value: 'group_channel' },
               ]"
               item-text="title"
               item-value="value"
@@ -191,9 +191,18 @@ export default {
         this.updateChannel({
           id: this.channel.id,
           title: this.title,
-          category: this.category,
+          category: this.categoryEnum(),
           description: this.description,
         });
+      }
+    },
+    categoryEnum() {
+      if (this.channel.category == "group_channel") {
+        return 0;
+      } else if (this.channel.category == "personal_channel") {
+        return 1;
+      } else {
+        return 2;
       }
     },
   },

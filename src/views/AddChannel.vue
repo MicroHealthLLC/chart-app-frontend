@@ -18,7 +18,7 @@ export default {
     this.fetchUsers();
   },
   mounted() {
-    this.SET_CHANNEL({ title: "", category: "public", description: "" });
+    this.SET_CHANNEL({ title: "", category: "public_channel", description: "" });
   },
 };
 </script>
