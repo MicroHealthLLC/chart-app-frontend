@@ -271,7 +271,7 @@ import PolarAreaChart from "../components/PolarAreaChart";
 import Table from "../components/Table";
 
 export default {
-  name: "Report",
+  name: "ReportForm",
   data() {
     return {
       formValid: true,
@@ -431,7 +431,6 @@ export default {
     ).scheme;
 
     if (this.$route.name == "AddReport") {
-      console.log(this.dataSets);
       this.dataSetChoices = [...this.dataSets];
     } else {
       this.dataSetChoices = [...this.channelDataSets];
@@ -441,7 +440,7 @@ export default {
     statusCode() {
       if (this.statusCode == 201) {
         this.$router.push(
-          `/channels/${this.$route.params.channelId}/reports/${this.activeReport.id}`
+          `/channels/${this.activeReport.channel_id}/reports/${this.activeReport.id}`
         );
         this.SET_STATUS_CODE(0);
       }

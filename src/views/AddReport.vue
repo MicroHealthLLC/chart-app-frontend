@@ -7,6 +7,7 @@ import { mapActions, mapMutations, mapGetters } from "vuex";
 import ReportForm from "../components/ReportForm";
 
 export default {
+  name: "AddReport",
   components: {
     ReportForm,
   },

@@ -7,11 +7,12 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
 import ReportForm from "../components/ReportForm";
 
 export default {
+  name: "Report",
   components: {
     ReportForm,
   },
   methods: {
-    ...mapActions(["fetchTags", "fetchChannelDataSets"]),
+    ...mapActions(["fetchReport", "fetchTags", "fetchChannelDataSets"]),
     ...mapMutations(["SET_ACTIVE_REPORT"]),
   },
   computed: {
