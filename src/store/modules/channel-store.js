@@ -8,6 +8,11 @@ export default {
       category: "public_channel",
       description: "",
       reports: [],
+      dashboards: [],
+      user: {
+        first_name: "",
+        last_name: "",
+      },
     },
     channels: [],
   },

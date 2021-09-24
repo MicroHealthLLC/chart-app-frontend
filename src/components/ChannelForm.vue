@@ -84,7 +84,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "ChannelForm",
@@ -104,6 +104,7 @@ export default {
   },
   methods: {
     ...mapActions(["addChannel", "updateChannel"]),
+    ...mapMutations(["SET_STATUS_CODE"]),
     saveChannel() {
       this.$refs.form.validate();
       if (this.formValid) {

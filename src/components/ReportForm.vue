@@ -339,9 +339,10 @@ export default {
       }
     },
     updateChartData() {
-      let dataSet = this.dataSets.find(
+      let dataSet = this.dataSetChoices.find(
         (dataSet) => dataSet.id == this.activeReport.data_set_id
       );
+
       this.SET_REPORT_DATA_SET(dataSet);
     },
     removeReport() {

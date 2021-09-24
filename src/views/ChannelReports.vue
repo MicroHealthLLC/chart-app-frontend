@@ -1,5 +1,5 @@
 <template>
-  <v-row>
+  <v-row v-if="channel.reports">
     <v-col class="col-9">
       <div class="d-flex justify-space-between">
         <h3>
