@@ -47,12 +47,18 @@ export default {
         });
     },
     fetchChannels({ commit }) {
+      let userId = localStorage.getItem("mRmsId");
+
       axios({
         method: "GET",
-        url: `${BASE_URL}/v1/channels`,
+        url: `${BASE_URL}/v1/channels?user_id=${userId}`,
       })
         .then((res) => {
-          commit("SET_CHANNELS", res.data);
+          commit("SET_CHANNELS", [
+            ...res.data.public,
+            ...res.data.personal,
+            ...res.data.group,
+          ]);
         })
         .catch((err) => {
           console.log(err);
