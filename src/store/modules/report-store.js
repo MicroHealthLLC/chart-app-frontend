@@ -28,9 +28,11 @@ export default {
   },
   actions: {
     fetchReports({ commit }) {
+      let userId = localStorage.getItem("mRmsId");
+
       axios({
         method: "GET",
-        url: `${BASE_URL}/v1/reports`,
+        url: `${BASE_URL}/v1/reports?user_id=${userId}`,
       }).then((res) => {
         commit("SET_REPORTS", res.data);
       });
