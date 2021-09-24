@@ -109,6 +109,9 @@
     <template v-slot:append>
       <div>
         <v-divider></v-divider>
+        <div v-show="!mini" class="user-name text-caption">
+          <span class="ml-5">{{ user.first_name }} {{ user.last_name }}</span>
+        </div>
         <v-list dense nav>
           <v-list-item link>
             <v-list-item-icon>
@@ -204,7 +207,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["channels"]),
+    ...mapGetters(["channels", "user"]),
     dashboardChannels() {
       return this.channels.filter((channel) => channel.dashboards.length > 0);
     },
@@ -230,5 +233,9 @@ export default {
 }
 .active-nav-item {
   color: #1976d2 !important;
+}
+.user-name {
+  background-color: #2196f3;
+  color: white;
 }
 </style>
