@@ -14,7 +14,9 @@
             small
             >Save</v-btn
           >
-          <v-btn class="mb-2" to="/" small outlined>Cancel</v-btn>
+          <v-btn class="mb-2" @click="$router.go(-1)" small outlined
+            >Close</v-btn
+          >
         </div>
       </div>
       <v-divider></v-divider>
@@ -199,7 +201,13 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["activeDataSet", "channels", "colors", "statusCode", "user"]),
+    ...mapGetters([
+      "activeDataSet",
+      "channels",
+      "colors",
+      "statusCode",
+      "user",
+    ]),
     graphType() {
       if (this.chartType === "Line") {
         return LineChart;
@@ -317,9 +325,7 @@ export default {
     },
     statusCode() {
       if (this.statusCode == 201) {
-        this.$router.push(
-          `/data-sets/${this.activeDataSet.id}`
-        );
+        this.$router.push(`/data-sets/${this.activeDataSet.id}`);
         this.SET_STATUS_CODE(0);
       }
     },
@@ -350,7 +356,7 @@ div >>> .v-select__selections {
 }
 div >>> .v-select__selections .v-chip {
   color: white;
-  background-color: #1976d2;
+  background-color: #2196F3;
 }
 div >>> .v-select__selections .v-chip .v-icon {
   color: white;

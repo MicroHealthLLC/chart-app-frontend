@@ -14,7 +14,7 @@
             >Save</v-btn
           >
           <v-btn class="mb-2" @click="$router.go(-1)" small outlined
-            >Cancel</v-btn
+            >Close</v-btn
           >
         </div>
       </div>

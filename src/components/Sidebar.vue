@@ -50,7 +50,7 @@
       <v-list-item exact-path to="/channels" active-class="active-nav-item">
         <v-list-item-icon><v-icon>mdi-forwardburger</v-icon></v-list-item-icon>
         <v-list-item-content>
-          <v-list-item-title>Request Channel</v-list-item-title>
+          <v-list-item-title>Channel List</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
       <!-- Public, Personal, and Group -->
@@ -109,7 +109,7 @@
     <template v-slot:append>
       <div>
         <v-divider></v-divider>
-        <div v-show="!mini" class="user-name text-caption">
+        <div v-show="!mini" class="user-name text-caption font-weight-bold">
           <span class="ml-5">{{ user.first_name }} {{ user.last_name }}</span>
         </div>
         <v-list dense nav>
@@ -235,7 +235,9 @@ export default {
   color: #1976d2 !important;
 }
 .user-name {
-  background-color: #2196f3;
-  color: white;
+  background-color: rgba(25, 118, 210, 0.12);
+  color: #1976d2;
+  margin: 8px 8px 0 8px;
+  border-radius: 4px;
 }
 </style>
