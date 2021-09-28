@@ -51,10 +51,11 @@
           </div>
           <div v-if="channel.category == 'group_channel'" class="users">
             <v-select
+              v-model="channel.members"
               :items="users"
               :item-text="(user) => `${user.first_name} ${user.last_name}`"
               item-value="id"
-              label="Users"
+              label="Group Members"
               hint="Please add all members who will have access to this Channel"
               persistent-hint
               multiple
@@ -116,9 +117,14 @@ export default {
             title: this.channel.title,
             category: this.categoryEnum(),
             description: this.channel.description,
+            member_ids: this.channel.members.map((member) => member.id),
           });
         } else {
-          this.addChannel({ ...this.channel, user_id: this.user.id });
+          this.addChannel({
+            ...this.channel,
+            member_ids: this.channel.members.map((member) => member.id),
+            user_id: this.user.id,
+          });
         }
       }
     },

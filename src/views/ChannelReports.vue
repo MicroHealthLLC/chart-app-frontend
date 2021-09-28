@@ -71,6 +71,16 @@
             >{{ channel.user.first_name }} {{ channel.user.last_name }}</span
           >
         </li>
+        <li v-if="channel.category == 'group_channel'">
+          <strong>Members: </strong>
+          <v-chip
+            v-for="(member, index) in channel.members"
+            :key="index"
+            x-small
+            color="info"
+            class="mr-1 mb-1"
+          >{{ member.first_name }} {{ member.last_name }}</v-chip>
+        </li>
       </ul>
       <!-- Dashboards -->
       <div class="d-flex justify-space-between mt-4">
@@ -133,8 +143,26 @@
               item-text="title"
               item-value="value"
             ></v-select>
+            <v-select
+              v-if="category == 'group_channel'"
+              v-model="channel.members"
+              :items="users"
+              :item-text="(user) => `${user.first_name} ${user.last_name}`"
+              item-value="id"
+              label="Group Members"
+              hint="Please add all members who will have access to this Channel"
+              persistent-hint
+              multiple
+              chips
+              deletable-chips
+              return-object
+              dense
+              required
+              :rules="usersRules"
+            ></v-select>
             <v-textarea
               v-model="description"
+              class="mt-4"
               label="Description"
               background-color="grey lighten-5"
               outlined
@@ -168,16 +196,27 @@ export default {
       title: "",
       category: "",
       description: "",
+      usersRules: [
+        (v) => v.length > 0 || "At least 1 user is required",
+        (v) =>
+          v.map((user) => user.id).includes(this.user.id) ||
+          "You must be included in the group",
+      ],
     };
   },
   components: {
     ReportCard,
   },
   computed: {
-    ...mapGetters(["channel", "dashboards"]),
+    ...mapGetters(["channel", "dashboards", "user", "users"]),
   },
   methods: {
-    ...mapActions(["fetchChannel", "fetchDashboards", "updateChannel"]),
+    ...mapActions([
+      "fetchChannel",
+      "fetchDashboards",
+      "fetchUsers",
+      "updateChannel",
+    ]),
     openForm() {
       this.showForm = true;
     },
@@ -193,6 +232,7 @@ export default {
           title: this.title,
           category: this.categoryEnum(),
           description: this.description,
+          member_ids: this.channel.members.map((member) => member.id),
         });
       }
     },
@@ -209,6 +249,7 @@ export default {
   beforeMount() {
     this.fetchChannel(this.$route.params.channelId);
     this.fetchDashboards();
+    this.fetchUsers();
   },
   watch: {
     $route() {
