@@ -44,6 +44,7 @@ export default {
         })
         .catch((err) => {
           console.log(err);
+          commit("SET_STATUS_CODE", err.response.status);
         });
     },
     fetchChannels({ commit }) {

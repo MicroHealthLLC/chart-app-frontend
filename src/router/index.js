@@ -26,6 +26,8 @@ import Dashboards from "../views/Dashboards.vue";
 import Dashboard from "../views/Dashboard.vue";
 import ChannelDashboards from "../views/ChannelDashboards.vue";
 
+import Forbidden from "../views/Forbidden.vue"
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -124,6 +126,11 @@ const routes = [
     path: "/channels/:channelId/dashboards",
     name: "ChannelDashboards",
     component: ChannelDashboards,
+  },
+  {
+    path: "/forbidden",
+    name: "Forbidden",
+    component: Forbidden,
   },
 ];
 

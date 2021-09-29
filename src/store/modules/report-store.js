@@ -46,7 +46,11 @@ export default {
         .then((res) => {
           commit("SET_ACTIVE_REPORT", res.data);
         })
-        .then(() => commit("TOGGLE_REPORT_LOADED", true));
+        .catch((err) => {
+          console.log(err);
+          commit("SET_STATUS_CODE", err.response.status);
+        });
+      commit("TOGGLE_REPORT_LOADED", true);
     },
     addReport({ commit }, report) {
       axios({

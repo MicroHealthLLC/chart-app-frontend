@@ -28,16 +28,24 @@ export default {
   }),
   methods: {
     ...mapActions(["fetchChannels", "fetchCurrentUser"]),
-    ...mapMutations(["CLOSE_SNACKBAR"]),
+    ...mapMutations(["CLOSE_SNACKBAR", "SET_STATUS_CODE"]),
   },
   computed: {
-    ...mapGetters(["channels", "snackbar"]),
+    ...mapGetters(["channels", "snackbar", "statusCode"]),
   },
   created() {
     if (localStorage.getItem("mRmsToken") && localStorage.getItem("mRmsId")) {
       this.fetchCurrentUser(localStorage.getItem("mRmsId"));
       this.fetchChannels();
     }
+  },
+  watch: {
+    statusCode() {
+      if (this.statusCode == 403) {
+        this.$router.push("/forbidden");
+        this.SET_STATUS_CODE(0);
+      }
+    },
   },
 };
 </script>
