@@ -48,11 +48,9 @@ export default {
         });
     },
     fetchChannels({ commit }) {
-      let userId = localStorage.getItem("mRmsId");
-
       axios({
         method: "GET",
-        url: `${BASE_URL}/v1/channels?user_id=${userId}`,
+        url: `${BASE_URL}/v1/channels`,
       })
         .then((res) => {
           commit("SET_CHANNELS", [
