@@ -1,7 +1,9 @@
 <template>
   <v-card class="mb-2" color="#5e93be" dark
     ><v-card-title class="d-flex flex-row flex-nowrap"
-      ><v-icon class="mr-3">mdi-account-circle</v-icon>
+      ><v-avatar class="mr-3" size="32" color="white"
+        ><span class="initials">{{ userInitials }}</span></v-avatar
+      >
       <span
         ><h5>{{ newsReport.title }}</h5>
         <p class="text-caption mb-0">
@@ -29,7 +31,19 @@ export default {
       type: Object,
     },
   },
+  computed: {
+    userInitials() {
+      return (
+        this.newsReport.user.first_name[0] + this.newsReport.user.last_name[0]
+      );
+    },
+  },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.initials {
+  color: #5e93be;
+  font-size: 16px;
+}
+</style>
