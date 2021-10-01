@@ -49,40 +49,13 @@
 
       <v-divider class="mb-4"></v-divider>
 
-      <ul class="text-caption details">
-        <li>
-          <strong
-            ><v-icon small>mdi-file-chart-outline</v-icon> Total
-            Reports:</strong
-          >
-          {{ channel.reports.length }}
-        </li>
-        <li>
-          <strong> <v-icon small>mdi-text</v-icon> Description:</strong>
-          {{ channel.description }}
-        </li>
-        <li>
-          <strong>Category: </strong>
-          <span class="category">{{ channel.category }}</span>
-        </li>
-        <li>
-          <strong>Created By: </strong>
-          <span class="category"
-            >{{ channel.user.first_name }} {{ channel.user.last_name }}</span
-          >
-        </li>
-        <li v-if="channel.category == 'group_channel'">
-          <strong>Members: </strong>
-          <v-chip
-            v-for="(member, index) in channel.members"
-            :key="index"
-            x-small
-            color="info"
-            class="mr-1 mb-1"
-            >{{ member.first_name }} {{ member.last_name }}</v-chip
-          >
-        </li>
-      </ul>
+      <ChannelDetails
+        :reportCount="channel.reports.length"
+        :description="channel.description"
+        :category="channel.category"
+        :createdBy="`${channel.user.first_name} ${channel.user.last_name}`"
+        :members="channel.members"
+      />
       <!-- Dashboards -->
       <div class="d-flex justify-space-between mt-4">
         <h3 class="mb-2">
@@ -130,6 +103,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import ChannelDetails from "../components/ChannelDetails.vue";
 import ChannelModalForm from "../components/ChannelModalForm";
 import ReportCard from "./../components/ReportCard";
 
@@ -143,6 +117,7 @@ export default {
   components: {
     ReportCard,
     ChannelModalForm,
+    ChannelDetails,
   },
   computed: {
     ...mapGetters(["channel", "dashboards"]),
@@ -193,8 +168,5 @@ h3 a:hover {
 }
 .btn-bg {
   background-color: lightgray;
-}
-.category {
-  text-transform: capitalize;
 }
 </style>

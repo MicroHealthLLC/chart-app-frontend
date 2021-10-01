@@ -32,6 +32,7 @@
         <v-btn text small color="primary">Add a Dashboard</v-btn>
       </div>
     </v-col>
+    <!-- Details -->
     <v-col class="col-3">
       <div class="d-flex justify-space-between">
         <h3 class="mb-2">Details</h3>
@@ -42,29 +43,13 @@
 
       <v-divider class="mb-4"></v-divider>
 
-      <ul class="text-caption details">
-        <li>
-          <strong
-            ><v-icon small>mdi-file-chart-outline</v-icon> Total
-            Reports:</strong
-          >
-          {{ channel.reports.length }}
-        </li>
-        <li>
-          <strong> <v-icon small>mdi-text</v-icon> Description:</strong>
-          {{ channel.description }}
-        </li>
-        <li>
-          <strong>Category: </strong>
-          <span class="category">{{ channel.category }}</span>
-        </li>
-        <li>
-          <strong>Created By: </strong>
-          <span class="category"
-            >{{ channel.user.first_name }} {{ channel.user.last_name }}</span
-          >
-        </li>
-      </ul>
+      <ChannelDetails
+        :reportCount="channel.reports.length"
+        :description="channel.description"
+        :category="channel.category"
+        :createdBy="`${channel.user.first_name} ${channel.user.last_name}`"
+        :members="channel.members"
+      />
       <!-- Reports -->
       <div class="d-flex justify-space-between mt-4">
         <h3 class="mb-2">
@@ -105,13 +90,14 @@
     </v-col>
     <!-- Modal Form -->
     <v-dialog v-model="showForm" width="50%">
-      <channel-modal-form @closeform="closeForm" />
+      <ChannelModalForm @closeform="closeForm" />
     </v-dialog>
   </v-row>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import ChannelDetails from "../components/ChannelDetails.vue";
 import ChannelModalForm from "../components/ChannelModalForm";
 import DashboardCard from "./../components/DashboardCard";
 
@@ -120,6 +106,7 @@ export default {
   components: {
     DashboardCard,
     ChannelModalForm,
+    ChannelDetails,
   },
   data() {
     return {
@@ -175,8 +162,5 @@ h3 a:hover {
 }
 .btn-bg {
   background-color: lightgray;
-}
-.category {
-  text-transform: capitalize;
 }
 </style>
