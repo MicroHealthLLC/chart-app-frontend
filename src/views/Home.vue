@@ -114,7 +114,7 @@
         </li>
       </ul>
       <!-- NEWS -->
-      <h3 class="mt-4">News</h3>
+      <h3 class="mt-4"><router-link to="/news">News</router-link></h3>
 
       <v-divider class="mb-4"></v-divider>
 
@@ -190,5 +190,8 @@ export default {
 }
 .btn-container {
   grid-column: 1 / span 3;
+}
+h3 a:hover {
+  color: #1976d2;
 }
 </style>
