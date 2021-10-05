@@ -35,6 +35,30 @@ export default {
         commit("SET_REPORTS", res.data);
       });
     },
+    fetchPublicReports({ commit }) {
+      axios({
+        method: "GET",
+        url: `${BASE_URL}/v1/public_reports`,
+      }).then((res) => {
+        commit("SET_PUBLIC_REPORTS", res.data);
+      });
+    },
+    fetchPersonalReports({ commit }) {
+      axios({
+        method: "GET",
+        url: `${BASE_URL}/v1/personal_reports`,
+      }).then((res) => {
+        commit("SET_PERSONAL_REPORTS", res.data);
+      });
+    },
+    fetchGroupReports({ commit }) {
+      axios({
+        method: "GET",
+        url: `${BASE_URL}/v1/group_reports`,
+      }).then((res) => {
+        commit("SET_GROUP_REPORTS", res.data);
+      });
+    },
     fetchReport({ commit }, id) {
       commit("TOGGLE_REPORT_LOADED", false);
       axios({
@@ -91,6 +115,10 @@ export default {
   },
   mutations: {
     SET_REPORTS: (state, reports) => (state.reports = reports),
+    SET_PUBLIC_REPORTS: (state, reports) => (state.reports.public = reports),
+    SET_PERSONAL_REPORTS: (state, reports) =>
+      (state.reports.personal = reports),
+    SET_GROUP_REPORTS: (state, reports) => (state.reports.group = reports),
     SET_ACTIVE_REPORT: (state, report) => (state.active_report = report),
     SET_REPORT_DATA_SET: (state, dataSet) =>
       (state.active_report.data_set = dataSet),

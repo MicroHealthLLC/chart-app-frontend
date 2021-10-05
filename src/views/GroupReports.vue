@@ -58,10 +58,10 @@ export default {
     ...mapGetters(["reports"]),
   },
   methods: {
-    ...mapActions(["fetchReports"]),
+    ...mapActions(["fetchGroupReports"]),
   },
   beforeMount() {
-    this.fetchReports();
+    this.fetchGroupReports();
   },
 };
 </script>
