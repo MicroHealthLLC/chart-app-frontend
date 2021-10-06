@@ -1,5 +1,6 @@
 <script>
 import { Bar } from "vue-chartjs";
+import ChartDatalabels from "chartjs-plugin-datalabels";
 
 export default {
   extends: Bar,
@@ -32,6 +33,16 @@ export default {
               },
             },
           ],
+        },
+        plugins: {
+          datalabels: {
+            color: "white",
+            font: {
+              size: 14,
+            },
+            align: "end",
+            anchor: "start"
+          },
         },
       },
     };
@@ -69,6 +80,7 @@ export default {
     },
   },
   mounted() {
+    this.addPlugin(ChartDatalabels);
     this.loadChart();
   },
   watch: {

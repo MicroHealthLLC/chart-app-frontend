@@ -1,5 +1,6 @@
 <script>
 import { Doughnut, mixins } from "vue-chartjs";
+import ChartDatalabels from "chartjs-plugin-datalabels";
 const { reactiveProp } = mixins;
 
 export default {
@@ -26,13 +27,20 @@ export default {
           display: true,
           text: ["", ""],
         },
+        plugins: {
+          datalabels: {
+            color: "white",
+            font: {
+              size: 14,
+            },
+          },
+        },
       },
       index: 0,
     };
   },
   methods: {
     loadChart() {
-      // const label = Object.keys(this.chartData[0])[1];
       const labels = this.chartData.map((item) => Object.values(item)[0]);
 
       const keys = Object.keys(this.chartData[0]).slice(1);
@@ -72,6 +80,7 @@ export default {
     },
   },
   mounted() {
+    this.addPlugin(ChartDatalabels);
     this.loadChart();
   },
   beforeDestroy() {

@@ -1,5 +1,6 @@
 <script>
 import { PolarArea, mixins } from "vue-chartjs";
+import ChartDatalabels from "chartjs-plugin-datalabels";
 const { reactiveProp } = mixins;
 
 export default {
@@ -25,6 +26,14 @@ export default {
         title: {
           display: true,
           text: ["", ""],
+        },
+        plugins: {
+          datalabels: {
+            color: "white",
+            font: {
+              size: 14,
+            },
+          },
         },
       },
       index: 0,
@@ -71,6 +80,7 @@ export default {
     },
   },
   mounted() {
+    this.addPlugin(ChartDatalabels);
     this.loadChart();
   },
   beforeDestroy() {
