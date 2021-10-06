@@ -41,6 +41,22 @@ export default {
     this.fetchChannelDataSets(this.$route.params.channelId);
     this.fetchTags();
   },
+  beforeDestroy() {
+    this.SET_ACTIVE_REPORT({
+      title: "",
+      description: "",
+      chart_type: "line",
+      data_set: { data: [] },
+      tags: [],
+      color_scheme_id: 1,
+      user: {
+        first_name: "",
+        last_name: "",
+      },
+      last_updated_by: "",
+      updated_at: "",
+    });
+  },
 };
 </script>
 

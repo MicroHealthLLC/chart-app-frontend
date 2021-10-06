@@ -446,7 +446,7 @@ export default {
         this.SET_STATUS_CODE(0);
       }
     },
-    reportLoaded() {
+    activeReport() {
       this.colorScheme = this.colors.find(
         (scheme) => scheme.id == this.activeReport.color_scheme_id
       ).scheme;
