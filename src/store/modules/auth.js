@@ -2,7 +2,7 @@ import { Auth } from "aws-amplify";
 
 export default {
   state: {
-    user: null,
+    user: null
   },
   actions: {
     async login({ commit, dispatch }, { username, password }) {
@@ -149,6 +149,6 @@ export default {
   },
   getters: {
     user: (state) => state.user,
-    isEditor: (state) => state.user?.isEditor || false,
+    isEditor: (state) => state.user.isEditor || false,
   },
-};
+}

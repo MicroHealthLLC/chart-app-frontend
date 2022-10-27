@@ -9,6 +9,7 @@ import snackbarStore from "./modules/snackbar-store";
 import reportStore from "./modules/report-store";
 import userStore from "./modules/user-store";
 import utilStore from "./modules/util-store";
+import auth from "./modules/auth"
 
 Vue.use(Vuex);
 
@@ -44,5 +45,6 @@ export default new Vuex.Store({
     reportStore,
     userStore,
     utilStore,
+    auth
   },
 });

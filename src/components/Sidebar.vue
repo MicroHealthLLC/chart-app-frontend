@@ -136,7 +136,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
   data() {
@@ -180,20 +180,25 @@ export default {
   },
   methods: {
     ...mapMutations(["SET_SNACKBAR", "SET_USER"]),
-    logOutUser() {
-      // Remove JWT tokem and user id from local storage
-      localStorage.removeItem("mRmsToken");
-      localStorage.removeItem("mRmsId");
-      // Display successful logout message
-      this.SET_SNACKBAR({
-        show: true,
-        message: "Logout successful!",
-      });
-      // Reset user to base state for authentication check in router guard
-      this.SET_USER({ isAuthenticated: false });
-      // Redirect to login page
+    ...mapActions(["logout"]),
+    async logOutUser() {
+      await this.logout();
       this.$router.push("/login");
     },
+    // logOutUser() {
+    //   // Remove JWT tokem and user id from local storage
+    //   // localStorage.removeItem("mRmsToken");
+    //   // localStorage.removeItem("mRmsId");
+    //   // Display successful logout message
+    //   this.SET_SNACKBAR({
+    //     show: true,
+    //     message: "Logout successful!",
+    //   });
+    //   // Reset user to base state for authentication check in router guard
+    //   this.SET_USER({ isAuthenticated: false });
+    //   // Redirect to login page
+    //   this.$router.push("/login");
+    // },
     updateChannels() {
       this.channels.forEach((channel) => {
         if (channel.category == "public_channel") {
