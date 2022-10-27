@@ -3,20 +3,27 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
-import axios from "axios";
+import sso_config from "./sso-exports"
+import { Amplify } from "aws-amplify";
+// import axios from "axios";
 
-axios.interceptors.request.use(
-  function (config) {
-    config.headers.Authorization = `Bearer ${localStorage.getItem(
-      "mRmsToken"
-    )}`;
-    return config;
-  },
-  function (error) {
-    // Do something with request error
-    return Promise.reject(error);
-  }
-);
+// amplify pull
+// amplify add api (for graphQL schema)
+// ampllify add auth (to set up cognito resources)
+Amplify.configure(sso_config);
+
+// axios.interceptors.request.use(
+//   function (config) {
+//     config.headers.Authorization = `Bearer ${localStorage.getItem(
+//       "mRmsToken"
+//     )}`;
+//     return config;
+//   },
+//   function (error) {
+//     // Do something with request error
+//     return Promise.reject(error);
+//   }
+// );
 
 Vue.config.productionTip = false;
 

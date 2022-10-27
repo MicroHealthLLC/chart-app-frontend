@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import userStore from "../store/modules/user-store";
+// import userStore from "../store/modules/user-store";
 
 import Login from "../views/Login.vue";
 import Home from "../views/Home.vue";
@@ -140,17 +140,17 @@ const router = new VueRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
-  if (
-    to.name !== "Login" &&
-    !userStore.state.user.isAuthenticated &&
-    !localStorage.getItem("mRmsToken") &&
-    !localStorage.getItem("mRmsId")
-  ) {
-    next({ name: "Login" });
-  } else {
-    next();
-  }
-});
+// router.beforeEach((to, from, next) => {
+//   if (
+//     to.name !== "Login" &&
+//     !userStore.state.user.isAuthenticated &&
+//     !localStorage.getItem("mRmsToken") &&
+//     !localStorage.getItem("mRmsId")
+//   ) {
+//     next({ name: "Login" });
+//   } else {
+//     next();
+//   }
+// });
 
 export default router;

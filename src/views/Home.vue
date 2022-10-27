@@ -143,7 +143,7 @@ export default {
     NewsCard,
   },
   computed: {
-    ...mapGetters(["channels", "news", "reports"]),
+    ...mapGetters(["channels", "news", "reports", "user"]),
     reportCount() {
       return (
         this.reports.public.length +
@@ -156,9 +156,12 @@ export default {
     ...mapActions(["fetchNews", "fetchReports"]),
   },
   beforeMount() {
-    this.fetchReports();
-    this.fetchNews();
+    // this.fetchReports();
+    // this.fetchNews();
+    // this.fetchCurrentUser();
+    // console.log(this.user)
   },
+
 };
 </script>
 

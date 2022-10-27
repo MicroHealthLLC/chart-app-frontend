@@ -31,12 +31,12 @@ export default {
     ...mapMutations(["CLOSE_SNACKBAR", "SET_STATUS_CODE"]),
   },
   computed: {
-    ...mapGetters(["channels", "snackbar", "statusCode"]),
+    ...mapGetters(["channels", "snackbar", "statusCode", "user"]),
   },
-  created() {
-    if (localStorage.getItem("mRmsToken") && localStorage.getItem("mRmsId")) {
-      this.fetchCurrentUser(localStorage.getItem("mRmsId"));
-      this.fetchChannels();
+  async mounted() {
+   await this.fetchCurrentUser();
+    if (this.user) {
+      console.log(this.user)
     }
   },
   watch: {
