@@ -109,8 +109,8 @@
     <template v-slot:append>
       <div>
         <v-divider></v-divider>
-        <div v-show="!mini" class="user-name text-caption font-weight-bold">
-          <span class="ml-5">{{ user.first_name }} {{ user.last_name }}</span>
+        <div v-show="!mini" class="user-name text-caption font-weight-bold">        
+          <!-- <span class="ml-5">{{ user.attributes.given_name }} {{ user.attributes.family_name }}</span>  -->
         </div>
         <v-list dense nav>
           <v-list-item link>
@@ -118,7 +118,7 @@
               <v-icon>mdi-account</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title>Profile</v-list-item-title>
+              <v-list-item-title v-show="user">Hi, {{user.attributes.given_name}}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
           <v-list-item @click="logOutUser" link>
@@ -183,22 +183,8 @@ export default {
     ...mapActions(["logout"]),
     async logOutUser() {
       await this.logout();
-      this.$router.push("/login");
+      this.$router.push("/signin");
     },
-    // logOutUser() {
-    //   // Remove JWT tokem and user id from local storage
-    //   // localStorage.removeItem("mRmsToken");
-    //   // localStorage.removeItem("mRmsId");
-    //   // Display successful logout message
-    //   this.SET_SNACKBAR({
-    //     show: true,
-    //     message: "Logout successful!",
-    //   });
-    //   // Reset user to base state for authentication check in router guard
-    //   this.SET_USER({ isAuthenticated: false });
-    //   // Redirect to login page
-    //   this.$router.push("/login");
-    // },
     updateChannels() {
       this.channels.forEach((channel) => {
         if (channel.category == "public_channel") {

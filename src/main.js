@@ -3,7 +3,8 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
-import sso_config from "./sso-exports"
+// import sso_config from "./sso-exports"
+import sso_config from "./aws-exports"
 import { Amplify } from "aws-amplify";
 // import axios from "axios";
 

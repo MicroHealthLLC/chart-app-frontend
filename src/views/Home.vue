@@ -156,10 +156,10 @@ export default {
     ...mapActions(["fetchNews", "fetchReports"]),
   },
   beforeMount() {
-    // this.fetchReports();
-    // this.fetchNews();
-    // this.fetchCurrentUser();
-    // console.log(this.user)
+    this.fetchReports();
+    this.fetchNews();
+   this.fetchCurrentUser();
+   console.log(this.user)
   },
 
 };

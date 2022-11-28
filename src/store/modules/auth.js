@@ -90,14 +90,15 @@ export default {
     async fetchCurrentUser({ commit }) {
       try {
         const userInfo = await Auth.currentUserInfo();
-        const userCredentials = await Auth.currentAuthenticatedUser();
-        const groups =
-          userCredentials.signInUserSession.accessToken.payload[
-            "cognito:groups"
-          ] || [];
-        const isEditor = groups.includes("Editors");
+        // const userCredentials = await Auth.currentAuthenticatedUser();
+        // const groups =
+        //   userCredentials.signInUserSession.accessToken.payload[
+        //     "cognito:groups"
+        //   ] || [];
+        // const isEditor = groups.includes("Editors");
 
-        commit("SET_USER", { ...userInfo, isEditor: isEditor });
+        commit("SET_USER", { ...userInfo });
+        console.log(...userInfo)
       } catch (error) {
         console.log(error);
       }
@@ -149,6 +150,6 @@ export default {
   },
   getters: {
     user: (state) => state.user,
-    isEditor: (state) => state.user.isEditor || false,
+    // isEditor: (state) => state.user.isEditor || false,
   },
 }

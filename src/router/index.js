@@ -1,9 +1,9 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import Auth from "@aws-amplify/auth";
 // import userStore from "../store/modules/user-store";
 
-import Login from "../views/Login.vue";
-import Home from "../views/Home.vue";
+// import Home from "../views/Home.vue";
 import News from "../views/News.vue";
 
 import AddDataSet from "../views/AddDataSet.vue";
@@ -27,19 +27,35 @@ import Dashboard from "../views/Dashboard.vue";
 import ChannelDashboards from "../views/ChannelDashboards.vue";
 
 import Forbidden from "../views/Forbidden.vue"
+import store from "../store";
 
 Vue.use(VueRouter);
 
 const routes = [
+    {
+    path: "/signin",
+    name: "Signin",
+    component: () =>
+      import("../views/auth/Signin.vue"),
+  },
   {
-    path: "/login",
-    name: "Login",
-    component: Login,
+    path: "/signup",
+    name: "SignUp",
+    component: () =>
+      import("../views/auth/SignUp.vue"),
+  },
+  {
+    path: "/verify",
+    name: "SignUpVerify",
+    props: true,
+    component: () =>
+      import("../views/auth/SignUpVerify.vue"),
   },
   {
     path: "/",
     name: "Home",
-    component: Home,
+    component: () =>
+      import("../views/Home.vue"),
   },
   {
     path: "/news",
@@ -137,20 +153,45 @@ const routes = [
 const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
+  scrollBehavior() {
+    return { x: 0, y: 0 };
+  },
   routes,
 });
 
-// router.beforeEach((to, from, next) => {
-//   if (
-//     to.name !== "Login" &&
-//     !userStore.state.user.isAuthenticated &&
-//     !localStorage.getItem("mRmsToken") &&
-//     !localStorage.getItem("mRmsId")
-//   ) {
-//     next({ name: "Login" });
-//   } else {
-//     next();
-//   }
-// });
+router.beforeEach(async (to, from, next) => {
+  console.log(to)
+  console.log(VueRouter)
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+  const requiresEditor = to.matched.some(
+    (record) => record.meta.requiresEditor
+  );
+  let isEditor = false;
+  let currentUserInfo = null;
+
+  if (store.getters.isEditor) {
+    isEditor = store.getters.isEditor;
+    currentUserInfo = store.getters.user;
+  } else {
+    currentUserInfo = await Auth.currentUserInfo();
+    if (currentUserInfo) {
+      const userCredentials = await Auth.currentAuthenticatedUser();
+      const groups =
+        userCredentials.signInUserSession.accessToken.payload[
+          "cognito:groups"
+        ] || [];
+      isEditor = groups.includes("Editors");
+    }
+  }
+
+  if (requiresAuth && requiresEditor && !isEditor && currentUserInfo) {
+    next("/not-authorized");
+  } else if (requiresAuth && !currentUserInfo) {
+    next("/signin");
+  } else {
+    next();
+  }
+});
 
 export default router;
+

@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <Sidebar v-if="$route.name != 'Login'" />
+    <Sidebar v-if="$route.name != 'Signin'" />
     <v-main class="main-container mx-auto">
       <v-snackbar v-model="snackbar.show" color="success" outlined text top
         >{{ snackbar.message
@@ -31,7 +31,7 @@ export default {
     ...mapMutations(["CLOSE_SNACKBAR", "SET_STATUS_CODE"]),
   },
   computed: {
-    ...mapGetters(["channels", "snackbar", "statusCode", "user"]),
+    ...mapGetters(["channels", "snackbar", "statusCode", "user", "logout"]),
   },
   async mounted() {
    await this.fetchCurrentUser();
