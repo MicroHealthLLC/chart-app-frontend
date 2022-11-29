@@ -45,6 +45,12 @@ const routes = [
       import("../views/auth/SignUp.vue"),
   },
   {
+    path: "/reset-password",
+    name: "ResetPW",
+    component: () =>
+      import("../views/auth/ResetPW.vue"),
+  },
+  {
     path: "/verify",
     name: "SignUpVerify",
     props: true,

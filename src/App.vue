@@ -50,7 +50,12 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
+:root {
+  --mh-blue: #1d336f;
+  --mh-green: #9ec64c;
+  --mh-orange: #dd9036;
+}
 .theme--light.v-application {
   background-color: #f0f3f7;
 }

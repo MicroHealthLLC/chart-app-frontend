@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer v-model="drawer" app permanent :mini-variant.sync="mini">
+  <v-navigation-drawer v-model="drawer" app permanent :mini-variant.sync="mini" v-if="user && user.attributes">
     <v-list>
       <v-list-item>
         <v-list-item-icon class="clickable" @click.stop="mini = !mini">
@@ -205,6 +205,7 @@ export default {
   },
   mounted() {
     this.updateChannels();
+    console.log(this.user)
  
   },
   watch: {    

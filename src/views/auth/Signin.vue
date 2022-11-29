@@ -41,7 +41,7 @@
                 ></v-text-field>
                 <p class="mt-4">
                   Forgot password?
-                  <router-link to="/reset-password">Reset</router-link>
+                  <span @click="resetPW" class="reset">Reset</span>
                 </p>
               </v-form>
             </v-card-text>
@@ -146,6 +146,9 @@ export default {
         }
      
       },
+      resetPW(){
+        this.$router.push("/reset-password")
+      },
       async userLogin() {
         if (!this.$refs.form.validate()) {
           return;
@@ -178,6 +181,10 @@ export default {
   .beWell {
     font-family: inherit;
     font-weight: 600;
+  }
+  .reset {
+    cursor: pointer;
+    color:royalblue;
   }
   </style>
 <!-- <script>
