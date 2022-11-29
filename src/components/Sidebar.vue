@@ -118,7 +118,7 @@
               <v-icon>mdi-account</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title v-show="user">Hi, {{user.attributes.given_name}}</v-list-item-title>
+              <v-list-item-title v-if="user && user.attributes">Hi, {{user.attributes.given_name}}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
           <v-list-item @click="logOutUser" link>
@@ -183,7 +183,7 @@ export default {
     ...mapActions(["logout"]),
     async logOutUser() {
       await this.logout();
-      this.$router.push("/signin");
+      // this.$router.push("/signin");
     },
     updateChannels() {
       this.channels.forEach((channel) => {
@@ -205,8 +205,9 @@ export default {
   },
   mounted() {
     this.updateChannels();
+ 
   },
-  watch: {
+  watch: {    
     channels() {
       this.channelItems[0].channels = [];
       this.channelItems[1].channels = [];
@@ -214,6 +215,13 @@ export default {
 
       this.updateChannels();
     },
+    user(){
+      if(this.user && this.user.attributes){
+        console.log(this.user)
+      } else {
+        this.$router.push("/signin")
+      }
+    } 
   },
 };
 </script>

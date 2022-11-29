@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Auth from "@aws-amplify/auth";
+import { Auth } from "@aws-amplify/auth";
 // import userStore from "../store/modules/user-store";
 
 // import Home from "../views/Home.vue";
@@ -162,31 +162,30 @@ const router = new VueRouter({
 router.beforeEach(async (to, from, next) => {
   console.log(to)
   console.log(VueRouter)
-  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
-  const requiresEditor = to.matched.some(
-    (record) => record.meta.requiresEditor
-  );
-  let isEditor = false;
+  console.log(store)
+  // const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+  // const requiresEditor = to.matched.some(
+  //   (record) => record.meta.requiresEditor
+  // );
+  // let isEditor = false;
   let currentUserInfo = null;
 
-  if (store.getters.isEditor) {
-    isEditor = store.getters.isEditor;
+  if (store.getters.user) {
+    // isEditor = store.getters.isEditor;
     currentUserInfo = store.getters.user;
   } else {
     currentUserInfo = await Auth.currentUserInfo();
-    if (currentUserInfo) {
-      const userCredentials = await Auth.currentAuthenticatedUser();
-      const groups =
-        userCredentials.signInUserSession.accessToken.payload[
-          "cognito:groups"
-        ] || [];
-      isEditor = groups.includes("Editors");
-    }
+    // if (currentUserInfo) {
+    //   const userCredentials = await Auth.currentAuthenticatedUser();
+      // const groups =
+      //   userCredentials.signInUserSession.accessToken.payload[
+      //     "cognito:groups"
+      //   ] || [];
+      // isEditor = groups.includes("Editors");
+    // }
   }
-
-  if (requiresAuth && requiresEditor && !isEditor && currentUserInfo) {
-    next("/not-authorized");
-  } else if (requiresAuth && !currentUserInfo) {
+  // isEditor
+ if (!currentUserInfo) {
     next("/signin");
   } else {
     next();

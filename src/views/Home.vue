@@ -153,12 +153,12 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["fetchNews", "fetchReports"]),
+    ...mapActions(["fetchNews", "fetchReports", "fetchCurrentUser"]),
   },
-  beforeMount() {
-    this.fetchReports();
-    this.fetchNews();
-   this.fetchCurrentUser();
+  mounted() {
+    // this.fetchReports();
+    // this.fetchNews();
+ 
    console.log(this.user)
   },
 
