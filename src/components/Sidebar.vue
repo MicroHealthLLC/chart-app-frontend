@@ -80,7 +80,7 @@
         </v-list-item>
       </v-list-group>
       <!-- Dashboards - Links to channel/id/dashboards -->
-      <v-list-group
+      <!-- <v-list-group
         v-if="dashboardChannels.length > 0"
         prepend-icon="mdi-monitor-dashboard"
         no-action
@@ -103,7 +103,7 @@
             <v-list-item-title>{{ child.title }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-      </v-list-group>
+      </v-list-group> -->
     </v-list>
     <!-- Profile and Logout Nav Items -->
     <template v-slot:append>
@@ -199,9 +199,9 @@ export default {
   },
   computed: {
     ...mapGetters(["channels", "user"]),
-    dashboardChannels() {
-      return this.channels.filter((channel) => channel.dashboards.length > 0);
-    },
+    // dashboardChannels() {
+    //   return this.channels.filter((channel) => channel.dashboards.length > 0);
+    // },
   },
   mounted() {
     this.updateChannels();

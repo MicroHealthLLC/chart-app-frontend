@@ -7,7 +7,14 @@
       "mode": "AMAZON_COGNITO_USER_POOLS",
       "cognitoUserPoolId": "authmrmsd8d7189c"
     },
-    "additionalAuthTypes": [],
+    "additionalAuthTypes": [
+      {
+        "mode": "API_KEY",
+        "expirationTime": 365,
+        "apiKeyExpirationDate": "2023-11-30T18:00:42.443Z",
+        "keyDescription": "mrmspublicapi"
+      }
+    ],
     "conflictResolution": {}
   }
 }

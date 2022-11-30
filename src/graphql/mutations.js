@@ -18,17 +18,17 @@ export const createReport = /* GraphQL */ `
         type {
           title
           id
+          createdAt
+          updatedAt
         }
         title
         createdAt
         updatedAt
-        owner
       }
       description
       channelId
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -49,17 +49,17 @@ export const updateReport = /* GraphQL */ `
         type {
           title
           id
+          createdAt
+          updatedAt
         }
         title
         createdAt
         updatedAt
-        owner
       }
       description
       channelId
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -80,17 +80,17 @@ export const deleteReport = /* GraphQL */ `
         type {
           title
           id
+          createdAt
+          updatedAt
         }
         title
         createdAt
         updatedAt
-        owner
       }
       description
       channelId
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -110,18 +110,18 @@ export const createChannel = /* GraphQL */ `
           channelId
           createdAt
           updatedAt
-          owner
         }
         nextToken
       }
       type {
         title
         id
+        createdAt
+        updatedAt
       }
       title
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -141,18 +141,18 @@ export const updateChannel = /* GraphQL */ `
           channelId
           createdAt
           updatedAt
-          owner
         }
         nextToken
       }
       type {
         title
         id
+        createdAt
+        updatedAt
       }
       title
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -172,18 +172,57 @@ export const deleteChannel = /* GraphQL */ `
           channelId
           createdAt
           updatedAt
-          owner
         }
         nextToken
       }
       type {
         title
         id
+        createdAt
+        updatedAt
       }
       title
       createdAt
       updatedAt
-      owner
+    }
+  }
+`;
+export const createChannelType = /* GraphQL */ `
+  mutation CreateChannelType(
+    $input: CreateChannelTypeInput!
+    $condition: ModelChannelTypeConditionInput
+  ) {
+    createChannelType(input: $input, condition: $condition) {
+      title
+      id
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateChannelType = /* GraphQL */ `
+  mutation UpdateChannelType(
+    $input: UpdateChannelTypeInput!
+    $condition: ModelChannelTypeConditionInput
+  ) {
+    updateChannelType(input: $input, condition: $condition) {
+      title
+      id
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteChannelType = /* GraphQL */ `
+  mutation DeleteChannelType(
+    $input: DeleteChannelTypeInput!
+    $condition: ModelChannelTypeConditionInput
+  ) {
+    deleteChannelType(input: $input, condition: $condition) {
+      title
+      id
+      createdAt
+      updatedAt
     }
   }
 `;

@@ -15,17 +15,17 @@ export const getReport = /* GraphQL */ `
         type {
           title
           id
+          createdAt
+          updatedAt
         }
         title
         createdAt
         updatedAt
-        owner
       }
       description
       channelId
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -45,13 +45,11 @@ export const listReports = /* GraphQL */ `
           title
           createdAt
           updatedAt
-          owner
         }
         description
         channelId
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }
@@ -70,18 +68,18 @@ export const getChannel = /* GraphQL */ `
           channelId
           createdAt
           updatedAt
-          owner
         }
         nextToken
       }
       type {
         title
         id
+        createdAt
+        updatedAt
       }
       title
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -101,11 +99,39 @@ export const listChannels = /* GraphQL */ `
         type {
           title
           id
+          createdAt
+          updatedAt
         }
         title
         createdAt
         updatedAt
-        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const getChannelType = /* GraphQL */ `
+  query GetChannelType($id: ID!) {
+    getChannelType(id: $id) {
+      title
+      id
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listChannelTypes = /* GraphQL */ `
+  query ListChannelTypes(
+    $filter: ModelChannelTypeFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listChannelTypes(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        title
+        id
+        createdAt
+        updatedAt
       }
       nextToken
     }
