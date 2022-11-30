@@ -15,6 +15,7 @@ export default {
   },
   mounted() {
     this.fetchChannel(this.$route.params.channelId);
+    console.log()
   },
   watch: {
     $route() {

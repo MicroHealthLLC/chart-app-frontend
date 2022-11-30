@@ -14,7 +14,7 @@
             small
             >Save</v-btn
           >
-          <v-btn class="mb-2" @click="$router.go(-1)" small outlined
+          <v-btn class="mb-2" @click="resetAndGoBack" small outlined
             >Close</v-btn
           >
         </div>
@@ -36,7 +36,7 @@
             </v-text-field>
           </div>
           <div>
-            <v-select
+            <!-- <v-select
               v-model="channel.category"
               label="Channel Type"
               :items="[
@@ -47,9 +47,9 @@
               item-text="title"
               item-value="value"
               dense
-            ></v-select>
+            ></v-select> -->
           </div>
-          <div v-if="channel.category == 'group_channel'" class="users">
+          <!-- <div v-if="channel.category == 'group_channel'" class="users">
             <v-select
               v-model="channel.members"
               :items="users"
@@ -66,7 +66,7 @@
               required
               :rules="usersRules"
             ></v-select>
-          </div>
+          </div> -->
           <div class="description">
             <v-textarea
               v-model="channel.description"
@@ -108,25 +108,31 @@ export default {
   methods: {
     ...mapActions(["addChannel", "updateChannel"]),
     ...mapMutations(["SET_STATUS_CODE"]),
+    resetAndGoBack(){
+      this.$router.go(-1)
+      this.$refs.form.reset();
+    },
     saveChannel() {
       this.$refs.form.validate();
-      if (this.formValid) {
-        if (this.channel.id) {
-          this.updateChannel({
-            id: this.channel.id,
-            title: this.channel.title,
-            category: this.categoryEnum(),
-            description: this.channel.description,
-            member_ids: this.channel.members.map((member) => member.id),
-          });
-        } else {
+      console.log(this.channel)
+      // if (this.formValid) {
+      //   if (this.channel.id) {
+      //     this.updateChannel({
+      //       id: this.channel.id,
+      //       title: this.channel.title,
+      //       // category: this.categoryEnum(),
+      //       // description: this.channel.description,
+      //       // member_ids: this.channel.members.map((member) => member.id),
+      //     });
+      //   } else {
           this.addChannel({
             ...this.channel,
-            member_ids: this.channel.members.map((member) => member.id),
-            user_id: this.user.id,
+            // member_ids: this.channel.members.map((member) => member.id),
+            // user_id: this.user.id,
           });
-        }
-      }
+          this.$refs.form.reset();
+      //   }
+      // }
     },
     categoryEnum() {
       if (this.channel.category == "group_channel") {
@@ -139,12 +145,17 @@ export default {
     },
   },
   watch: {
-    statusCode() {
-      if (this.statusCode == 201) {
-        this.$router.push(`/channels/${this.channel.id}/reports`);
-        this.SET_STATUS_CODE(0);
+    // statusCode() {
+    //   if (this.statusCode == 201) {
+    //     this.$router.push(`/channels/${this.channel.id}/reports`);
+    //     this.SET_STATUS_CODE(0);
+    //   }
+    // },
+    channel(){
+      if(this.channel){
+        console.log(this.channel)
       }
-    },
+    }
   },
 };
 </script>

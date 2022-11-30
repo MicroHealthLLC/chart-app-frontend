@@ -1,6 +1,17 @@
 projects:
   mrmsbeta:
-    schemaPath: amplify/backend/api/mrmsbeta/build/schema.graphql
+    schemaPath: amplify/backend/api/mrms/build/schema.graphql
+    includes:
+      - src/graphql/**/*.js
+    excludes:
+      - ./amplify/**
+    extensions:
+      amplify:
+        codeGenTarget: javascript
+        generatedFileName: ''
+        docsFilePath: src/graphql
+  mrms:
+    schemaPath: amplify/backend/api/mrms/build/schema.graphql
     includes:
       - src/graphql/**/*.js
     excludes:

@@ -1,150 +1,111 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const getBlog = /* GraphQL */ `
-  query GetBlog($id: ID!) {
-    getBlog(id: $id) {
-      id
-      name
-      posts {
-        items {
-          id
-          title
-          createdAt
-          updatedAt
-          blogPostsId
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listBlogs = /* GraphQL */ `
-  query ListBlogs(
-    $filter: ModelBlogFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listBlogs(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        name
-        posts {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getPost = /* GraphQL */ `
-  query GetPost($id: ID!) {
-    getPost(id: $id) {
+export const getReport = /* GraphQL */ `
+  query GetReport($id: ID!) {
+    getReport(id: $id) {
       id
       title
-      blog {
+      channel {
         id
-        name
-        posts {
+        description
+        reports {
           nextToken
         }
+        type {
+          title
+          id
+        }
+        title
         createdAt
         updatedAt
+        owner
       }
-      comments {
-        items {
-          id
-          content
-          createdAt
-          updatedAt
-          postCommentsId
-        }
-        nextToken
-      }
+      description
+      channelId
       createdAt
       updatedAt
-      blogPostsId
+      owner
     }
   }
 `;
-export const listPosts = /* GraphQL */ `
-  query ListPosts(
-    $filter: ModelPostFilterInput
+export const listReports = /* GraphQL */ `
+  query ListReports(
+    $filter: ModelReportFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listPosts(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listReports(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         title
-        blog {
+        channel {
           id
-          name
+          description
+          title
           createdAt
           updatedAt
+          owner
         }
-        comments {
-          nextToken
-        }
+        description
+        channelId
         createdAt
         updatedAt
-        blogPostsId
+        owner
       }
       nextToken
     }
   }
 `;
-export const getComment = /* GraphQL */ `
-  query GetComment($id: ID!) {
-    getComment(id: $id) {
+export const getChannel = /* GraphQL */ `
+  query GetChannel($id: ID!) {
+    getChannel(id: $id) {
       id
-      post {
-        id
-        title
-        blog {
+      description
+      reports {
+        items {
           id
-          name
+          title
+          description
+          channelId
           createdAt
           updatedAt
+          owner
         }
-        comments {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        blogPostsId
+        nextToken
       }
-      content
+      type {
+        title
+        id
+      }
+      title
       createdAt
       updatedAt
-      postCommentsId
+      owner
     }
   }
 `;
-export const listComments = /* GraphQL */ `
-  query ListComments(
-    $filter: ModelCommentFilterInput
+export const listChannels = /* GraphQL */ `
+  query ListChannels(
+    $filter: ModelChannelFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listComments(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listChannels(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        post {
-          id
-          title
-          createdAt
-          updatedAt
-          blogPostsId
+        description
+        reports {
+          nextToken
         }
-        content
+        type {
+          title
+          id
+        }
+        title
         createdAt
         updatedAt
-        postCommentsId
+        owner
       }
       nextToken
     }

@@ -4,7 +4,8 @@ let graphQLEndpoint = "https://flbeizkcb5hifcb5aqk3p34woq.appsync-api.us-east-1.
 if (process.env.NODE_ENV == "development") {
     console.log(process.env)
     baseURL = "http://localhost:8080/"
-    graphQLEndpoint = process.env.VUE_APP_GRAPHQL_ENDPOINT
+    graphQLEndpoint = "http://100.109.142.69:20002"
+    // graphQLEndpoint = process.env.VUE_APP_GRAPHQL_ENDPOINT
 }
 
 const awsmobile = {
@@ -41,8 +42,8 @@ const awsmobile = {
     ],
     "aws_appsync_graphqlEndpoint": `${graphQLEndpoint}`,
     "aws_appsync_region": "us-east-1",
-    // "aws_appsync_authenticationType": "AMAZON_COGNITO_USER_POOLS",
-    "aws_appsync_authenticationType": "API_KEY",
+    "aws_appsync_authenticationType": "AMAZON_COGNITO_USER_POOLS",
+    // "aws_appsync_authenticationType": "API_KEY",
     "aws_appsync_apiKey": "da2-2yyee5l2ejblblrkk7bwdrjv4e",
     "aws_appsync_dangerously_connect_to_http_endpoint_for_testing": true,
 };

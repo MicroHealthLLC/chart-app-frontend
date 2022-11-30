@@ -1,261 +1,189 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const createBlog = /* GraphQL */ `
-  mutation CreateBlog(
-    $input: CreateBlogInput!
-    $condition: ModelBlogConditionInput
+export const createReport = /* GraphQL */ `
+  mutation CreateReport(
+    $input: CreateReportInput!
+    $condition: ModelReportConditionInput
   ) {
-    createBlog(input: $input, condition: $condition) {
+    createReport(input: $input, condition: $condition) {
       id
-      name
-      posts {
+      title
+      channel {
+        id
+        description
+        reports {
+          nextToken
+        }
+        type {
+          title
+          id
+        }
+        title
+        createdAt
+        updatedAt
+        owner
+      }
+      description
+      channelId
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updateReport = /* GraphQL */ `
+  mutation UpdateReport(
+    $input: UpdateReportInput!
+    $condition: ModelReportConditionInput
+  ) {
+    updateReport(input: $input, condition: $condition) {
+      id
+      title
+      channel {
+        id
+        description
+        reports {
+          nextToken
+        }
+        type {
+          title
+          id
+        }
+        title
+        createdAt
+        updatedAt
+        owner
+      }
+      description
+      channelId
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteReport = /* GraphQL */ `
+  mutation DeleteReport(
+    $input: DeleteReportInput!
+    $condition: ModelReportConditionInput
+  ) {
+    deleteReport(input: $input, condition: $condition) {
+      id
+      title
+      channel {
+        id
+        description
+        reports {
+          nextToken
+        }
+        type {
+          title
+          id
+        }
+        title
+        createdAt
+        updatedAt
+        owner
+      }
+      description
+      channelId
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const createChannel = /* GraphQL */ `
+  mutation CreateChannel(
+    $input: CreateChannelInput!
+    $condition: ModelChannelConditionInput
+  ) {
+    createChannel(input: $input, condition: $condition) {
+      id
+      description
+      reports {
         items {
           id
           title
+          description
+          channelId
           createdAt
           updatedAt
-          blogPostsId
+          owner
         }
         nextToken
       }
+      type {
+        title
+        id
+      }
+      title
       createdAt
       updatedAt
+      owner
     }
   }
 `;
-export const updateBlog = /* GraphQL */ `
-  mutation UpdateBlog(
-    $input: UpdateBlogInput!
-    $condition: ModelBlogConditionInput
+export const updateChannel = /* GraphQL */ `
+  mutation UpdateChannel(
+    $input: UpdateChannelInput!
+    $condition: ModelChannelConditionInput
   ) {
-    updateBlog(input: $input, condition: $condition) {
+    updateChannel(input: $input, condition: $condition) {
       id
-      name
-      posts {
+      description
+      reports {
         items {
           id
           title
+          description
+          channelId
           createdAt
           updatedAt
-          blogPostsId
+          owner
         }
         nextToken
       }
+      type {
+        title
+        id
+      }
+      title
       createdAt
       updatedAt
+      owner
     }
   }
 `;
-export const deleteBlog = /* GraphQL */ `
-  mutation DeleteBlog(
-    $input: DeleteBlogInput!
-    $condition: ModelBlogConditionInput
+export const deleteChannel = /* GraphQL */ `
+  mutation DeleteChannel(
+    $input: DeleteChannelInput!
+    $condition: ModelChannelConditionInput
   ) {
-    deleteBlog(input: $input, condition: $condition) {
+    deleteChannel(input: $input, condition: $condition) {
       id
-      name
-      posts {
+      description
+      reports {
         items {
           id
           title
+          description
+          channelId
           createdAt
           updatedAt
-          blogPostsId
+          owner
         }
         nextToken
       }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createPost = /* GraphQL */ `
-  mutation CreatePost(
-    $input: CreatePostInput!
-    $condition: ModelPostConditionInput
-  ) {
-    createPost(input: $input, condition: $condition) {
-      id
-      title
-      blog {
-        id
-        name
-        posts {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      comments {
-        items {
-          id
-          content
-          createdAt
-          updatedAt
-          postCommentsId
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-      blogPostsId
-    }
-  }
-`;
-export const updatePost = /* GraphQL */ `
-  mutation UpdatePost(
-    $input: UpdatePostInput!
-    $condition: ModelPostConditionInput
-  ) {
-    updatePost(input: $input, condition: $condition) {
-      id
-      title
-      blog {
-        id
-        name
-        posts {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      comments {
-        items {
-          id
-          content
-          createdAt
-          updatedAt
-          postCommentsId
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-      blogPostsId
-    }
-  }
-`;
-export const deletePost = /* GraphQL */ `
-  mutation DeletePost(
-    $input: DeletePostInput!
-    $condition: ModelPostConditionInput
-  ) {
-    deletePost(input: $input, condition: $condition) {
-      id
-      title
-      blog {
-        id
-        name
-        posts {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      comments {
-        items {
-          id
-          content
-          createdAt
-          updatedAt
-          postCommentsId
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-      blogPostsId
-    }
-  }
-`;
-export const createComment = /* GraphQL */ `
-  mutation CreateComment(
-    $input: CreateCommentInput!
-    $condition: ModelCommentConditionInput
-  ) {
-    createComment(input: $input, condition: $condition) {
-      id
-      post {
-        id
+      type {
         title
-        blog {
-          id
-          name
-          createdAt
-          updatedAt
-        }
-        comments {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        blogPostsId
-      }
-      content
-      createdAt
-      updatedAt
-      postCommentsId
-    }
-  }
-`;
-export const updateComment = /* GraphQL */ `
-  mutation UpdateComment(
-    $input: UpdateCommentInput!
-    $condition: ModelCommentConditionInput
-  ) {
-    updateComment(input: $input, condition: $condition) {
-      id
-      post {
         id
-        title
-        blog {
-          id
-          name
-          createdAt
-          updatedAt
-        }
-        comments {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        blogPostsId
       }
-      content
+      title
       createdAt
       updatedAt
-      postCommentsId
-    }
-  }
-`;
-export const deleteComment = /* GraphQL */ `
-  mutation DeleteComment(
-    $input: DeleteCommentInput!
-    $condition: ModelCommentConditionInput
-  ) {
-    deleteComment(input: $input, condition: $condition) {
-      id
-      post {
-        id
-        title
-        blog {
-          id
-          name
-          createdAt
-          updatedAt
-        }
-        comments {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        blogPostsId
-      }
-      content
-      createdAt
-      updatedAt
-      postCommentsId
+      owner
     }
   }
 `;

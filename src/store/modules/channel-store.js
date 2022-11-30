@@ -1,92 +1,87 @@
-import axios from "axios";
-const BASE_URL = process.env.VUE_APP_BASE_API_URL;
+import { API, graphqlOperation } from "aws-amplify";
+import { createChannel } from "@/graphql/mutations";
+import { updateChannel } from "@/graphql/mutations";
+import { deleteChannel } from "@/graphql/mutations";
+import { getChannel } from "@/graphql/queries";
+import { listChannels } from "@/graphql/queries";
+
 
 export default {
   state: {
-    channel: {
-      title: "",
-      category: "public_channel",
-      description: "",
-      reports: [],
-      dashboards: [],
-      user: {
-        first_name: "",
-        last_name: "",
-      },
-    },
     channels: [],
+    channel: {},
   },
   actions: {
-    addChannel({ commit, dispatch, getters }, channel) {
-      axios({
-        method: "POST",
-        url: `${BASE_URL}/v1/channels`,
-        data: channel,
-      }).then((res) => {
-        commit("SET_CHANNEL", res.data);
-        commit("SET_CHANNELS", [...getters.channels, res.data]);
+    async addChannel({ commit, dispatch }, channel) {
+      commit("TOGGLE_SAVING", true);
+      try {
+        await API.graphql(graphqlOperation(createChannel, { input: channel }));
+        dispatch("fetchChannels");
         commit("SET_SNACKBAR", {
           show: true,
-          message: "Channel added successfully!",
+          message: "Channel Successfully Added!",
+          color: "var(--mh-green)",
         });
-        commit("SET_STATUS_CODE", res.status);
-        // Used to update changes made necessary for sidebar
+      } catch (error) {
+        console.log(error);
+      }
+      commit("TOGGLE_SAVING", false);
+    },
+    async updateChannelById({ commit, dispatch }, channel ) {
+      commit("TOGGLE_SAVING", true);
+      try {
+        await API.graphql(graphqlOperation(updateChannel, { input: channel }));
         dispatch("fetchChannels");
-      });
-    },
-    fetchChannel({ commit }, id) {
-      axios({
-        method: "GET",
-        url: `${BASE_URL}/v1/channels/${id}`,
-      })
-        .then((res) => {
-          commit("SET_CHANNEL", res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-          commit("SET_STATUS_CODE", err.response.status);
-        });
-    },
-    fetchChannels({ commit }) {
-      axios({
-        method: "GET",
-        url: `${BASE_URL}/v1/channels`,
-      })
-        .then((res) => {
-          commit("SET_CHANNELS", [
-            ...res.data.public,
-            ...res.data.personal,
-            ...res.data.group,
-          ]);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    updateChannel({ commit, dispatch }, channel) {
-      axios({
-        method: "PATCH",
-        url: `${BASE_URL}/v1/channels/${channel.id}`,
-        data: channel,
-      }).then((res) => {
-        commit("SET_CHANNEL", res.data);
-        // TODO: Update state.channels for Sidebar
-        // commit("SET_CHANNELS", [...getters.channels, res.data]);
         commit("SET_SNACKBAR", {
           show: true,
-          message: "Channel updated successfully!",
+          message: "Channel Successfully Updated!",
+          color: "var(--mh-green)",
         });
-        // Used to update changes made necessary for sidebar
+      } catch (error) {
+        console.log(error);
+      }
+      commit("TOGGLE_SAVING", false);
+    },
+    async removeChannel({ commit, dispatch }, id) {
+      try {
+        await API.graphql(graphqlOperation(deleteChannel, { input: id }));
         dispatch("fetchChannels");
-      });
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Channel Successfully Removed",
+          color: "var(--mh-orange)",
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async fetchChannels({ commit }) {
+      try {     
+       const res = await API.graphql(graphqlOperation(listChannels));
+        commit("SET_CHANNELS", res.data.listChannels.items);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async fetchChannel({ commit }) {
+      try {     
+       const res = await API.graphql(graphqlOperation(getChannel));
+        commit("SET_CHANNEL", res.data.getChannel);
+        console.log(res.data.getChannel);
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
   mutations: {
-    SET_CHANNEL: (state, channel) => (state.channel = channel),
+    ADD_CHANNEL: (state, channel) => state.channels.push(channel),
     SET_CHANNELS: (state, channels) => (state.channels = channels),
+    SET_CHANNEL: (state, channel) => (state.channel = channel),
   },
   getters: {
-    channel: (state) => state.channel,
-    channels: (state) => state.channels,
+    channels: (state) => state.channels,  
+    channel: (state) => state.channel, 
   },
 };
+
+

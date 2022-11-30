@@ -22,7 +22,8 @@
         }
       },
       "auth": {
-        "mrmsd8d7189c": {}
+        "mrmsd8d7189c": {},
+        "userPoolGroups": {}
       }
     }
   }
