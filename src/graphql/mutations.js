@@ -214,57 +214,6 @@ export const deleteDataSet = /* GraphQL */ `
     }
   }
 `;
-export const createDataSet = /* GraphQL */ `
-  mutation CreateDataSet(
-    $input: CreateDataSetInput!
-    $condition: ModelDataSetConditionInput
-  ) {
-    createDataSet(input: $input, condition: $condition) {
-      id
-      title
-      description
-      channels
-      data
-      user
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateDataSet = /* GraphQL */ `
-  mutation UpdateDataSet(
-    $input: UpdateDataSetInput!
-    $condition: ModelDataSetConditionInput
-  ) {
-    updateDataSet(input: $input, condition: $condition) {
-      id
-      title
-      description
-      channels
-      data
-      user
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteDataSet = /* GraphQL */ `
-  mutation DeleteDataSet(
-    $input: DeleteDataSetInput!
-    $condition: ModelDataSetConditionInput
-  ) {
-    deleteDataSet(input: $input, condition: $condition) {
-      id
-      title
-      description
-      channels
-      data
-      user
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const createChannelType = /* GraphQL */ `
   mutation CreateChannelType(
     $input: CreateChannelTypeInput!

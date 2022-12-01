@@ -89,7 +89,7 @@ export default {
           type: "warning",
         }
        ).then(() => {
-        this.removeChannel(item.id);
+        this.removeChannel({ id: item.id });
       });     
     },
   },
