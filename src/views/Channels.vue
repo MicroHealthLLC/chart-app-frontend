@@ -13,14 +13,14 @@
       <v-card>
         <v-data-table :headers="headers" :items="channels">
           <!-- Formatted Date -->
-          <template v-slot:item.created_at="{ item }">
-            <span>{{ new Date(item.created_at).toLocaleDateString() }}</span>
+          <template v-slot:item.createdAt="{ item }">
+            <span>{{ new Date(item.createdAt).toLocaleDateString() }}</span>
           </template>
           <template v-slot:item.actions="{ item }">
             <v-icon color="primary" small class="mr-2" @click="editItem(item)">
               mdi-pencil
             </v-icon>
-            <v-icon color="primary" small @click="deleteItem(item)">
+            <v-icon color="primary" small @click="deleteChannel(item)">
               mdi-delete
             </v-icon>
             <!-- <v-btn class="ml-2" depressed outlined x-small
@@ -50,12 +50,12 @@ export default {
         {
           text: "Date Added",
           sortable: true,
-          value: "created_at",
+          value: "createdAt",
         },
         {
           text: "Category",
           sortable: true,
-          value: "category",
+          value: "type",
         },
         {
           text: "Description",
@@ -75,12 +75,22 @@ export default {
     ...mapGetters(["channels"]),
   },
   methods: {
-    ...mapActions(["fetchChannels"]),
+    ...mapActions(["fetchChannels", "removeChannel"]),
     editItem(item) {
       console.log(`EDIT ${item.title}`);
     },
-    deleteItem(item) {
-      console.log(`DELETE ${item.title}`);
+    deleteChannel(item) {
+      this.$confirm(
+        `Are you sure you want to delete the ${item.title} channel?`,
+        "Confirm Delete",
+        {
+          confirmButtonText: "Delete",
+          cancelButtonText: "Cancel",
+          type: "warning",
+        }
+       ).then(() => {
+        this.removeChannel(item.id);
+      });     
     },
   },
   beforeMount() {
