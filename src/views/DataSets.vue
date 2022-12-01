@@ -13,7 +13,10 @@
         <v-data-table :headers="headers" :items="dataSets">
           <!-- Formatted Date -->
           <template v-slot:item.created_at="{ item }">
-            <span>{{ new Date(item.created_at).toLocaleDateString() }}</span>
+            <span>{{ new Date(item.createdAt).toLocaleDateString() }}</span>
+          </template>
+          <template v-slot:item.user="{ item }">
+            <span>{{ item.user }}</span>
           </template>
           <!-- Action Buttons -->
           <template v-slot:item.actions="{ item }">
@@ -45,15 +48,20 @@ export default {
           width: "25%",
         },
         {
+          text: "Description",
+          sortable: false,
+          value: "description",
+          width: "30%",
+        },
+        {
           text: "Date Added",
           sortable: true,
           value: "created_at",
         },
         {
-          text: "Description",
-          sortable: false,
-          value: "description",
-          width: "40%",
+          text: "Created By",
+          sortable: true,
+          value: "user",
         },
         {
           text: "Actions",
@@ -64,14 +72,18 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["dataSets"]),
+    ...mapGetters(["dataSets", "user"]),
   },
   methods: {
     ...mapActions(["fetchDataSets", "removeDataSet", "fetchDataSet"]),
+    log(e) {
+      console.log(e)
+    },
     editItem(item) {
       console.log(item)
-      this.$router.push(`/data-sets/${item.id}`)
-      this.fetchDataSet(item.id)
+      /* this.fetchDataSet({id: item.id})
+      this.$router.push(`/data-sets/${item.id}`) */
+      
     },
     async deleteItem(item) {
       console.log(item)
@@ -81,6 +93,9 @@ export default {
   beforeMount() {
     this.fetchDataSets();
   },
+  mounted() {
+    console.log(this.dataSets)
+  }
 };
 </script>
 

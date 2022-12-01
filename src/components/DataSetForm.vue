@@ -303,6 +303,7 @@ export default {
         description: this.dataSet.description,
         data: ["test_data"],
         channels: ["test_chan"],
+        user: this.createdBy
       });
       console.log(this.$refs.form)
       this.$refs.form.reset();

@@ -65,9 +65,10 @@ export default {
       }
     },
     async fetchDataSet(id) {
+      console.log(id)  
       try {
-        console.log(id)     
-       const res = await API.graphql(graphqlOperation(getDataSet, { input: id }));
+           
+       const res = await API.graphql(graphqlOperation(getDataSet, { id: id }));
         console.log(res.data);
         //commit("SET_DATA_SET", res.data.getDataSet);
       } catch (error) {
