@@ -3,7 +3,7 @@
     <!-- Title -->
     <v-col class="col-12">
       <div class="d-flex justify-space-between">
-        <h3 v-if="activeDataSet.id">{{ activeDataSet.title }}</h3>
+        <h3 v-if="dataSet.id">{{ dataSet.title }}</h3>
         <h3 v-else>Add Data Set</h3>
         <div>
           <v-btn
@@ -34,7 +34,7 @@
         <div class="grid">
           <div>
             <v-text-field
-              v-model="activeDataSet.title"
+              v-model="dataSet.title"
               label="Title"
               dense
               required
@@ -45,14 +45,14 @@
             <v-text-field v-model="createdBy" label="Created By" dense>
             </v-text-field>
           </div>
-          <div :class="{ description: activeDataSet.id }">
+          <div :class="{ description: dataSet.id }">
             <v-text-field
-              v-model="activeDataSet.description"
+              v-model="dataSet.description"
               label="Description"
               dense
             ></v-text-field>
           </div>
-          <div v-if="!activeDataSet.id">
+          <!-- <div v-if="!dataSet.id">
             <v-file-input
               placeholder="Please choose a file..."
               type="file"
@@ -71,7 +71,7 @@
           </div>
           <div class="channels">
             <v-select
-              v-model="activeDataSet.channels"
+              v-model="dataSet.channels"
               label="Channels"
               :items="channels"
               item-text="title"
@@ -86,7 +86,7 @@
               hint="Please select all Channels that have access to this Data Set"
               persistent-hint
             ></v-select>
-          </div>
+          </div> -->
         </div>
       </v-form>
     </v-col>
@@ -202,7 +202,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      "activeDataSet",
+      "dataSet",
       "channels",
       "colors",
       "statusCode",
@@ -234,18 +234,18 @@ export default {
       );
     },
     createdBy() {
-      if (this.activeDataSet.id) {
-        return `${this.activeDataSet.user.first_name} ${
-          this.activeDataSet.user.last_name
-        } on ${new Date(this.activeDataSet.created_at).toLocaleString()}`;
-      } else {
-        return `${this.activeDataSet.user.first_name} ${this.activeDataSet.user.last_name}`;
-      }
+      if (this.dataSet.id) {
+        return `${this.dataSet.user.first_name} ${
+          this.dataSet.user.last_name
+        } on ${new Date(this.dataSet.created_at).toLocaleString()}`;
+      } else if (this.dataSet.user) {
+        return `${this.dataSet.user.first_name} ${this.dataSet.user.last_name}`;
+      } else return ""
     },
   },
   methods: {
     ...mapActions(["addDataSet", "updateDataSet"]),
-    ...mapMutations(["SET_ACTIVE_DATA_SET", "SET_STATUS_CODE"]),
+    ...mapMutations(["SET_DATA_SET", "SET_STATUS_CODE"]),
     onChange(event) {
       this.file = event.target.files ? event.target.files[0] : null;
     },
@@ -298,34 +298,46 @@ export default {
     },
     saveDataSet() {
       this.$refs.form.validate();
+      this.addDataSet({
+        title: this.dataSet.title,
+        description: this.dataSet.description,
+        data: ["test_data"],
+        channels: ["test_chan"],
+        user: this.createdBy
+      });
+      console.log(this.$refs.form)
+      this.$refs.form.reset();
+    },
+    /* saveDataSet() {
+      this.$refs.form.validate();
       this.submitAttempted = true;
 
       if (this.formValid) {
         let dataSet = {
-          title: this.activeDataSet.title,
-          description: this.activeDataSet.description,
+          title: this.dataSet.title,
+          description: this.dataSet.description,
           data: this.data,
-          channel_ids: this.activeDataSet.channels.map((channel) => channel.id),
+          channel_ids: this.dataSet.channels.map((channel) => channel.id),
         };
 
-        if (this.activeDataSet.id) {
-          dataSet.id = this.activeDataSet.id;
+        if (this.dataSet.id) {
+          dataSet.id = this.dataSet.id;
           this.updateDataSet(dataSet);
         } else {
           dataSet.user_id = this.user.id;
           this.addDataSet(dataSet);
         }
       }
-    },
+    }, */
   },
   watch: {
-    activeDataSet() {
-      this.data = this.activeDataSet.data;
+    dataSet() {
+      this.data = this.dataSet.data;
       this.uploadData(this.data);
     },
     statusCode() {
       if (this.statusCode == 201) {
-        this.$router.push(`/data-sets/${this.activeDataSet.id}`);
+        this.$router.push(`/data-sets/${this.dataSet.id}`);
         this.SET_STATUS_CODE(0);
       }
     },

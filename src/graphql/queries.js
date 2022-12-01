@@ -135,6 +135,41 @@ export const listDataSets = /* GraphQL */ `
     }
   }
 `;
+export const getDataSet = /* GraphQL */ `
+  query GetDataSet($id: ID!) {
+    getDataSet(id: $id) {
+      id
+      title
+      description
+      channels
+      data
+      user
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listDataSets = /* GraphQL */ `
+  query ListDataSets(
+    $filter: ModelDataSetFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listDataSets(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        title
+        description
+        channels
+        data
+        user
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getChannelType = /* GraphQL */ `
   query GetChannelType($id: ID!) {
     getChannelType(id: $id) {
