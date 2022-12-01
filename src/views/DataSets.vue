@@ -67,13 +67,15 @@ export default {
     ...mapGetters(["dataSets"]),
   },
   methods: {
-    ...mapActions(["fetchDataSets"]),
+    ...mapActions(["fetchDataSets", "removeDataSet", "fetchDataSet"]),
     editItem(item) {
-      console.log(`EDIT ${item.title}`);
-      this.$router.push(`/data-sets/${item.id}`);
+      console.log(item)
+      this.$router.push(`/data-sets/${item.id}`)
+      this.fetchDataSet(item.id)
     },
-    deleteItem(item) {
-      console.log(`DELETE ${item.title}`);
+    async deleteItem(item) {
+      console.log(item)
+      await this.removeDataSet({id: item.id});
     },
   },
   beforeMount() {

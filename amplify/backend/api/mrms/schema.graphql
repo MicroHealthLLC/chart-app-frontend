@@ -16,7 +16,16 @@ type Channel @model @auth(rules: [{ allow: public }]) {
   reports: [Report] @hasMany(indexName: "byChannel",fields: ["id"])
   type: [ChannelType]
   title: String!
- }
+}
+
+type DataSet @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  title: String!
+  description: String
+  channels: [String]
+  data: [String]
+  user: String
+}
 
 type ChannelType @model @auth(rules: [{ allow: public }]) {
   title: String!
