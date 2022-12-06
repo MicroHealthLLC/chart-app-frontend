@@ -19,9 +19,7 @@
           >
         </div>
       </div>
-
       <v-divider class="mb-4"></v-divider>
-
       <!-- Form Fields -->
       <v-card class="pa-4">
         <v-form v-model="formValid" ref="form" class="grid mt-4">
@@ -166,6 +164,9 @@ export default {
           });
          }  
           if(this.channel.id){
+            console.log("edit")
+            this.channel.reports = [{i}]
+            console.log({...this.channel})
           this.updateChannelById({
           ...this.channel  
           });
@@ -190,8 +191,9 @@ export default {
   },
   mounted() {
     this.fetchChannelTypes()  
-    this.fetchChannels()
-  },
+    this.fetchChannels() 
+    
+   },
   watch: {
     // statusCode() {
     //   if (this.statusCode == 201) {
@@ -202,15 +204,16 @@ export default {
     channels(){
       if(this.channels){
         console.log("Channels")
+        console.log(this.$route.path)
         console.log(this.channels)
       }
     },
     channel(){
       this.data = this.channel
-      if(this.data){
+      if(this.data.length > 0){
         console.log(this.data)
-
-      }
+      } 
+      // else this.$refs.form.reset();
     },
   },
 };

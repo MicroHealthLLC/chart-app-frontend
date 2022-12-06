@@ -38,6 +38,7 @@ export default {
       commit("TOGGLE_SAVING", false);
     },
     async updateChannelById({ commit, dispatch }, channel ) {
+      console.log(channel);
       commit("TOGGLE_SAVING", true);
       try {
         await API.graphql(graphqlOperation(updateChannel, { input: channel }));
@@ -74,6 +75,7 @@ export default {
       }
     },
     async fetchChannel({ commit }, id) {
+      console.log(id);
       try {     
        const res = await API.graphql(graphqlOperation(getChannel, {id: id}));
         commit("SET_CHANNEL", res.data.getChannel);

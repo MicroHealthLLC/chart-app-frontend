@@ -40,7 +40,7 @@
 
       <div v-show="!mini" class="ml-2 mt-2 text-caption">Channels</div>
 
-      <v-list-item link to="/add-channel" active-class="active-nav-item">
+      <v-list-item to="/add-channel" active-class="active-nav-item">
         <v-list-item-icon><v-icon>mdi-playlist-plus</v-icon></v-list-item-icon>
         <v-list-item-content>
           <v-list-item-title>Create Channel</v-list-item-title>
