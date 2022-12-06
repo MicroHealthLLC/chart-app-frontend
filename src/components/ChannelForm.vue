@@ -147,7 +147,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["addChannel", "updateChannel", "addChannelType", "fetchChannelTypes", "fetchChannels"]),
+    ...mapActions(["addChannel", "updateChannelById", "addChannelType", "fetchChannelTypes", "fetchChannels"]),
     ...mapMutations(["SET_STATUS_CODE"]),
     resetAndGoBack(){
       this.$router.go(-1)
@@ -161,17 +161,19 @@ export default {
         if(!this.channel.type.id){              
           this.channel.type == this.channel.type
           console.log(this.channel)
+          this.addChannelType({
+          title: this.channel.type,      
+          });
+         }  
+          if(this.channel.id){
+          this.updateChannelById({
+          ...this.channel  
+          });
+         } else {
           this.addChannel({
           ...this.channel  
           });
-          this.addChannelType({
-          title: this.channel.type,      
-        });
-        } else {
-          this.addChannel({
-          ...this.channel  
-          }); 
-        }         
+         }   
         this.$refs.form.reset();
         this.channel.type = null
       }
@@ -203,12 +205,13 @@ export default {
         console.log(this.channels)
       }
     },
-    // channel(){
-    //   if(this.channel){
-    //     console.log("Channel")
-    //     console.log(this.channel)
-    //   }
-    // },
+    channel(){
+      this.data = this.channel
+      if(this.data){
+        console.log(this.data)
+
+      }
+    },
   },
 };
 </script>
