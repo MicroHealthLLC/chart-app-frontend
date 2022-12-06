@@ -146,55 +146,22 @@ export const onDeleteChannel = /* GraphQL */ `
   }
 `;
 export const onCreateDataSet = /* GraphQL */ `
-  subscription OnCreateDataSet($filter: ModelSubscriptionDataSetFilterInput) {
-    onCreateDataSet(filter: $filter) {
-      id
-      title
-      description
-      channels
-      data
-      user
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateDataSet = /* GraphQL */ `
-  subscription OnUpdateDataSet($filter: ModelSubscriptionDataSetFilterInput) {
-    onUpdateDataSet(filter: $filter) {
-      id
-      title
-      description
-      channels
-      data
-      user
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteDataSet = /* GraphQL */ `
-  subscription OnDeleteDataSet($filter: ModelSubscriptionDataSetFilterInput) {
-    onDeleteDataSet(filter: $filter) {
-      id
-      title
-      description
-      channels
-      data
-      user
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateDataSet = /* GraphQL */ `
   subscription OnCreateDataSet {
     onCreateDataSet {
       id
       title
       description
       channels
-      data
+      data {
+        items {
+          id
+          score
+          createdAt
+          updatedAt
+          dataSetDataId
+        }
+        nextToken
+      }
       user
       createdAt
       updatedAt
@@ -208,7 +175,16 @@ export const onUpdateDataSet = /* GraphQL */ `
       title
       description
       channels
-      data
+      data {
+        items {
+          id
+          score
+          createdAt
+          updatedAt
+          dataSetDataId
+        }
+        nextToken
+      }
       user
       createdAt
       updatedAt
@@ -222,10 +198,88 @@ export const onDeleteDataSet = /* GraphQL */ `
       title
       description
       channels
-      data
+      data {
+        items {
+          id
+          score
+          createdAt
+          updatedAt
+          dataSetDataId
+        }
+        nextToken
+      }
       user
       createdAt
       updatedAt
+    }
+  }
+`;
+export const onCreateDataValue = /* GraphQL */ `
+  subscription OnCreateDataValue {
+    onCreateDataValue {
+      id
+      score
+      dataset {
+        id
+        title
+        description
+        channels
+        data {
+          nextToken
+        }
+        user
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+      dataSetDataId
+    }
+  }
+`;
+export const onUpdateDataValue = /* GraphQL */ `
+  subscription OnUpdateDataValue {
+    onUpdateDataValue {
+      id
+      score
+      dataset {
+        id
+        title
+        description
+        channels
+        data {
+          nextToken
+        }
+        user
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+      dataSetDataId
+    }
+  }
+`;
+export const onDeleteDataValue = /* GraphQL */ `
+  subscription OnDeleteDataValue {
+    onDeleteDataValue {
+      id
+      score
+      dataset {
+        id
+        title
+        description
+        channels
+        data {
+          nextToken
+        }
+        user
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+      dataSetDataId
     }
   }
 `;

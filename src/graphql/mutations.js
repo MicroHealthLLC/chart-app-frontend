@@ -173,7 +173,16 @@ export const createDataSet = /* GraphQL */ `
       title
       description
       channels
-      data
+      data {
+        items {
+          id
+          score
+          createdAt
+          updatedAt
+          dataSetDataId
+        }
+        nextToken
+      }
       user
       createdAt
       updatedAt
@@ -190,7 +199,16 @@ export const updateDataSet = /* GraphQL */ `
       title
       description
       channels
-      data
+      data {
+        items {
+          id
+          score
+          createdAt
+          updatedAt
+          dataSetDataId
+        }
+        nextToken
+      }
       user
       createdAt
       updatedAt
@@ -207,10 +225,97 @@ export const deleteDataSet = /* GraphQL */ `
       title
       description
       channels
-      data
+      data {
+        items {
+          id
+          score
+          createdAt
+          updatedAt
+          dataSetDataId
+        }
+        nextToken
+      }
       user
       createdAt
       updatedAt
+    }
+  }
+`;
+export const createDataValue = /* GraphQL */ `
+  mutation CreateDataValue(
+    $input: CreateDataValueInput!
+    $condition: ModelDataValueConditionInput
+  ) {
+    createDataValue(input: $input, condition: $condition) {
+      id
+      score
+      dataset {
+        id
+        title
+        description
+        channels
+        data {
+          nextToken
+        }
+        user
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+      dataSetDataId
+    }
+  }
+`;
+export const updateDataValue = /* GraphQL */ `
+  mutation UpdateDataValue(
+    $input: UpdateDataValueInput!
+    $condition: ModelDataValueConditionInput
+  ) {
+    updateDataValue(input: $input, condition: $condition) {
+      id
+      score
+      dataset {
+        id
+        title
+        description
+        channels
+        data {
+          nextToken
+        }
+        user
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+      dataSetDataId
+    }
+  }
+`;
+export const deleteDataValue = /* GraphQL */ `
+  mutation DeleteDataValue(
+    $input: DeleteDataValueInput!
+    $condition: ModelDataValueConditionInput
+  ) {
+    deleteDataValue(input: $input, condition: $condition) {
+      id
+      score
+      dataset {
+        id
+        title
+        description
+        channels
+        data {
+          nextToken
+        }
+        user
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+      dataSetDataId
     }
   }
 `;

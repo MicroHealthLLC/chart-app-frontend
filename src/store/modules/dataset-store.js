@@ -1,14 +1,15 @@
 import { API, graphqlOperation } from "aws-amplify";
-import { createDataSet } from "@/graphql/mutations";
+import { createDataSet, createDataValue } from "@/graphql/mutations";
 import { updateDataSet } from "@/graphql/mutations";
 import { deleteDataSet } from "@/graphql/mutations";
 import { getDataSet } from "@/graphql/queries";
-import { listDataSets } from "@/graphql/queries";
+import { listDataSets, listDataValues } from "@/graphql/queries";
 
 
 export default {
   state: {
     dataSets: [],
+    dataValues: [],
     dataSet: {},
   },
   actions: {
@@ -21,6 +22,22 @@ export default {
         commit("SET_SNACKBAR", {
           show: true,
           message: "DataSet Successfully Added!",
+          color: "var(--mh-green)",
+        });
+      } catch (error) {
+        console.log(error);
+      }
+      commit("TOGGLE_SAVING", false);
+    },
+    async addDataValue({ commit, dispatch }, dataValue) {
+      console.log(dataValue)
+      commit("TOGGLE_SAVING", true);
+      try {
+        await API.graphql(graphqlOperation(createDataValue, { input: dataValue }));
+        dispatch("fetchDataValues");
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "DataValue Successfully Added!",
           color: "var(--mh-green)",
         });
       } catch (error) {
@@ -64,6 +81,14 @@ export default {
         console.log(error);
       }
     },
+    async fetchDataValues({ commit }) {
+      try {     
+       const res = await API.graphql(graphqlOperation(listDataValues));
+        commit("SET_DATA_VALUES", res.data.listDataValues.items);
+      } catch (error) {
+        console.log(error);
+      }
+    },
     async fetchDataSet({ commit } , id) {
       console.log(id)  
       try {     
@@ -78,10 +103,12 @@ export default {
   mutations: {
     ADD_DATA_SET: (state, dataSet) => state.dataSets.push(dataSet),
     SET_DATA_SETS: (state, dataSets) => (state.dataSets = dataSets),
+    SET_DATA_VALUES: (state, dataValues) => (state.dataValues = dataValues),
     SET_DATA_SET: (state, dataSet) => (state.dataSet = dataSet),
   },
   getters: {
-    dataSets: (state) => state.dataSets,  
+    dataSets: (state) => state.dataSets,
+    dataValues: (state) => state.dataValues,  
     dataSet: (state) => state.dataSet, 
   },
 };

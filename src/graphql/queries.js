@@ -100,7 +100,6 @@ export const listChannels = /* GraphQL */ `
     }
   }
 `;
-
 export const getDataSet = /* GraphQL */ `
   query GetDataSet($id: ID!) {
     getDataSet(id: $id) {
@@ -108,7 +107,16 @@ export const getDataSet = /* GraphQL */ `
       title
       description
       channels
-      data
+      data {
+        items {
+          id
+          score
+          createdAt
+          updatedAt
+          dataSetDataId
+        }
+        nextToken
+      }
       user
       createdAt
       updatedAt
@@ -127,10 +135,62 @@ export const listDataSets = /* GraphQL */ `
         title
         description
         channels
-        data
+        data {
+          nextToken
+        }
         user
         createdAt
         updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getDataValue = /* GraphQL */ `
+  query GetDataValue($id: ID!) {
+    getDataValue(id: $id) {
+      id
+      score
+      dataset {
+        id
+        title
+        description
+        channels
+        data {
+          nextToken
+        }
+        user
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+      dataSetDataId
+    }
+  }
+`;
+export const listDataValues = /* GraphQL */ `
+  query ListDataValues(
+    $filter: ModelDataValueFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listDataValues(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        score
+        dataset {
+          id
+          title
+          description
+          channels
+          user
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+        dataSetDataId
       }
       nextToken
     }

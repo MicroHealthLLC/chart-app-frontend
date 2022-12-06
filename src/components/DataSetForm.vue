@@ -52,7 +52,11 @@
               dense
             ></v-text-field>
           </div>
-          <div v-if="!dataSet.id">
+          <div>
+            <v-text-field v-model="dataValueInput" label="Add Data Value" clearable dense></v-text-field>
+            <v-btn elevation="8" icon @click="addNewDataValue"><v-icon>mdi-plus-circle</v-icon></v-btn>
+          </div>
+          <!-- <div v-if="!dataSet.id">
             <v-file-input
               placeholder="Please choose a file..."
               type="file"
@@ -86,10 +90,10 @@
               hint="Please select all Channels that have access to this Data Set"
               persistent-hint
             ></v-select>
-          </div>
+          </div>-->
         </div>
       </v-form>
-    </v-col>
+    </v-col> 
     <!-- Chart Preview -->
     <v-col class="col-12">
       <v-card class="d-flex flex-column preview-container">
@@ -198,6 +202,7 @@ export default {
       selected: [],
       formValid: true,
       submitAttempted: false,
+      dataValueInput: '',
     };
   },
   computed: {
@@ -274,6 +279,9 @@ export default {
     },
     togglePolarAreaChart() {
       this.chartType = "Polar Area";
+    },
+    addNewDataValue() {
+      
     },
     uploadData(data) {
       const keys = Object.keys(data[0]);

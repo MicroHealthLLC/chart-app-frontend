@@ -25,8 +25,13 @@ type DataSet @model @auth(rules: [{ allow: public }]) {
   title: String!
   description: String
   channels: [String]
-  data: [String]
+  data: [DataValue] @hasMany
   user: String
+}
+type DataValue @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  score: Int!
+  dataset: DataSet @belongsTo
 }
 
 type ChannelType @model @auth(rules: [{ allow: public }]) {
