@@ -73,9 +73,9 @@ export default {
         console.log(error);
       }
     },
-    async fetchChannel({ commit }) {
+    async fetchChannel({ commit }, id) {
       try {     
-       const res = await API.graphql(graphqlOperation(getChannel));
+       const res = await API.graphql(graphqlOperation(getChannel, {id: id}));
         commit("SET_CHANNEL", res.data.getChannel);
         console.log(res.data.getChannel);
       } catch (error) {

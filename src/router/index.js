@@ -110,7 +110,6 @@ const routes = [
   },
   {
     path: "/channels/:channelId",
-    redirect: "/channels/:channelId/reports",
     name: "Channel",
     component: Channel,
   },

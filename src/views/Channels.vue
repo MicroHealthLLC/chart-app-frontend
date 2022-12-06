@@ -75,9 +75,11 @@ export default {
     ...mapGetters(["channels"]),
   },
   methods: {
-    ...mapActions(["fetchChannels", "removeChannel"]),
+    ...mapActions(["fetchChannel", "fetchChannels", "removeChannel"]),
     editItem(item) {
       console.log(`EDIT ${item.title}`);
+      this.fetchChannel({id: item.id})
+      this.$router.push(`/channels/${item.id}`) 
     },
     deleteChannel(item) {
       this.$confirm(

@@ -55,7 +55,7 @@
       </v-list-item>
       <!-- Public, Personal, and Group -->
       <v-list-group
-        v-for="(item, index) in channelItems"
+        v-for="(item, index) in channels"
         :key="index"
         :prepend-icon="item.icon"
         no-action
@@ -180,7 +180,7 @@ export default {
   },
   methods: {
     ...mapMutations(["SET_SNACKBAR", "SET_USER"]),
-    ...mapActions(["logout"]),
+    ...mapActions(["logout", "fetchChannels"]),
     async logOutUser() {
       await this.logout();
       // this.$router.push("/signin");
@@ -205,6 +205,7 @@ export default {
   },
   mounted() {
     this.updateChannels();
+    this.fetchChannels()
     console.log(this.user)
  
   },
