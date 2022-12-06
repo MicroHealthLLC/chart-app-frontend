@@ -111,9 +111,9 @@ export const getDataSet = /* GraphQL */ `
         items {
           id
           score
+          dataSetId
           createdAt
           updatedAt
-          dataSetDataId
         }
         nextToken
       }
@@ -151,21 +151,9 @@ export const getDataValue = /* GraphQL */ `
     getDataValue(id: $id) {
       id
       score
-      dataset {
-        id
-        title
-        description
-        channels
-        data {
-          nextToken
-        }
-        user
-        createdAt
-        updatedAt
-      }
+      dataSetId
       createdAt
       updatedAt
-      dataSetDataId
     }
   }
 `;
@@ -179,18 +167,9 @@ export const listDataValues = /* GraphQL */ `
       items {
         id
         score
-        dataset {
-          id
-          title
-          description
-          channels
-          user
-          createdAt
-          updatedAt
-        }
+        dataSetId
         createdAt
         updatedAt
-        dataSetDataId
       }
       nextToken
     }

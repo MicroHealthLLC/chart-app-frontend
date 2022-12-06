@@ -156,9 +156,9 @@ export const onCreateDataSet = /* GraphQL */ `
         items {
           id
           score
+          dataSetId
           createdAt
           updatedAt
-          dataSetDataId
         }
         nextToken
       }
@@ -179,9 +179,9 @@ export const onUpdateDataSet = /* GraphQL */ `
         items {
           id
           score
+          dataSetId
           createdAt
           updatedAt
-          dataSetDataId
         }
         nextToken
       }
@@ -202,9 +202,9 @@ export const onDeleteDataSet = /* GraphQL */ `
         items {
           id
           score
+          dataSetId
           createdAt
           updatedAt
-          dataSetDataId
         }
         nextToken
       }
@@ -219,21 +219,9 @@ export const onCreateDataValue = /* GraphQL */ `
     onCreateDataValue {
       id
       score
-      dataset {
-        id
-        title
-        description
-        channels
-        data {
-          nextToken
-        }
-        user
-        createdAt
-        updatedAt
-      }
+      dataSetId
       createdAt
       updatedAt
-      dataSetDataId
     }
   }
 `;
@@ -242,21 +230,9 @@ export const onUpdateDataValue = /* GraphQL */ `
     onUpdateDataValue {
       id
       score
-      dataset {
-        id
-        title
-        description
-        channels
-        data {
-          nextToken
-        }
-        user
-        createdAt
-        updatedAt
-      }
+      dataSetId
       createdAt
       updatedAt
-      dataSetDataId
     }
   }
 `;
@@ -265,21 +241,9 @@ export const onDeleteDataValue = /* GraphQL */ `
     onDeleteDataValue {
       id
       score
-      dataset {
-        id
-        title
-        description
-        channels
-        data {
-          nextToken
-        }
-        user
-        createdAt
-        updatedAt
-      }
+      dataSetId
       createdAt
       updatedAt
-      dataSetDataId
     }
   }
 `;

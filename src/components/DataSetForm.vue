@@ -208,6 +208,7 @@ export default {
   computed: {
     ...mapGetters([
       "dataSet",
+      "dataValues",
       "channels",
       "colors",
       "statusCode",
@@ -247,7 +248,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["addDataSet", "updateDataSet", "fetchChannels"]),
+    ...mapActions(["addDataSet", "addDataValue", "updateDataSet", "fetchChannels", "fetchDataValues"]),
     ...mapMutations(["SET_DATA_SET", "SET_STATUS_CODE"]),
     onChange(event) {
       this.file = event.target.files ? event.target.files[0] : null;
@@ -281,11 +282,36 @@ export default {
       this.chartType = "Polar Area";
     },
     addNewDataValue() {
-      
+      /* this.addDataValue({
+        score: this.dataValueInput,
+        dataSetId: this.dataSet.id
+      }); */
+      this.fetchDataValues()
+      this.loadData(this.dataValues)
+    },
+    loadData(data) {
+      console.log(data)
+      let newData = data.map((d) => ({
+        "Created At": new Date(d.createdAt).toLocaleString(),
+        "Score": d.score
+      }))
+      console.log(newData)
+      const keys = Object.keys(newData[0])
+      console.log(keys)
+      this.headers = keys.map((item) => ({
+        text: item,
+        value: item,
+      }));
+
+      this.items = newData;
+
+      this.selected = newData;
+
+      this.data = newData;
     },
     uploadData(data) {
       const keys = Object.keys(data[0]);
-
+      console.log(keys)
       this.headers = keys.map((item) => ({
         text: item,
         value: item,
@@ -340,13 +366,15 @@ export default {
     this.fetchChannels();
   },
   watch: {
-    dataSet() {
-      this.data = this.dataSet;
-      if (this.data){
-        console.log(this.data)
+    /* dataSet() {
+      if (this.dataSet) {
+        this.data = this.dataSet;
+        if (this.data){
+          console.log(this.data)
+        }
+        this.loadData(this.data.dat);
       }
-      this.uploadData(this.data);
-    },
+    }, */
     selected(){
       if (this.selected && this.selected.length > 0){
         console.log(this.selected)
