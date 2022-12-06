@@ -52,7 +52,7 @@
               dense
             ></v-text-field>
           </div>
-          <!-- <div v-if="!dataSet.id">
+          <div v-if="!dataSet.id">
             <v-file-input
               placeholder="Please choose a file..."
               type="file"
@@ -86,7 +86,7 @@
               hint="Please select all Channels that have access to this Data Set"
               persistent-hint
             ></v-select>
-          </div> -->
+          </div>
         </div>
       </v-form>
     </v-col>
@@ -235,16 +235,14 @@ export default {
     },
     createdBy() {
       if (this.dataSet.id) {
-        return `${this.dataSet.user.first_name} ${
-          this.dataSet.user.last_name
-        } on ${new Date(this.dataSet.created_at).toLocaleString()}`;
+        return `${this.dataSet.user} on ${new Date(this.dataSet.createdAt).toLocaleString()}`;
       } else if (this.dataSet.user) {
         return `${this.dataSet.user.first_name} ${this.dataSet.user.last_name}`;
       } else return ""
     },
   },
   methods: {
-    ...mapActions(["addDataSet", "updateDataSet"]),
+    ...mapActions(["addDataSet", "updateDataSet", "fetchChannels"]),
     ...mapMutations(["SET_DATA_SET", "SET_STATUS_CODE"]),
     onChange(event) {
       this.file = event.target.files ? event.target.files[0] : null;
@@ -330,10 +328,21 @@ export default {
       }
     }, */
   },
+  beforeMount() {
+    this.fetchChannels();
+  },
   watch: {
     dataSet() {
-      this.data = this.dataSet.data;
+      this.data = this.dataSet;
+      if (this.data){
+        console.log(this.data)
+      }
       this.uploadData(this.data);
+    },
+    selected(){
+      if (this.selected && this.selected.length > 0){
+        console.log(this.selected)
+      } else (console.log("no SELECTED data"))
     },
     statusCode() {
       if (this.statusCode == 201) {

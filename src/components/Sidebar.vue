@@ -159,17 +159,17 @@ export default {
       ],
       channelItems: [
         {
-          title: "Public",
+          title: "IT APPS",
           icon: "mdi-account-group",
           channels: [],
         },
         {
-          title: "Personal",
+          title: "Business Dev",
           icon: "mdi-shield-account",
           channels: [],
         },
         {
-          title: "Group",
+          title: "Proposals",
           icon: "mdi-account-multiple",
           channels: [],
         },

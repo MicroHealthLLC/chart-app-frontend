@@ -80,9 +80,10 @@ export default {
       console.log(e)
     },
     editItem(item) {
-      console.log(item)
-      /* this.fetchDataSet({id: item.id})
-      this.$router.push(`/data-sets/${item.id}`) */
+      
+      // console.log(item)
+     this.fetchDataSet({id: item.id})
+      this.$router.push(`/data-sets/${item.id}`) 
       
     },
     async deleteItem(item) {

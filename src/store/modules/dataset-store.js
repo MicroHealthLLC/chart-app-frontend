@@ -64,13 +64,12 @@ export default {
         console.log(error);
       }
     },
-    async fetchDataSet(id) {
+    async fetchDataSet({ commit } , id) {
       console.log(id)  
-      try {
-           
-       const res = await API.graphql(graphqlOperation(getDataSet, { id: id }));
-        console.log(res.data);
-        //commit("SET_DATA_SET", res.data.getDataSet);
+      try {     
+       const res = await API.graphql(graphqlOperation(getDataSet, { id: id }));    
+       console.log(res.data);
+        commit("SET_DATA_SET", res.data.getDataSet);
       } catch (error) {
         console.log(error);
       }
