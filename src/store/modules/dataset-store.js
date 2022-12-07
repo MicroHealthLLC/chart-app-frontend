@@ -90,7 +90,6 @@ export default {
       }
     },
     async fetchDataSet({ commit } , id) {
-      console.log(id)  
       try {     
        const res = await API.graphql(graphqlOperation(getDataSet, { id: id }));    
        console.log(res.data);
