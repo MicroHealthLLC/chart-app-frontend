@@ -12,14 +12,27 @@
               >mdi-chart-timeline-variant-shimmer</v-icon
             ></v-list-item-title
           >
-          <v-list-item-subtitle> Microhealth </v-list-item-subtitle>
+          <v-list-item-subtitle > Microhealth </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
     </v-list>
 
     <v-divider></v-divider>
 
+        <!-- <v-btn
+          color="primary"
+          dark
+          v-bind="attrs"
+          v-on="on"
+        >
+          Right
+        </v-btn>
+      </template>
+      <span>Right tooltip</span>
+    </v-tooltip> -->
+
     <v-list dense nav>
+     
       <v-list-item
         v-for="item in items"
         :key="item.title"
@@ -27,14 +40,21 @@
         :to="item.route"
         active-class="active-nav-item"
       >
-        <v-list-item-icon>
-          <v-icon>{{ item.icon }}</v-icon>
+    
+        <v-tooltip right>
+        <template v-slot:activator="{ on, attrs }">
+          <v-list-item-icon>
+          <v-icon v-bind="attrs"
+          v-on="on">{{ item.icon }}</v-icon>
         </v-list-item-icon>
-
-        <v-list-item-content>
+      </template>
+      <v-list-item-content>
           <v-list-item-title>{{ item.title }}</v-list-item-title>
         </v-list-item-content>
+      </v-tooltip>
+      
       </v-list-item>
+   
 
       <v-divider></v-divider>
 
