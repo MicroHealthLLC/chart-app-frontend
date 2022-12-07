@@ -152,9 +152,6 @@ export default {
       this.channel.type = null
       this.$refs.form.reset();
     },
-    log(e){
-      console.log(e)
-    },
     saveChannel() {
     this.$refs.form.validate();
     if (this.formValid){
