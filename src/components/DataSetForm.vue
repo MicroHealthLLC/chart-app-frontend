@@ -7,6 +7,7 @@
         <h3 v-else>Add Data Set</h3>
         <div>
           <v-btn
+            v-if="!isReadOnly"
             @click="saveDataSet"
             class="px-5 mr-2 mb-2"
             color="primary"
@@ -14,9 +15,18 @@
             small
             >Save</v-btn
           >
-          <v-btn class="mb-2" @click="$router.go(-1)" small outlined
-            >Close</v-btn
+          <v-btn
+            v-else
+            @click="isReadOnly"
+            class="px-5 mr-2 mb-2"
+            color="primary"
+            depressed
+            small
+            >Edit</v-btn
           >
+          <!-- <v-btn class="mb-2" @click="$router.go(-1)" small outlined
+            >Close</v-btn
+          > -->
         </div>
       </div>
       <v-divider></v-divider>
@@ -38,11 +48,12 @@
               label="Title"
               dense
               required
+              :disabled="isReadOnly"
               :rules="[(v) => !!v || 'Title is required']"
             ></v-text-field>
           </div>
           <div>
-            <v-text-field v-model="createdBy" label="Created By" dense>
+            <v-text-field :disabled="isReadOnly" v-model="createdBy" label="Created By" dense>
             </v-text-field>
           </div>
           <div :class="{ description: dataSet.id }">
@@ -50,11 +61,24 @@
               v-model="dataSet.description"
               label="Description"
               dense
+              :disabled="isReadOnly"
             ></v-text-field>
           </div>
-          <div>
-            <v-text-field v-model="dataValueInput" label="Add Data Value" clearable dense></v-text-field>
-            <v-btn elevation="8" icon @click="addNewDataValue"><v-icon>mdi-plus-circle</v-icon></v-btn>
+          <div d-flex flex-row>
+            <v-text-field type="number" v-model="dataValueInput" label="Add Data Value" clearable dense>
+              <template v-slot:append>
+              <v-tooltip
+                bottom
+              >
+                <template v-slot:activator="{ on }">
+                  <!-- <v-icon>
+                    mdi-help-circle-outline
+                  </v-icon> -->
+                  <v-btn class="mb-1" v-on="on" v-if="dataSet.id" icon elevation="4" small @click="addNewDataValue"><v-icon>mdi-plus-circle-outline</v-icon></v-btn>
+                </template>
+                Add Value
+              </v-tooltip>
+            </template></v-text-field>
           </div>
           <!-- <div v-if="!dataSet.id">
             <v-file-input
@@ -246,6 +270,11 @@ export default {
         return `${this.dataSet.user.first_name} ${this.dataSet.user.last_name}`;
       } else return ""
     },
+    isReadOnly() {
+      if (this.dataSet.id) {
+        return true
+      } else return false
+    }
   },
   methods: {
     ...mapActions(["addDataSet", "addDataValue", "updateDataSet", "fetchChannels", "fetchDataValues"]),
@@ -282,16 +311,18 @@ export default {
       this.chartType = "Polar Area";
     },
     addNewDataValue() {
-      /* this.addDataValue({
+      this.addDataValue({
         score: this.dataValueInput,
         dataSetId: this.dataSet.id
-      }); */
+      });
       this.fetchDataValues()
       this.loadData(this.dataValues)
     },
     loadData(data) {
       console.log(data)
-      let newData = data.map((d) => ({
+      let newData = data
+      .filter(f => f.dataSetId == this.dataSet.id)
+      .map((d) => ({
         "Created At": new Date(d.createdAt).toLocaleString(),
         "Score": d.score
       }))
@@ -333,10 +364,12 @@ export default {
       this.addDataSet({
         title: this.dataSet.title,
         description: this.dataSet.description,
-        data: ["test_data"],
         channels: ["test_chan"],
         user: this.createdBy
       });
+      if (this.dataValueInput) {
+        this.addNewDataValue()
+      }
       console.log(this.$refs.form)
       this.$refs.form.reset();
     },
@@ -372,7 +405,7 @@ export default {
         if (this.data){
           console.log(this.data)
         }
-        this.loadData(this.data.dat);
+        this.loadData(this.data);
       }
     }, */
     selected(){
