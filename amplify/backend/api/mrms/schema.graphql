@@ -5,7 +5,7 @@
 type Report @model @auth(rules: [{ allow: public }]) {
   id: ID!
   title: String!
-  channel: Channel @belongsTo(fields: ["channelId"])
+  # channel: Channel @belongsTo(fields: ["channelId"])
   description: String,
   channelId:  ID @index(name: "byChannel")  
 }
@@ -13,7 +13,7 @@ type Report @model @auth(rules: [{ allow: public }]) {
 type Channel @model @auth(rules: [{ allow: public }]) {
   id: ID!
   description: String,
-  reports: [Report] @hasMany(indexName: "byChannel",fields: ["id"])
+  # reports: [Report] @hasMany(indexName: "byChannel",fields: ["id"])
   # type: ChannelType @belongsTo(fields: ["channelTypeId"])
   type: String
   title: String!

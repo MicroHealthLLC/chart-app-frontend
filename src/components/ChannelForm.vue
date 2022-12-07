@@ -152,21 +152,23 @@ export default {
       this.channel.type = null
       this.$refs.form.reset();
     },
+    log(e){
+      console.log(e)
+    },
     saveChannel() {
     this.$refs.form.validate();
     if (this.formValid){
        //Adding new channel type if it doesn't exist
-        if(!this.channel.type.id){              
-          this.channel.type == this.channel.type
-          console.log(this.channel)
-          this.addChannelType({
-          title: this.channel.type,      
-          });
-         }  
+        // if(!this.channel.type.id){              
+        //   this.channel.type == this.channel.type
+        //   console.log(this.channel)
+        //   this.addChannelType({
+        //   title: this.channel.type,      
+        //   });
+        //  }  
           if(this.channel.id){
-            console.log("edit")
-            this.channel.reports = [{i}]
-            console.log({...this.channel})
+   
+            console.log(this.channel)
           this.updateChannelById({
           ...this.channel  
           });
@@ -179,6 +181,7 @@ export default {
         this.channel.type = null
       }
     },
+
     categoryEnum() {
       if (this.channel.category == "group_channel") {
         return 0;
