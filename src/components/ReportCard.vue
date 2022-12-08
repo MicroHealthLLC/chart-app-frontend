@@ -8,17 +8,18 @@
     </v-card-title>
     <v-card-text>
       <ul class="mb-4 text-caption">
-        <li><strong>Data Set:</strong> {{ report.data_set.title }}</li>
+        <li v-if="report.data_set"><strong>Data Set:</strong> {{ report.data_set.title }}</li>
+        <li v-else><strong>Data Set:</strong> None</li>
         <li><strong>Channel:</strong> {{ report.channel.title }}</li>
       </ul>
-      <v-chip
+      <!-- <v-chip
         v-for="(tag, index) in report.tags"
         :key="index"
         class="mr-1"
         x-small
         color="info"
         >{{ tag.title }}</v-chip
-      >
+      > -->
     </v-card-text>
   </v-card>
 </template>
@@ -55,7 +56,7 @@ export default {
   methods: {
     toReport() {
       this.$router.push(
-        `/channels/${this.report.channel.id}/reports/${this.report.id}`
+        `/channels/${this.report.channelId}/reports/${this.report.id}`
       );
     },
   },

@@ -12,15 +12,42 @@
               >mdi-chart-timeline-variant-shimmer</v-icon
             ></v-list-item-title
           >
-          <v-list-item-subtitle> Microhealth </v-list-item-subtitle>
+          <v-list-item-subtitle > Microhealth </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
     </v-list>
 
     <v-divider></v-divider>
-
+ 
     <v-list dense nav>
-      <v-list-item
+     <!-- <span v-if="mini" class="ml-0">
+  <v-list-item
+    
+        v-for="item in items"
+        :key="item.title"
+        link
+        :to="item.route"
+        active-class="active-nav-item"
+      >
+    
+        <v-tooltip right >
+        <template v-slot:activator="{ on, attrs }">
+          <v-list-item-icon>
+          <v-icon v-bind="attrs"
+          v-on="on">{{ item.icon }}</v-icon>
+        </v-list-item-icon>
+      </template>
+      <v-list-item-content>
+          <v-list-item-title>{{ item.title }}</v-list-item-title>
+        </v-list-item-content>
+      </v-tooltip>
+      
+      </v-list-item>
+     </span>
+     -->
+
+      <!-- <span v-else> -->
+        <v-list-item      
         v-for="item in items"
         :key="item.title"
         link
@@ -28,13 +55,17 @@
         active-class="active-nav-item"
       >
         <v-list-item-icon>
-          <v-icon>{{ item.icon }}</v-icon>
+        <v-icon >{{ item.icon }}</v-icon>
         </v-list-item-icon>
-
         <v-list-item-content>
           <v-list-item-title>{{ item.title }}</v-list-item-title>
         </v-list-item-content>
+  
       </v-list-item>
+
+      <!-- </span> -->
+   
+   
 
       <v-divider></v-divider>
 
