@@ -6,8 +6,34 @@ export const onCreateReport = /* GraphQL */ `
     onCreateReport(filter: $filter) {
       id
       title
+      channel {
+        id
+        description
+        reports {
+          nextToken
+        }
+        type
+        title
+        channelTypeId
+        createdAt
+        updatedAt
+      }
       description
       channelId
+      color_scheme_id
+      chart_type
+      data_set {
+        id
+        title
+        description
+        channels
+        data {
+          nextToken
+        }
+        user
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -18,8 +44,34 @@ export const onUpdateReport = /* GraphQL */ `
     onUpdateReport(filter: $filter) {
       id
       title
+      channel {
+        id
+        description
+        reports {
+          nextToken
+        }
+        type
+        title
+        channelTypeId
+        createdAt
+        updatedAt
+      }
       description
       channelId
+      color_scheme_id
+      chart_type
+      data_set {
+        id
+        title
+        description
+        channels
+        data {
+          nextToken
+        }
+        user
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -30,8 +82,34 @@ export const onDeleteReport = /* GraphQL */ `
     onDeleteReport(filter: $filter) {
       id
       title
+      channel {
+        id
+        description
+        reports {
+          nextToken
+        }
+        type
+        title
+        channelTypeId
+        createdAt
+        updatedAt
+      }
       description
       channelId
+      color_scheme_id
+      chart_type
+      data_set {
+        id
+        title
+        description
+        channels
+        data {
+          nextToken
+        }
+        user
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -42,6 +120,19 @@ export const onCreateChannel = /* GraphQL */ `
     onCreateChannel(filter: $filter) {
       id
       description
+      reports {
+        items {
+          id
+          title
+          description
+          channelId
+          color_scheme_id
+          chart_type
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       type
       title
       channelTypeId
@@ -55,6 +146,19 @@ export const onUpdateChannel = /* GraphQL */ `
     onUpdateChannel(filter: $filter) {
       id
       description
+      reports {
+        items {
+          id
+          title
+          description
+          channelId
+          color_scheme_id
+          chart_type
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       type
       title
       channelTypeId
@@ -68,6 +172,19 @@ export const onDeleteChannel = /* GraphQL */ `
     onDeleteChannel(filter: $filter) {
       id
       description
+      reports {
+        items {
+          id
+          title
+          description
+          channelId
+          color_scheme_id
+          chart_type
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       type
       title
       channelTypeId

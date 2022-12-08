@@ -6,8 +6,34 @@ export const getReport = /* GraphQL */ `
     getReport(id: $id) {
       id
       title
+      channel {
+        id
+        description
+        reports {
+          nextToken
+        }
+        type
+        title
+        channelTypeId
+        createdAt
+        updatedAt
+      }
       description
       channelId
+      color_scheme_id
+      chart_type
+      data_set {
+        id
+        title
+        description
+        channels
+        data {
+          nextToken
+        }
+        user
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -23,8 +49,28 @@ export const listReports = /* GraphQL */ `
       items {
         id
         title
+        channel {
+          id
+          description
+          type
+          title
+          channelTypeId
+          createdAt
+          updatedAt
+        }
         description
         channelId
+        color_scheme_id
+        chart_type
+        data_set {
+          id
+          title
+          description
+          channels
+          user
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }
@@ -37,6 +83,19 @@ export const getChannel = /* GraphQL */ `
     getChannel(id: $id) {
       id
       description
+      reports {
+        items {
+          id
+          title
+          description
+          channelId
+          color_scheme_id
+          chart_type
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       type
       title
       channelTypeId
@@ -55,6 +114,9 @@ export const listChannels = /* GraphQL */ `
       items {
         id
         description
+        reports {
+          nextToken
+        }
         type
         title
         channelTypeId

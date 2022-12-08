@@ -34,7 +34,7 @@
           <v-icon>mdi-fullscreen</v-icon>
         </v-btn>
         <!-- Chart -->
-        <Component
+        <!-- <Component
           v-if="
             (activeReport.id || activeReport.data_set.id) &&
             activeReport.data_set.data.length > 0 &&
@@ -49,10 +49,11 @@
           :title="activeReport.title"
           class="mb-4"
         >
-        </Component>
+        </Component> -->
         <!-- Placeholder -->
+        <!-- This div has a v-else directive -->
         <div
-          v-else
+        
           class="place-holder d-flex justify-center align-center ma-4"
         >
           <p class="text-center placeholder-text mb-0">
@@ -426,37 +427,37 @@ export default {
       }
     },
   },
-  mounted() {
-    this.colorScheme = this.colors.find(
-      (scheme) => scheme.id == this.activeReport.color_scheme_id
-    ).scheme;
+  // mounted() {
+  //   this.colorScheme = this.colors.find(
+  //     (scheme) => scheme.id == this.activeReport.color_scheme_id
+  //   ).scheme;
 
-    if (this.$route.name == "AddReport") {
-      this.dataSetChoices = [...this.dataSets];
-    } else {
-      this.dataSetChoices = [...this.channelDataSets];
-    }
-  },
+  //   if (this.$route.name == "AddReport") {
+  //     this.dataSetChoices = [...this.dataSets];
+  //   } else {
+  //     this.dataSetChoices = [...this.channelDataSets];
+  //   }
+  // },
   watch: {
-    statusCode() {
-      if (this.statusCode == 201) {
-        this.$router.push(
-          `/channels/${this.activeReport.channel_id}/reports/${this.activeReport.id}`
-        );
-        this.SET_STATUS_CODE(0);
-      }
-    },
-    activeReport() {
-      this.colorScheme = this.colors.find(
-        (scheme) => scheme.id == this.activeReport.color_scheme_id
-      ).scheme;
-    },
+    // statusCode() {
+    //   if (this.statusCode == 201) {
+    //     this.$router.push(
+    //       `/channels/${this.activeReport.channel_id}/reports/${this.activeReport.id}`
+    //     );
+    //     this.SET_STATUS_CODE(0);
+    //   }
+    // },
+    // activeReport() {
+    //   this.colorScheme = this.colors.find(
+    //     (scheme) => scheme.id == this.activeReport.color_scheme_id
+    //   ).scheme;
+    // },
     dataSets() {
       this.dataSetChoices = [...this.dataSets];
     },
-    channelDataSets() {
-      this.dataSetChoices = [...this.channelDataSets];
-    },
+    // channelDataSets() {
+    //   this.dataSetChoices = [...this.channelDataSets];
+    // },
   },
 };
 </script>

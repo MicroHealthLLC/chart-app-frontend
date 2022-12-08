@@ -5,7 +5,7 @@
       <h3><router-link to="/public-reports">Public Reports</router-link></h3>
       <v-divider class="mb-4"></v-divider>
 
-      <div v-if="reports.public.length > 0" class="grid">
+      <!-- <div v-if="reports.public.length > 0" class="grid">
         <ReportCard
           v-for="(report, index) in reports.public"
           :report="report"
@@ -14,6 +14,23 @@
         <div class="d-flex justify-end btn-container">
           <v-btn
             v-if="reports.public.length >= 6"
+            to="/public-reports"
+            class="d-flex-end"
+            color="primary"
+            text
+            >View All</v-btn
+          >
+        </div>
+      </div> -->
+      <div v-if="reports.length > 0" class="grid">
+        <ReportCard
+          v-for="(report, index) in reports"
+          :report="report"
+          :key="index"
+        ></ReportCard>
+        <div class="d-flex justify-end btn-container">
+          <v-btn
+            v-if="reports.length >= 6"
             to="/public-reports"
             class="d-flex-end"
             color="primary"
@@ -35,15 +52,15 @@
       </h3>
       <v-divider class="mb-4"></v-divider>
 
-      <div v-if="reports.personal.length > 0" class="grid">
+      <div v-if="reports.length > 0" class="grid">
         <ReportCard
-          v-for="(report, index) in reports.personal"
+          v-for="(report, index) in reports"
           :report="report"
           :key="index"
         ></ReportCard>
         <div class="d-flex justify-end btn-container">
           <v-btn
-            v-if="reports.personal.length >= 6"
+            v-if="reports.length >= 6"
             to="/personal-reports"
             class="ml-auto"
             color="primary"
@@ -65,15 +82,15 @@
       </h3>
       <v-divider class="mb-4"></v-divider>
 
-      <div v-if="reports.group.length > 0" class="grid">
+      <div v-if="reports.length > 0" class="grid">
         <ReportCard
-          v-for="(report, index) in reports.group"
+          v-for="(report, index) in reports"
           :report="report"
           :key="index"
         ></ReportCard>
         <div class="d-flex justify-end btn-container">
           <v-btn
-            v-if="reports.group.length >= 6"
+            v-if="reports.length >= 6"
             to="/group-reports"
             class="ml-auto"
             color="primary"
@@ -146,9 +163,7 @@ export default {
     ...mapGetters(["channels", "news", "reports", "user"]),
     reportCount() {
       return (
-        this.reports.public.length +
-        this.reports.personal.length +
-        this.reports.group.length
+        this.reports.length
       );
     },
   },
@@ -156,11 +171,16 @@ export default {
     ...mapActions(["fetchNews", "fetchReports", "fetchCurrentUser"]),
   },
   mounted() {
-    // this.fetchReports();
+    this.fetchReports();
     // this.fetchNews();
  
    console.log(this.user)
   },
+  watch:{
+reports(){
+  console.log(this.reports)
+}
+  }
 
 };
 </script>

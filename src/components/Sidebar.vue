@@ -18,22 +18,11 @@
     </v-list>
 
     <v-divider></v-divider>
-
-        <!-- <v-btn
-          color="primary"
-          dark
-          v-bind="attrs"
-          v-on="on"
-        >
-          Right
-        </v-btn>
-      </template>
-      <span>Right tooltip</span>
-    </v-tooltip> -->
-
+ 
     <v-list dense nav>
-     
-      <v-list-item
+     <!-- <span v-if="mini" class="ml-0">
+  <v-list-item
+    
         v-for="item in items"
         :key="item.title"
         link
@@ -41,7 +30,7 @@
         active-class="active-nav-item"
       >
     
-        <v-tooltip right>
+        <v-tooltip right >
         <template v-slot:activator="{ on, attrs }">
           <v-list-item-icon>
           <v-icon v-bind="attrs"
@@ -54,6 +43,28 @@
       </v-tooltip>
       
       </v-list-item>
+     </span>
+     -->
+
+      <!-- <span v-else> -->
+        <v-list-item      
+        v-for="item in items"
+        :key="item.title"
+        link
+        :to="item.route"
+        active-class="active-nav-item"
+      >
+        <v-list-item-icon>
+        <v-icon >{{ item.icon }}</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-title>{{ item.title }}</v-list-item-title>
+        </v-list-item-content>
+  
+      </v-list-item>
+
+      <!-- </span> -->
+   
    
 
       <v-divider></v-divider>
