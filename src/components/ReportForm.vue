@@ -65,6 +65,7 @@
         <div class="d-flex justify-end mb-4">
           <v-btn
             v-if="
+               activeReport.data_set &&
                activeReport.data_set.data && activeReport.data_set.data[0] &&
               Object.keys(activeReport.data_set.data[0]).length > 2 &&
               circleChart
@@ -122,7 +123,7 @@
           </div>
           <div>
             <v-select
-              v-model="activeReport.data_set.data.id"
+               v-model="activeReport.dataSetId"
               :load="log(activeReport)"
               :items="dataSetChoices"
               item-text="title"
@@ -227,7 +228,7 @@
           </v-toolbar>
           <Component
             v-if="
-              (activeReport.id || activeReport.data_set.data) &&
+              (activeReport.data && activeReport.data_set.data) &&
               activeReport.data_set.data.length > 0 &&
               fullscreen &&
               colorScheme
@@ -334,7 +335,8 @@ export default {
           channelId: this.activeReport.channelId,
           chart_type: this.activeReport.chart_type,
           dataSetId: this.activeReport.dataSetId,
-          // tag_ids: this.activeReport.tags.map((tag) => tag.id),
+          // data_set: this.activeReport.data_set,
+            // tag_ids: this.activeReport.tags.map((tag) => tag.id),
           color_scheme_id: this.activeReport.color_scheme_id,
           // last_updated_by: `${this.user.first_name} ${this.user.last_name}`,
         };

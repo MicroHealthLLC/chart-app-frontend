@@ -8,7 +8,9 @@
     </v-card-title>
     <v-card-text>
       <ul class="mb-4 text-caption">
-        <li v-if="report.data_set"><strong>Data Set:</strong> {{ report.data_set.title }}</li>
+        <li v-if="(report.dataSetId && report.data_set && report.data_set.data)">
+          <strong>Data Set:</strong> {{ dataSets.data.filter(d => d.id == report.dataSetId).title }}
+        </li>
         <li v-else><strong>Data Set:</strong> None</li>
         <li><strong>Channel:</strong> {{ report.channel.title }}</li>
       </ul>
@@ -25,6 +27,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "ReportCard",
   props: {
@@ -33,6 +36,9 @@ export default {
     },
   },
   computed: {
+    ...mapGetters([
+       "dataSets",
+     ]),
     chartIcon() {
       return this.report.chart_type === "line"
         ? "mdi-chart-line"
@@ -53,7 +59,15 @@ export default {
         : "mdi-chart-line";
     },
   },
+  beforeMount() {
+    if(this.dataSets && this.dataSets.length < 1){
+      this.fetchDataSets();
+    }
+  },
   methods: {
+    ...mapActions([
+       "fetchDataSets",
+     ]),
     toReport() {
       this.$router.push(
         `/channels/${this.report.channelId}/reports/${this.report.id}`
