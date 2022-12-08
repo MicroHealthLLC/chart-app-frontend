@@ -96,9 +96,18 @@ export default {
       this.fetchDataSet(item.id)
       this.$router.push(`/data-sets/${item.id}`)
     },
-    async deleteItem(item) {
-      console.log(item)
-      await this.removeDataSet({ id: item.id });
+    deleteItem(item) {
+      this.$confirm(
+        `Are you sure you want to delete the "${item.title}" Data Set?`,
+        "Confirm Delete",
+        {
+          confirmButtonText: "Delete",
+          cancelButtonText: "Cancel",
+          type: "warning",
+        }
+       ).then(() => {
+        this.removeDataSet({ id: item.id });
+      });
     },
   },
   beforeMount() {
