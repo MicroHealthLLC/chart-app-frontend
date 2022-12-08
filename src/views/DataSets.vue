@@ -91,10 +91,11 @@ export default {
     log(e) {
       console.log(e)
     },
-    editItem(item) {
+    async editItem(item) {
       console.log(item)
-      this.fetchDataSet(item.id)
-      this.$router.push(`/data-sets/${item.id}`)
+      let id = item.id
+      await this.fetchDataSet(id)
+      this.$router.push(`/data-sets/${id}`)
     },
     deleteItem(item) {
       this.$confirm(

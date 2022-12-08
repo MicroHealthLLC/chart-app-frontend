@@ -79,6 +79,7 @@
             </template></v-text-field>
           </div> -->
           <!-- <v-btn v-if="dataSet.id" @click="showDataChart">Show Data</v-btn> -->
+          <v-btn v-if="dataSet.id" class="mb-1" icon elevation="4" small @click="addNewDataValue"><v-icon>mdi-plus-circle-outline</v-icon></v-btn>
           <div>
             <v-file-input
               placeholder="Please choose a file..."
@@ -255,6 +256,7 @@ export default {
   computed: {
     ...mapGetters([
       "dataSet",
+      "dataValue",
       "dataValues",
       "channels",
       "colors",
@@ -301,7 +303,7 @@ export default {
     } */
   },
   methods: {
-    ...mapActions(["addDataSet", "addDataValue", "updateDataSet", "fetchChannels", "fetchDataValues"]),
+    ...mapActions(["addDataSet", "addDataValue", "updateDataSet", "fetchDataSet", "fetchChannels", "fetchDataValue", "fetchDataValues"]),
     ...mapMutations(["SET_DATA_SET", "SET_STATUS_CODE"]),
     onChange(event) {
       this.file = event.target.files ? event.target.files[0] : null;
@@ -342,24 +344,25 @@ export default {
         channels: ["test_chan"],
         user: this.createdBy
       });
-      /* if (this.dataValueInput) {
-        this.addNewDataValue()
-      } */
-      console.log(this.$refs.form)
       this.$refs.form.reset();
+      //this.fetchDataSet(this.$route.params.dataSetId)
+      //this.$router.push(`/data-sets/${this.dataSet.id}`);
+      //this.selected && this.addNewDataValue()
+      //console.log(this.$refs.form)
       this.isReadOnly = true
     },
-    /* addNewDataValue() {
+    addNewDataValue() {
+      let objString = JSON.stringify(this.selected)
       this.addDataValue({
-        score: this.dataValueInput,
+        data: objString,
         dataSetId: this.dataSet.id
       });
-      this.showDataChart()
-    }, */
-    showDataChart() {
+      //this.showDataChart()
+    },
+    /* showDataChart() {
       this.fetchDataValues()
       this.uploadData(this.dataValues)
-    },
+    }, */
     uploadData(data) {
       console.log(data)
       let newData = data
@@ -427,20 +430,37 @@ export default {
       }
     }, */
   },
-  beforeMount() {
-    //this.fetchChannels();
+  mounted() {
+    if (this.dataSet && this.dataSet.dataValues.items && this.dataSet.dataValues.items.length > 0 ) {
+      console.log(this.dataSet)
+      this.uploadData(this.dataSet.dataValues.items[0].data)
+    }
   },
+  /* beforeMount() {
+    this.fetchDataSet(this.dataSet.id)
+    if (this.dataSet && this.dataSet.dataValues.items) {
+      console.log(this.dataSet)
+      this.uploadData(this.dataSet.dataValues.items[0].data)
+    }
+    //this.fetchChannels();
+  }, */
   watch: {
     dataSet() {
+      console.log(this.dataSet.id)
+      console.log(this.$route.params.dataSetId)
       if (this.dataSet.id) {
         this.isReadOnly = true
-
+        
+        if (this.dataSet.id !== this.$route.params.dataSetId){
+        this.clear()
+      }
         /* this.data = this.dataSet;
         if (this.data){
           console.log(this.data)
         }
         this.uploadData(this.data); */
       } else this.isReadOnly = false
+
     },
     selectedHeaders() {
       console.log(this.selected)

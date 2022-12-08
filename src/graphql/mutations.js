@@ -9,8 +9,35 @@ export const createReport = /* GraphQL */ `
     createReport(input: $input, condition: $condition) {
       id
       title
+      channel {
+        id
+        description
+        reports {
+          nextToken
+        }
+        type
+        title
+        channelTypeId
+        createdAt
+        updatedAt
+      }
       description
       channelId
+      color_scheme_id
+      chart_type
+      data_set {
+        id
+        title
+        description
+        channels
+        dataValues {
+          nextToken
+        }
+        user
+        createdAt
+        updatedAt
+      }
+      dataSetId
       createdAt
       updatedAt
     }
@@ -24,8 +51,35 @@ export const updateReport = /* GraphQL */ `
     updateReport(input: $input, condition: $condition) {
       id
       title
+      channel {
+        id
+        description
+        reports {
+          nextToken
+        }
+        type
+        title
+        channelTypeId
+        createdAt
+        updatedAt
+      }
       description
       channelId
+      color_scheme_id
+      chart_type
+      data_set {
+        id
+        title
+        description
+        channels
+        dataValues {
+          nextToken
+        }
+        user
+        createdAt
+        updatedAt
+      }
+      dataSetId
       createdAt
       updatedAt
     }
@@ -39,8 +93,35 @@ export const deleteReport = /* GraphQL */ `
     deleteReport(input: $input, condition: $condition) {
       id
       title
+      channel {
+        id
+        description
+        reports {
+          nextToken
+        }
+        type
+        title
+        channelTypeId
+        createdAt
+        updatedAt
+      }
       description
       channelId
+      color_scheme_id
+      chart_type
+      data_set {
+        id
+        title
+        description
+        channels
+        dataValues {
+          nextToken
+        }
+        user
+        createdAt
+        updatedAt
+      }
+      dataSetId
       createdAt
       updatedAt
     }
@@ -54,6 +135,20 @@ export const createChannel = /* GraphQL */ `
     createChannel(input: $input, condition: $condition) {
       id
       description
+      reports {
+        items {
+          id
+          title
+          description
+          channelId
+          color_scheme_id
+          chart_type
+          dataSetId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       type
       title
       channelTypeId
@@ -70,6 +165,20 @@ export const updateChannel = /* GraphQL */ `
     updateChannel(input: $input, condition: $condition) {
       id
       description
+      reports {
+        items {
+          id
+          title
+          description
+          channelId
+          color_scheme_id
+          chart_type
+          dataSetId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       type
       title
       channelTypeId
@@ -86,6 +195,20 @@ export const deleteChannel = /* GraphQL */ `
     deleteChannel(input: $input, condition: $condition) {
       id
       description
+      reports {
+        items {
+          id
+          title
+          description
+          channelId
+          color_scheme_id
+          chart_type
+          dataSetId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       type
       title
       channelTypeId
@@ -104,10 +227,10 @@ export const createDataSet = /* GraphQL */ `
       title
       description
       channels
-      data {
+      dataValues {
         items {
           id
-          score
+          data
           dataSetId
           createdAt
           updatedAt
@@ -130,10 +253,10 @@ export const updateDataSet = /* GraphQL */ `
       title
       description
       channels
-      data {
+      dataValues {
         items {
           id
-          score
+          data
           dataSetId
           createdAt
           updatedAt
@@ -156,10 +279,10 @@ export const deleteDataSet = /* GraphQL */ `
       title
       description
       channels
-      data {
+      dataValues {
         items {
           id
-          score
+          data
           dataSetId
           createdAt
           updatedAt
@@ -179,7 +302,7 @@ export const createDataValue = /* GraphQL */ `
   ) {
     createDataValue(input: $input, condition: $condition) {
       id
-      score
+      data
       dataSetId
       createdAt
       updatedAt
@@ -193,7 +316,7 @@ export const updateDataValue = /* GraphQL */ `
   ) {
     updateDataValue(input: $input, condition: $condition) {
       id
-      score
+      data
       dataSetId
       createdAt
       updatedAt
@@ -207,7 +330,7 @@ export const deleteDataValue = /* GraphQL */ `
   ) {
     deleteDataValue(input: $input, condition: $condition) {
       id
-      score
+      data
       dataSetId
       createdAt
       updatedAt

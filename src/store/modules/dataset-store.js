@@ -91,7 +91,11 @@ export default {
     },
     async fetchDataSet({ commit } , id) {
       try {     
+       console.log(id)
        const res = await API.graphql(graphqlOperation(getDataSet, { id: id }));    
+       if (res.data.getDataSet.dataValues.items && res.data.getDataSet.dataValues.items.length > 0){
+        res.data.getDataSet.dataValues.items[0].data = JSON.parse(res.data.getDataSet.dataValues.items[0].data)
+       } 
        console.log(res.data);
         commit("SET_DATA_SET", res.data.getDataSet);
       } catch (error) {

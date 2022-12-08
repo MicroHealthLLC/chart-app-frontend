@@ -6,8 +6,35 @@ export const getReport = /* GraphQL */ `
     getReport(id: $id) {
       id
       title
+      channel {
+        id
+        description
+        reports {
+          nextToken
+        }
+        type
+        title
+        channelTypeId
+        createdAt
+        updatedAt
+      }
       description
       channelId
+      color_scheme_id
+      chart_type
+      data_set {
+        id
+        title
+        description
+        channels
+        dataValues {
+          nextToken
+        }
+        user
+        createdAt
+        updatedAt
+      }
+      dataSetId
       createdAt
       updatedAt
     }
@@ -23,8 +50,29 @@ export const listReports = /* GraphQL */ `
       items {
         id
         title
+        channel {
+          id
+          description
+          type
+          title
+          channelTypeId
+          createdAt
+          updatedAt
+        }
         description
         channelId
+        color_scheme_id
+        chart_type
+        data_set {
+          id
+          title
+          description
+          channels
+          user
+          createdAt
+          updatedAt
+        }
+        dataSetId
         createdAt
         updatedAt
       }
@@ -37,6 +85,20 @@ export const getChannel = /* GraphQL */ `
     getChannel(id: $id) {
       id
       description
+      reports {
+        items {
+          id
+          title
+          description
+          channelId
+          color_scheme_id
+          chart_type
+          dataSetId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       type
       title
       channelTypeId
@@ -55,6 +117,9 @@ export const listChannels = /* GraphQL */ `
       items {
         id
         description
+        reports {
+          nextToken
+        }
         type
         title
         channelTypeId
@@ -72,10 +137,10 @@ export const getDataSet = /* GraphQL */ `
       title
       description
       channels
-      data {
+      dataValues {
         items {
           id
-          score
+          data
           dataSetId
           createdAt
           updatedAt
@@ -100,7 +165,7 @@ export const listDataSets = /* GraphQL */ `
         title
         description
         channels
-        data {
+        dataValues {
           nextToken
         }
         user
@@ -115,7 +180,7 @@ export const getDataValue = /* GraphQL */ `
   query GetDataValue($id: ID!) {
     getDataValue(id: $id) {
       id
-      score
+      data
       dataSetId
       createdAt
       updatedAt
@@ -131,7 +196,7 @@ export const listDataValues = /* GraphQL */ `
     listDataValues(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        score
+        data
         dataSetId
         createdAt
         updatedAt
