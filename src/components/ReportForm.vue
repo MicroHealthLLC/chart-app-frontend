@@ -13,7 +13,7 @@
             small
             >Save</v-btn
           >
-          <v-btn class="mb-2" @click="$router.go(-1)" outlined small
+          <v-btn class="mb-2" @click="resetAndGoBack" outlined small
             >Close</v-btn
           >
         </div>
@@ -34,9 +34,9 @@
           <v-icon>mdi-fullscreen</v-icon>
         </v-btn>
         <!-- Chart -->
-        <!-- <Component
+        <Component
           v-if="
-            (activeReport.id || activeReport.data_set.id) &&
+            (activeReport.id || activeReport.data_set) &&
             activeReport.data_set.data.length > 0 &&
             reportLoaded
           "
@@ -49,7 +49,7 @@
           :title="activeReport.title"
           class="mb-4"
         >
-        </Component> -->
+        </Component>
         <!-- Placeholder -->
         <!-- This div has a v-else directive -->
         <div
@@ -65,7 +65,7 @@
         <div class="d-flex justify-end mb-4">
           <v-btn
             v-if="
-              activeReport.data_set.data[0] &&
+               activeReport.data_set.data && activeReport.data_set.data[0] &&
               Object.keys(activeReport.data_set.data[0]).length > 2 &&
               circleChart
             "
@@ -101,7 +101,7 @@
           </div>
           <div>
             <v-select
-              v-model="activeReport.channel_id"
+              v-model="activeReport.channelId"
               :items="channels"
               item-text="title"
               item-value="id"
@@ -122,7 +122,8 @@
           </div>
           <div>
             <v-select
-              v-model="activeReport.data_set_id"
+              v-model="activeReport.data_set.data.id"
+              :load="log(activeReport)"
               :items="dataSetChoices"
               item-text="title"
               item-value="id"
@@ -226,7 +227,7 @@
           </v-toolbar>
           <Component
             v-if="
-              (activeReport.id || activeReport.data_set.id) &&
+              (activeReport.id || activeReport.data_set.data) &&
               activeReport.data_set.data.length > 0 &&
               fullscreen &&
               colorScheme
@@ -297,6 +298,7 @@ export default {
   methods: {
     ...mapActions([
       "fetchReport",
+      "fetchDataSets",
       "fetchTags",
       "addReport",
       "updateReport",
@@ -308,11 +310,18 @@ export default {
         (this.$refs.chart.index + 1) %
         (Object.keys(this.$refs.chart.chartData[0]).length - 1);
     },
+    log(e){
+      console.log(e)
+    },
     // FS = Full Screen
     changeFSChartData() {
       this.$refs.fullscreenchart.index =
         (this.$refs.fullscreenchart.index + 1) %
         (Object.keys(this.$refs.fullscreenchart.chartData[0]).length - 1);
+    },
+    resetAndGoBack(){
+      this.$router.go(-1)
+      this.$refs.form.reset();
     },
     saveReport() {
       this.$refs.form.validate();
@@ -322,26 +331,27 @@ export default {
         let data = {
           title: this.activeReport.title,
           description: this.activeReport.description,
-          channel_id: this.activeReport.channel_id,
+          channelId: this.activeReport.channelId,
           chart_type: this.activeReport.chart_type,
-          data_set_id: this.activeReport.data_set_id,
-          tag_ids: this.activeReport.tags.map((tag) => tag.id),
+          dataSetId: this.activeReport.dataSetId,
+          // tag_ids: this.activeReport.tags.map((tag) => tag.id),
           color_scheme_id: this.activeReport.color_scheme_id,
-          last_updated_by: `${this.user.first_name} ${this.user.last_name}`,
+          // last_updated_by: `${this.user.first_name} ${this.user.last_name}`,
         };
 
         if (this.activeReport.id) {
           data.id = this.activeReport.id;
           this.updateReport(data);
         } else {
-          data.user_id = this.user.id;
-          this.addReport(data);
+          console.log(data)
+          // data.user_id = this.user.id;
+          // this.addReport(data);
         }
       }
     },
     updateChartData() {
       let dataSet = this.dataSetChoices.find(
-        (dataSet) => dataSet.id == this.activeReport.data_set_id
+        (dataSet) => dataSet.id == this.activeReport.dataSetId
       );
 
       this.SET_REPORT_DATA_SET(dataSet);
@@ -427,17 +437,22 @@ export default {
       }
     },
   },
-  // mounted() {
-  //   this.colorScheme = this.colors.find(
-  //     (scheme) => scheme.id == this.activeReport.color_scheme_id
-  //   ).scheme;
+  beforeMount() {
+    if(this.dataSets && this.dataSets.length < 1){
+      this.fetchDataSets();
+    }
+  },
+  mounted() {
+    this.colorScheme = this.colors.find(
+      (scheme) => scheme.id == this.activeReport.color_scheme_id
+    ).scheme;
 
-  //   if (this.$route.name == "AddReport") {
-  //     this.dataSetChoices = [...this.dataSets];
-  //   } else {
-  //     this.dataSetChoices = [...this.channelDataSets];
-  //   }
-  // },
+    if (this.$route.name == "AddReport") {
+      this.dataSetChoices = [...this.dataSets];
+    } else {
+      this.dataSetChoices = [...this.channelDataSets];
+    }
+  },
   watch: {
     // statusCode() {
     //   if (this.statusCode == 201) {
@@ -447,11 +462,11 @@ export default {
     //     this.SET_STATUS_CODE(0);
     //   }
     // },
-    // activeReport() {
-    //   this.colorScheme = this.colors.find(
-    //     (scheme) => scheme.id == this.activeReport.color_scheme_id
-    //   ).scheme;
-    // },
+    activeReport() {
+      this.colorScheme = this.colors.find(
+        (scheme) => scheme.id == this.activeReport.color_scheme_id
+      ).scheme;
+    },
     dataSets() {
       this.dataSetChoices = [...this.dataSets];
     },

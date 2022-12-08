@@ -37,6 +37,7 @@ export const createReport = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      dataSetId
       createdAt
       updatedAt
     }
@@ -78,6 +79,7 @@ export const updateReport = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      dataSetId
       createdAt
       updatedAt
     }
@@ -119,6 +121,7 @@ export const deleteReport = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      dataSetId
       createdAt
       updatedAt
     }
@@ -140,6 +143,7 @@ export const createChannel = /* GraphQL */ `
           channelId
           color_scheme_id
           chart_type
+          dataSetId
           createdAt
           updatedAt
         }
@@ -169,6 +173,7 @@ export const updateChannel = /* GraphQL */ `
           channelId
           color_scheme_id
           chart_type
+          dataSetId
           createdAt
           updatedAt
         }
@@ -198,6 +203,7 @@ export const deleteChannel = /* GraphQL */ `
           channelId
           color_scheme_id
           chart_type
+          dataSetId
           createdAt
           updatedAt
         }

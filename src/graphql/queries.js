@@ -34,6 +34,7 @@ export const getReport = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      dataSetId
       createdAt
       updatedAt
     }
@@ -71,6 +72,7 @@ export const listReports = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dataSetId
         createdAt
         updatedAt
       }
@@ -91,6 +93,7 @@ export const getChannel = /* GraphQL */ `
           channelId
           color_scheme_id
           chart_type
+          dataSetId
           createdAt
           updatedAt
         }

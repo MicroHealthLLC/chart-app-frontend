@@ -2,7 +2,7 @@
   <v-row>
     <v-col class="col-9">
       <!-- PUBLIC REPORTS -->
-      <h3><router-link to="/public-reports">Public Reports</router-link></h3>
+      <h3><router-link to="/public-reports">Reports</router-link></h3>
       <v-divider class="mb-4"></v-divider>
 
       <!-- <div v-if="reports.public.length > 0" class="grid">
@@ -47,12 +47,12 @@
         <v-btn text small color="primary" to="/add-report">Add a Report</v-btn>
       </div>
       <!-- PERSONAL REPORTS -->
-      <h3 class="mt-4">
+      <!-- <h3 class="mt-4">
         <router-link to="/personal-reports">Personal Reports</router-link>
       </h3>
-      <v-divider class="mb-4"></v-divider>
+      <v-divider class="mb-4"></v-divider> -->
 
-      <div v-if="reports.length > 0" class="grid">
+      <!-- <div v-if="reports.length > 0" class="grid">
         <ReportCard
           v-for="(report, index) in reports"
           :report="report"
@@ -68,21 +68,21 @@
             >View All</v-btn
           >
         </div>
-      </div>
-      <div
+      </div> -->
+      <!-- <div
         v-else
         class="placeholder d-flex flex-column justify-center align-center"
       >
         <p class="font-weight-light">No Personal Reports to show...</p>
         <v-btn text small color="primary" to="/add-report">Add a Report</v-btn>
-      </div>
+      </div> -->
       <!-- GROUP REPORTS -->
-      <h3 class="mt-4">
+      <!-- <h3 class="mt-4">
         <router-link to="/group-reports">Group Reports</router-link>
       </h3>
-      <v-divider class="mb-4"></v-divider>
+      <v-divider class="mb-4"></v-divider> -->
 
-      <div v-if="reports.length > 0" class="grid">
+      <!-- <div v-if="reports.length > 0" class="grid">
         <ReportCard
           v-for="(report, index) in reports"
           :report="report"
@@ -105,8 +105,10 @@
       >
         <p class="font-weight-light">No Group Reports to show...</p>
         <v-btn text small color="primary" to="/add-report">Add a Report</v-btn>
-      </div>
+      </div> -->
     </v-col>
+
+
     <!-- DETAILS -->
     <v-col class="col-3">
       <h3>Details</h3>

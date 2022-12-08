@@ -10,11 +10,7 @@ type Report @model @auth(rules: [{ allow: public }]) {
   color_scheme_id: Int
   chart_type: String
   data_set: [DataSet]
-  
-}
-
-type Reports {
-  reports: [Report]  
+  dataSetId: String  
 }
 
 type Channel @model @auth(rules: [{ allow: public }]) {
