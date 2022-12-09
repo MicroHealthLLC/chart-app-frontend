@@ -26,7 +26,6 @@ export const getReport = /* GraphQL */ `
         id
         title
         description
-        channels
         dataValues {
           nextToken
         }
@@ -67,7 +66,6 @@ export const listReports = /* GraphQL */ `
           id
           title
           description
-          channels
           user
           createdAt
           updatedAt
@@ -136,7 +134,6 @@ export const getDataSet = /* GraphQL */ `
       id
       title
       description
-      channels
       dataValues {
         items {
           id
@@ -164,7 +161,6 @@ export const listDataSets = /* GraphQL */ `
         id
         title
         description
-        channels
         dataValues {
           nextToken
         }

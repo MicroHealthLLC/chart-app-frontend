@@ -48,12 +48,12 @@
               label="Title"
               dense
               required
-              :disabled="isReadOnly"
+              :readonly="isReadOnly"
               :rules="[(v) => !!v || 'Title is required']"
             ></v-text-field>
           </div>
           <div>
-            <v-text-field :disabled="isReadOnly" v-model="createdBy" label="Created By" dense>
+            <v-text-field :readonly="isReadOnly" v-model="createdBy" label="Created By" dense>
             </v-text-field>
           </div>
           <div :class="{ description: dataSet.id }">
@@ -61,7 +61,7 @@
               v-model="dataSet.description"
               label="Description"
               dense
-              :disabled="isReadOnly"
+              :readonly="isReadOnly"
             ></v-text-field>
           </div>
           <!-- <div d-flex flex-row>
@@ -79,7 +79,6 @@
             </template></v-text-field>
           </div> -->
           <!-- <v-btn v-if="dataSet.id" @click="showDataChart">Show Data</v-btn> -->
-          <v-btn v-if="dataSet.id" class="mb-1" icon elevation="4" small @click="addNewDataValue"><v-icon>mdi-plus-circle-outline</v-icon></v-btn>
           <div>
             <v-file-input
               placeholder="Please choose a file..."
@@ -96,8 +95,7 @@
                 @parsed="uploadData"
               ></xlsx-json>
             </xlsx-read>
-          </div>
-          <div>
+            <div>
             <v-select
               v-model="value"
               :items="headers"
@@ -110,15 +108,17 @@
               return-object
               @change="filterData"
             >
+            
             <!-- <template v-slot:selection="{ item, index }">
               <v-chip v-if="index === 0">
                 <span>{{ item.text }}</span>
               </v-chip>
               <span v-if="index === 1" class="grey--text caption">(+{{ value.length - 1 }} others)</span>
             </template> -->
-          </v-select>
+          </v-select><v-btn v-if="dataSet.id" class="mb-1" elevation="4" small @click="addNewDataValue"><v-icon>mdi-plus-circle-outline</v-icon> Add New Data</v-btn>
+        </div>
           </div>
-          <!-- <div class="channels">
+          <div class="channels">
             <v-select
               v-model="dataSet.channels"
               label="Channels"
@@ -135,7 +135,7 @@
               hint="Please select all Channels that have access to this Data Set"
               persistent-hint
             ></v-select>
-          </div>-->
+          </div>
         </div>
       </v-form>
     </v-col> 
@@ -352,9 +352,9 @@ export default {
       this.isReadOnly = true
     },
     addNewDataValue() {
-      let objString = JSON.stringify(this.selected)
+      //let objString = JSON.stringify(this.selected)
       this.addDataValue({
-        data: objString,
+        data: JSON.stringify(this.selected),
         dataSetId: this.dataSet.id
       });
       //this.showDataChart()
@@ -364,7 +364,6 @@ export default {
       this.uploadData(this.dataValues)
     }, */
     uploadData(data) {
-      console.log(data)
       let newData = data
       /*.filter(f => f.dataSetId == this.dataSet.id)
       .sort((a, b) => a.createdAt.localeCompare(b.createdAt))
@@ -431,10 +430,13 @@ export default {
     }, */
   },
   mounted() {
-    if (this.dataSet && this.dataSet.dataValues.items && this.dataSet.dataValues.items.length > 0 ) {
-      console.log(this.dataSet)
-      this.uploadData(this.dataSet.dataValues.items[0].data)
+    if (this.dataSet && this.dataSet.dataValues.items && this.dataSet.dataValues.items.length > 0) {
+      console.log(this.dataSet.dataValues.items)
+      let masterData = []
+      this.dataSet.dataValues.items.forEach(d => masterData.push(d.data))
+      this.uploadData(masterData.flat())
     }
+    this.fetchChannels();
   },
   /* beforeMount() {
     this.fetchDataSet(this.dataSet.id)
@@ -442,12 +444,10 @@ export default {
       console.log(this.dataSet)
       this.uploadData(this.dataSet.dataValues.items[0].data)
     }
-    //this.fetchChannels();
+    
   }, */
   watch: {
     dataSet() {
-      console.log(this.dataSet.id)
-      console.log(this.$route.params.dataSetId)
       if (this.dataSet.id) {
         this.isReadOnly = true
         
@@ -463,7 +463,7 @@ export default {
 
     },
     selectedHeaders() {
-      console.log(this.selected)
+      //console.log(this.selected)
     },
     headers() {
       console.log(this.headers)
