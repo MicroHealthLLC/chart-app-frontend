@@ -28,12 +28,12 @@ type DataSet @model @auth(rules: [{ allow: public }]) {
   title: String!
   description: String
   channels: [String]
-  data: [DataValue] @hasMany (indexName: "byDataSet", fields: ["id"])
+  dataValues: [DataValue] @hasMany (indexName: "byDataSet", fields: ["id"])
   user: String
 }
 type DataValue @model @auth(rules: [{ allow: public }]) {
   id: ID!
-  score: Int!
+  data: String!
   dataSetId: ID! @index(name: "byDataSet")
 }
 

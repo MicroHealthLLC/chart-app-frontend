@@ -30,7 +30,7 @@ export const createReport = /* GraphQL */ `
         title
         description
         channels
-        data {
+        dataValues {
           nextToken
         }
         user
@@ -72,7 +72,7 @@ export const updateReport = /* GraphQL */ `
         title
         description
         channels
-        data {
+        dataValues {
           nextToken
         }
         user
@@ -114,7 +114,7 @@ export const deleteReport = /* GraphQL */ `
         title
         description
         channels
-        data {
+        dataValues {
           nextToken
         }
         user
@@ -227,10 +227,10 @@ export const createDataSet = /* GraphQL */ `
       title
       description
       channels
-      data {
+      dataValues {
         items {
           id
-          score
+          data
           dataSetId
           createdAt
           updatedAt
@@ -253,10 +253,10 @@ export const updateDataSet = /* GraphQL */ `
       title
       description
       channels
-      data {
+      dataValues {
         items {
           id
-          score
+          data
           dataSetId
           createdAt
           updatedAt
@@ -279,10 +279,10 @@ export const deleteDataSet = /* GraphQL */ `
       title
       description
       channels
-      data {
+      dataValues {
         items {
           id
-          score
+          data
           dataSetId
           createdAt
           updatedAt
@@ -302,7 +302,7 @@ export const createDataValue = /* GraphQL */ `
   ) {
     createDataValue(input: $input, condition: $condition) {
       id
-      score
+      data
       dataSetId
       createdAt
       updatedAt
@@ -316,7 +316,7 @@ export const updateDataValue = /* GraphQL */ `
   ) {
     updateDataValue(input: $input, condition: $condition) {
       id
-      score
+      data
       dataSetId
       createdAt
       updatedAt
@@ -330,7 +330,7 @@ export const deleteDataValue = /* GraphQL */ `
   ) {
     deleteDataValue(input: $input, condition: $condition) {
       id
-      score
+      data
       dataSetId
       createdAt
       updatedAt

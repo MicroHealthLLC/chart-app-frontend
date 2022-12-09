@@ -17,16 +17,16 @@
           >
           <v-btn
             v-else
-            @click="isReadOnly"
+            @click="editForm"
             class="px-5 mr-2 mb-2"
             color="primary"
             depressed
             small
             >Edit</v-btn
           >
-          <!-- <v-btn class="mb-2" @click="$router.go(-1)" small outlined
+          <v-btn class="mb-2" @click="$router.go(-1)" small outlined
             >Close</v-btn
-          > -->
+          >
         </div>
       </div>
       <v-divider></v-divider>
@@ -64,23 +64,23 @@
               :disabled="isReadOnly"
             ></v-text-field>
           </div>
-          <div d-flex flex-row>
+          <!-- <div d-flex flex-row>
             <v-text-field type="number" v-model="dataValueInput" label="Add Data Value" clearable dense>
               <template v-slot:append>
               <v-tooltip
                 bottom
               >
                 <template v-slot:activator="{ on }">
-                  <!-- <v-icon>
-                    mdi-help-circle-outline
-                  </v-icon> -->
-                  <v-btn class="mb-1" v-on="on" v-if="dataSet.id" icon elevation="4" small @click="addNewDataValue"><v-icon>mdi-plus-circle-outline</v-icon></v-btn>
+                  
+                  <v-btn v-if="dataSet.id" class="mb-1" v-on="on" icon elevation="4" small @click="addNewDataValue"><v-icon>mdi-plus-circle-outline</v-icon></v-btn>
                 </template>
                 Add Value
               </v-tooltip>
             </template></v-text-field>
-          </div>
-          <!-- <div v-if="!dataSet.id">
+          </div> -->
+          <!-- <v-btn v-if="dataSet.id" @click="showDataChart">Show Data</v-btn> -->
+          <v-btn v-if="dataSet.id" class="mb-1" icon elevation="4" small @click="addNewDataValue"><v-icon>mdi-plus-circle-outline</v-icon></v-btn>
+          <div>
             <v-file-input
               placeholder="Please choose a file..."
               type="file"
@@ -97,7 +97,28 @@
               ></xlsx-json>
             </xlsx-read>
           </div>
-          <div class="channels">
+          <div>
+            <v-select
+              v-model="value"
+              :items="headers"
+              label="Select"
+              multiple
+              chips
+              small
+              hint="What are the target columns?"
+              persistent-hint
+              return-object
+              @change="filterData"
+            >
+            <!-- <template v-slot:selection="{ item, index }">
+              <v-chip v-if="index === 0">
+                <span>{{ item.text }}</span>
+              </v-chip>
+              <span v-if="index === 1" class="grey--text caption">(+{{ value.length - 1 }} others)</span>
+            </template> -->
+          </v-select>
+          </div>
+          <!-- <div class="channels">
             <v-select
               v-model="dataSet.channels"
               label="Channels"
@@ -138,7 +159,7 @@
         >
           <v-data-table
             v-model="selected"
-            :headers="headers"
+            :headers="selectedHeaders"
             :items="items"
             :item-key="headers[0].text"
             :single-select="false"
@@ -222,16 +243,20 @@ export default {
         dateNF: "mm/dd/yyyy",
       },
       headers: [],
+      selectedHeaders:[],
+      value: [],
       items: [],
       selected: [],
       formValid: true,
       submitAttempted: false,
       dataValueInput: '',
+      isReadOnly: false
     };
   },
   computed: {
     ...mapGetters([
       "dataSet",
+      "dataValue",
       "dataValues",
       "channels",
       "colors",
@@ -263,21 +288,22 @@ export default {
         this.data.length > 0
       );
     },
-    createdBy() {
-      if (this.dataSet.id) {
-        return `${this.dataSet.user} on ${new Date(this.dataSet.createdAt).toLocaleString()}`;
-      } else if (this.dataSet.user) {
+    createdBy: {
+      get() {
         return `${this.dataSet.user.first_name} ${this.dataSet.user.last_name}`;
-      } else return ""
+      },
+      set() {
+        console.log(this.dataSet)
+      }
     },
-    isReadOnly() {
+    /* isReadOnly() {
       if (this.dataSet.id) {
         return true
       } else return false
-    }
+    } */
   },
   methods: {
-    ...mapActions(["addDataSet", "addDataValue", "updateDataSet", "fetchChannels", "fetchDataValues"]),
+    ...mapActions(["addDataSet", "addDataValue", "updateDataSet", "fetchDataSet", "fetchChannels", "fetchDataValue", "fetchDataValues"]),
     ...mapMutations(["SET_DATA_SET", "SET_STATUS_CODE"]),
     onChange(event) {
       this.file = event.target.files ? event.target.files[0] : null;
@@ -310,55 +336,6 @@ export default {
     togglePolarAreaChart() {
       this.chartType = "Polar Area";
     },
-    addNewDataValue() {
-      this.addDataValue({
-        score: this.dataValueInput,
-        dataSetId: this.dataSet.id
-      });
-      this.fetchDataValues()
-      this.loadData(this.dataValues)
-    },
-    loadData(data) {
-      console.log(data)
-      let newData = data
-      .filter(f => f.dataSetId == this.dataSet.id)
-      .map((d) => ({
-        "Created At": new Date(d.createdAt).toLocaleString(),
-        "Score": d.score
-      }))
-      console.log(newData)
-      const keys = Object.keys(newData[0])
-      console.log(keys)
-      this.headers = keys.map((item) => ({
-        text: item,
-        value: item,
-      }));
-
-      this.items = newData;
-
-      this.selected = newData;
-
-      this.data = newData;
-    },
-    uploadData(data) {
-      const keys = Object.keys(data[0]);
-      console.log(keys)
-      this.headers = keys.map((item) => ({
-        text: item,
-        value: item,
-      }));
-
-      this.items = data;
-
-      this.selected = data;
-
-      this.data = data;
-    },
-    changeChartData() {
-      this.$refs.chart.index =
-        (this.$refs.chart.index + 1) %
-        (Object.keys(this.$refs.chart.chartData[0]).length - 1);
-    },
     saveDataSet() {
       this.$refs.form.validate();
       this.addDataSet({
@@ -367,12 +344,70 @@ export default {
         channels: ["test_chan"],
         user: this.createdBy
       });
-      if (this.dataValueInput) {
-        this.addNewDataValue()
-      }
-      console.log(this.$refs.form)
       this.$refs.form.reset();
+      //this.fetchDataSet(this.$route.params.dataSetId)
+      //this.$router.push(`/data-sets/${this.dataSet.id}`);
+      //this.selected && this.addNewDataValue()
+      //console.log(this.$refs.form)
+      this.isReadOnly = true
     },
+    addNewDataValue() {
+      let objString = JSON.stringify(this.selected)
+      this.addDataValue({
+        data: objString,
+        dataSetId: this.dataSet.id
+      });
+      //this.showDataChart()
+    },
+    /* showDataChart() {
+      this.fetchDataValues()
+      this.uploadData(this.dataValues)
+    }, */
+    uploadData(data) {
+      console.log(data)
+      let newData = data
+      /*.filter(f => f.dataSetId == this.dataSet.id)
+      .sort((a, b) => a.createdAt.localeCompare(b.createdAt))
+       .map((d) => ({
+        "Created At": new Date(d.createdAt).toLocaleString(),
+        "Score": d.score
+      })) */
+       const keys = Object.keys(newData[0])
+       
+      this.headers = keys.map((item) => ({
+        text: item,
+        value: item,
+      }));
+      this.selectedHeaders = this.headers
+      this.items = newData;
+      this.selected = newData;
+      this.data = newData;
+    },
+    editForm() {
+      this.isReadOnly = false
+    },
+    filterData(cols) {
+      let filtered =  []
+      this.data.forEach((row) => {
+        let newDV = {}
+        cols.forEach(col => {
+          let column = col.text
+          newDV[column] = row[column]
+        })
+        filtered.push(newDV)
+      })
+      this.selected = filtered
+    },
+    changeChartData() {
+      this.$refs.chart.index =
+        (this.$refs.chart.index + 1) %
+        (Object.keys(this.$refs.chart.chartData[0]).length - 1);
+    },
+    checkForId() {
+      if (this.dataSet.id) {
+        return true
+      } else return false
+    }
     /* saveDataSet() {
       this.$refs.form.validate();
       this.submitAttempted = true;
@@ -395,19 +430,50 @@ export default {
       }
     }, */
   },
-  beforeMount() {
-    this.fetchChannels();
+  mounted() {
+    if (this.dataSet && this.dataSet.dataValues.items && this.dataSet.dataValues.items.length > 0 ) {
+      console.log(this.dataSet)
+      this.uploadData(this.dataSet.dataValues.items[0].data)
+    }
   },
+  /* beforeMount() {
+    this.fetchDataSet(this.dataSet.id)
+    if (this.dataSet && this.dataSet.dataValues.items) {
+      console.log(this.dataSet)
+      this.uploadData(this.dataSet.dataValues.items[0].data)
+    }
+    //this.fetchChannels();
+  }, */
   watch: {
-    /* dataSet() {
-      if (this.dataSet) {
-        this.data = this.dataSet;
+    dataSet() {
+      console.log(this.dataSet.id)
+      console.log(this.$route.params.dataSetId)
+      if (this.dataSet.id) {
+        this.isReadOnly = true
+        
+        if (this.dataSet.id !== this.$route.params.dataSetId){
+        this.clear()
+      }
+        /* this.data = this.dataSet;
         if (this.data){
           console.log(this.data)
         }
-        this.loadData(this.data);
-      }
-    }, */
+        this.uploadData(this.data); */
+      } else this.isReadOnly = false
+
+    },
+    selectedHeaders() {
+      console.log(this.selected)
+    },
+    headers() {
+      console.log(this.headers)
+      /* this.headers.forEach(h => {
+        this.selectedHeaders.push(h.text)
+      }) */
+    },
+    value(val) {
+      this.selectedHeaders = val;
+    },
     selected(){
       if (this.selected && this.selected.length > 0){
         console.log(this.selected)
