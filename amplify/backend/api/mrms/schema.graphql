@@ -7,9 +7,9 @@ type Report @model @auth(rules: [{ allow: public }]) {
   channel: Channel @belongsTo(fields: ["channelId"])
   description: String,
   channelId:  ID @index(name: "byChannel")  
-  color_scheme_id: Int
-  chart_type: String
-  data_set: [DataSet]
+  colorSchemeId: Int
+  chartType: String
+  dataSet: [DataSet]
   dataSetId: String  
 }
 

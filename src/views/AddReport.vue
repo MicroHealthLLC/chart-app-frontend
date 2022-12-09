@@ -22,10 +22,10 @@ export default {
     this.SET_REPORT({
       title: "",
       description: "",
-      chart_type: "line",
-      data_set: { data: [] },
+      chartType: "line",
+      dataSet: { dataValues: [] },
       // tags: [],
-      color_scheme_id: 1,
+      colorSchemeId: 1,
       user: {
         first_name: this.user.attributes.given_name,
         last_name: this.user.attributes.family_name,

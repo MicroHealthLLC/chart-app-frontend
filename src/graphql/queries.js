@@ -20,12 +20,13 @@ export const getReport = /* GraphQL */ `
       }
       description
       channelId
-      color_scheme_id
-      chart_type
-      data_set {
+      colorSchemeId
+      chartType
+      dataSet {
         id
         title
         description
+        channels
         dataValues {
           nextToken
         }
@@ -60,9 +61,9 @@ export const listReports = /* GraphQL */ `
         }
         description
         channelId
-        color_scheme_id
-        chart_type
-        data_set {
+        colorSchemeId
+        chartType
+        dataSet {
           id
           title
           description
@@ -89,8 +90,8 @@ export const getChannel = /* GraphQL */ `
           title
           description
           channelId
-          color_scheme_id
-          chart_type
+          colorSchemeId
+          chartType
           dataSetId
           createdAt
           updatedAt

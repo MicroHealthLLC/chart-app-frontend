@@ -8,7 +8,9 @@
     </v-card-title>
     <v-card-text>
       <ul class="mb-4 text-caption">
-        <li v-if="report.data_set"><strong>Data Set:</strong> {{ report.data_set.title }}</li>
+        <li v-if="(report && report.dataSetId)" :load="log(report)">
+          <strong>Data Set:</strong><span class="blueFont"> {{ dataSets.filter(d => d && d.id == report.dataSetId )[0].title }}</span>
+        </li>
         <li v-else><strong>Data Set:</strong> None</li>
         <li><strong>Channel:</strong> {{ report.channel.title }}</li>
       </ul>
@@ -25,6 +27,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "ReportCard",
   props: {
@@ -33,31 +36,53 @@ export default {
     },
   },
   computed: {
+    ...mapGetters([
+       "dataSets",
+     ]),
     chartIcon() {
-      return this.report.chart_type === "line"
+      return this.report.chartType === "line"
         ? "mdi-chart-line"
-        : this.report.chart_type === "bar"
+        : this.report.chartType === "bar"
         ? "mdi-chart-bar"
-        : this.report.chart_type === "pie"
+        : this.report.chartType === "pie"
         ? "mdi-chart-pie"
-        : this.report.chart_type === "donut"
+        : this.report.chartType === "donut"
         ? "mdi-chart-donut"
-        : this.report.chart_type === "table"
+        : this.report.chartType === "table"
         ? "mdi-table-large"
-        : this.report.chart_type === "curve"
+        : this.report.chartType === "curve"
         ? "mdi-chart-bell-curve-cumulative"
-        : this.report.chart_type === "polar-area"
+        : this.report.chartType === "polar-area"
         ? "mdi-chart-pie"
-        : this.report.chart_type === "radar"
+        : this.report.chartType === "radar"
         ? "mdi-hexagon-slice-2"
         : "mdi-chart-line";
     },
   },
+  beforeMount() {
+    if(this.dataSets && this.dataSets.length < 1){
+      this.fetchDataSets();
+    }
+  },
   methods: {
+    ...mapActions([
+       "fetchDataSets",
+     ]),
+     log(e){
+      console.log(e)
+     },
     toReport() {
       this.$router.push(
         `/channels/${this.report.channelId}/reports/${this.report.id}`
       );
+    },
+  },
+  watch: {
+    dataSets() {
+      console.log(this.dataSets)
+    },
+    report() {
+      console.log(this.report)
     },
   },
 };
@@ -85,5 +110,8 @@ export default {
   word-break: normal;
   line-height: 1.5rem;
   flex-wrap: unset;
+}
+.blueFont {
+  color: #1976d2;
 }
 </style>

@@ -162,7 +162,7 @@ export default {
     NewsCard,
   },
   computed: {
-    ...mapGetters(["channels", "news", "reports", "user"]),
+    ...mapGetters(["channels", "news", "reports", "user", "dataSets"]),
     reportCount() {
       return (
         this.reports.length
@@ -170,18 +170,20 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["fetchNews", "fetchReports", "fetchCurrentUser"]),
+    ...mapActions(["fetchNews", "fetchReports", "fetchCurrentUser", "fetchDataSets"]),
   },
   mounted() {
     this.fetchReports();
-    // this.fetchNews();
- 
+    this.fetchDataSets();
    console.log(this.user)
   },
   watch:{
-reports(){
-  console.log(this.reports)
-}
+    reports(){
+      console.log(this.reports)
+    },
+    dataSets() {
+      console.log(this.dataSets)
+    },
   }
 
 };
