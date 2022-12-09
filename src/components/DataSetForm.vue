@@ -115,7 +115,7 @@
               </v-chip>
               <span v-if="index === 1" class="grey--text caption">(+{{ value.length - 1 }} others)</span>
             </template> -->
-          </v-select><v-btn v-if="dataSet.id" class="mb-1" elevation="4" small @click="addNewDataValue"><v-icon>mdi-plus-circle-outline</v-icon> Add New Data</v-btn>
+          </v-select><v-btn v-if="dataSet.id" :disabled="(!file || value.length == 0)" class="mb-1" elevation="4" small @click="addNewDataValue"><v-icon>mdi-plus-circle-outline</v-icon> Add New Data</v-btn>
         </div>
           </div>
           <div class="channels">
@@ -351,18 +351,19 @@ export default {
       //console.log(this.$refs.form)
       this.isReadOnly = true
     },
-    addNewDataValue() {
+    async addNewDataValue() {
       //let objString = JSON.stringify(this.selected)
-      this.addDataValue({
+      await this.addDataValue({
         data: JSON.stringify(this.selected),
         dataSetId: this.dataSet.id
       });
-      //this.showDataChart()
+      this.showDataChart()
     },
-    /* showDataChart() {
-      this.fetchDataValues()
-      this.uploadData(this.dataValues)
-    }, */
+    showDataChart() {
+      this.fetchDataSet(this.$route.params.dataSetId)
+      this.createMasterData()
+      //this.uploadData(this.dataValues)
+    },
     uploadData(data) {
       let newData = data
       /*.filter(f => f.dataSetId == this.dataSet.id)
@@ -406,6 +407,23 @@ export default {
       if (this.dataSet.id) {
         return true
       } else return false
+    },
+    createMasterData() {
+      if (this.dataSet && this.dataSet.dataValues.items && this.dataSet.dataValues.items.length > 0) {
+      let masterData = []
+      this.dataSet.dataValues.items.forEach(d => masterData.unshift(d.data))
+      masterData = masterData.flat()
+      const uniqueArray = masterData.filter((object,index) => index === masterData.findIndex(obj => JSON.stringify(obj) === JSON.stringify(object)))
+      console.log(uniqueArray)
+      this.uploadData(this.sortByKey(uniqueArray))
+    }
+    },
+    sortByKey(arr, key = "Date") {
+      return arr.sort((a,b) => {
+        let x = a[key]
+        let y = b[key];
+        return ((x < y) ? - 1 : ((x > y) ? 1 : 0));
+      })
     }
     /* saveDataSet() {
       this.$refs.form.validate();
@@ -430,12 +448,7 @@ export default {
     }, */
   },
   mounted() {
-    if (this.dataSet && this.dataSet.dataValues.items && this.dataSet.dataValues.items.length > 0) {
-      console.log(this.dataSet.dataValues.items)
-      let masterData = []
-      this.dataSet.dataValues.items.forEach(d => masterData.push(d.data))
-      this.uploadData(masterData.flat())
-    }
+    this.createMasterData()
     this.fetchChannels();
   },
   /* beforeMount() {
@@ -466,7 +479,7 @@ export default {
       //console.log(this.selected)
     },
     headers() {
-      console.log(this.headers)
+      //console.log(this.headers)
       /* this.headers.forEach(h => {
         this.selectedHeaders.push(h.text)
       }) */
