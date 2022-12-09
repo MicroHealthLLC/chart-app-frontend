@@ -36,15 +36,15 @@
         <!-- Chart -->
         <Component
           v-if="
-            (activeReport.id || activeReport.data_set) &&
-            activeReport.data_set.data.length > 0 &&
+            (activeReport.id || activeReport.dataSet) &&
+            activeReport.dataSet.dataValues.length > 0 &&
             reportLoaded
           "
           ref="chart"
           :is="graphType"
-          :chartData="activeReport.data_set.data"
+          :chartData="activeReport.dataSet.dataValues"
           :chartColors="colorScheme"
-          :graphType="activeReport.chart_type"
+          :graphType="activeReport.chartType"
           :height="350"
           :title="activeReport.title"
           class="mb-4"
@@ -65,9 +65,9 @@
         <div class="d-flex justify-end mb-4">
           <v-btn
             v-if="
-               activeReport.data_set &&
-               activeReport.data_set.data && activeReport.data_set.data[0] &&
-              Object.keys(activeReport.data_set.data[0]).length > 2 &&
+               activeReport.dataSet &&
+               activeReport.dataSet.dataValues && activeReport.dataSet.dataValues[0] &&
+              Object.keys(activeReport.dataSet.dataValues[0]).length > 2 &&
               circleChart
             "
             @click="changeChartData"
@@ -137,7 +137,7 @@
           </div>
           <div>
             <v-select
-              v-model="activeReport.chart_type"
+              v-model="activeReport.chartType"
               :items="chartTypes"
               item-text="text"
               item-value="value"
@@ -172,7 +172,7 @@
           </div>
           <div>
             <v-select
-              v-model="activeReport.color_scheme_id"
+              v-model="activeReport.colorSchemeId"
               label="Color Scheme"
               :items="colors"
               item-text="title"
@@ -228,16 +228,16 @@
           </v-toolbar>
           <Component
             v-if="
-              (activeReport.data && activeReport.data_set.data) &&
-              activeReport.data_set.data.length > 0 &&
+              (activeReport.data && activeReport.dataSet.dataValues) &&
+              activeReport.dataSet.data.length > 0 &&
               fullscreen &&
               colorScheme
             "
             ref="fullscreenchart"
             :is="graphType"
-            :chartData="activeReport.data_set.data"
+            :chartData="activeReport.dataSet.dataValues"
             :chartColors="colorScheme"
-            :graphType="activeReport.chart_type"
+            :graphType="activeReport.chartType"
             :height="screenHeight"
             :title="activeReport.title"
             class="pa-6"
@@ -247,8 +247,8 @@
           <div class="d-flex justify-end pr-6">
             <v-btn
               v-if="
-                activeReport.data_set.data[0] &&
-                Object.keys(activeReport.data_set.data[0]).length > 2 &&
+                activeReport.dataSet.dataValues[0] &&
+                Object.keys(activeReport.dataSet.dataValues[0]).length > 2 &&
                 circleChart
               "
               @click="changeFSChartData"
@@ -305,7 +305,7 @@ export default {
       "updateReport",
       "deleteReport",
     ]),
-    ...mapMutations(["SET_REPORT_DATA_SET", "SET_STATUS_CODE"]),
+    ...mapMutations(["SET_REPORT_DATASET", "SET_STATUS_CODE"]),
     changeChartData() {
       this.$refs.chart.index =
         (this.$refs.chart.index + 1) %
@@ -333,11 +333,11 @@ export default {
           title: this.activeReport.title,
           description: this.activeReport.description,
           channelId: this.activeReport.channelId,
-          chart_type: this.activeReport.chart_type,
+          chartType: this.activeReport.chartType,
           dataSetId: this.activeReport.dataSetId,
-          // data_set: this.activeReport.data_set,
+          // dataSet: this.activeReport.dataSet,
             // tag_ids: this.activeReport.tags.map((tag) => tag.id),
-          color_scheme_id: this.activeReport.color_scheme_id,
+          colorSchemeId: this.activeReport.colorSchemeId,
           // last_updated_by: `${this.user.first_name} ${this.user.last_name}`,
         };
 
@@ -356,7 +356,7 @@ export default {
         (dataSet) => dataSet.id == this.activeReport.dataSetId
       );
 
-      this.SET_REPORT_DATA_SET(dataSet);
+      this.SET_REPORT_DATASET(dataSet);
     },
     removeReport() {
       this.deleteReport(this.activeReport.id);
@@ -389,19 +389,19 @@ export default {
       "user",
     ]),
     graphType() {
-      if (this.activeReport.chart_type === "line") {
+      if (this.activeReport.chartType === "line") {
         return LineChart;
-      } else if (this.activeReport.chart_type === "bar") {
+      } else if (this.activeReport.chartType === "bar") {
         return BarChart;
-      } else if (this.activeReport.chart_type === "radar") {
+      } else if (this.activeReport.chartType === "radar") {
         return RadarChart;
-      } else if (this.activeReport.chart_type === "donut") {
+      } else if (this.activeReport.chartType === "donut") {
         return DoughnutChart;
-      } else if (this.activeReport.chart_type === "pie") {
+      } else if (this.activeReport.chartType === "pie") {
         return PieChart;
-      } else if (this.activeReport.chart_type === "polar-area") {
+      } else if (this.activeReport.chartType === "polar-area") {
         return PolarAreaChart;
-      } else if (this.activeReport.chart_type === "table") {
+      } else if (this.activeReport.chartType === "table") {
         return Table;
       } else {
         return LineChart;
@@ -409,9 +409,9 @@ export default {
     },
     circleChart() {
       return (
-        this.activeReport.chart_type == "donut" ||
-        this.activeReport.chart_type == "pie" ||
-        this.activeReport.chart_type == "polar-area"
+        this.activeReport.chartType == "donut" ||
+        this.activeReport.chartType == "pie" ||
+        this.activeReport.chartType == "polar-area"
       );
     },
     newChannelReport() {
@@ -446,7 +446,7 @@ export default {
   },
   mounted() {
     this.colorScheme = this.colors.find(
-      (scheme) => scheme.id == this.activeReport.color_scheme_id
+      (scheme) => scheme.id == this.activeReport.colorSchemeId
     ).scheme;
 
     if (this.$route.name == "AddReport") {
@@ -466,7 +466,7 @@ export default {
     // },
     activeReport() {
       this.colorScheme = this.colors.find(
-        (scheme) => scheme.id == this.activeReport.color_scheme_id
+        (scheme) => scheme.id == this.activeReport.colorSchemeId
       ).scheme;
     },
     dataSets() {

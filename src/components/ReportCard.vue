@@ -8,8 +8,8 @@
     </v-card-title>
     <v-card-text>
       <ul class="mb-4 text-caption">
-        <li v-if="(report.dataSetId && report.data_set && report.data_set.data)">
-          <strong>Data Set:</strong> {{ dataSets.data.filter(d => d.id == report.dataSetId).title }}
+        <li v-if="(report.dataSetId && report.dataSet && report.dataSet.dataValues)">
+          <strong>Data Set:</strong> {{ dataSets.dataValues.filter(d => d.id == report.dataSetId).title }}
         </li>
         <li v-else><strong>Data Set:</strong> None</li>
         <li><strong>Channel:</strong> {{ report.channel.title }}</li>
@@ -40,21 +40,21 @@ export default {
        "dataSets",
      ]),
     chartIcon() {
-      return this.report.chart_type === "line"
+      return this.report.chartType === "line"
         ? "mdi-chart-line"
-        : this.report.chart_type === "bar"
+        : this.report.chartType === "bar"
         ? "mdi-chart-bar"
-        : this.report.chart_type === "pie"
+        : this.report.chartType === "pie"
         ? "mdi-chart-pie"
-        : this.report.chart_type === "donut"
+        : this.report.chartType === "donut"
         ? "mdi-chart-donut"
-        : this.report.chart_type === "table"
+        : this.report.chartType === "table"
         ? "mdi-table-large"
-        : this.report.chart_type === "curve"
+        : this.report.chartType === "curve"
         ? "mdi-chart-bell-curve-cumulative"
-        : this.report.chart_type === "polar-area"
+        : this.report.chartType === "polar-area"
         ? "mdi-chart-pie"
-        : this.report.chart_type === "radar"
+        : this.report.chartType === "radar"
         ? "mdi-hexagon-slice-2"
         : "mdi-chart-line";
     },

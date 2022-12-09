@@ -78,8 +78,8 @@
           :ref="'chart' + index"
           :is="graphType(report)"
           :chartData="report.data_set.data"
-          :chartColors="colorScheme(report.color_scheme_id)"
-          :graphType="report.chart_type"
+          :chartColors="colorScheme(report.colorSchemeId)"
+          :graphType="report.chartType"
           :title="report.title"
           :height="350"
           class="mb-4"
@@ -87,7 +87,7 @@
         </Component>
         <div class="d-flex justify-end">
           <v-btn
-            v-show="['donut', 'pie', 'polar-area'].includes(report.chart_type)"
+            v-show="['donut', 'pie', 'polar-area'].includes(report.chartType)"
             @click="changeChartData($refs['chart' + index])"
             outlined
             small
@@ -291,19 +291,19 @@ export default {
     ]),
     ...mapMutations(["SET_ACTIVE_DASHBOARD", "SET_STATUS_CODE"]),
     graphType(report) {
-      if (report.chart_type === "line") {
+      if (report.chartType === "line") {
         return LineChart;
-      } else if (report.chart_type === "bar") {
+      } else if (report.chartType === "bar") {
         return BarChart;
-      } else if (report.chart_type === "radar") {
+      } else if (report.chartType === "radar") {
         return RadarChart;
-      } else if (report.chart_type === "donut") {
+      } else if (report.chartType === "donut") {
         return DoughnutChart;
-      } else if (report.chart_type === "pie") {
+      } else if (report.chartType === "pie") {
         return PieChart;
-      } else if (report.chart_type === "polar-area") {
+      } else if (report.chartType === "polar-area") {
         return PolarAreaChart;
-      } else if (report.chart_type === "table") {
+      } else if (report.chartType === "table") {
         return Table;
       } else {
         return LineChart;

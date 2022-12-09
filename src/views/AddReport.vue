@@ -22,8 +22,8 @@ export default {
     this.SET_REPORT({
       title: "",
       description: "",
-      chart_type: "line",
-      data_set: { data: [] },
+      chartType: "line",
+      dataSet: { dataValues: [] },
       // tags: [],
       color_scheme_id: 1,
       user: {
