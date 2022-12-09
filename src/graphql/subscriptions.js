@@ -26,7 +26,6 @@ export const onCreateReport = /* GraphQL */ `
         id
         title
         description
-        channels
         dataValues {
           nextToken
         }
@@ -65,7 +64,6 @@ export const onUpdateReport = /* GraphQL */ `
         id
         title
         description
-        channels
         dataValues {
           nextToken
         }
@@ -104,7 +102,6 @@ export const onDeleteReport = /* GraphQL */ `
         id
         title
         description
-        channels
         dataValues {
           nextToken
         }
@@ -205,7 +202,6 @@ export const onCreateDataSet = /* GraphQL */ `
       id
       title
       description
-      channels
       dataValues {
         items {
           id
@@ -228,7 +224,6 @@ export const onUpdateDataSet = /* GraphQL */ `
       id
       title
       description
-      channels
       dataValues {
         items {
           id
@@ -251,7 +246,6 @@ export const onDeleteDataSet = /* GraphQL */ `
       id
       title
       description
-      channels
       dataValues {
         items {
           id
