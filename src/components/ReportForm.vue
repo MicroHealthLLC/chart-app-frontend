@@ -36,7 +36,7 @@
         <!-- Chart -->
         <Component
           v-if="
-            (activeReport.id || activeReport.dataSet) &&
+            (activeReport.dataSet) &&
             activeReport.dataSet.dataValues.length > 0 &&
             reportLoaded
           "
@@ -154,7 +154,7 @@
               dense
             ></v-textarea>
           </div>
-          <div class="tags">
+          <!-- <div class="tags">
             <v-select
               v-model="activeReport.tags"
               :items="tags"
@@ -169,7 +169,7 @@
               dense
             >
             </v-select>
-          </div>
+          </div> -->
           <div>
             <v-select
               v-model="activeReport.colorSchemeId"
@@ -347,7 +347,7 @@ export default {
         } else {
           console.log(data)
           // data.user_id = this.user.id;
-          // this.addReport(data);
+           this.addReport(data);
         }
       }
     },
@@ -355,7 +355,7 @@ export default {
       let dataSet = this.dataSetChoices.find(
         (dataSet) => dataSet.id == this.activeReport.dataSetId
       );
-
+      console.log("ds: ", this.dataSets)
       this.SET_REPORT_DATASET(dataSet);
     },
     removeReport() {
@@ -445,9 +445,9 @@ export default {
     }
   },
   mounted() {
-    this.colorScheme = this.colors.find(
-      (scheme) => scheme.id == this.activeReport.colorSchemeId
-    ).scheme;
+    // this.colorScheme = this.colors.find(
+    //   (scheme) => scheme.id == this.activeReport.colorSchemeId
+    // ).scheme;
 
     if (this.$route.name == "AddReport") {
       this.dataSetChoices = [...this.dataSets];
@@ -465,9 +465,10 @@ export default {
     //   }
     // },
     activeReport() {
-      this.colorScheme = this.colors.find(
-        (scheme) => scheme.id == this.activeReport.colorSchemeId
-      ).scheme;
+      this.colorScheme = this.colors.find((scheme) => scheme.id == this.activeReport.colorSchemeId).scheme;
+      console.log(this.activeReport.colorSchemeId)
+      console.log(this.activeReport)
+      console.log(this.colorScheme)
     },
     dataSets() {
       this.dataSetChoices = [...this.dataSets];

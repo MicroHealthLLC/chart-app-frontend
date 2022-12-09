@@ -23,9 +23,9 @@ export const createReport = /* GraphQL */ `
       }
       description
       channelId
-      color_scheme_id
-      chart_type
-      data_set {
+      colorSchemeId
+      chartType
+      dataSet {
         id
         title
         description
@@ -65,9 +65,9 @@ export const updateReport = /* GraphQL */ `
       }
       description
       channelId
-      color_scheme_id
-      chart_type
-      data_set {
+      colorSchemeId
+      chartType
+      dataSet {
         id
         title
         description
@@ -107,9 +107,9 @@ export const deleteReport = /* GraphQL */ `
       }
       description
       channelId
-      color_scheme_id
-      chart_type
-      data_set {
+      colorSchemeId
+      chartType
+      dataSet {
         id
         title
         description
@@ -141,8 +141,8 @@ export const createChannel = /* GraphQL */ `
           title
           description
           channelId
-          color_scheme_id
-          chart_type
+          colorSchemeId
+          chartType
           dataSetId
           createdAt
           updatedAt
@@ -171,8 +171,8 @@ export const updateChannel = /* GraphQL */ `
           title
           description
           channelId
-          color_scheme_id
-          chart_type
+          colorSchemeId
+          chartType
           dataSetId
           createdAt
           updatedAt
@@ -201,8 +201,8 @@ export const deleteChannel = /* GraphQL */ `
           title
           description
           channelId
-          color_scheme_id
-          chart_type
+          colorSchemeId
+          chartType
           dataSetId
           createdAt
           updatedAt

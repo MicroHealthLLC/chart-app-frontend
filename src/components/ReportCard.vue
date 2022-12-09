@@ -8,8 +8,8 @@
     </v-card-title>
     <v-card-text>
       <ul class="mb-4 text-caption">
-        <li v-if="(report.dataSetId && report.dataSet && report.dataSet.dataValues)">
-          <strong>Data Set:</strong> {{ dataSets.dataValues.filter(d => d.id == report.dataSetId).title }}
+        <li v-if="(report && report.dataSetId)" :load="log(report)">
+          <strong>Data Set:</strong><span class="blueFont"> {{ dataSets.filter(d => d && d.id == report.dataSetId )[0].title }}</span>
         </li>
         <li v-else><strong>Data Set:</strong> None</li>
         <li><strong>Channel:</strong> {{ report.channel.title }}</li>
@@ -68,10 +68,21 @@ export default {
     ...mapActions([
        "fetchDataSets",
      ]),
+     log(e){
+      console.log(e)
+     },
     toReport() {
       this.$router.push(
         `/channels/${this.report.channelId}/reports/${this.report.id}`
       );
+    },
+  },
+  watch: {
+    dataSets() {
+      console.log(this.dataSets)
+    },
+    report() {
+      console.log(this.report)
     },
   },
 };
@@ -99,5 +110,8 @@ export default {
   word-break: normal;
   line-height: 1.5rem;
   flex-wrap: unset;
+}
+.blueFont {
+  color: #1976d2;
 }
 </style>

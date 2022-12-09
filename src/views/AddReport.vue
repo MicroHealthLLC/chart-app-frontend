@@ -25,7 +25,7 @@ export default {
       chartType: "line",
       dataSet: { dataValues: [] },
       // tags: [],
-      color_scheme_id: 1,
+      colorSchemeId: 1,
       user: {
         first_name: this.user.attributes.given_name,
         last_name: this.user.attributes.family_name,
