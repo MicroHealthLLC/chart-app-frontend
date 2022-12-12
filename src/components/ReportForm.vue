@@ -63,7 +63,7 @@
         </div>
         <!-- Category Toggle Button -->
         <div class="d-flex justify-end mb-4">
-          <v-btn
+          <!-- <v-btn
             v-if="
                activeReport.dataSet &&
                activeReport.dataSet.dataValues && activeReport.dataSet.dataValues[0] &&
@@ -74,7 +74,7 @@
             outlined
             small
             >Next Category <v-icon small>mdi-arrow-right</v-icon></v-btn
-          >
+          > -->
         </div>
       </v-card>
 
@@ -124,7 +124,7 @@
           <div>
             <v-select
                v-model="activeReport.dataSetId"
-              :load="log(activeReport)"
+              :load="log(user)"
               :items="dataSetChoices"
               item-text="title"
               item-value="id"
@@ -245,7 +245,7 @@
           </Component>
           <!-- Category Toggle Button -->
           <div class="d-flex justify-end pr-6">
-            <v-btn
+            <!-- <v-btn
               v-if="
                 activeReport.dataSet.dataValues[0] &&
                 Object.keys(activeReport.dataSet.dataValues[0]).length > 2 &&
@@ -255,7 +255,7 @@
               outlined
               small
               >Next Category <v-icon small>mdi-arrow-right</v-icon></v-btn
-            >
+            > -->
           </div>
         </v-card>
       </v-dialog>
@@ -430,21 +430,19 @@ export default {
       return window.innerHeight - 200;
     },
     createdBy() {
-      if (this.activeReport.id) {
-        return `${this.activeReport.user.first_name} ${
-          this.activeReport.user.last_name
-        } on ${new Date(this.activeReport.created_at).toLocaleString()}`;
+      if (this.activeReport.id && this.user && this.user.attributes) {
+        return  `${this.user.attributes.given_name , 'on', new Date(this.activeReport.createdAt).toLocaleString()}`
       } else {
-        return `${this.activeReport.user.first_name} ${this.activeReport.user.last_name}`;
+        return `${this.user.attributes.given_name}  ${this.user.attributes.given_name}`;
       }
     },
     updatedBy() {
-      if (this.activeReport.id) {
+      if (this.activeReport && this.activeReport.id) {
         return `${this.activeReport.last_updated_by} on ${new Date(
-          this.activeReport.updated_at
+          this.activeReport.updatedAt
         ).toLocaleString()}`;
       } else {
-        return `${this.activeReport.user.first_name} ${this.activeReport.user.last_name}`;
+        return `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
       }
     },
   },
@@ -461,9 +459,11 @@ export default {
 
     if (this.$route.name == "AddReport") {
       this.dataSetChoices = [...this.dataSets];
-    } else {
-      this.dataSetChoices = [...this.channelDataSets];
-    }
+    } 
+    
+    // else {
+    //   this.dataSetChoices = [...this.channelDataSets];
+    // }
   },
   watch: {
     // statusCode() {
@@ -485,6 +485,9 @@ export default {
     },
     dataValues(){
       console.log(this.dataValues)
+    },
+    user(){
+      console.log(this.user)
     }
     // channelDataSets() {
     //   this.dataSetChoices = [...this.channelDataSets];
