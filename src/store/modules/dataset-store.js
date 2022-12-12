@@ -97,6 +97,7 @@ export default {
           res.data.getDataSet.dataValues.items[i].data = JSON.parse(res.data.getDataSet.dataValues.items[i].data)
         } 
        } 
+       console.log(res.data.getDataSet)
         commit("SET_DATA_SET", res.data.getDataSet);
       } catch (error) {
         console.log(error);

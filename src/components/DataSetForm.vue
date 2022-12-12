@@ -118,7 +118,7 @@
           </v-select><v-btn v-if="dataSet.id" :disabled="(!file || value.length == 0)" class="mb-1" elevation="4" small @click="addNewDataValue"><v-icon>mdi-plus-circle-outline</v-icon> Add New Data</v-btn>
         </div>
           </div>
-          <div class="channels">
+          <!-- <div class="channels">
             <v-select
               v-model="dataSet.channels"
               label="Channels"
@@ -135,7 +135,7 @@
               hint="Please select all Channels that have access to this Data Set"
               persistent-hint
             ></v-select>
-          </div>
+          </div> -->
         </div>
       </v-form>
     </v-col> 
@@ -210,6 +210,7 @@ import PolarAreaChart from "../components/PolarAreaChart";
 import { XlsxRead } from "vue-xlsx";
 import { XlsxJson } from "vue-xlsx";
 import { mapActions, mapGetters, mapMutations } from "vuex";
+import datasetMixin from "../mixins/dataset-mixin";
 
 export default {
   name: "DataSetForm",
@@ -253,6 +254,7 @@ export default {
       isReadOnly: false
     };
   },
+  mixins: [datasetMixin],
   computed: {
     ...mapGetters([
       "dataSet",
@@ -336,9 +338,9 @@ export default {
     togglePolarAreaChart() {
       this.chartType = "Polar Area";
     },
-    saveDataSet() {
+    async saveDataSet() {
       this.$refs.form.validate();
-      this.addDataSet({
+      await this.addDataSet({
         title: this.dataSet.title,
         description: this.dataSet.description,
         user: this.createdBy
@@ -363,8 +365,8 @@ export default {
       this.createMasterData()
       //this.uploadData(this.dataValues)
     },
-    uploadData(data) {
-      let newData = data
+    uploadData(datas) {
+      let newData = datas
       /*.filter(f => f.dataSetId == this.dataSet.id)
       .sort((a, b) => a.createdAt.localeCompare(b.createdAt))
        .map((d) => ({
@@ -407,23 +409,22 @@ export default {
         return true
       } else return false
     },
-    createMasterData() {
-      if (this.dataSet && this.dataSet.dataValues.items && this.dataSet.dataValues.items.length > 0) {
+    /* createMasterData() {
       let masterData = []
       this.dataSet.dataValues.items.forEach(d => masterData.unshift(d.data))
       masterData = masterData.flat()
       const uniqueArray = masterData.filter((object,index) => index === masterData.findIndex(obj => JSON.stringify(obj) === JSON.stringify(object)))
       console.log(uniqueArray)
-      this.uploadData(this.sortByKey(uniqueArray))
-    }
-    },
-    sortByKey(arr, key = "Date") {
+      return this.sortByKey(uniqueArray)
+      //this.uploadData(this.sortByKey(uniqueArray))
+    }, */
+    /* sortByKey(arr, key = "Date") {
       return arr.sort((a,b) => {
         let x = a[key]
         let y = b[key];
         return ((x < y) ? - 1 : ((x > y) ? 1 : 0));
       })
-    }
+    } */
     /* saveDataSet() {
       this.$refs.form.validate();
       this.submitAttempted = true;
@@ -447,7 +448,9 @@ export default {
     }, */
   },
   mounted() {
-    this.createMasterData()
+    if (this.dataSet && this.dataSet.dataValues && this.dataSet.dataValues.items && this.dataSet.dataValues.items.length > 0) {
+      this.uploadData(this.createMasterData(this.dataSet.dataValues.items))
+    }
     this.fetchChannels();
   },
   /* beforeMount() {

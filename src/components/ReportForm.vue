@@ -36,13 +36,11 @@
         <!-- Chart -->
         <Component
           v-if="
-            (activeReport.dataSet) &&
-            activeReport.dataSet.dataValues.length > 0 &&
-            reportLoaded
+            (activeReport.dataSet) && activeReport.dataSet.dataValues.items && activeReport.dataSet.dataValues.items.length > 0
           "
           ref="chart"
           :is="graphType"
-          :chartData="activeReport.dataSet.dataValues"
+          :chartData="data"
           :chartColors="colorScheme"
           :graphType="activeReport.chartType"
           :height="350"
@@ -52,7 +50,7 @@
         </Component>
         <!-- Placeholder -->
         <!-- This div has a v-else directive -->
-        <div
+        <!-- <div
         
           class="place-holder d-flex justify-center align-center ma-4"
         >
@@ -60,7 +58,7 @@
             <v-icon class="placeholder-icon">mdi-chart-areaspline</v-icon>
             Please load a data set to view preview...
           </p>
-        </div>
+        </div> -->
         <!-- Category Toggle Button -->
         <div class="d-flex justify-end mb-4">
           <v-btn
@@ -235,7 +233,7 @@
             "
             ref="fullscreenchart"
             :is="graphType"
-            :chartData="activeReport.dataSet.dataValues"
+            :chartData="data"
             :chartColors="colorScheme"
             :graphType="activeReport.chartType"
             :height="screenHeight"
@@ -272,6 +270,7 @@ import DoughnutChart from "../components/DoughnutChart";
 import PieChart from "../components/PieChart";
 import PolarAreaChart from "../components/PolarAreaChart";
 import Table from "../components/Table";
+import datasetMixin from "../mixins/dataset-mixin";
 
 export default {
   name: "ReportForm",
@@ -294,13 +293,14 @@ export default {
       ],
       colorScheme: [],
       dataSetChoices: [],
+      data: []
     };
   },
+  mixins: [datasetMixin],
   methods: {
     ...mapActions([
       "fetchReport",
       "fetchDataSets",
-      "fetchDataValues",
       "fetchDataSet",
       "fetchTags",
       "addReport",
@@ -338,7 +338,7 @@ export default {
           chartType: this.activeReport.chartType,
           dataSetId: this.activeReport.dataSetId,
           // dataSet: this.activeReport.dataSet,
-            // tag_ids: this.activeReport.tags.map((tag) => tag.id),
+          // tag_ids: this.activeReport.tags.map((tag) => tag.id),
           colorSchemeId: this.activeReport.colorSchemeId,
           // last_updated_by: `${this.user.first_name} ${this.user.last_name}`,
         };
@@ -354,17 +354,12 @@ export default {
       }
     },
     updateChartData() {
-      let dataSet = this.dataSetChoices.find(
-        (dataSet) => dataSet.id == this.activeReport.dataSetId
-      );
-    
-      console.log("ds: ", this.dataSets)
-      console.log("Selected DataSet: ", dataSet)
+      this.fetchDataSet(this.activeReport.dataSetId)
+      let dataSet = this.dataSet
       this.SET_REPORT_DATASET(dataSet);
       // let id = dataSet.id
       // this.fetchDataValue(id)
-      this.fetchDataValues()
-
+      console.log(this.activeReport)
     },
     removeReport() {
       this.deleteReport(this.activeReport.id);
@@ -381,17 +376,26 @@ export default {
         (color) => selectedSchemeId == color.id
       ).scheme;
     },
+    /* createMasterData(arr) {
+      let masterData = []
+      arr.forEach(d => masterData.unshift(d.data))
+      masterData = masterData.flat()
+      const uniqueArray = masterData.filter((object,index) => index === masterData.findIndex(obj => JSON.stringify(obj) === JSON.stringify(object)))
+      console.log(uniqueArray)
+      this.data = uniqueArray
+      //this.uploadData(this.sortByKey(uniqueArray))
+    }, */
   },
   computed: {
     ...mapGetters([
       "activeDataSet",
-      "dataValues",
       "activeReport",
       "channels",
       "channelReports",
       "colors",
       "channelDataSets",
       "dataSets",
+      "dataSet",
       "reportLoaded",
       "tags",
       "statusCode",
@@ -454,7 +458,6 @@ export default {
     }
   },
   mounted() {
-    this.fetchDataValues()
     // this.colorScheme = this.colors.find(
     //   (scheme) => scheme.id == this.activeReport.colorSchemeId
     // ).scheme;
@@ -479,13 +482,13 @@ export default {
       console.log(this.activeReport.colorSchemeId)
       console.log(this.activeReport)
       console.log(this.colorScheme)
+      if (this.activeReport.dataSet && this.activeReport.dataSet.dataValues && this.activeReport.dataSet.dataValues.items && this.activeReport.dataSet.dataValues.items.length > 0) {
+        this.data = this.createMasterData(this.activeReport.dataSet.dataValues.items)
+      }
     },
     dataSets() {
       this.dataSetChoices = [...this.dataSets];
     },
-    dataValues(){
-      console.log(this.dataValues)
-    }
     // channelDataSets() {
     //   this.dataSetChoices = [...this.channelDataSets];
     // },
