@@ -26,7 +26,6 @@ export const getReport = /* GraphQL */ `
         id
         title
         description
-        channels
         dataValues {
           nextToken
         }
@@ -37,6 +36,7 @@ export const getReport = /* GraphQL */ `
       dataSetId
       createdAt
       updatedAt
+      reportDataSetId
     }
   }
 `;
@@ -74,6 +74,7 @@ export const listReports = /* GraphQL */ `
         dataSetId
         createdAt
         updatedAt
+        reportDataSetId
       }
       nextToken
     }
@@ -95,6 +96,7 @@ export const getChannel = /* GraphQL */ `
           dataSetId
           createdAt
           updatedAt
+          reportDataSetId
         }
         nextToken
       }

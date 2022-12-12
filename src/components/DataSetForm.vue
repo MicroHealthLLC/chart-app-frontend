@@ -341,7 +341,6 @@ export default {
       this.addDataSet({
         title: this.dataSet.title,
         description: this.dataSet.description,
-        channels: ["test_chan"],
         user: this.createdBy
       });
       this.$refs.form.reset();
