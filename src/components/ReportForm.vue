@@ -300,6 +300,8 @@ export default {
     ...mapActions([
       "fetchReport",
       "fetchDataSets",
+      "fetchDataValues",
+      "fetchDataSet",
       "fetchTags",
       "addReport",
       "updateReport",
@@ -355,8 +357,14 @@ export default {
       let dataSet = this.dataSetChoices.find(
         (dataSet) => dataSet.id == this.activeReport.dataSetId
       );
+    
       console.log("ds: ", this.dataSets)
+      console.log("Selected DataSet: ", dataSet)
       this.SET_REPORT_DATASET(dataSet);
+      // let id = dataSet.id
+      // this.fetchDataValue(id)
+      this.fetchDataValues()
+
     },
     removeReport() {
       this.deleteReport(this.activeReport.id);
@@ -377,6 +385,7 @@ export default {
   computed: {
     ...mapGetters([
       "activeDataSet",
+      "dataValues",
       "activeReport",
       "channels",
       "channelReports",
@@ -445,6 +454,7 @@ export default {
     }
   },
   mounted() {
+    this.fetchDataValues()
     // this.colorScheme = this.colors.find(
     //   (scheme) => scheme.id == this.activeReport.colorSchemeId
     // ).scheme;
@@ -473,6 +483,9 @@ export default {
     dataSets() {
       this.dataSetChoices = [...this.dataSets];
     },
+    dataValues(){
+      console.log(this.dataValues)
+    }
     // channelDataSets() {
     //   this.dataSetChoices = [...this.channelDataSets];
     // },

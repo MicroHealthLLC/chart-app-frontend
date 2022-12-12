@@ -39,6 +39,7 @@ export const createReport = /* GraphQL */ `
       dataSetId
       createdAt
       updatedAt
+      reportDataSetId
     }
   }
 `;
@@ -80,6 +81,7 @@ export const updateReport = /* GraphQL */ `
       dataSetId
       createdAt
       updatedAt
+      reportDataSetId
     }
   }
 `;
@@ -121,6 +123,7 @@ export const deleteReport = /* GraphQL */ `
       dataSetId
       createdAt
       updatedAt
+      reportDataSetId
     }
   }
 `;
@@ -143,6 +146,7 @@ export const createChannel = /* GraphQL */ `
           dataSetId
           createdAt
           updatedAt
+          reportDataSetId
         }
         nextToken
       }
@@ -173,6 +177,7 @@ export const updateChannel = /* GraphQL */ `
           dataSetId
           createdAt
           updatedAt
+          reportDataSetId
         }
         nextToken
       }
@@ -203,6 +208,7 @@ export const deleteChannel = /* GraphQL */ `
           dataSetId
           createdAt
           updatedAt
+          reportDataSetId
         }
         nextToken
       }

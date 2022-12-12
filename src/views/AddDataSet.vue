@@ -22,7 +22,6 @@ export default {
       title: "",
       description: "",
       data: [],
-      channels: [],
       user: {
         first_name: this.user.attributes.given_name,
         last_name: this.user.attributes.family_name,

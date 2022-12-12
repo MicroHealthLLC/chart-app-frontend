@@ -341,7 +341,6 @@ export default {
       this.addDataSet({
         title: this.dataSet.title,
         description: this.dataSet.description,
-        channels: ["test_chan"],
         user: this.createdBy
       });
       this.$refs.form.reset();
@@ -430,7 +429,7 @@ export default {
     }, */
   },
   mounted() {
-    if (this.dataSet && this.dataSet.dataValues.items && this.dataSet.dataValues.items.length > 0) {
+    if (this.dataSet &&  this.dataSet.dataValues && this.dataSet.dataValues.items && this.dataSet.dataValues.items.length > 0) {
       console.log(this.dataSet.dataValues.items)
       let masterData = []
       this.dataSet.dataValues.items.forEach(d => masterData.push(d.data))
