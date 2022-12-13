@@ -13,7 +13,7 @@ export default {
   },
   methods: {
     ...mapActions(["fetchReport", "fetchTags", "fetchChannelDataSets"]),
-    ...mapMutations(["SET_ACTIVE_REPORT"]),
+    ...mapMutations(["SET_REPORT"]),
   },
   computed: {
     ...mapGetters(["user"]),
@@ -22,7 +22,7 @@ export default {
     if (this.$route.name == "Report" && this.$route.params.reportId != "new") {
       this.fetchReport(this.$route.params.reportId);
     } else {
-      this.SET_ACTIVE_REPORT({
+      this.SET_REPORT({
         title: "",
         description: "",
         chart_type: "line",
@@ -42,7 +42,7 @@ export default {
     //this.fetchTags();
   },
   beforeDestroy() {
-    this.SET_ACTIVE_REPORT({
+    this.SET_REPORT({
       title: "",
       description: "",
       chart_type: "line",

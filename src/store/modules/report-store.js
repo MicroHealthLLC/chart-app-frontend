@@ -82,8 +82,7 @@ export default {
     ADD_REPORT: (state, active_report) => state.reports.push(active_report),
     SET_REPORTS: (state, reports) => (state.reports = reports),
     SET_REPORT: (state, active_report) => (state.active_report = active_report),
-    SET_REPORT_DATASET: (state, dataSet) =>
-    (state.active_report.dataSet = dataSet),
+    SET_REPORT_DATASET: (state, dataSet) => (state.active_report.dataSet = dataSet),
   },
   getters: {
     reports: (state) => state.reports,  
