@@ -12,20 +12,31 @@ export const getReport = /* GraphQL */ `
         reports {
           nextToken
         }
-        type {
-          title
-          id
-          createdAt
-          updatedAt
-        }
+        type
         title
+        channelTypeId
         createdAt
         updatedAt
       }
       description
       channelId
+      colorSchemeId
+      chartType
+      dataSet {
+        id
+        title
+        description
+        dataValues {
+          nextToken
+        }
+        user
+        createdAt
+        updatedAt
+      }
+      dataSetId
       createdAt
       updatedAt
+      reportDataSetId
     }
   }
 `;
@@ -42,14 +53,28 @@ export const listReports = /* GraphQL */ `
         channel {
           id
           description
+          type
           title
+          channelTypeId
           createdAt
           updatedAt
         }
         description
         channelId
+        colorSchemeId
+        chartType
+        dataSet {
+          id
+          title
+          description
+          user
+          createdAt
+          updatedAt
+        }
+        dataSetId
         createdAt
         updatedAt
+        reportDataSetId
       }
       nextToken
     }
@@ -66,18 +91,18 @@ export const getChannel = /* GraphQL */ `
           title
           description
           channelId
+          colorSchemeId
+          chartType
+          dataSetId
           createdAt
           updatedAt
+          reportDataSetId
         }
         nextToken
       }
-      type {
-        title
-        id
-        createdAt
-        updatedAt
-      }
+      type
       title
+      channelTypeId
       createdAt
       updatedAt
     }
@@ -96,13 +121,101 @@ export const listChannels = /* GraphQL */ `
         reports {
           nextToken
         }
-        type {
-          title
+        type
+        title
+        channelTypeId
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getDataSet = /* GraphQL */ `
+  query GetDataSet($id: ID!) {
+    getDataSet(id: $id) {
+      id
+      title
+      description
+      dataValues {
+        items {
           id
+          data
+          dataSetId
           createdAt
           updatedAt
         }
+        nextToken
+      }
+      user
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listDataSets = /* GraphQL */ `
+  query ListDataSets(
+    $filter: ModelDataSetFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listDataSets(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
         title
+        description
+        dataValues {
+          nextToken
+        }
+        user
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getDataValue = /* GraphQL */ `
+  query GetDataValue($id: ID!) {
+    getDataValue(id: $id) {
+      id
+      data
+      dataSetId
+      dataSet {
+        id
+        title
+        description
+        dataValues {
+          nextToken
+        }
+        user
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listDataValues = /* GraphQL */ `
+  query ListDataValues(
+    $filter: ModelDataValueFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listDataValues(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        data
+        dataSetId
+        dataSet {
+          id
+          title
+          description
+          user
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }
@@ -114,6 +227,18 @@ export const getChannelType = /* GraphQL */ `
   query GetChannelType($id: ID!) {
     getChannelType(id: $id) {
       title
+      channels {
+        items {
+          id
+          description
+          type
+          title
+          channelTypeId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       id
       createdAt
       updatedAt
@@ -129,6 +254,9 @@ export const listChannelTypes = /* GraphQL */ `
     listChannelTypes(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         title
+        channels {
+          nextToken
+        }
         id
         createdAt
         updatedAt

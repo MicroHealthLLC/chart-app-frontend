@@ -3,33 +3,18 @@
     "mrms": {
       "service": "AppSync",
       "providerPlugin": "awscloudformation",
-      "dependsOn": [
-        {
-          "category": "auth",
-          "resourceName": "mrmsd8d7189c",
-          "attributes": [
-            "UserPoolId"
-          ]
-        }
-      ],
+      "dependsOn": [],
       "output": {
         "authConfig": {
           "defaultAuthentication": {
-            "authenticationType": "AMAZON_COGNITO_USER_POOLS",
-            "userPoolConfig": {
-              "userPoolId": "authmrmsd8d7189c"
+            "authenticationType": "API_KEY",
+            "apiKeyConfig": {
+              "apiKeyExpirationDays": 365,
+              "apiKeyExpirationDate": "2023-12-01T14:02:48.304Z",
+              "description": "mrmsapikey"
             }
           },
-          "additionalAuthenticationProviders": [
-            {
-              "authenticationType": "API_KEY",
-              "apiKeyConfig": {
-                "description": "mrmspublicapi",
-                "apiKeyExpirationDays": 365,
-                "apiKeyExpirationDate": "2023-11-30T18:00:42.443Z"
-              }
-            }
-          ]
+          "additionalAuthenticationProviders": []
         }
       }
     }

@@ -110,7 +110,6 @@ const routes = [
   },
   {
     path: "/channels/:channelId",
-    redirect: "/channels/:channelId/reports",
     name: "Channel",
     component: Channel,
   },
@@ -166,9 +165,9 @@ const router = new VueRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  console.log(to)
+  /* console.log(to)
   console.log(VueRouter)
-  console.log(store)
+  console.log(store) */
   // const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
   // const requiresEditor = to.matched.some(
   //   (record) => record.meta.requiresEditor

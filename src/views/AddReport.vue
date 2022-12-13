@@ -13,29 +13,29 @@ export default {
   },
   methods: {
     ...mapActions(["fetchTags", "fetchDataSets"]),
-    ...mapMutations(["SET_ACTIVE_REPORT"]),
+    ...mapMutations(["SET_REPORT"]),
   },
   computed: {
     ...mapGetters(["user"]),
   },
   beforeMount() {
-    this.SET_ACTIVE_REPORT({
+    this.SET_REPORT({
       title: "",
       description: "",
-      chart_type: "line",
-      data_set: { data: [] },
-      tags: [],
-      color_scheme_id: 1,
+      chartType: "line",
+      dataSet: { dataValues: [] },
+      // tags: [],
+      colorSchemeId: 1,
       user: {
-        first_name: this.user.first_name,
-        last_name: this.user.last_name,
+        first_name: this.user.attributes.given_name,
+        last_name: this.user.attributes.family_name,
       },
       updated_at: "",
     });
 
     // TODO: Combine API calls below into one
-    this.fetchDataSets();
-    this.fetchTags();
+    // this.fetchDataSets();
+    // this.fetchTags();
   },
 };
 </script>

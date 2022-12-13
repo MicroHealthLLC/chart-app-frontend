@@ -1,24 +1,46 @@
 # This "input" configures a global authorization rule to enable public access to
 # all models in this schema. Learn more about authorization rules here: https://docs.amplify.aws/cli/graphql/authorization-rules
 
-
 type Report @model @auth(rules: [{ allow: public }]) {
   id: ID!
   title: String!
   channel: Channel @belongsTo(fields: ["channelId"])
   description: String,
   channelId:  ID @index(name: "byChannel")  
+  colorSchemeId: Int
+  chartType: String
+  dataSet: DataSet @hasOne
+  dataSetId: String  
 }
 
 type Channel @model @auth(rules: [{ allow: public }]) {
   id: ID!
   description: String,
   reports: [Report] @hasMany(indexName: "byChannel",fields: ["id"])
-  type: [ChannelType]
+  # dataSets: [DataSet] @manyToMany(relationName: "channelDS")
+  # type: ChannelType @belongsTo(fields: ["channelTypeId"])
+  type: String
   title: String!
- }
+  channelTypeId: ID @index(name: "byChannelType")
+}
+
+type DataSet @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  title: String!
+  description: String
+  # channels: [Channel] @manyToMany(relationName: "channelDS")
+  dataValues: [DataValue] @hasMany (indexName: "byDataSet", fields: ["id"])
+  user: String
+}
+type DataValue @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  data: AWSJSON!
+  dataSetId: ID! @index(name: "byDataSet")
+  dataSet: DataSet @belongsTo(fields: ["dataSetId"])
+}
 
 type ChannelType @model @auth(rules: [{ allow: public }]) {
   title: String!
+  channels: [Channel] @hasMany(indexName: "byChannelType",fields: ["id"])
   id: ID!
 }

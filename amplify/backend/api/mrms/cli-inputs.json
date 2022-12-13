@@ -4,17 +4,12 @@
     "apiName": "mrms",
     "serviceName": "AppSync",
     "defaultAuthType": {
-      "mode": "AMAZON_COGNITO_USER_POOLS",
-      "cognitoUserPoolId": "authmrmsd8d7189c"
+      "mode": "API_KEY",
+      "expirationTime": 365,
+      "apiKeyExpirationDate": "2023-12-01T14:02:48.304Z",
+      "keyDescription": "mrmsapikey"
     },
-    "additionalAuthTypes": [
-      {
-        "mode": "API_KEY",
-        "expirationTime": 365,
-        "apiKeyExpirationDate": "2023-11-30T18:00:42.443Z",
-        "keyDescription": "mrmspublicapi"
-      }
-    ],
+    "additionalAuthTypes": [],
     "conflictResolution": {}
   }
 }

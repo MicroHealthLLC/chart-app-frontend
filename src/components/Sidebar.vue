@@ -12,15 +12,42 @@
               >mdi-chart-timeline-variant-shimmer</v-icon
             ></v-list-item-title
           >
-          <v-list-item-subtitle> Microhealth </v-list-item-subtitle>
+          <v-list-item-subtitle > Microhealth </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
     </v-list>
 
     <v-divider></v-divider>
-
+ 
     <v-list dense nav>
-      <v-list-item
+     <!-- <span v-if="mini" class="ml-0">
+  <v-list-item
+    
+        v-for="item in items"
+        :key="item.title"
+        link
+        :to="item.route"
+        active-class="active-nav-item"
+      >
+    
+        <v-tooltip right >
+        <template v-slot:activator="{ on, attrs }">
+          <v-list-item-icon>
+          <v-icon v-bind="attrs"
+          v-on="on">{{ item.icon }}</v-icon>
+        </v-list-item-icon>
+      </template>
+      <v-list-item-content>
+          <v-list-item-title>{{ item.title }}</v-list-item-title>
+        </v-list-item-content>
+      </v-tooltip>
+      
+      </v-list-item>
+     </span>
+     -->
+
+      <!-- <span v-else> -->
+        <v-list-item      
         v-for="item in items"
         :key="item.title"
         link
@@ -28,19 +55,23 @@
         active-class="active-nav-item"
       >
         <v-list-item-icon>
-          <v-icon>{{ item.icon }}</v-icon>
+        <v-icon >{{ item.icon }}</v-icon>
         </v-list-item-icon>
-
         <v-list-item-content>
           <v-list-item-title>{{ item.title }}</v-list-item-title>
         </v-list-item-content>
+  
       </v-list-item>
+
+      <!-- </span> -->
+   
+   
 
       <v-divider></v-divider>
 
       <div v-show="!mini" class="ml-2 mt-2 text-caption">Channels</div>
 
-      <v-list-item link to="/add-channel" active-class="active-nav-item">
+      <v-list-item to="/add-channel" active-class="active-nav-item">
         <v-list-item-icon><v-icon>mdi-playlist-plus</v-icon></v-list-item-icon>
         <v-list-item-content>
           <v-list-item-title>Create Channel</v-list-item-title>
@@ -55,7 +86,7 @@
       </v-list-item>
       <!-- Public, Personal, and Group -->
       <v-list-group
-        v-for="(item, index) in channelItems"
+        v-for="(item, index) in channels"
         :key="index"
         :prepend-icon="item.icon"
         no-action
@@ -159,17 +190,17 @@ export default {
       ],
       channelItems: [
         {
-          title: "Public",
+          title: "IT APPS",
           icon: "mdi-account-group",
           channels: [],
         },
         {
-          title: "Personal",
+          title: "Business Dev",
           icon: "mdi-shield-account",
           channels: [],
         },
         {
-          title: "Group",
+          title: "Proposals",
           icon: "mdi-account-multiple",
           channels: [],
         },
@@ -180,7 +211,7 @@ export default {
   },
   methods: {
     ...mapMutations(["SET_SNACKBAR", "SET_USER"]),
-    ...mapActions(["logout"]),
+    ...mapActions(["logout", "fetchChannels"]),
     async logOutUser() {
       await this.logout();
       // this.$router.push("/signin");
@@ -205,6 +236,7 @@ export default {
   },
   mounted() {
     this.updateChannels();
+    this.fetchChannels()
     console.log(this.user)
  
   },

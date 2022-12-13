@@ -63,7 +63,7 @@ export default {
         const data = this.chartData.map(
           (item) => Object.values(item)[index + 1]
         );
-
+        //console.log(this.chartColors[0][index])
         dataSets.push({
           label: item,
           data: data,
@@ -96,9 +96,9 @@ export default {
     graphType() {
       this.loadChart();
     },
-    chartColors() {
+    /* chartColors() {
       this.loadChart();
-    },
+    }, */
     chartData() {
       this.loadChart();
     },

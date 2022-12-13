@@ -3,26 +3,45 @@
     <v-col>
       <div class="d-flex justify-space-between">
         <h3>Data Sets</h3>
-        <v-btn class="mb-2" color="primary" small to="/add-data-set"
-          >Add Data Set <v-icon small>mdi-plus</v-icon></v-btn
-        >
+        <v-btn class="mb-2" color="primary" small to="/add-data-set">Add Data Set <v-icon
+            small>mdi-plus</v-icon></v-btn>
       </div>
 
       <v-divider class="mb-4"></v-divider>
       <v-card>
         <v-data-table :headers="headers" :items="dataSets">
+          
           <!-- Formatted Date -->
           <template v-slot:item.created_at="{ item }">
-            <span>{{ new Date(item.created_at).toLocaleDateString() }}</span>
+            <span>{{ new Date(item.createdAt).toLocaleDateString() }}</span>
           </template>
+          <template v-slot:item.user="{ item }">
+            <span>{{ item.user }}</span>
+          </template>
+
           <!-- Action Buttons -->
           <template v-slot:item.actions="{ item }">
-            <v-icon color="primary" small class="mr-2" @click="editItem(item)">
-              mdi-pencil
-            </v-icon>
-            <v-icon color="primary" small @click="deleteItem(item)">
-              mdi-delete
-            </v-icon>
+            <v-tooltip top>
+              <template v-slot:activator="{ on, attrs }">
+                <v-icon color="primary" small class="mr-2" @click="editItem(item)" v-bind="attrs" v-on="on">
+                  mdi-table-eye
+                </v-icon>
+              </template>
+              <span>View</span>
+            </v-tooltip>
+            <v-tooltip top>
+              <template v-slot:activator="{ on, attrs }">
+                <!-- <v-icon v-if="(item.user == `${user.attributes.given_name} ${user.attributes.family_name}`)"
+                  color="primary" small @click="deleteItem(item)" v-bind="attrs" v-on="on">
+                  mdi-delete
+                </v-icon> -->
+                <v-icon
+                  color="primary" small @click="deleteItem(item)" v-bind="attrs" v-on="on">
+                  mdi-delete
+                </v-icon>
+              </template>
+              <span>Delete</span>
+            </v-tooltip>
           </template>
         </v-data-table>
       </v-card>
@@ -45,15 +64,20 @@ export default {
           width: "25%",
         },
         {
+          text: "Description",
+          sortable: false,
+          value: "description",
+          width: "30%",
+        },
+        {
           text: "Date Added",
           sortable: true,
           value: "created_at",
         },
         {
-          text: "Description",
-          sortable: false,
-          value: "description",
-          width: "40%",
+          text: "Created By",
+          sortable: true,
+          value: "user",
         },
         {
           text: "Actions",
@@ -64,21 +88,40 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["dataSets"]),
+    ...mapGetters(["dataSets", "user"]),
   },
   methods: {
-    ...mapActions(["fetchDataSets"]),
-    editItem(item) {
-      console.log(`EDIT ${item.title}`);
-      this.$router.push(`/data-sets/${item.id}`);
+    ...mapActions(["fetchDataSets", "removeDataSet", "fetchDataSet"]),
+    log(e) {
+      console.log(e)
+    },
+    async editItem(item) {
+      console.log(item)
+      let id = item.id
+      await this.fetchDataSet(id)
+      this.$router.push(`/data-sets/${id}`)
     },
     deleteItem(item) {
-      console.log(`DELETE ${item.title}`);
+      this.$confirm(
+        `Are you sure you want to delete the "${item.title}" Data Set?`,
+        "Confirm Delete",
+        {
+          confirmButtonText: "Delete",
+          cancelButtonText: "Cancel",
+          type: "warning",
+        }
+       ).then(() => {
+        this.removeDataSet({ id: item.id });
+      });
     },
   },
   beforeMount() {
     this.fetchDataSets();
   },
+  mounted() {
+    console.log(this.user)
+    console.log(this.dataSets)
+  }
 };
 </script>
 

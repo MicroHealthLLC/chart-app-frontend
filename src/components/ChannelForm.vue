@@ -19,9 +19,7 @@
           >
         </div>
       </div>
-
       <v-divider class="mb-4"></v-divider>
-
       <!-- Form Fields -->
       <v-card class="pa-4">
         <v-form v-model="formValid" ref="form" class="grid mt-4">
@@ -35,7 +33,28 @@
             >
             </v-text-field>
           </div>
-          <div>
+          <div class="ml-auto">
+          <el-select             
+            v-model="channel.type"       
+            value-key="id"       
+            filterable
+            clearable
+            allow-create
+            default-first-option
+            placeholder="Channel Type"
+            size="small"
+          >
+          <el-option
+            v-for="item in uniqueTypes"
+            :key="item.id"
+            :label="item.title"
+            :value="item">
+            </el-option>         
+                    
+          </el-select>
+          <!-- JUAN TO DO (12/1/2023) :
+          IF user selects Group, need to display a multi-select component where user can select users to save in group. -->
+
             <!-- <v-select
               v-model="channel.category"
               label="Channel Type"
@@ -88,12 +107,28 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
+import channelsMixin from "../mixins/channels-mixin";
 
 export default {
   name: "ChannelForm",
+  mixins: [channelsMixin],
   data() {
     return {
       formValid: true,
+      options: [{
+          value: 'HTML',
+          label: 'HTML',
+          id: 1
+        }, {
+          value: 'CSS',
+          label: 'CSS',
+          id: 2
+        }, {
+          value: 'JavaScript',
+          label: 'JavaScript',
+          id: 3
+        }],
+        value: [],
       usersRules: [
         (v) => v.length > 0 || "At least 1 user is required",
         (v) =>
@@ -103,37 +138,46 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["channel", "statusCode", "user", "users"]),
+    ...mapGetters(["channel", "channels", "statusCode", "user", "users", "channelTypes"]),
+    uniqueTypes() {
+      let channel_types = this.channelTypes;
+      return [...new Set(channel_types.map((item) => item.title))];
+    },
   },
   methods: {
-    ...mapActions(["addChannel", "updateChannel"]),
+    ...mapActions(["addChannel", "updateChannelById", "addChannelType", "fetchChannelTypes", "fetchChannels"]),
     ...mapMutations(["SET_STATUS_CODE"]),
     resetAndGoBack(){
       this.$router.go(-1)
+      this.channel.type = null
       this.$refs.form.reset();
     },
     saveChannel() {
       this.$refs.form.validate();
-      console.log(this.channel)
-      // if (this.formValid) {
-      //   if (this.channel.id) {
-      //     this.updateChannel({
-      //       id: this.channel.id,
-      //       title: this.channel.title,
-      //       // category: this.categoryEnum(),
-      //       // description: this.channel.description,
-      //       // member_ids: this.channel.members.map((member) => member.id),
-      //     });
-      //   } else {
-          this.addChannel({
-            ...this.channel,
-            // member_ids: this.channel.members.map((member) => member.id),
-            // user_id: this.user.id,
+      if (this.formValid) {
+        //Need to add a new channel type if it doesn't exist
+        if (!this.uniqueTypes.includes(this.channel.type)) {
+          this.addChannelType({
+            title: this.channel.type,
+          })
+        }
+        if (this.channel.id) {
+          this.updateChannelById({
+            id: this.channel.id,
+            title: this.channel.title,
+            description: this.channel.description,
+            type: this.channel.type
           });
-          this.$refs.form.reset();
-      //   }
-      // }
+        } else {
+          this.addChannel({
+            ...this.channel
+          });
+        }
+        this.$refs.form.reset();
+        this.channel.type = null
+      }
     },
+
     categoryEnum() {
       if (this.channel.category == "group_channel") {
         return 0;
@@ -144,6 +188,11 @@ export default {
       }
     },
   },
+  mounted() {
+    this.fetchChannelTypes()  
+    this.fetchChannels() 
+    
+   },
   watch: {
     // statusCode() {
     //   if (this.statusCode == 201) {
@@ -151,11 +200,20 @@ export default {
     //     this.SET_STATUS_CODE(0);
     //   }
     // },
-    channel(){
-      if(this.channel){
-        console.log(this.channel)
+    channels(){
+      if(this.channels){
+        console.log("Channels")
+        console.log(this.$route.path)
+        console.log(this.channels)
       }
-    }
+    },
+    channel(){
+      this.data = this.channel
+      if(this.data.length > 0){
+        console.log(this.data)
+      } 
+      // else this.$refs.form.reset();
+    },
   },
 };
 </script>

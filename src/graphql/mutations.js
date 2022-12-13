@@ -15,20 +15,32 @@ export const createReport = /* GraphQL */ `
         reports {
           nextToken
         }
-        type {
-          title
-          id
-          createdAt
-          updatedAt
-        }
+        type
         title
+        channelTypeId
         createdAt
         updatedAt
       }
       description
       channelId
+      colorSchemeId
+      chartType
+      dataSet {
+        id
+        title
+        description
+        dataValues {
+          
+          nextToken
+        }
+        user
+        createdAt
+        updatedAt
+      }
+      dataSetId
       createdAt
       updatedAt
+      reportDataSetId
     }
   }
 `;
@@ -46,20 +58,31 @@ export const updateReport = /* GraphQL */ `
         reports {
           nextToken
         }
-        type {
-          title
-          id
-          createdAt
-          updatedAt
-        }
+        type
         title
+        channelTypeId
         createdAt
         updatedAt
       }
       description
       channelId
+      colorSchemeId
+      chartType
+      dataSet {
+        id
+        title
+        description
+        dataValues {
+          nextToken
+        }
+        user
+        createdAt
+        updatedAt
+      }
+      dataSetId
       createdAt
       updatedAt
+      reportDataSetId
     }
   }
 `;
@@ -77,20 +100,31 @@ export const deleteReport = /* GraphQL */ `
         reports {
           nextToken
         }
-        type {
-          title
-          id
-          createdAt
-          updatedAt
-        }
+        type
         title
+        channelTypeId
         createdAt
         updatedAt
       }
       description
       channelId
+      colorSchemeId
+      chartType
+      dataSet {
+        id
+        title
+        description
+        dataValues {
+          nextToken
+        }
+        user
+        createdAt
+        updatedAt
+      }
+      dataSetId
       createdAt
       updatedAt
+      reportDataSetId
     }
   }
 `;
@@ -108,18 +142,18 @@ export const createChannel = /* GraphQL */ `
           title
           description
           channelId
+          colorSchemeId
+          chartType
+          dataSetId
           createdAt
           updatedAt
+          reportDataSetId
         }
         nextToken
       }
-      type {
-        title
-        id
-        createdAt
-        updatedAt
-      }
+      type
       title
+      channelTypeId
       createdAt
       updatedAt
     }
@@ -139,18 +173,18 @@ export const updateChannel = /* GraphQL */ `
           title
           description
           channelId
+          colorSchemeId
+          chartType
+          dataSetId
           createdAt
           updatedAt
+          reportDataSetId
         }
         nextToken
       }
-      type {
-        title
-        id
-        createdAt
-        updatedAt
-      }
+      type
       title
+      channelTypeId
       createdAt
       updatedAt
     }
@@ -170,18 +204,168 @@ export const deleteChannel = /* GraphQL */ `
           title
           description
           channelId
+          colorSchemeId
+          chartType
+          dataSetId
+          createdAt
+          updatedAt
+          reportDataSetId
+        }
+        nextToken
+      }
+      type
+      title
+      channelTypeId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createDataSet = /* GraphQL */ `
+  mutation CreateDataSet(
+    $input: CreateDataSetInput!
+    $condition: ModelDataSetConditionInput
+  ) {
+    createDataSet(input: $input, condition: $condition) {
+      id
+      title
+      description
+      dataValues {
+        items {
+          id
+          data
+          dataSetId
           createdAt
           updatedAt
         }
         nextToken
       }
-      type {
-        title
+      user
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateDataSet = /* GraphQL */ `
+  mutation UpdateDataSet(
+    $input: UpdateDataSetInput!
+    $condition: ModelDataSetConditionInput
+  ) {
+    updateDataSet(input: $input, condition: $condition) {
+      id
+      title
+      description
+      dataValues {
+        items {
+          id
+          data
+          dataSetId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      user
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteDataSet = /* GraphQL */ `
+  mutation DeleteDataSet(
+    $input: DeleteDataSetInput!
+    $condition: ModelDataSetConditionInput
+  ) {
+    deleteDataSet(input: $input, condition: $condition) {
+      id
+      title
+      description
+      dataValues {
+        items {
+          id
+          data
+          dataSetId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      user
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createDataValue = /* GraphQL */ `
+  mutation CreateDataValue(
+    $input: CreateDataValueInput!
+    $condition: ModelDataValueConditionInput
+  ) {
+    createDataValue(input: $input, condition: $condition) {
+      id
+      data
+      dataSetId
+      dataSet {
         id
+        title
+        description
+        dataValues {
+          nextToken
+        }
+        user
         createdAt
         updatedAt
       }
-      title
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateDataValue = /* GraphQL */ `
+  mutation UpdateDataValue(
+    $input: UpdateDataValueInput!
+    $condition: ModelDataValueConditionInput
+  ) {
+    updateDataValue(input: $input, condition: $condition) {
+      id
+      data
+      dataSetId
+      dataSet {
+        id
+        title
+        description
+        dataValues {
+          nextToken
+        }
+        user
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteDataValue = /* GraphQL */ `
+  mutation DeleteDataValue(
+    $input: DeleteDataValueInput!
+    $condition: ModelDataValueConditionInput
+  ) {
+    deleteDataValue(input: $input, condition: $condition) {
+      id
+      data
+      dataSetId
+      dataSet {
+        id
+        title
+        description
+        dataValues {
+          nextToken
+        }
+        user
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -194,6 +378,18 @@ export const createChannelType = /* GraphQL */ `
   ) {
     createChannelType(input: $input, condition: $condition) {
       title
+      channels {
+        items {
+          id
+          description
+          type
+          title
+          channelTypeId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       id
       createdAt
       updatedAt
@@ -207,6 +403,18 @@ export const updateChannelType = /* GraphQL */ `
   ) {
     updateChannelType(input: $input, condition: $condition) {
       title
+      channels {
+        items {
+          id
+          description
+          type
+          title
+          channelTypeId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       id
       createdAt
       updatedAt
@@ -220,6 +428,18 @@ export const deleteChannelType = /* GraphQL */ `
   ) {
     deleteChannelType(input: $input, condition: $condition) {
       title
+      channels {
+        items {
+          id
+          description
+          type
+          title
+          channelTypeId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       id
       createdAt
       updatedAt

@@ -13,7 +13,7 @@
             small
             >Save</v-btn
           >
-          <v-btn class="mb-2" @click="$router.go(-1)" outlined small
+          <v-btn class="mb-2" @click="resetAndGoBack" outlined small
             >Close</v-btn
           >
         </div>
@@ -29,50 +29,54 @@
         >Please fix highlighted fields below before sumbitting Report</v-alert
       >
 
-      <v-card class="pa-4 mb-4">
+      <v-card v-if="(data && data.length > 0)" class="pa-4 mb-4">
         <v-btn @click="fullscreenReport" class="chart-menu" icon>
           <v-icon>mdi-fullscreen</v-icon>
         </v-btn>
         <!-- Chart -->
         <Component
-          v-if="
-            (activeReport.id || activeReport.data_set.id) &&
-            activeReport.data_set.data.length > 0 &&
-            reportLoaded
-          "
           ref="chart"
           :is="graphType"
-          :chartData="activeReport.data_set.data"
+          :chartData="data"
           :chartColors="colorScheme"
-          :graphType="activeReport.chart_type"
+          :graphType="activeReport.chartType"
           :height="350"
           :title="activeReport.title"
           class="mb-4"
         >
         </Component>
         <!-- Placeholder -->
-        <div
-          v-else
+        <!-- This div has a v-else directive -->
+        <!-- <div
+        
           class="place-holder d-flex justify-center align-center ma-4"
         >
           <p class="text-center placeholder-text mb-0">
             <v-icon class="placeholder-icon">mdi-chart-areaspline</v-icon>
             Please load a data set to view preview...
           </p>
-        </div>
+        </div> -->
         <!-- Category Toggle Button -->
         <div class="d-flex justify-end mb-4">
           <v-btn
+            v-if="circleChart"
+            @click="changeChartData"
+            outlined
+            small
+            >Next Category <v-icon small>mdi-arrow-right</v-icon></v-btn
+          >
+          <!-- <v-btn
             v-if="
-              activeReport.data_set.data[0] &&
-              Object.keys(activeReport.data_set.data[0]).length > 2 &&
+               activeReport.dataSet &&
+               activeReport.dataSet.dataValues && activeReport.dataSet.dataValues[0] &&
+              Object.keys(activeReport.dataSet.dataValues[0]).length > 2 &&
               circleChart
             "
             @click="changeChartData"
             outlined
             small
             >Next Category <v-icon small>mdi-arrow-right</v-icon></v-btn
-          >
+          > -->
         </div>
       </v-card>
 
@@ -100,7 +104,7 @@
           </div>
           <div>
             <v-select
-              v-model="activeReport.channel_id"
+              v-model="activeReport.channelId"
               :items="channels"
               item-text="title"
               item-value="id"
@@ -121,7 +125,7 @@
           </div>
           <div>
             <v-select
-              v-model="activeReport.data_set_id"
+               v-model="activeReport.dataSetId"
               :items="dataSetChoices"
               item-text="title"
               item-value="id"
@@ -134,7 +138,7 @@
           </div>
           <div>
             <v-select
-              v-model="activeReport.chart_type"
+              v-model="activeReport.chartType"
               :items="chartTypes"
               item-text="text"
               item-value="value"
@@ -151,7 +155,7 @@
               dense
             ></v-textarea>
           </div>
-          <div class="tags">
+          <!-- <div class="tags">
             <v-select
               v-model="activeReport.tags"
               :items="tags"
@@ -166,10 +170,10 @@
               dense
             >
             </v-select>
-          </div>
+          </div> -->
           <div>
             <v-select
-              v-model="activeReport.color_scheme_id"
+              v-model="activeReport.colorSchemeId"
               label="Color Scheme"
               :items="colors"
               item-text="title"
@@ -224,17 +228,12 @@
             >
           </v-toolbar>
           <Component
-            v-if="
-              (activeReport.id || activeReport.data_set.id) &&
-              activeReport.data_set.data.length > 0 &&
-              fullscreen &&
-              colorScheme
-            "
+            v-if="fullscreen && colorScheme"
             ref="fullscreenchart"
             :is="graphType"
-            :chartData="activeReport.data_set.data"
+            :chartData="data"
             :chartColors="colorScheme"
-            :graphType="activeReport.chart_type"
+            :graphType="activeReport.chartType"
             :height="screenHeight"
             :title="activeReport.title"
             class="pa-6"
@@ -243,11 +242,7 @@
           <!-- Category Toggle Button -->
           <div class="d-flex justify-end pr-6">
             <v-btn
-              v-if="
-                activeReport.data_set.data[0] &&
-                Object.keys(activeReport.data_set.data[0]).length > 2 &&
-                circleChart
-              "
+              v-if="circleChart"
               @click="changeFSChartData"
               outlined
               small
@@ -269,6 +264,7 @@ import DoughnutChart from "../components/DoughnutChart";
 import PieChart from "../components/PieChart";
 import PolarAreaChart from "../components/PolarAreaChart";
 import Table from "../components/Table";
+import datasetMixin from "../mixins/dataset-mixin";
 
 export default {
   name: "ReportForm",
@@ -291,27 +287,38 @@ export default {
       ],
       colorScheme: [],
       dataSetChoices: [],
+      data: []
     };
   },
+  mixins: [datasetMixin],
   methods: {
     ...mapActions([
       "fetchReport",
+      "fetchDataSets",
+      "fetchDataSet",
       "fetchTags",
       "addReport",
-      "updateReport",
+      "updateReportById",
       "deleteReport",
     ]),
-    ...mapMutations(["SET_REPORT_DATA_SET", "SET_STATUS_CODE"]),
+    ...mapMutations(["SET_REPORT_DATASET", "SET_STATUS_CODE"]),
     changeChartData() {
       this.$refs.chart.index =
         (this.$refs.chart.index + 1) %
         (Object.keys(this.$refs.chart.chartData[0]).length - 1);
     },
+    /* log(e){
+      //console.log(e)
+    }, */
     // FS = Full Screen
     changeFSChartData() {
       this.$refs.fullscreenchart.index =
         (this.$refs.fullscreenchart.index + 1) %
         (Object.keys(this.$refs.fullscreenchart.chartData[0]).length - 1);
+    },
+    resetAndGoBack(){
+      this.$router.go(-1)
+      this.$refs.form.reset();
     },
     saveReport() {
       this.$refs.form.validate();
@@ -321,29 +328,38 @@ export default {
         let data = {
           title: this.activeReport.title,
           description: this.activeReport.description,
-          channel_id: this.activeReport.channel_id,
-          chart_type: this.activeReport.chart_type,
-          data_set_id: this.activeReport.data_set_id,
-          tag_ids: this.activeReport.tags.map((tag) => tag.id),
-          color_scheme_id: this.activeReport.color_scheme_id,
-          last_updated_by: `${this.user.first_name} ${this.user.last_name}`,
+          channelId: this.activeReport.channelId,
+          chartType: this.activeReport.chartType,
+          dataSetId: this.activeReport.dataSetId,
+          // dataSet: this.activeReport.dataSet,
+          // tag_ids: this.activeReport.tags.map((tag) => tag.id),
+          colorSchemeId: this.activeReport.colorSchemeId,
+          // last_updated_by: `${this.user.first_name} ${this.user.last_name}`,
         };
 
         if (this.activeReport.id) {
           data.id = this.activeReport.id;
-          this.updateReport(data);
+          this.updateReportById(data);
         } else {
-          data.user_id = this.user.id;
-          this.addReport(data);
+          console.log(data)
+          // data.user_id = this.user.id;
+           this.addReport(data);
         }
       }
     },
-    updateChartData() {
-      let dataSet = this.dataSetChoices.find(
-        (dataSet) => dataSet.id == this.activeReport.data_set_id
-      );
+    async updateChartData() {
+      try {
+        await this.fetchDataSet(this.activeReport.dataSetId)
+        let dataSet = this.dataSet
+        console.log(dataSet)
+        this.SET_REPORT_DATASET(dataSet);
+        this.data = this.createMasterData(dataSet.dataValues.items)
+        console.log(this.activeReport)
+      } catch (err) {
+        console.log(err)
+      }
 
-      this.SET_REPORT_DATA_SET(dataSet);
+
     },
     removeReport() {
       this.deleteReport(this.activeReport.id);
@@ -360,6 +376,15 @@ export default {
         (color) => selectedSchemeId == color.id
       ).scheme;
     },
+    /* createMasterData(arr) {
+      let masterData = []
+      arr.forEach(d => masterData.unshift(d.data))
+      masterData = masterData.flat()
+      const uniqueArray = masterData.filter((object,index) => index === masterData.findIndex(obj => JSON.stringify(obj) === JSON.stringify(object)))
+      console.log(uniqueArray)
+      this.data = uniqueArray
+      //this.uploadData(this.sortByKey(uniqueArray))
+    }, */
   },
   computed: {
     ...mapGetters([
@@ -370,25 +395,26 @@ export default {
       "colors",
       "channelDataSets",
       "dataSets",
+      "dataSet",
       "reportLoaded",
       "tags",
       "statusCode",
       "user",
     ]),
     graphType() {
-      if (this.activeReport.chart_type === "line") {
+      if (this.activeReport.chartType === "line") {
         return LineChart;
-      } else if (this.activeReport.chart_type === "bar") {
+      } else if (this.activeReport.chartType === "bar") {
         return BarChart;
-      } else if (this.activeReport.chart_type === "radar") {
+      } else if (this.activeReport.chartType === "radar") {
         return RadarChart;
-      } else if (this.activeReport.chart_type === "donut") {
+      } else if (this.activeReport.chartType === "donut") {
         return DoughnutChart;
-      } else if (this.activeReport.chart_type === "pie") {
+      } else if (this.activeReport.chartType === "pie") {
         return PieChart;
-      } else if (this.activeReport.chart_type === "polar-area") {
+      } else if (this.activeReport.chartType === "polar-area") {
         return PolarAreaChart;
-      } else if (this.activeReport.chart_type === "table") {
+      } else if (this.activeReport.chartType === "table") {
         return Table;
       } else {
         return LineChart;
@@ -396,9 +422,9 @@ export default {
     },
     circleChart() {
       return (
-        this.activeReport.chart_type == "donut" ||
-        this.activeReport.chart_type == "pie" ||
-        this.activeReport.chart_type == "polar-area"
+        this.activeReport.chartType == "donut" ||
+        this.activeReport.chartType == "pie" ||
+        this.activeReport.chartType == "polar-area"
       );
     },
     newChannelReport() {
@@ -408,55 +434,61 @@ export default {
       return window.innerHeight - 200;
     },
     createdBy() {
-      if (this.activeReport.id) {
-        return `${this.activeReport.user.first_name} ${
-          this.activeReport.user.last_name
-        } on ${new Date(this.activeReport.created_at).toLocaleString()}`;
+      if (this.activeReport.id && this.user && this.user.attributes) {
+        return `${this.user.attributes.given_name}  ${this.user.attributes.family_name} on ${new Date(this.activeReport.createdAt).toLocaleString()}`;
       } else {
-        return `${this.activeReport.user.first_name} ${this.activeReport.user.last_name}`;
+        return `${this.user.attributes.given_name}  ${this.user.attributes.family_name}`;
       }
     },
     updatedBy() {
-      if (this.activeReport.id) {
-        return `${this.activeReport.last_updated_by} on ${new Date(
-          this.activeReport.updated_at
-        ).toLocaleString()}`;
+      if (this.activeReport && this.activeReport.id) {
+        return `${this.user.attributes.given_name}  ${this.user.attributes.family_name} on ${new Date(this.activeReport.updatedAt).toLocaleString()}`;
       } else {
-        return `${this.activeReport.user.first_name} ${this.activeReport.user.last_name}`;
+        return `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
       }
     },
   },
-  mounted() {
-    this.colorScheme = this.colors.find(
-      (scheme) => scheme.id == this.activeReport.color_scheme_id
-    ).scheme;
-
+  async beforeMount() {
+    if(this.dataSets && this.dataSets.length < 1){
+      await this.fetchDataSets();
+    } 
+    
+  },
+  async mounted() {
+    // this.colorScheme = this.colors.find(
+    //   (scheme) => scheme.id == this.activeReport.colorSchemeId
+    // ).scheme;
+    if (this.$route.params.reportId) {
+      await this.fetchReport(this.$route.params.reportId);
+      this.updateChartData();
+    }
     if (this.$route.name == "AddReport") {
       this.dataSetChoices = [...this.dataSets];
     } else {
-      this.dataSetChoices = [...this.channelDataSets];
+      this.dataSetChoices = [...this.dataSets]; // was ...this.channelDataSets
     }
   },
   watch: {
-    statusCode() {
-      if (this.statusCode == 201) {
-        this.$router.push(
-          `/channels/${this.activeReport.channel_id}/reports/${this.activeReport.id}`
-        );
-        this.SET_STATUS_CODE(0);
-      }
-    },
+    // statusCode() {
+    //   if (this.statusCode == 201) {
+    //     this.$router.push(
+    //       `/channels/${this.activeReport.channel_id}/reports/${this.activeReport.id}`
+    //     );
+    //     this.SET_STATUS_CODE(0);
+    //   }
+    // },
     activeReport() {
-      this.colorScheme = this.colors.find(
-        (scheme) => scheme.id == this.activeReport.color_scheme_id
-      ).scheme;
+      this.colorScheme = this.colors.find((scheme) => scheme.id == this.activeReport.colorSchemeId).scheme;
+      //console.log(this.activeReport.colorSchemeId)
+      console.log(this.activeReport)
+      //console.log(this.colorScheme)
     },
     dataSets() {
       this.dataSetChoices = [...this.dataSets];
     },
-    channelDataSets() {
-      this.dataSetChoices = [...this.channelDataSets];
-    },
+    // channelDataSets() {
+    //   this.dataSetChoices = [...this.channelDataSets];
+    // },
   },
 };
 </script>
