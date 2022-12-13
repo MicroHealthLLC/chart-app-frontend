@@ -107,7 +107,7 @@
               hint="What are the target columns?"
               persistent-hint
               return-object
-              @change="filterData"
+              @change="filterData(headers)"
             >
             
             <!-- <template v-slot:selection="{ item, index }">
@@ -376,33 +376,43 @@ export default {
       //console.log(this.$refs.form)
       this.isReadOnly = true
     },
-    async addNewDataValue() {
+    addNewDataValue() {
       //let objString = JSON.stringify(this.selected)
-      await this.addDataValue({
+      this.addDataValue({
         data: JSON.stringify(this.selected),
         dataSetId: this.dataSet.id
       });
       this.showDataChart()
     },
-    showDataChart() {
-      this.fetchDataSet(this.$route.params.dataSetId)
-      this.createMasterData()
+    async showDataChart() {
+      await this.fetchDataSet(this.$route.params.dataSetId)
+      //console.log(this.dataSet)
+      this.createMasterData(this.dataSet.dataValues.items)
       //this.uploadData(this.dataValues)
+    },
+    arrayMove(arr, oldIdx, newIdx) {
+      if (newIdx >= arr.length) {
+        var k = newIdx - arr.length + 1;
+        while (k--) {
+          arr.push(undefined);
+        }
+      }
+      arr.splice(newIdx, 0, arr.splice(oldIdx, 1)[0]);
+      return arr;
     },
     uploadData(data) {
       let newData = data
-      /*.filter(f => f.dataSetId == this.dataSet.id)
-      .sort((a, b) => a.createdAt.localeCompare(b.createdAt))
-       .map((d) => ({
-        "Created At": new Date(d.createdAt).toLocaleString(),
-        "Score": d.score
-      })) */
-       const keys = Object.keys(newData[0])
-       
+      const keys = Object.keys(newData[0])
+      keys.forEach((k, i) => {
+        if (k.toLowerCase() == "date") {
+          this.arrayMove(keys, i, 0)
+        }
+      })
       this.headers = keys.map((item) => ({
         text: item,
         value: item,
       }));
+      newData = this.filterData(this.headers, newData)
       this.selectedHeaders = this.headers
       this.items = newData;
       this.selected = newData;
@@ -411,9 +421,9 @@ export default {
     editForm() {
       this.isReadOnly = false
     },
-    filterData(cols) {
+    filterData(cols, data) {
       let filtered =  []
-      this.data.forEach((row) => {
+      data.forEach((row) => {
         let newDV = {}
         cols.forEach(col => {
           let column = col.text
@@ -421,7 +431,7 @@ export default {
         })
         filtered.push(newDV)
       })
-      this.selected = filtered
+      return filtered
     },
     changeChartData() {
       this.$refs.chart.index =

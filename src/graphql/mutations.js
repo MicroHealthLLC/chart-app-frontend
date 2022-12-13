@@ -30,7 +30,6 @@ export const createReport = /* GraphQL */ `
         title
         description
         dataValues {
-          
           nextToken
         }
         user
