@@ -26,7 +26,29 @@ export default {
           let y = b[key];
           return ((x < y) ? - 1 : ((x > y) ? 1 : 0));
         })
-      }
+      },
+      filterData(cols, data) {
+        let filtered =  []
+        data.forEach((row) => {
+          let newDV = {}
+          cols.forEach(col => {
+            let column = col.text
+            newDV[column] = row[column]
+          })
+          filtered.push(newDV)
+        })
+        return filtered
+      },
+      arrayMove(arr, oldIdx, newIdx) {
+        if (newIdx >= arr.length) {
+          var k = newIdx - arr.length + 1;
+          while (k--) {
+            arr.push(undefined);
+          }
+        }
+        arr.splice(newIdx, 0, arr.splice(oldIdx, 1)[0]);
+        return arr;
+      },
   },
   mounted() {
    

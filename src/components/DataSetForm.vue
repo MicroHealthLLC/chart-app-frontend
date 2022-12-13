@@ -107,7 +107,7 @@
               hint="What are the target columns?"
               persistent-hint
               return-object
-              @change="filterData(headers)"
+              @change="onChangeSelected"
             >
             
             <!-- <template v-slot:selection="{ item, index }">
@@ -421,17 +421,10 @@ export default {
     editForm() {
       this.isReadOnly = false
     },
-    filterData(cols, data) {
-      let filtered =  []
-      data.forEach((row) => {
-        let newDV = {}
-        cols.forEach(col => {
-          let column = col.text
-          newDV[column] = row[column]
-        })
-        filtered.push(newDV)
-      })
-      return filtered
+    onChangeSelected() {
+      if (this.dataSet && this.dataSet.dataValues && this.dataSet.dataValues.items && this.dataSet.dataValues.items.length > 0) {
+        this.uploadData(this.createMasterData(this.dataSet.dataValues.items))
+      }
     },
     changeChartData() {
       this.$refs.chart.index =
@@ -482,9 +475,10 @@ export default {
     }, */
   },
   mounted() {
-    if (this.dataSet && this.dataSet.dataValues && this.dataSet.dataValues.items && this.dataSet.dataValues.items.length > 0) {
+    /* if (this.dataSet && this.dataSet.dataValues && this.dataSet.dataValues.items && this.dataSet.dataValues.items.length > 0) {
       this.uploadData(this.createMasterData(this.dataSet.dataValues.items))
-    }
+    } */
+    this.onChangeSelected()
     this.fetchChannels();
   },
   /* beforeMount() {

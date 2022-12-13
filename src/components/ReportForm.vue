@@ -351,10 +351,19 @@ export default {
       try {
         await this.fetchDataSet(this.activeReport.dataSetId)
         let dataSet = this.dataSet
-        console.log(dataSet)
-        this.SET_REPORT_DATASET(dataSet);
+        const headers = Object.keys(this.dataSet.dataValues.items[0].data[0])
+        headers.forEach((k, i) => {
+          if (k.toLowerCase() == "date") {
+            this.arrayMove(headers, i, 0)
+          }
+        })
+        let newHeaders = headers.map((item) => ({
+          text: item,
+          value: item,
+        }));
         this.data = this.createMasterData(dataSet.dataValues.items)
-        console.log(this.activeReport)
+        this.data = this.filterData(newHeaders, this.data)
+        this.SET_REPORT_DATASET(dataSet);
       } catch (err) {
         console.log(err)
       }
@@ -376,15 +385,6 @@ export default {
         (color) => selectedSchemeId == color.id
       ).scheme;
     },
-    /* createMasterData(arr) {
-      let masterData = []
-      arr.forEach(d => masterData.unshift(d.data))
-      masterData = masterData.flat()
-      const uniqueArray = masterData.filter((object,index) => index === masterData.findIndex(obj => JSON.stringify(obj) === JSON.stringify(object)))
-      console.log(uniqueArray)
-      this.data = uniqueArray
-      //this.uploadData(this.sortByKey(uniqueArray))
-    }, */
   },
   computed: {
     ...mapGetters([
