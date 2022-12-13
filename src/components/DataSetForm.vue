@@ -3,7 +3,8 @@
     <!-- Title -->
     <v-col class="col-12">
       <div class="d-flex justify-space-between">
-        <h3 v-if="dataSet.id">{{ dataSet.title }}</h3>
+        <h3 v-if="(!isReadOnly && dataSet.id)">Update {{ dataSet.title }}</h3>
+        <h3 v-else-if="dataSet.id">View {{ dataSet.title }}</h3>
         <h3 v-else>Add Data Set</h3>
         <div>
           <v-btn
@@ -141,7 +142,7 @@
     </v-col> 
     <!-- Chart Preview -->
     <v-col class="col-12">
-      <v-card class="d-flex flex-column preview-container">
+      <v-card v-if="selectedHeaders.length > 0" class="d-flex flex-column preview-container">
         <!-- Chart Buttons -->
         <v-btn-toggle class="ma-4" color="primary" mandatory>
           <v-btn @click="toggleDataTable" small>Data Table</v-btn>
@@ -155,16 +156,10 @@
         <!-- Table Preview -->
         <div
           class="ma-4"
-          v-if="headers.length > 0 && chartType === 'Data Table'"
+          v-if="chartType === 'Data Table'"
         >
-          <v-data-table
-            v-model="selected"
-            :headers="selectedHeaders"
-            :items="items"
-            :item-key="headers[0].text"
-            :single-select="false"
-            show-select
-          ></v-data-table>
+          <v-data-table v-model="selected" :headers="selectedHeaders" :items="items" :item-key="headers[0].text" :single-select="false" show-select>
+          </v-data-table>
         </div>
         <!-- Chart Previews -->
         <div
@@ -294,8 +289,11 @@ export default {
       get() {
         return `${this.dataSet.user.first_name} ${this.dataSet.user.last_name}`;
       },
-      set() {
-        console.log(this.dataSet)
+      set(newVal) {
+        console.log(newVal)
+        let parts = newVal.split(' ');
+	      this.dataSet.user.first_name = parts[0];
+  	    this.dataSet.user.last_name = parts[parts.length - 1];
       }
     },
     /* isReadOnly() {
@@ -305,7 +303,7 @@ export default {
     } */
   },
   methods: {
-    ...mapActions(["addDataSet", "addDataValue", "updateDataSet", "fetchDataSet", "fetchChannels", "fetchDataValue", "fetchDataValues"]),
+    ...mapActions(["addDataSet", "addDataValue", "updateDataSetById", "updateDataSet", "fetchDataSet", "fetchChannels", "fetchDataValue", "fetchDataValues"]),
     ...mapMutations(["SET_DATA_SET", "SET_STATUS_CODE"]),
     onChange(event) {
       this.file = event.target.files ? event.target.files[0] : null;
@@ -338,13 +336,39 @@ export default {
     togglePolarAreaChart() {
       this.chartType = "Polar Area";
     },
+    updateHeaderOrder(evt) {
+      let headers = this.selectedHeaders;
+      let old_index = evt.oldIndex;
+      let new_index = evt.newIndex;
+      if (new_index >= headers.length) {
+        var k = new_index - headers.length + 1;
+        while (k--) {
+          headers.push(undefined);
+        }
+      }
+      headers.splice(new_index, 0, headers.splice(old_index, 1)[0]);
+      this.selectedHeaders = headers;
+      //- by setting an id as a :key on the table 
+      //- we force it to redraw when headers are moved
+      this.id++;
+    },
     async saveDataSet() {
       this.$refs.form.validate();
-      await this.addDataSet({
-        title: this.dataSet.title,
-        description: this.dataSet.description,
-        user: this.createdBy
-      });
+
+      if (!this.isReadOnly && this.dataSet.id) {
+        await this.updateDataSetById({
+          id: this.dataSet.id,
+          title: this.dataSet.title,
+          description: this.dataSet.description,
+          user: this.createdBy
+        });
+      } else {
+        await this.addDataSet({
+          title: this.dataSet.title,
+          description: this.dataSet.description,
+          user: this.createdBy
+        });
+      }
       this.$refs.form.reset();
       //this.fetchDataSet(this.$route.params.dataSetId)
       //this.$router.push(`/data-sets/${this.dataSet.id}`);
@@ -365,8 +389,8 @@ export default {
       this.createMasterData()
       //this.uploadData(this.dataValues)
     },
-    uploadData(datas) {
-      let newData = datas
+    uploadData(data) {
+      let newData = data
       /*.filter(f => f.dataSetId == this.dataSet.id)
       .sort((a, b) => a.createdAt.localeCompare(b.createdAt))
        .map((d) => ({

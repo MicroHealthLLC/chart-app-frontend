@@ -153,28 +153,28 @@ export default {
       this.$refs.form.reset();
     },
     saveChannel() {
-    this.$refs.form.validate();
-    if (this.formValid){
-       //Need to add a new channel type if it doesn't exist
-        if(!this.uniqueTypes.includes(this.channel.type)){
+      this.$refs.form.validate();
+      if (this.formValid) {
+        //Need to add a new channel type if it doesn't exist
+        if (!this.uniqueTypes.includes(this.channel.type)) {
           this.addChannelType({
-          title: this.channel.type,      
+            title: this.channel.type,
           })
-        } 
-        if(this.channel.id){          
+        }
+        if (this.channel.id) {
           this.updateChannelById({
-              id: this.channel.id,
-              title: this.channel.title,
-              description: this.channel.description,
-              type: this.channel.type
+            id: this.channel.id,
+            title: this.channel.title,
+            description: this.channel.description,
+            type: this.channel.type
           });
-         } else {
+        } else {
           this.addChannel({
-          ...this.channel  
+            ...this.channel
           });
-         }   
-         this.$refs.form.reset();
-         this.channel.type = null
+        }
+        this.$refs.form.reset();
+        this.channel.type = null
       }
     },
 

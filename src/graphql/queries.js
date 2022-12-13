@@ -181,6 +181,17 @@ export const getDataValue = /* GraphQL */ `
       id
       data
       dataSetId
+      dataSet {
+        id
+        title
+        description
+        dataValues {
+          nextToken
+        }
+        user
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -197,6 +208,14 @@ export const listDataValues = /* GraphQL */ `
         id
         data
         dataSetId
+        dataSet {
+          id
+          title
+          description
+          user
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }

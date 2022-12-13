@@ -76,9 +76,9 @@ export default {
   },
   methods: {
     ...mapActions(["fetchChannel", "fetchChannels", "removeChannel"]),
-    editItem(item) {
+    async editItem(item) {
       let id = item.id
-      this.fetchChannel(id)
+      await this.fetchChannel(id)
       this.$router.push(`/channels/${id}`) 
     },
     deleteChannel(item) {

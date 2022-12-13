@@ -274,6 +274,17 @@ export const onCreateDataValue = /* GraphQL */ `
       id
       data
       dataSetId
+      dataSet {
+        id
+        title
+        description
+        dataValues {
+          nextToken
+        }
+        user
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -285,6 +296,17 @@ export const onUpdateDataValue = /* GraphQL */ `
       id
       data
       dataSetId
+      dataSet {
+        id
+        title
+        description
+        dataValues {
+          nextToken
+        }
+        user
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -296,6 +318,17 @@ export const onDeleteDataValue = /* GraphQL */ `
       id
       data
       dataSetId
+      dataSet {
+        id
+        title
+        description
+        dataValues {
+          nextToken
+        }
+        user
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }

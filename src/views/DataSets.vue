@@ -31,7 +31,11 @@
             </v-tooltip>
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
-                <v-icon v-if="(item.user == `${user.attributes.given_name} ${user.attributes.family_name}`)"
+                <!-- <v-icon v-if="(item.user == `${user.attributes.given_name} ${user.attributes.family_name}`)"
+                  color="primary" small @click="deleteItem(item)" v-bind="attrs" v-on="on">
+                  mdi-delete
+                </v-icon> -->
+                <v-icon
                   color="primary" small @click="deleteItem(item)" v-bind="attrs" v-on="on">
                   mdi-delete
                 </v-icon>

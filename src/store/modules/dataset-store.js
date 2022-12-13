@@ -4,6 +4,7 @@ import { updateDataSet } from "@/graphql/mutations";
 import { deleteDataSet } from "@/graphql/mutations";
 import { getDataSet } from "@/graphql/queries";
 import { listDataSets, listDataValues } from "@/graphql/queries";
+//import { onDeleteDataSet } from "../../graphql/subscriptions";
 
 
 export default {
@@ -11,6 +12,7 @@ export default {
     dataSets: [],
     dataValues: [],
     dataSet: {},
+    channelDataSets: [],
   },
   actions: {
     async addDataSet({ commit, dispatch }, dataSet) {
@@ -109,11 +111,14 @@ export default {
     SET_DATA_SETS: (state, dataSets) => (state.dataSets = dataSets),
     SET_DATA_VALUES: (state, dataValues) => (state.dataValues = dataValues),
     SET_DATA_SET: (state, dataSet) => (state.dataSet = dataSet),
+    SET_CHANNEL_DATA_SETS: (state, dataSets) =>
+      (state.channelDataSets = dataSets),
   },
   getters: {
     dataSets: (state) => state.dataSets,
     dataValues: (state) => state.dataValues,  
     dataSet: (state) => state.dataSet, 
+    channelDataSets: (state) => state.channelDataSets,
   },
 };
 

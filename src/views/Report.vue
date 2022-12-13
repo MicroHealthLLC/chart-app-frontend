@@ -38,8 +38,8 @@ export default {
       });
     }
     // TODO: Combine API calls below into one
-    this.fetchChannelDataSets(this.$route.params.channelId);
-    this.fetchTags();
+    //this.fetchChannelDataSets(this.$route.params.channelId);
+    //this.fetchTags();
   },
   beforeDestroy() {
     this.SET_ACTIVE_REPORT({

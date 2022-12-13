@@ -29,15 +29,12 @@
         >Please fix highlighted fields below before sumbitting Report</v-alert
       >
 
-      <v-card class="pa-4 mb-4">
+      <v-card v-if="(data && data.length > 0)" class="pa-4 mb-4">
         <v-btn @click="fullscreenReport" class="chart-menu" icon>
           <v-icon>mdi-fullscreen</v-icon>
         </v-btn>
         <!-- Chart -->
         <Component
-          v-if="
-            (activeReport.dataSet) && activeReport.dataSet.dataValues.items && activeReport.dataSet.dataValues.items.length > 0
-          "
           ref="chart"
           :is="graphType"
           :chartData="data"
@@ -62,6 +59,13 @@
         <!-- Category Toggle Button -->
         <div class="d-flex justify-end mb-4">
           <v-btn
+            v-if="circleChart"
+            @click="changeChartData"
+            outlined
+            small
+            >Next Category <v-icon small>mdi-arrow-right</v-icon></v-btn
+          >
+          <!-- <v-btn
             v-if="
                activeReport.dataSet &&
                activeReport.dataSet.dataValues && activeReport.dataSet.dataValues[0] &&
@@ -72,7 +76,7 @@
             outlined
             small
             >Next Category <v-icon small>mdi-arrow-right</v-icon></v-btn
-          >
+          > -->
         </div>
       </v-card>
 
@@ -122,7 +126,6 @@
           <div>
             <v-select
                v-model="activeReport.dataSetId"
-              :load="log(activeReport)"
               :items="dataSetChoices"
               item-text="title"
               item-value="id"
@@ -225,12 +228,7 @@
             >
           </v-toolbar>
           <Component
-            v-if="
-              (activeReport.data && activeReport.dataSet.dataValues) &&
-              activeReport.dataSet.data.length > 0 &&
-              fullscreen &&
-              colorScheme
-            "
+            v-if="fullscreen && colorScheme"
             ref="fullscreenchart"
             :is="graphType"
             :chartData="data"
@@ -244,11 +242,7 @@
           <!-- Category Toggle Button -->
           <div class="d-flex justify-end pr-6">
             <v-btn
-              v-if="
-                activeReport.dataSet.dataValues[0] &&
-                Object.keys(activeReport.dataSet.dataValues[0]).length > 2 &&
-                circleChart
-              "
+              v-if="circleChart"
               @click="changeFSChartData"
               outlined
               small
@@ -304,7 +298,7 @@ export default {
       "fetchDataSet",
       "fetchTags",
       "addReport",
-      "updateReport",
+      "updateReportById",
       "deleteReport",
     ]),
     ...mapMutations(["SET_REPORT_DATASET", "SET_STATUS_CODE"]),
@@ -313,9 +307,9 @@ export default {
         (this.$refs.chart.index + 1) %
         (Object.keys(this.$refs.chart.chartData[0]).length - 1);
     },
-    log(e){
-      console.log(e)
-    },
+    /* log(e){
+      //console.log(e)
+    }, */
     // FS = Full Screen
     changeFSChartData() {
       this.$refs.fullscreenchart.index =
@@ -345,7 +339,7 @@ export default {
 
         if (this.activeReport.id) {
           data.id = this.activeReport.id;
-          this.updateReport(data);
+          this.updateReportById(data);
         } else {
           console.log(data)
           // data.user_id = this.user.id;
@@ -353,13 +347,19 @@ export default {
         }
       }
     },
-    updateChartData() {
-      this.fetchDataSet(this.activeReport.dataSetId)
-      let dataSet = this.dataSet
-      this.SET_REPORT_DATASET(dataSet);
-      // let id = dataSet.id
-      // this.fetchDataValue(id)
-      console.log(this.activeReport)
+    async updateChartData() {
+      try {
+        await this.fetchDataSet(this.activeReport.dataSetId)
+        let dataSet = this.dataSet
+        console.log(dataSet)
+        this.SET_REPORT_DATASET(dataSet);
+        this.data = this.createMasterData(dataSet.dataValues.items)
+        console.log(this.activeReport)
+      } catch (err) {
+        console.log(err)
+      }
+
+
     },
     removeReport() {
       this.deleteReport(this.activeReport.id);
@@ -434,38 +434,38 @@ export default {
       return window.innerHeight - 200;
     },
     createdBy() {
-      if (this.activeReport.id) {
-        return `${this.activeReport.user.first_name} ${
-          this.activeReport.user.last_name
-        } on ${new Date(this.activeReport.created_at).toLocaleString()}`;
+      if (this.activeReport.id && this.user && this.user.attributes) {
+        return `${this.user.attributes.given_name}  ${this.user.attributes.family_name} on ${new Date(this.activeReport.createdAt).toLocaleString()}`;
       } else {
-        return `${this.activeReport.user.first_name} ${this.activeReport.user.last_name}`;
+        return `${this.user.attributes.given_name}  ${this.user.attributes.family_name}`;
       }
     },
     updatedBy() {
-      if (this.activeReport.id) {
-        return `${this.activeReport.last_updated_by} on ${new Date(
-          this.activeReport.updated_at
-        ).toLocaleString()}`;
+      if (this.activeReport && this.activeReport.id) {
+        return `${this.user.attributes.given_name}  ${this.user.attributes.family_name} on ${new Date(this.activeReport.updatedAt).toLocaleString()}`;
       } else {
-        return `${this.activeReport.user.first_name} ${this.activeReport.user.last_name}`;
+        return `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
       }
     },
   },
-  beforeMount() {
+  async beforeMount() {
     if(this.dataSets && this.dataSets.length < 1){
-      this.fetchDataSets();
-    }
+      await this.fetchDataSets();
+    } 
+    
   },
-  mounted() {
+  async mounted() {
     // this.colorScheme = this.colors.find(
     //   (scheme) => scheme.id == this.activeReport.colorSchemeId
     // ).scheme;
-
+    if (this.$route.params.reportId) {
+      await this.fetchReport(this.$route.params.reportId);
+      this.updateChartData();
+    }
     if (this.$route.name == "AddReport") {
       this.dataSetChoices = [...this.dataSets];
     } else {
-      this.dataSetChoices = [...this.channelDataSets];
+      this.dataSetChoices = [...this.dataSets]; // was ...this.channelDataSets
     }
   },
   watch: {
@@ -479,12 +479,9 @@ export default {
     // },
     activeReport() {
       this.colorScheme = this.colors.find((scheme) => scheme.id == this.activeReport.colorSchemeId).scheme;
-      console.log(this.activeReport.colorSchemeId)
+      //console.log(this.activeReport.colorSchemeId)
       console.log(this.activeReport)
-      console.log(this.colorScheme)
-      if (this.activeReport.dataSet && this.activeReport.dataSet.dataValues && this.activeReport.dataSet.dataValues.items && this.activeReport.dataSet.dataValues.items.length > 0) {
-        this.data = this.createMasterData(this.activeReport.dataSet.dataValues.items)
-      }
+      //console.log(this.colorScheme)
     },
     dataSets() {
       this.dataSetChoices = [...this.dataSets];

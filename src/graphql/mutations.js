@@ -30,6 +30,7 @@ export const createReport = /* GraphQL */ `
         title
         description
         dataValues {
+          
           nextToken
         }
         user
@@ -304,6 +305,17 @@ export const createDataValue = /* GraphQL */ `
       id
       data
       dataSetId
+      dataSet {
+        id
+        title
+        description
+        dataValues {
+          nextToken
+        }
+        user
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -318,6 +330,17 @@ export const updateDataValue = /* GraphQL */ `
       id
       data
       dataSetId
+      dataSet {
+        id
+        title
+        description
+        dataValues {
+          nextToken
+        }
+        user
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -332,6 +355,17 @@ export const deleteDataValue = /* GraphQL */ `
       id
       data
       dataSetId
+      dataSet {
+        id
+        title
+        description
+        dataValues {
+          nextToken
+        }
+        user
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
