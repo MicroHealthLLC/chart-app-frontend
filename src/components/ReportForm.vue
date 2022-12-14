@@ -435,9 +435,9 @@ export default {
     },
     createdBy() {
       if (this.activeReport.id && this.user && this.user.attributes) {
-        return `${this.user.attributes.given_name}  ${this.user.attributes.family_name} on ${new Date(this.activeReport.createdAt).toLocaleString()}`;
+        return `${this.user.attributes.given_name} ${this.user.attributes.family_name} on ${new Date(this.activeReport.createdAt).toLocaleString()}`;
       } else {
-        return `${this.user.attributes.given_name}  ${this.user.attributes.family_name}`;
+        return `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
       }
     },
     updatedBy() {

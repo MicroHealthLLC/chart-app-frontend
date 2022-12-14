@@ -79,10 +79,10 @@ export default {
   },
   watch: {
     dataSets() {
-      console.log(this.dataSets)
+      //console.log(this.dataSets)
     },
     report() {
-      console.log(this.report)
+      //console.log(this.report)
     },
   },
 };

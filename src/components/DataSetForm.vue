@@ -54,7 +54,7 @@
             ></v-text-field>
           </div>
           <div>
-            <v-text-field :readonly="isReadOnly" v-model="createdBy" label="Created By" dense>
+            <v-text-field :readonly="isReadOnly" v-model="dataSet.user" label="Created By" dense>
             </v-text-field>
           </div>
           <div :class="{ description: dataSet.id }">
@@ -98,8 +98,9 @@
             </xlsx-read>
             <div>
             <v-select
+              v-show="file"
               v-model="value"
-              :items="headers"
+              :items="file ? headers : []"
               label="Select"
               multiple
               chips
@@ -109,14 +110,7 @@
               return-object
               @change="onChangeSelected"
             >
-            
-            <!-- <template v-slot:selection="{ item, index }">
-              <v-chip v-if="index === 0">
-                <span>{{ item.text }}</span>
-              </v-chip>
-              <span v-if="index === 1" class="grey--text caption">(+{{ value.length - 1 }} others)</span>
-            </template> -->
-          </v-select><v-btn v-if="dataSet.id" :disabled="(!file || value.length == 0)" class="mb-1" elevation="4" small @click="addNewDataValue"><v-icon>mdi-plus-circle-outline</v-icon> Add New Data</v-btn>
+          </v-select><v-btn v-if="dataSet.id" :disabled="(!file || !selectedHeaders)" class="mb-1" elevation="4" small @click="addNewDataValue"><v-icon>mdi-plus-circle-outline</v-icon> Add New Data</v-btn>
         </div>
           </div>
           <!-- <div class="channels">
@@ -153,6 +147,11 @@
           <v-btn @click="togglePieChart" small>Pie</v-btn>
           <v-btn @click="togglePolarAreaChart" small>Polar Area</v-btn>
         </v-btn-toggle>
+        <v-row class="ml-1">
+          <v-col class="d-flex" cols="12" sm="4">
+            <v-select v-model="xAxisValue" :items="xAxisKeys" label="X-Axis" solo @change="onChangeAxis"></v-select>
+          </v-col>
+        </v-row>
         <!-- Table Preview -->
         <div
           class="ma-4"
@@ -243,6 +242,8 @@ export default {
       value: [],
       items: [],
       selected: [],
+      xAxisKeys: [],
+      xAxisValue: "",
       formValid: true,
       submitAttempted: false,
       dataValueInput: '',
@@ -285,17 +286,13 @@ export default {
         this.data.length > 0
       );
     },
-    createdBy: {
-      get() {
-        return `${this.dataSet.user.first_name} ${this.dataSet.user.last_name}`;
-      },
-      set(newVal) {
-        console.log(newVal)
-        let parts = newVal.split(' ');
-	      this.dataSet.user.first_name = parts[0];
-  	    this.dataSet.user.last_name = parts[parts.length - 1];
+    /* createdBy() {
+      if (!this.dataSet.id && this.user && this.user.attributes) {
+        return `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
+      } else {
+        return `${this.dataSet.user}`
       }
-    },
+    }, */
     /* isReadOnly() {
       if (this.dataSet.id) {
         return true
@@ -310,10 +307,10 @@ export default {
     },
     clear() {
       this.file = null;
-      this.data = [];
+      /* this.data = [];
       this.selected = [];
       this.headers = [];
-      this.items = [];
+      this.items = []; */
     },
     toggleDataTable() {
       this.chartType = "Data Table";
@@ -336,22 +333,6 @@ export default {
     togglePolarAreaChart() {
       this.chartType = "Polar Area";
     },
-    updateHeaderOrder(evt) {
-      let headers = this.selectedHeaders;
-      let old_index = evt.oldIndex;
-      let new_index = evt.newIndex;
-      if (new_index >= headers.length) {
-        var k = new_index - headers.length + 1;
-        while (k--) {
-          headers.push(undefined);
-        }
-      }
-      headers.splice(new_index, 0, headers.splice(old_index, 1)[0]);
-      this.selectedHeaders = headers;
-      //- by setting an id as a :key on the table 
-      //- we force it to redraw when headers are moved
-      this.id++;
-    },
     async saveDataSet() {
       this.$refs.form.validate();
 
@@ -360,24 +341,21 @@ export default {
           id: this.dataSet.id,
           title: this.dataSet.title,
           description: this.dataSet.description,
-          user: this.createdBy
+          user: this.dataSet.user
         });
       } else {
         await this.addDataSet({
           title: this.dataSet.title,
           description: this.dataSet.description,
-          user: this.createdBy
+          user: this.dataSet.user
         });
       }
       this.$refs.form.reset();
-      //this.fetchDataSet(this.$route.params.dataSetId)
-      //this.$router.push(`/data-sets/${this.dataSet.id}`);
-      //this.selected && this.addNewDataValue()
-      //console.log(this.$refs.form)
       this.isReadOnly = true
     },
     addNewDataValue() {
       //let objString = JSON.stringify(this.selected)
+      console.log(this.selected)
       this.addDataValue({
         data: JSON.stringify(this.selected),
         dataSetId: this.dataSet.id
@@ -386,25 +364,44 @@ export default {
     },
     async showDataChart() {
       await this.fetchDataSet(this.$route.params.dataSetId)
-      //console.log(this.dataSet)
-      this.createMasterData(this.dataSet.dataValues.items)
-      //this.uploadData(this.dataValues)
-    },
-    arrayMove(arr, oldIdx, newIdx) {
-      if (newIdx >= arr.length) {
-        var k = newIdx - arr.length + 1;
-        while (k--) {
-          arr.push(undefined);
-        }
-      }
-      arr.splice(newIdx, 0, arr.splice(oldIdx, 1)[0]);
-      return arr;
+      console.log(this.dataSet)
+      //this.createMasterData(this.dataSet.dataValues.items)
+      this.uploadData(this.createMasterData(this.dataSet.dataValues.items))
     },
     uploadData(data) {
+      console.log(data)
       let newData = data
       const keys = Object.keys(newData[0])
+      this.xAxisKeys = keys
+      this.moveArrByKey(keys)
+      /* keys.forEach((k, i) => {
+        if (k.toLowerCase() == "date" || k.toLowerCase().includes(" date") || k.toLowerCase().includes("date ")) {
+          this.arrayMove(keys, i, 0)
+        }
+      }) 
+      this.headers = keys.map((item) => ({
+        text: item,
+        value: item,
+      }));*/
+      this.setDataTable(newData)
+    },
+    editForm() {
+      this.isReadOnly = false
+    },
+    onChangeAxis() {
+      this.moveArrByKey(this.xAxisKeys, this.xAxisValue)
+      this.setDataTable(this.createMasterData(this.dataSet.dataValues.items))
+    },
+    setDataTable(data) {
+      let newData = this.filterData(this.headers, data)
+      this.items = newData;
+      this.selected = newData;
+      this.data = newData;
+      this.selectedHeaders = this.headers
+    },
+    moveArrByKey(keys, selected = "Date") {
       keys.forEach((k, i) => {
-        if (k.toLowerCase() == "date") {
+        if (k == selected) {
           this.arrayMove(keys, i, 0)
         }
       })
@@ -412,17 +409,12 @@ export default {
         text: item,
         value: item,
       }));
-      newData = this.filterData(this.headers, newData)
-      this.selectedHeaders = this.headers
-      this.items = newData;
-      this.selected = newData;
-      this.data = newData;
-    },
-    editForm() {
-      this.isReadOnly = false
+      console.log(keys)
     },
     onChangeSelected() {
       if (this.dataSet && this.dataSet.dataValues && this.dataSet.dataValues.items && this.dataSet.dataValues.items.length > 0) {
+        console.log(this.dataSet.dataValues.items)
+        console.log(this.selected)
         this.uploadData(this.createMasterData(this.dataSet.dataValues.items))
       }
     },
@@ -436,50 +428,13 @@ export default {
         return true
       } else return false
     },
-    /* createMasterData() {
-      let masterData = []
-      this.dataSet.dataValues.items.forEach(d => masterData.unshift(d.data))
-      masterData = masterData.flat()
-      const uniqueArray = masterData.filter((object,index) => index === masterData.findIndex(obj => JSON.stringify(obj) === JSON.stringify(object)))
-      console.log(uniqueArray)
-      return this.sortByKey(uniqueArray)
-      //this.uploadData(this.sortByKey(uniqueArray))
-    }, */
-    /* sortByKey(arr, key = "Date") {
-      return arr.sort((a,b) => {
-        let x = a[key]
-        let y = b[key];
-        return ((x < y) ? - 1 : ((x > y) ? 1 : 0));
-      })
-    } */
-    /* saveDataSet() {
-      this.$refs.form.validate();
-      this.submitAttempted = true;
-
-      if (this.formValid) {
-        let dataSet = {
-          title: this.dataSet.title,
-          description: this.dataSet.description,
-          data: this.data,
-          channel_ids: this.dataSet.channels.map((channel) => channel.id),
-        };
-
-        if (this.dataSet.id) {
-          dataSet.id = this.dataSet.id;
-          this.updateDataSet(dataSet);
-        } else {
-          dataSet.user_id = this.user.id;
-          this.addDataSet(dataSet);
-        }
-      }
-    }, */
   },
   mounted() {
-    /* if (this.dataSet && this.dataSet.dataValues && this.dataSet.dataValues.items && this.dataSet.dataValues.items.length > 0) {
-      this.uploadData(this.createMasterData(this.dataSet.dataValues.items))
-    } */
     this.onChangeSelected()
     this.fetchChannels();
+    if (!this.dataSet.user) {
+      this.dataSet.user = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`
+    }
   },
   /* beforeMount() {
     this.fetchDataSet(this.dataSet.id)
@@ -496,12 +451,7 @@ export default {
         
         if (this.dataSet.id !== this.$route.params.dataSetId){
         this.clear()
-      }
-        /* this.data = this.dataSet;
-        if (this.data){
-          console.log(this.data)
         }
-        this.uploadData(this.data); */
       } else this.isReadOnly = false
 
     },
@@ -514,9 +464,10 @@ export default {
         this.selectedHeaders.push(h.text)
       }) */
     },
-    value(val) {
+    /* value(val) {
+      console.log(val)
       this.selectedHeaders = val;
-    },
+    }, */
     selected(){
       if (this.selected && this.selected.length > 0){
         console.log(this.selected)

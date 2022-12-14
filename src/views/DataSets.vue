@@ -119,8 +119,8 @@ export default {
     this.fetchDataSets();
   },
   mounted() {
-    console.log(this.user)
-    console.log(this.dataSets)
+    //console.log(this.user)
+    //console.log(this.dataSets)
   }
 };
 </script>
