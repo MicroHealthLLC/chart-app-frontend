@@ -97,7 +97,7 @@
               ></xlsx-json>
             </xlsx-read>
             <div>
-            <v-select
+            <!-- <v-select
               v-show="file"
               v-model="value"
               :items="file ? headers : []"
@@ -110,7 +110,7 @@
               return-object
               @change="onChangeSelected"
             >
-          </v-select><v-btn v-if="dataSet.id" :disabled="(!file || !selectedHeaders)" class="mb-1" elevation="4" small @click="addNewDataValue"><v-icon>mdi-plus-circle-outline</v-icon> Add New Data</v-btn>
+          </v-select> --><v-btn v-if="dataSet.id" :disabled="(!file || !selectedHeaders)" class="mb-1" elevation="4" small @click="addNewDataValue"><v-icon>mdi-plus-circle-outline</v-icon> Add New Data</v-btn>
         </div>
           </div>
           <!-- <div class="channels">
@@ -147,9 +147,10 @@
           <v-btn @click="togglePieChart" small>Pie</v-btn>
           <v-btn @click="togglePolarAreaChart" small>Polar Area</v-btn>
         </v-btn-toggle>
-        <v-row class="ml-1">
-          <v-col class="d-flex" cols="12" sm="4">
-            <v-select v-model="xAxisValue" :items="xAxisKeys" label="X-Axis" solo @change="onChangeAxis"></v-select>
+        <v-row v-if="(dataSet.dataValues && dataSet.dataValues.items && dataSet.dataValues.items.length > 0)" class="ml-2">
+          <v-col class="d-inline-flex" cols="12" sm="6">
+            <v-select v-model="xAxisValue" :items="xAxisKeys" label="Align Data By:" solo dense @change="onChangeAxis"></v-select>
+            <v-btn v-if="xAxisValue" @click="saveAxis" class="ml-2">Save</v-btn>
           </v-col>
         </v-row>
         <!-- Table Preview -->
@@ -392,6 +393,12 @@ export default {
       this.moveArrByKey(this.xAxisKeys, this.xAxisValue)
       this.setDataTable(this.createMasterData(this.dataSet.dataValues.items))
     },
+    saveAxis() {
+      this.updateDataSetById({
+        id: this.dataSet.id,
+        xAxis: this.xAxisValue
+      });
+    },
     setDataTable(data) {
       let newData = this.filterData(this.headers, data)
       this.items = newData;
@@ -409,7 +416,6 @@ export default {
         text: item,
         value: item,
       }));
-      console.log(keys)
     },
     onChangeSelected() {
       if (this.dataSet && this.dataSet.dataValues && this.dataSet.dataValues.items && this.dataSet.dataValues.items.length > 0) {
@@ -434,6 +440,10 @@ export default {
     this.fetchChannels();
     if (!this.dataSet.user) {
       this.dataSet.user = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`
+    }
+    if (this.dataSet.xAxis) {
+      this.xAxisValue = this.dataSet.xAxis
+      this.onChangeAxis()
     }
   },
   /* beforeMount() {
@@ -485,7 +495,7 @@ export default {
 
 <style scoped>
 .preview-container {
-  height: 750px;
+  /* height: 750px; */
 }
 .placeholder-text,
 .placeholder-icon {

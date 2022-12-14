@@ -353,7 +353,7 @@ export default {
         let dataSet = this.dataSet
         const headers = Object.keys(this.dataSet.dataValues.items[0].data[0])
         headers.forEach((k, i) => {
-          if (k.toLowerCase() == "date") {
+          if (k == this.dataSet.xAxis) {
             this.arrayMove(headers, i, 0)
           }
         })

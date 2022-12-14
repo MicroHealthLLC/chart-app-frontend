@@ -17,17 +17,14 @@ export default {
   methods: {
     ...mapMutations(["SET_DATA_SET"]),
   },
-  /* beforeMount() {
+  beforeMount() {
     this.SET_DATA_SET({
       title: "",
       description: "",
       data: [],
-      user: {
-        first_name: this.user.attributes.given_name,
-        last_name: this.user.attributes.family_name,
-      },
+      user: `${this.user.attributes.given_name} ${this.user.attributes.family_name}`,
     });
-  }, */
+  },
 };
 </script>
 
