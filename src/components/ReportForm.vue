@@ -350,20 +350,22 @@ export default {
     async updateChartData() {
       try {
         await this.fetchDataSet(this.activeReport.dataSetId)
-        let dataSet = this.dataSet
-        const headers = Object.keys(this.dataSet.dataValues.items[0].data[0])
+        let headers = Object.keys(this.dataSet.dataValues.items[0].data[0])
+        console.log(headers)
         headers.forEach((k, i) => {
           if (k == this.dataSet.xAxis) {
             this.arrayMove(headers, i, 0)
           }
         })
+        console.log(headers)
         let newHeaders = headers.map((item) => ({
           text: item,
           value: item,
         }));
-        this.data = this.createMasterData(dataSet.dataValues.items)
+        console.log(newHeaders)
+        this.data = this.createMasterData(this.dataSet.dataValues.items)
         this.data = this.filterData(newHeaders, this.data)
-        this.SET_REPORT_DATASET(dataSet);
+        this.SET_REPORT_DATASET(this.dataSet);
       } catch (err) {
         console.log(err)
       }
