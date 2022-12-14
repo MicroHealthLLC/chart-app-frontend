@@ -2,7 +2,7 @@
   <v-row>
     <v-col>
       <div class="d-flex justify-space-between">
-        <h3>Data Sets</h3>
+        <h3><v-icon class="mr-2 pb-2" color="blue darken-2">mdi-equalizer</v-icon>Data Sets</h3>
         <v-btn class="mb-2" color="primary" small to="/add-data-set">Add Data Set <v-icon
             small>mdi-plus</v-icon></v-btn>
       </div>

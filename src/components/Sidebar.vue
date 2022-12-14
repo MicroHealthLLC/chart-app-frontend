@@ -16,77 +16,47 @@
         </v-list-item-content>
       </v-list-item>
     </v-list>
-
-    <v-divider></v-divider>
- 
+    <v-divider></v-divider> 
+         <v-list dense nav>
+          <v-list-item :to="`/`" link>
+            <v-list-item-icon>
+              <v-icon color="purple darken-2">mdi-home</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Home</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item :to="`/channels`" link>
+            <v-list-item-icon>
+              <v-icon color="green darken-2">mdi-television-classic</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Channels</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item :to="`/data-sets`" link>
+            <v-list-item-icon >
+              <v-icon color="blue darken-2">mdi-equalizer</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Data Sets</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item :to="`/reports`" link>
+            <v-list-item-icon >
+              <v-icon color="orange darken-2">mdi-chart-box-outline</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Reports</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>         
+        </v-list>
     <v-list dense nav>
-     <!-- <span v-if="mini" class="ml-0">
-  <v-list-item
-    
-        v-for="item in items"
-        :key="item.title"
-        link
-        :to="item.route"
-        active-class="active-nav-item"
-      >
-    
-        <v-tooltip right >
-        <template v-slot:activator="{ on, attrs }">
-          <v-list-item-icon>
-          <v-icon v-bind="attrs"
-          v-on="on">{{ item.icon }}</v-icon>
-        </v-list-item-icon>
-      </template>
-      <v-list-item-content>
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
-        </v-list-item-content>
-      </v-tooltip>
-      
-      </v-list-item>
-     </span>
-     -->
-
-      <!-- <span v-else> -->
-        <v-list-item      
-        v-for="item in items"
-        :key="item.title"
-        link
-        :to="item.route"
-        active-class="active-nav-item"
-      >
-        <v-list-item-icon>
-        <v-icon >{{ item.icon }}</v-icon>
-        </v-list-item-icon>
-        <v-list-item-content>
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
-        </v-list-item-content>
-  
-      </v-list-item>
-
-      <!-- </span> -->
-   
-   
-
-      <v-divider></v-divider>
-
-      <div v-show="!mini" class="ml-2 mt-2 text-caption">Channels</div>
-
-      <v-list-item to="/add-channel" active-class="active-nav-item">
-        <v-list-item-icon><v-icon>mdi-playlist-plus</v-icon></v-list-item-icon>
-        <v-list-item-content>
-          <v-list-item-title>Create Channel</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-
-      <v-list-item exact-path to="/channels" active-class="active-nav-item">
-        <v-list-item-icon><v-icon>mdi-forwardburger</v-icon></v-list-item-icon>
-        <v-list-item-content>
-          <v-list-item-title>Channel List</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-      <!-- Public, Personal, and Group -->
+    <div v-show="!mini" class="ml-2 mt-2 text-caption text-dark">Report Channels</div>
+     <!-- Public, Personal, and Group -->
       <v-list-group
         v-for="(item, index) in channels"
+        :load="log(channels)"
         :key="index"
         :prepend-icon="item.icon"
         no-action
@@ -94,73 +64,52 @@
       >
         <template v-slot:activator>
           <v-list-item-content>
-            <v-list-item-title v-text="item.title"></v-list-item-title>
+          <v-list-item-title ><span class="pr-2"> (3)</span>{{ item.title }}</v-list-item-title>
           </v-list-item-content>
         </template>
-
-        <v-list-item
-          v-for="(child, index) in item.channels"
+        <!-- <v-list-item
+          v-for="(child, index) in reports"
           :key="index"
-          :to="`/channels/${child.id}`"
+          :to="`/reports/${this.report.channelId}/report/${this.report.id}`"
           link
           dense
-        >
-          <v-list-item-content>
-            <v-list-item-title>{{ child.title }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list-group>
-      <!-- Dashboards - Links to channel/id/dashboards -->
-      <!-- <v-list-group
-        v-if="dashboardChannels.length > 0"
-        prepend-icon="mdi-monitor-dashboard"
-        no-action
-        class="nav-group"
-      >
-        <template v-slot:activator>
-          <v-list-item-content>
-            <v-list-item-title>Dashboards</v-list-item-title>
-          </v-list-item-content>
-        </template>
-
-        <v-list-item
-          v-for="(child, index) in dashboardChannels"
+        > -->
+         <v-list-item
+          v-for="(child, index) in reports"
           :key="index"
-          :to="`/channels/${child.id}/dashboards`"
           link
-          dense
-        >
+          dense>
+      
           <v-list-item-content>
-            <v-list-item-title>{{ child.title }}</v-list-item-title>
+            <v-list-item-title v-show="child.channelId == item.id">{{ child.title }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-      </v-list-group> -->
+      </v-list-group>   
     </v-list>
     <!-- Profile and Logout Nav Items -->
     <template v-slot:append>
       <div>
-        <v-divider></v-divider>
-        <div v-show="!mini" class="user-name text-caption font-weight-bold">        
-          <!-- <span class="ml-5">{{ user.attributes.given_name }} {{ user.attributes.family_name }}</span>  -->
+        <v-divider></v-divider>        
+        <div v-show="!mini" class="user-name text-caption font-weight-bold">     
         </div>
         <v-list dense nav>
-          <v-list-item link>
+           <v-list-item link>
             <v-list-item-icon>
-              <v-icon>mdi-account</v-icon>
+              <v-icon  color="blue-grey darken-2">mdi-account</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title v-if="user && user.attributes">Hi, {{user.attributes.given_name}}</v-list-item-title>
             </v-list-item-content>
-          </v-list-item>
+          </v-list-item>       
           <v-list-item @click="logOutUser" link>
             <v-list-item-icon>
-              <v-icon>mdi-logout</v-icon>
+              <v-icon color="orange darken-2">mdi-logout</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>Logout</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-        </v-list>
+        </v-list>      
       </div>
     </template>
   </v-navigation-drawer>
@@ -174,6 +123,7 @@ export default {
     return {
       mini: false,
       drawer: true,
+      channelList: [],
       items: [
         { title: "Home", icon: "mdi-home", route: "/" },
         {
@@ -211,10 +161,13 @@ export default {
   },
   methods: {
     ...mapMutations(["SET_SNACKBAR", "SET_USER"]),
-    ...mapActions(["logout", "fetchChannels"]),
+    ...mapActions(["logout", "fetchChannels", "fetchReports"]),
     async logOutUser() {
       await this.logout();
       // this.$router.push("/signin");
+    },
+    log(e){
+      console.log(e)
     },
     updateChannels() {
       this.channels.forEach((channel) => {
@@ -229,16 +182,16 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["channels", "user"]),
+    ...mapGetters(["channels", "user", "reports"]),
     // dashboardChannels() {
     //   return this.channels.filter((channel) => channel.dashboards.length > 0);
     // },
+
   },
   mounted() {
     this.updateChannels();
     this.fetchChannels()
-    console.log(this.user)
- 
+    this.fetchReports()
   },
   watch: {    
     channels() {
