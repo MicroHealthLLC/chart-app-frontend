@@ -1,8 +1,8 @@
 <template>
   <v-row>
      <v-col>
-        <div class="d-flex justify-center align-center main-container" :load="log(user)">
-          <v-card class="pt-0 pr-5 pb-5 pl-5" max-width="600" :loading="loading">
+        <div class="" :load="log(user)">
+          <v-card class="pt-0 pr-5 pb-5 pl-5 card" max-width="600" :loading="loading">
             <v-alert
               v-model="hasError"
               type="error"
@@ -12,9 +12,7 @@
             >
             <v-card-title class="d-flex flex-column"
               >
-              <h2 class="text-body-1"><span class="beWell">Welcome to mRMS  <v-icon color="primary"
-                >mdi-chart-timeline-variant-shimmer</v-icon
-              ></span></h2></v-card-title
+              <h2 class="text-body-1"><span class="beWell">Welcome to mRMS   <v-icon color="orange darken-2">mdi-chart-box-outline</v-icon></span></h2></v-card-title
             >
             <v-card-text>
               <v-form ref="form" v-model="valid">
@@ -47,7 +45,7 @@
             </v-card-text>
             <v-card-actions class="d-flex flex-column">
               <v-btn
-               
+               color="var(--mh-blue)"
                 @click="userLogin"
                 :loading="loading"
                 :disabled="loading"
@@ -175,8 +173,11 @@ export default {
   a {
     text-decoration: none;
   }
-  .main-container {
-    height: 100vh;
+  .card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
   .beWell {
     font-family: inherit;

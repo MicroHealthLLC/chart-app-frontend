@@ -22,9 +22,9 @@
             >
           </div>
         </div> -->
-        <div v-if="reports.length > 0" class="grid">
+        <div v-if="channelReports.length > 0" class="grid">
           <ReportCard
-            v-for="(report, index) in reports"
+            v-for="(report, index) in channelReports"
             :report="report"
             :key="index"
           ></ReportCard>
@@ -39,12 +39,13 @@
             >
           </div>
         </div>
+
         <div
           v-else
           class="placeholder d-flex flex-column justify-center align-center"
         >
-          <p class="font-weight-light">No Public Reports to show...</p>
-          <v-btn text small color="primary" to="/add-report">Add a Report</v-btn>
+          <p class="font-weight-light">No Reports on this Channel yet...</p>
+          <v-btn text small color="primary" :to="`/channel/${this.currentChannel.name}/add-report`">Add a Report</v-btn>
         </div>
         <!-- PERSONAL REPORTS -->
         <!-- <h3 class="mt-4">
@@ -162,11 +163,16 @@
       NewsCard,
     },
     computed: {
-      ...mapGetters(["channels", "news", "reports", "user", "dataSets"]),
+      ...mapGetters(["channels", "news", "reports", "user", "dataSets", "currentChannel"]),
       reportCount() {
         return (
           this.reports.length
         );
+      },
+      channelReports(){
+        if (this.reports && this.reports.length > 0){
+          return this.reports.filter(t => t.channelId == this.currentChannel.id)
+        } else return []
       },
     },
     methods: {

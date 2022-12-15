@@ -342,14 +342,10 @@ export default {
           data.id = this.activeReport.id;
           this.updateReportById(data);
 
-          // await this.updateReminderById({
-          //       id: goalActsArray[i].id,           
-          //       goalId: null,
-          //     });
-          this.updateChannelById({
-           id:  this.activeReport.channelId,
-           reports: [this.activeReport]
-          });
+           // this.updateChannelById({
+          //  id:  this.activeReport.channelId,
+          //  reports: [this.activeReport]
+          // });
         } else {
           console.log(data)
           // data.user_id = this.user.id;

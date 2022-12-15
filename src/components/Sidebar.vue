@@ -1,60 +1,55 @@
 <template>
-  <v-navigation-drawer v-model="drawer" app permanent :mini-variant.sync="mini" v-if="user && user.attributes">
+  <v-navigation-drawer v-model="drawer" app permanent :mini-variant.sync="mini" v-if="user && user.attributes" >
     <v-list>
-      <v-list-item>
+      <v-list-item >
         <v-list-item-icon class="clickable" @click.stop="mini = !mini">
           <v-icon>mdi-menu</v-icon>
         </v-list-item-icon>
-        <v-list-item-content>
-          <v-list-item-title class="text-h6"
-            >mRMS
-            <v-icon color="primary" small
-              >mdi-chart-timeline-variant-shimmer</v-icon
-            ></v-list-item-title
-          >
-          <v-list-item-subtitle > Microhealth </v-list-item-subtitle>
+        <v-list-item-content >
+          <v-list-item-title @click="goHome" link  class="text-h6 text-bold cursor"
+            ><b>mRMS</b></v-list-item-title>   
         </v-list-item-content>
       </v-list-item>
     </v-list>
     <v-divider></v-divider> 
          <v-list dense nav>
-          <v-list-item :to="`/`" link>
+          <v-list-item>
             <v-list-item-icon>
-              <v-icon color="purple darken-2">mdi-home</v-icon>
+              <v-icon color="green darken-2" class="pt-1">mdi-television-classic</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title>Home</v-list-item-title>
+              <v-list-item-title ><span class="text-h6 text--blue" color="text--blue">{{this.currentChannel.reg_name}}</span></v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item :to="`/channels`" link>
-            <v-list-item-icon>
-              <v-icon color="green darken-2">mdi-television-classic</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>Channels</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item :to="`/data-sets`" link>
+          <v-list-item :to="`/channel/${this.currentChannel.name}/data-sets`" link>
             <v-list-item-icon >
               <v-icon color="blue darken-2">mdi-equalizer</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title>Data Sets</v-list-item-title>
+              <v-list-item-title>Datasets</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item :to="`/reports`" link>
+          <v-list-item :to="`/channel/${this.currentChannel.name}/reports`" link>
             <v-list-item-icon >
               <v-icon color="orange darken-2">mdi-chart-box-outline</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>Reports</v-list-item-title>
             </v-list-item-content>
+          </v-list-item>  
+          <v-list-item :to="`/dashboards`" link>
+            <v-list-item-icon >
+              <v-icon color="cyan">mdi-monitor-dashboard</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Dashboards</v-list-item-title>
+            </v-list-item-content>
           </v-list-item>         
         </v-list>
-    <v-list dense nav>
-    <div v-show="!mini" class="ml-2 mt-2 text-caption text-dark">Report Channels</div>
+    <!-- <v-list dense nav>
+    <div v-show="!mini" class="ml-2 mt-2 text-caption text-dark">Report Channels</div> -->
      <!-- Public, Personal, and Group -->
-      <v-list-group
+      <!-- <v-list-group
         v-for="(item, index) in channels"
         :load="log(channels)"
         :key="index"
@@ -67,14 +62,7 @@
           <v-list-item-title ><span class="pr-2"> (3)</span>{{ item.title }}</v-list-item-title>
           </v-list-item-content>
         </template>
-        <!-- <v-list-item
-          v-for="(child, index) in reports"
-          :key="index"
-          :to="`/reports/${this.report.channelId}/report/${this.report.id}`"
-          link
-          dense
-        > -->
-         <v-list-item
+           <v-list-item
           v-for="(child, index) in reports"
           :key="index"
           link
@@ -84,8 +72,8 @@
             <v-list-item-title v-show="child.channelId == item.id">{{ child.title }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-      </v-list-group>   
-    </v-list>
+      </v-list-group>    -->
+    <!-- </v-list> -->
     <!-- Profile and Logout Nav Items -->
     <template v-slot:append>
       <div>
@@ -169,6 +157,9 @@ export default {
     log(e){
       console.log(e)
     },
+    goHome(){
+      this.$router.push("/")
+    },
     updateChannels() {
       this.channels.forEach((channel) => {
         if (channel.category == "public_channel") {
@@ -182,7 +173,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["channels", "user", "reports"]),
+    ...mapGetters(["channels", "user", "reports", "currentChannel"]),
     // dashboardChannels() {
     //   return this.channels.filter((channel) => channel.dashboards.length > 0);
     // },
@@ -218,6 +209,12 @@ export default {
 }
 .active-nav-item {
   color: #1976d2 !important;
+}
+.cursor{
+  cursor: pointer;
+  color: #1D336F;
+  font-weight: 900;
+  font-style: italic;
 }
 .user-name {
   background-color: rgba(25, 118, 210, 0.12);
