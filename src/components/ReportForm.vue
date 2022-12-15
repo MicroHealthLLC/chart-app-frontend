@@ -351,18 +351,15 @@ export default {
       try {
         await this.fetchDataSet(this.activeReport.dataSetId)
         let headers = Object.keys(this.dataSet.dataValues.items[0].data[0])
-        console.log(headers)
         headers.forEach((k, i) => {
           if (k == this.dataSet.xAxis) {
             this.arrayMove(headers, i, 0)
           }
         })
-        console.log(headers)
         let newHeaders = headers.map((item) => ({
           text: item,
           value: item,
         }));
-        console.log(newHeaders)
         this.data = this.createMasterData(this.dataSet.dataValues.items)
         this.data = this.filterData(newHeaders, this.data)
         this.SET_REPORT_DATASET(this.dataSet);
