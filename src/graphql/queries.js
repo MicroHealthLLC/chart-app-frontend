@@ -29,6 +29,7 @@ export const getReport = /* GraphQL */ `
         dataValues {
           nextToken
         }
+        xAxis
         user
         createdAt
         updatedAt
@@ -67,6 +68,7 @@ export const listReports = /* GraphQL */ `
           id
           title
           description
+          xAxis
           user
           createdAt
           updatedAt
@@ -147,6 +149,7 @@ export const getDataSet = /* GraphQL */ `
         }
         nextToken
       }
+      xAxis
       user
       createdAt
       updatedAt
@@ -167,6 +170,7 @@ export const listDataSets = /* GraphQL */ `
         dataValues {
           nextToken
         }
+        xAxis
         user
         createdAt
         updatedAt
@@ -188,6 +192,7 @@ export const getDataValue = /* GraphQL */ `
         dataValues {
           nextToken
         }
+        xAxis
         user
         createdAt
         updatedAt
@@ -212,6 +217,7 @@ export const listDataValues = /* GraphQL */ `
           id
           title
           description
+          xAxis
           user
           createdAt
           updatedAt
@@ -258,6 +264,35 @@ export const listChannelTypes = /* GraphQL */ `
           nextToken
         }
         id
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getCurrentChannel = /* GraphQL */ `
+  query GetCurrentChannel($id: ID!) {
+    getCurrentChannel(id: $id) {
+      id
+      name
+      regName
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listCurrentChannels = /* GraphQL */ `
+  query ListCurrentChannels(
+    $filter: ModelCurrentChannelFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCurrentChannels(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        regName
         createdAt
         updatedAt
       }

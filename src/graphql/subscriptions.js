@@ -29,6 +29,7 @@ export const onCreateReport = /* GraphQL */ `
         dataValues {
           nextToken
         }
+        xAxis
         user
         createdAt
         updatedAt
@@ -68,6 +69,7 @@ export const onUpdateReport = /* GraphQL */ `
         dataValues {
           nextToken
         }
+        xAxis
         user
         createdAt
         updatedAt
@@ -107,6 +109,7 @@ export const onDeleteReport = /* GraphQL */ `
         dataValues {
           nextToken
         }
+        xAxis
         user
         createdAt
         updatedAt
@@ -218,6 +221,7 @@ export const onCreateDataSet = /* GraphQL */ `
         }
         nextToken
       }
+      xAxis
       user
       createdAt
       updatedAt
@@ -240,6 +244,7 @@ export const onUpdateDataSet = /* GraphQL */ `
         }
         nextToken
       }
+      xAxis
       user
       createdAt
       updatedAt
@@ -262,6 +267,7 @@ export const onDeleteDataSet = /* GraphQL */ `
         }
         nextToken
       }
+      xAxis
       user
       createdAt
       updatedAt
@@ -283,6 +289,7 @@ export const onCreateDataValue = /* GraphQL */ `
         dataValues {
           nextToken
         }
+        xAxis
         user
         createdAt
         updatedAt
@@ -307,6 +314,7 @@ export const onUpdateDataValue = /* GraphQL */ `
         dataValues {
           nextToken
         }
+        xAxis
         user
         createdAt
         updatedAt
@@ -331,6 +339,7 @@ export const onDeleteDataValue = /* GraphQL */ `
         dataValues {
           nextToken
         }
+        xAxis
         user
         createdAt
         updatedAt
@@ -407,6 +416,45 @@ export const onDeleteChannelType = /* GraphQL */ `
         nextToken
       }
       id
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateCurrentChannel = /* GraphQL */ `
+  subscription OnCreateCurrentChannel(
+    $filter: ModelSubscriptionCurrentChannelFilterInput
+  ) {
+    onCreateCurrentChannel(filter: $filter) {
+      id
+      name
+      regName
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateCurrentChannel = /* GraphQL */ `
+  subscription OnUpdateCurrentChannel(
+    $filter: ModelSubscriptionCurrentChannelFilterInput
+  ) {
+    onUpdateCurrentChannel(filter: $filter) {
+      id
+      name
+      regName
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteCurrentChannel = /* GraphQL */ `
+  subscription OnDeleteCurrentChannel(
+    $filter: ModelSubscriptionCurrentChannelFilterInput
+  ) {
+    onDeleteCurrentChannel(filter: $filter) {
+      id
+      name
+      regName
       createdAt
       updatedAt
     }

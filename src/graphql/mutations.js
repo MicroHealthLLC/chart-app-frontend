@@ -32,6 +32,7 @@ export const createReport = /* GraphQL */ `
         dataValues {
           nextToken
         }
+        xAxis
         user
         createdAt
         updatedAt
@@ -74,6 +75,7 @@ export const updateReport = /* GraphQL */ `
         dataValues {
           nextToken
         }
+        xAxis
         user
         createdAt
         updatedAt
@@ -116,6 +118,7 @@ export const deleteReport = /* GraphQL */ `
         dataValues {
           nextToken
         }
+        xAxis
         user
         createdAt
         updatedAt
@@ -239,6 +242,7 @@ export const createDataSet = /* GraphQL */ `
         }
         nextToken
       }
+      xAxis
       user
       createdAt
       updatedAt
@@ -264,6 +268,7 @@ export const updateDataSet = /* GraphQL */ `
         }
         nextToken
       }
+      xAxis
       user
       createdAt
       updatedAt
@@ -289,6 +294,7 @@ export const deleteDataSet = /* GraphQL */ `
         }
         nextToken
       }
+      xAxis
       user
       createdAt
       updatedAt
@@ -311,6 +317,7 @@ export const createDataValue = /* GraphQL */ `
         dataValues {
           nextToken
         }
+        xAxis
         user
         createdAt
         updatedAt
@@ -336,6 +343,7 @@ export const updateDataValue = /* GraphQL */ `
         dataValues {
           nextToken
         }
+        xAxis
         user
         createdAt
         updatedAt
@@ -361,6 +369,7 @@ export const deleteDataValue = /* GraphQL */ `
         dataValues {
           nextToken
         }
+        xAxis
         user
         createdAt
         updatedAt
@@ -440,6 +449,48 @@ export const deleteChannelType = /* GraphQL */ `
         nextToken
       }
       id
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createCurrentChannel = /* GraphQL */ `
+  mutation CreateCurrentChannel(
+    $input: CreateCurrentChannelInput!
+    $condition: ModelCurrentChannelConditionInput
+  ) {
+    createCurrentChannel(input: $input, condition: $condition) {
+      id
+      name
+      regName
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateCurrentChannel = /* GraphQL */ `
+  mutation UpdateCurrentChannel(
+    $input: UpdateCurrentChannelInput!
+    $condition: ModelCurrentChannelConditionInput
+  ) {
+    updateCurrentChannel(input: $input, condition: $condition) {
+      id
+      name
+      regName
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteCurrentChannel = /* GraphQL */ `
+  mutation DeleteCurrentChannel(
+    $input: DeleteCurrentChannelInput!
+    $condition: ModelCurrentChannelConditionInput
+  ) {
+    deleteCurrentChannel(input: $input, condition: $condition) {
+      id
+      name
+      regName
       createdAt
       updatedAt
     }
