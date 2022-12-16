@@ -462,6 +462,7 @@ export const createCurrentChannel = /* GraphQL */ `
     createCurrentChannel(input: $input, condition: $condition) {
       id
       name
+      channelId
       regName
       createdAt
       updatedAt
@@ -476,6 +477,7 @@ export const updateCurrentChannel = /* GraphQL */ `
     updateCurrentChannel(input: $input, condition: $condition) {
       id
       name
+      channelId
       regName
       createdAt
       updatedAt
@@ -490,6 +492,7 @@ export const deleteCurrentChannel = /* GraphQL */ `
     deleteCurrentChannel(input: $input, condition: $condition) {
       id
       name
+      channelId
       regName
       createdAt
       updatedAt

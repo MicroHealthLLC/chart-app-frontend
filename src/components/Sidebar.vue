@@ -18,10 +18,14 @@
               <v-icon color="green darken-2" class="pt-1">mdi-television-classic</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title ><span class="text-h6 text--blue" color="text--blue">{{this.currentChannel.reg_name}}</span></v-list-item-title>
+              <v-list-item-title ><span  class="text-h6 text--blue" color="text--blue">{{ regName }}</span>
+             
+              </v-list-item-title>
+             
+
             </v-list-item-content>
           </v-list-item>
-          <v-list-item :to="`/channel/${this.currentChannel.name}/data-sets`" link>
+          <v-list-item :to="`/channel/${pathName}/data-sets`" link>
             <v-list-item-icon >
               <v-icon color="blue darken-2">mdi-equalizer</v-icon>
             </v-list-item-icon>
@@ -29,7 +33,7 @@
               <v-list-item-title>Datasets</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item :to="`/channel/${this.currentChannel.name}/reports`" link>
+          <v-list-item :to="`/channel/${pathName}/reports`" link>
             <v-list-item-icon >
               <v-icon color="orange darken-2">mdi-chart-box-outline</v-icon>
             </v-list-item-icon>
@@ -37,7 +41,7 @@
               <v-list-item-title>Reports</v-list-item-title>
             </v-list-item-content>
           </v-list-item>  
-          <v-list-item :to="`/dashboards`" link>
+          <v-list-item :to="`/channel/${pathName}/dashboards`" link>
             <v-list-item-icon >
               <v-icon color="cyan">mdi-monitor-dashboard</v-icon>
             </v-list-item-icon>
@@ -88,7 +92,16 @@
             <v-list-item-content>
               <v-list-item-title v-if="user && user.attributes">Hi, {{user.attributes.given_name}}</v-list-item-title>
             </v-list-item-content>
-          </v-list-item>       
+          </v-list-item> 
+          
+          <v-list-item link>
+            <v-list-item-icon>
+              <v-icon  color="purple-grey darken-2">mdi-cog-outline</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Channel Settings</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>    
           <v-list-item @click="logOutUser" link>
             <v-list-item-icon>
               <v-icon color="orange darken-2">mdi-logout</v-icon>
@@ -111,6 +124,10 @@ export default {
     return {
       mini: false,
       drawer: true,
+      regName: '',
+      pathName: '',
+      channelId: null,
+
       channelList: [],
       items: [
         { title: "Home", icon: "mdi-home", route: "/" },
@@ -149,7 +166,7 @@ export default {
   },
   methods: {
     ...mapMutations(["SET_SNACKBAR", "SET_USER"]),
-    ...mapActions(["logout", "fetchChannels", "fetchReports"]),
+    ...mapActions(["logout", "fetchChannels", "fetchReports", "removeCurrentChannel", "fetchCurrentChannels"]),
     async logOutUser() {
       await this.logout();
       // this.$router.push("/signin");
@@ -157,8 +174,15 @@ export default {
     log(e){
       console.log(e)
     },
-    goHome(){
-      this.$router.push("/")
+    goHome(){    
+      if(this.channelId){
+      let id = this.channelId
+      this.removeCurrentChannel({id: id})
+     }
+     this.$router.push("/");
+    },
+    resetChannelStation(){
+    
     },
     updateChannels() {
       this.channels.forEach((channel) => {
@@ -173,7 +197,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["channels", "user", "reports", "currentChannel"]),
+    ...mapGetters(["channels", "user", "reports", "currentChannel", "currentChannels"]),
     // dashboardChannels() {
     //   return this.channels.filter((channel) => channel.dashboards.length > 0);
     // },
@@ -182,9 +206,20 @@ export default {
   mounted() {
     this.updateChannels();
     this.fetchChannels()
+    this.fetchCurrentChannels()
     this.fetchReports()
   },
-  watch: {    
+  watch: {   
+    currentChannels(){
+      if(this.currentChannels && this.currentChannels[0]){
+        console.log(this.currentChannels)
+        console.log(this.currentChannels[0].channelId)
+        console.log(this.currentChannels[0].regName)
+        this.channelId = this.currentChannels[0].id
+        this.regName = this.currentChannels[0].regName
+        this.pathName = this.currentChannels[0].name
+      }
+        },
     channels() {
       this.channelItems[0].channels = [];
       this.channelItems[1].channels = [];
@@ -194,7 +229,7 @@ export default {
     },
     user(){
       if(this.user && this.user.attributes){
-        console.log(this.user)
+        // console.log(this.user)
       } else {
         this.$router.push("/signin")
       }

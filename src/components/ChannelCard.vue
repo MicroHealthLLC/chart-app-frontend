@@ -1,9 +1,9 @@
 <template>
-    <v-card class="report-card" @click="toChannel" :load="log($route)">      
+    <v-card class="report-card" @click="toChannel">      
       <v-card-title>
         <!-- <v-icon class="mr-4" color="info">{{ chartIcon }}</v-icon> -->
         <span class="text-h6 font-weight-bold"  color="var(--mh-blue)">
-         {{ channel.title }}
+          <v-icon color="green darken-2" class="pb-2">mdi-television-classic</v-icon> {{ channel.title }}
         </span>
       </v-card-title>
       <v-divider></v-divider> 
@@ -66,14 +66,15 @@
     methods: {
       ...mapActions([
          "fetchDataSets",
-         "fetchReports"
+         "fetchReports",
+         "setCurrentChannel"
        ]),
        ...mapMutations([
          "SET_CURRENT_CHANNEL",
        ]),
-       log(e){
-        console.log(e)
-       },
+      //  log(e){
+      //   console.log(e)
+      //  },
       toChannel() {
         console.log(this.channel.title.toLowerCase().replace(/\s/g, '_'))
         this.SET_CURRENT_CHANNEL({
@@ -81,15 +82,23 @@
           name: this.channel.title.toLowerCase().replace(/\s/g, '_'),
           reg_name: this.channel.title
         })
+
+        let data = {
+          channelId: this.channel.id,
+          name: this.channel.title.toLowerCase().replace(/\s/g, '_'),
+          regName: this.channel.title
+        };
+        this.setCurrentChannel(data)
+        console.log(data)
         this.$router.push(
           `/channel/${this.channel.title.toLowerCase().replace(/\s/g, '_')}`
         );
       },
     },
     watch: {
-      dataSets() {
-        console.log(this.dataSets)
-      },
+      // dataSets() {
+      //   console.log(this.dataSets)
+      // },
       // report() {
       //   console.log(this.report)
       // },

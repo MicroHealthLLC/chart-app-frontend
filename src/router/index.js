@@ -152,7 +152,7 @@ const routes = [
     component: AddDashboard,
   },
   {
-    path: "/dashboards",
+    path: "channel/:title/dashboards",
     name: "Dashboards",
     component: Dashboards,
   },

@@ -397,6 +397,7 @@ export default {
       "activeDataSet",
       "activeReport",
       "channels",
+      "currentChannel",
       "channelReports",
       "colors",
       "channelDataSets",
@@ -483,6 +484,7 @@ export default {
     //     this.SET_STATUS_CODE(0);
     //   }
     // },
+
     activeReport() {
       this.colorScheme = this.colors.find((scheme) => scheme.id == this.activeReport.colorSchemeId).scheme;
       //console.log(this.activeReport.colorSchemeId)

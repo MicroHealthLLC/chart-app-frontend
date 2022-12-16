@@ -96,7 +96,7 @@ export default {
     // NewsCard,
   },
   computed: {
-    ...mapGetters(["channels", "news", "reports", "user", "dataSets"]),
+    ...mapGetters(["channels", "news", "reports", "user", "dataSets", "currentChannels"]),
     reportCount() {
       return (
         this.reports.length
@@ -104,19 +104,25 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["fetchNews", "fetchChannels", "fetchCurrentUser", "fetchDataSets"]),
+    ...mapActions(["fetchNews", "fetchChannels", "fetchCurrentUser", "fetchDataSets", "fetchCurrentChannels", "removeCurrentChannel"]),
   },
   beforeMount() {
-  this.fetchChannels();  
-   console.log(this.user)
+  this.fetchChannels(); 
+  this.fetchCurrentChannels()
   },
   watch:{
-    reports(){
-      console.log(this.reports)
+    currentChannels(){
+      if(this.currentChannels && this.currentChannels > 0 && this.currentChannels[0]){      
+        console.log(this.currentChannels)  
+       this.removeCurrentChannel({id: this.currentChannels[0].id})     
+       }
     },
-    dataSets() {
-      console.log(this.dataSets)
-    },
+    // reports(){
+    //   console.log(this.reports)
+    // },
+    // dataSets() {
+    //   console.log(this.dataSets)
+    // },
   }
 
 };

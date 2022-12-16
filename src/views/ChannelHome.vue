@@ -2,7 +2,15 @@
     <div>  
 
 <v-row>
-Current Channel {{this.currentChannel.name}}
+  <h2 class="mt-5">
+    CHANNEL HOME 
+  </h2>
+  <br/>
+<p>
+  Current Channel {{this.currentChannel.name}}
+</p>
+
+
 ID: {{this.currentChannel.id}}
 </v-row>
     
@@ -20,7 +28,7 @@ ID: {{this.currentChannel.id}}
     components: {
      },
     computed: {
-      ...mapGetters(["channels", "news", "reports", "user", "dataSets", "currentChannel"]),
+      ...mapGetters(["channels", "news", "reports", "user", "dataSets", "currentChannel","currenttChannel", "currentChannels"]),
       reportCount() {
         return (
           this.reports.length
@@ -28,16 +36,35 @@ ID: {{this.currentChannel.id}}
       },
     },
     methods: {
-      ...mapActions(["fetchNews", "fetchChannels", "fetchCurrentUser", "fetchDataSets"]),
+      ...mapActions(["fetchNews", "fetchChannels", "fetchCurrentUser", "fetchDataSets", "fetchCurrentChannels", "removeCurrentChannel"]),
     },
     beforeMount() {
-
-     console.log(this.user)
+      this.fetchCurrentChannels()
+      console.log(this.currentChannels)
     },
     watch:{
       reports(){
         console.log(this.reports)
       },
+
+      currentChannels(){
+      if(this.currentChannels && this.currentChannels.length > 0){
+        this.removeCurrentChannel(this.currentChannels[0].id)
+        console.log(this.currentChannels)
+        console.log(this.currentChannels[0].channelId)
+        console.log(this.currentChannels[0].regName)
+      }
+      if(this.currentChannels && this.currentChannels.length > 1){      
+        console.log(this.currentChannels)  
+       this.removeCurrentChannel({id: this.currentChannels[1].id})     
+       
+      }
+    },
+      // currenttChannel() {
+      //   if(this.currenttChannel){
+      //     console.log(this.currenttChannel)
+      //   }       
+      // },
       dataSets() {
         console.log(this.dataSets)
       },

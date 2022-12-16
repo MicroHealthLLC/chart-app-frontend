@@ -428,6 +428,7 @@ export const onCreateCurrentChannel = /* GraphQL */ `
     onCreateCurrentChannel(filter: $filter) {
       id
       name
+      channelId
       regName
       createdAt
       updatedAt
@@ -441,6 +442,7 @@ export const onUpdateCurrentChannel = /* GraphQL */ `
     onUpdateCurrentChannel(filter: $filter) {
       id
       name
+      channelId
       regName
       createdAt
       updatedAt
@@ -454,6 +456,7 @@ export const onDeleteCurrentChannel = /* GraphQL */ `
     onDeleteCurrentChannel(filter: $filter) {
       id
       name
+      channelId
       regName
       createdAt
       updatedAt

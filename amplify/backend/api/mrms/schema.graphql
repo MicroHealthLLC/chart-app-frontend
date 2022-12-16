@@ -46,8 +46,9 @@ type ChannelType @model @auth(rules: [{ allow: public }]) {
   id: ID!
 }
 type CurrentChannel @model @auth(rules: [{ allow: public }]) {
-  id: String!
+  id: ID!
   name: String!
+  channelId: String!
   regName: String
 }
 

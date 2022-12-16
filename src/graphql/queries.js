@@ -276,6 +276,7 @@ export const getCurrentChannel = /* GraphQL */ `
     getCurrentChannel(id: $id) {
       id
       name
+      channelId
       regName
       createdAt
       updatedAt
@@ -292,6 +293,7 @@ export const listCurrentChannels = /* GraphQL */ `
       items {
         id
         name
+        channelId
         regName
         createdAt
         updatedAt

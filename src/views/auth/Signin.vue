@@ -2,7 +2,7 @@
   <v-row>
      <v-col>
         <div class="" :load="log(user)">
-          <v-card class="pt-0 pr-5 pb-5 pl-5 card" max-width="600" :loading="loading">
+          <v-card class="pt-0 pr-5 pb-5 pl-5 card" :loading="loading">
             <v-alert
               v-model="hasError"
               type="error"
@@ -178,6 +178,7 @@ export default {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    min-width: 350px;
   }
   .beWell {
     font-family: inherit;
