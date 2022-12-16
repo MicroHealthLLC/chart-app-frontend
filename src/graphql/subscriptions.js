@@ -29,6 +29,7 @@ export const onCreateReport = /* GraphQL */ `
         dataValues {
           nextToken
         }
+        xAxis
         user
         createdAt
         updatedAt
@@ -68,6 +69,7 @@ export const onUpdateReport = /* GraphQL */ `
         dataValues {
           nextToken
         }
+        xAxis
         user
         createdAt
         updatedAt
@@ -107,6 +109,7 @@ export const onDeleteReport = /* GraphQL */ `
         dataValues {
           nextToken
         }
+        xAxis
         user
         createdAt
         updatedAt
@@ -218,6 +221,7 @@ export const onCreateDataSet = /* GraphQL */ `
         }
         nextToken
       }
+      xAxis
       user
       createdAt
       updatedAt
@@ -240,6 +244,7 @@ export const onUpdateDataSet = /* GraphQL */ `
         }
         nextToken
       }
+      xAxis
       user
       createdAt
       updatedAt
@@ -262,6 +267,7 @@ export const onDeleteDataSet = /* GraphQL */ `
         }
         nextToken
       }
+      xAxis
       user
       createdAt
       updatedAt
@@ -281,6 +287,7 @@ export const onCreateDataValue = /* GraphQL */ `
         dataValues {
           nextToken
         }
+        xAxis
         user
         createdAt
         updatedAt
@@ -303,6 +310,7 @@ export const onUpdateDataValue = /* GraphQL */ `
         dataValues {
           nextToken
         }
+        xAxis
         user
         createdAt
         updatedAt
@@ -325,6 +333,7 @@ export const onDeleteDataValue = /* GraphQL */ `
         dataValues {
           nextToken
         }
+        xAxis
         user
         createdAt
         updatedAt
