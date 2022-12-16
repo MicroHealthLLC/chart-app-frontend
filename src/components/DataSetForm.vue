@@ -147,9 +147,10 @@
           <v-btn @click="togglePieChart" small>Pie</v-btn>
           <v-btn @click="togglePolarAreaChart" small>Polar Area</v-btn>
         </v-btn-toggle>
+        <small class="ml-6 mb-2">{{xAxisLabel}}</small>
         <v-row v-if="(dataSet.dataValues && dataSet.dataValues.items && dataSet.dataValues.items.length > 0)" class="ml-2">
-          <v-col class="d-inline-flex" cols="12" sm="6">
-            <v-select v-model="xAxisValue" :items="xAxisKeys" label="Align Data By:" solo dense @change="onChangeAxis"></v-select>
+          <v-col class="d-inline-flex" cols="12" sm="4">
+            <v-select v-model="xAxisValue" :items="xAxisKeys" :label="xAxisLabel" solo dense @change="onChangeAxis"></v-select>
             <v-btn v-if="xAxisValue" @click="saveAxis" class="ml-2">Save</v-btn>
           </v-col>
         </v-row>
@@ -258,6 +259,7 @@ export default {
       "dataValue",
       "dataValues",
       "channels",
+      "currentChannel",
       "colors",
       "statusCode",
       "user",
@@ -287,6 +289,11 @@ export default {
         this.data.length > 0
       );
     },
+    xAxisLabel (){
+      if (this.chartType === "Line" || this.chartType === "Bar") {
+        return 'X-Axis:'
+      } else return 'Align Data By:'
+    }
     /* createdBy() {
       if (!this.dataSet.id && this.user && this.user.attributes) {
         return `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
@@ -342,13 +349,15 @@ export default {
           id: this.dataSet.id,
           title: this.dataSet.title,
           description: this.dataSet.description,
-          user: this.dataSet.user
+          user: this.dataSet.user,
+          channelId: this.currentChannel.id
         });
       } else {
         await this.addDataSet({
           title: this.dataSet.title,
           description: this.dataSet.description,
-          user: this.dataSet.user
+          user: this.dataSet.user,
+          channelId: this.currentChannel.id
         });
       }
       this.$refs.form.reset();
@@ -445,6 +454,7 @@ export default {
       this.xAxisValue = this.dataSet.xAxis
       this.onChangeAxis()
     }
+    console.log(this.currentChannel)
   },
   /* beforeMount() {
     this.fetchDataSet(this.dataSet.id)

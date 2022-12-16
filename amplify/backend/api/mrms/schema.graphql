@@ -6,7 +6,7 @@ type Report @model @auth(rules: [{ allow: public }]) {
   title: String!
   channel: Channel @belongsTo(fields: ["channelId"])
   description: String,
-  channelId:  ID @index(name: "byChannel")  
+  channelId: ID @index(name: "byChannel")  
   colorSchemeId: Int
   chartType: String
   dataSet: DataSet @hasOne
@@ -16,8 +16,8 @@ type Report @model @auth(rules: [{ allow: public }]) {
 type Channel @model @auth(rules: [{ allow: public }]) {
   id: ID!
   description: String,
-  reports: [Report] @hasMany(indexName: "byChannel",fields: ["id"])
-  # dataSets: [DataSet] @manyToMany(relationName: "channelDS")
+  reports: [Report] @hasMany(indexName: "byChannel", fields: ["id"])
+  dataSets: [DataSet] @hasMany(indexName: "byChannel", fields: ["id"])
   # type: ChannelType @belongsTo(fields: ["channelTypeId"])
   type: String
   title: String!
@@ -28,7 +28,8 @@ type DataSet @model @auth(rules: [{ allow: public }]) {
   id: ID!
   title: String!
   description: String
-  # channels: [Channel] @manyToMany(relationName: "channelDS")
+  channel: Channel @belongsTo(fields: ["channelId"])
+  channelId: ID @index(name: "byChannel")  
   dataValues: [DataValue] @hasMany (indexName: "byDataSet", fields: ["id"])
   xAxis: String
   user: String

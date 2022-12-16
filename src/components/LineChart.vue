@@ -63,7 +63,7 @@ export default {
         const data = this.chartData.map(
           (item) => Object.values(item)[index + 1]
         );
-        //console.log(this.chartColors[0][index])
+        console.log(item)
         dataSets.push({
           label: item,
           data: data,

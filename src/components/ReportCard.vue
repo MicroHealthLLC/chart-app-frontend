@@ -59,8 +59,11 @@ export default {
         : "mdi-chart-line";
     },
     dataSetTitle() {
-      let title = this.dataSets.filter(d => d && d.id == this.report.dataSetId)[0].title 
-      return title ? title : "N/A"
+      if ((this.report.dataSetId)[0].title) {
+        let title = this.dataSets.filter(d => d && d.id == this.report.dataSetId)[0].title 
+        return title
+      } else return ""
+      
     }
   },
   async beforeMount() {

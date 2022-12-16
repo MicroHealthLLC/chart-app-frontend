@@ -94,6 +94,15 @@
               :rules="[(v) => !!v || 'Title is required']"
             ></v-text-field>
           </div>
+          <div class="description">
+            <v-textarea
+              v-model="activeReport.description"
+              label="Description"
+              rows="1"
+              auto-grow
+              dense
+            ></v-textarea>
+          </div>
           <div>
             <v-text-field
               v-model="createdBy"
@@ -102,7 +111,7 @@
               readonly
             ></v-text-field>
           </div>
-          <div>
+          <!-- <div>
             <v-select
               v-model="activeReport.channelId"
               :items="channels"
@@ -114,7 +123,7 @@
               :rules="[(v) => !!v || 'Channel is required']"
               :readonly="newChannelReport"
             ></v-select>
-          </div>
+          </div> -->
           <div>
             <v-text-field
               v-model="updatedBy"
@@ -145,15 +154,6 @@
               label="Chart Type"
               dense
             ></v-select>
-          </div>
-          <div class="description">
-            <v-textarea
-              v-model="activeReport.description"
-              label="Description"
-              rows="1"
-              auto-grow
-              dense
-            ></v-textarea>
           </div>
           <!-- <div class="tags">
             <v-select
