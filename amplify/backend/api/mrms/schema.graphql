@@ -45,3 +45,11 @@ type ChannelType @model @auth(rules: [{ allow: public }]) {
   channels: [Channel] @hasMany(indexName: "byChannelType",fields: ["id"])
   id: ID!
 }
+type CurrentChannel @model @auth(rules: [{ allow: public }]) {
+  id: String!
+  name: String!
+  regName: String
+}
+
+# Create simple table for currentChannel
+

@@ -271,3 +271,32 @@ export const listChannelTypes = /* GraphQL */ `
     }
   }
 `;
+export const getCurrentChannel = /* GraphQL */ `
+  query GetCurrentChannel($id: ID!) {
+    getCurrentChannel(id: $id) {
+      id
+      name
+      regName
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listCurrentChannels = /* GraphQL */ `
+  query ListCurrentChannels(
+    $filter: ModelCurrentChannelFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCurrentChannels(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        regName
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;

@@ -454,3 +454,45 @@ export const deleteChannelType = /* GraphQL */ `
     }
   }
 `;
+export const createCurrentChannel = /* GraphQL */ `
+  mutation CreateCurrentChannel(
+    $input: CreateCurrentChannelInput!
+    $condition: ModelCurrentChannelConditionInput
+  ) {
+    createCurrentChannel(input: $input, condition: $condition) {
+      id
+      name
+      regName
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateCurrentChannel = /* GraphQL */ `
+  mutation UpdateCurrentChannel(
+    $input: UpdateCurrentChannelInput!
+    $condition: ModelCurrentChannelConditionInput
+  ) {
+    updateCurrentChannel(input: $input, condition: $condition) {
+      id
+      name
+      regName
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteCurrentChannel = /* GraphQL */ `
+  mutation DeleteCurrentChannel(
+    $input: DeleteCurrentChannelInput!
+    $condition: ModelCurrentChannelConditionInput
+  ) {
+    deleteCurrentChannel(input: $input, condition: $condition) {
+      id
+      name
+      regName
+      createdAt
+      updatedAt
+    }
+  }
+`;

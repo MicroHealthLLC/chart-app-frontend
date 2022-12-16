@@ -52,6 +52,11 @@ const routes = [
       import("../views/auth/ResetPW.vue"),
   },
   {
+    path: "/dashboards",
+    name: "NewDashboards",
+    component: Dashboards,
+  },
+    {
     path: "/verify",
     name: "SignUpVerify",
     props: true,
@@ -65,6 +70,12 @@ const routes = [
       import("../views/Home.vue"),
   },
   {
+    path: "/channel-card",
+    name: "ChannelCard",
+    component: () =>
+      import("../components/ChannelCard.vue"),
+  },
+  {
     path: "/news",
     name: "News",
     component: News,
@@ -75,10 +86,16 @@ const routes = [
     component: AddDataSet,
   },
   {
-    path: "/data-sets",
+    path: "/channel/:title/data-sets",
     name: "DataSets",
     component: DataSets,
   },
+  {
+    path: "/channel/:title",
+    name: "ChannelHome",
+    component: () =>
+    import("../views/ChannelHome.vue"),
+},
   {
     path: "/data-sets/:dataSetId",
     name: "DataSet",
@@ -90,7 +107,7 @@ const routes = [
     component: PublicReports,
   },
   {
-    path: "/reports",
+    path: "/channel/:title/reports",
     name: "Reports",
     component: Reports,
   },
@@ -115,12 +132,12 @@ const routes = [
     component: Channel,
   },
   {
-    path: "/add-report",
+    path: "/channel/:title/add-report",
     name: "AddReport",
     component: AddReport,
   },
   {
-    path: "/channels/:channelId/reports",
+    path: "/channels/:title/reports",
     name: "ChannelReports",
     component: ChannelReports,
   },
