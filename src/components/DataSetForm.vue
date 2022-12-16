@@ -80,7 +80,7 @@
             </template></v-text-field>
           </div> -->
           <!-- <v-btn v-if="dataSet.id" @click="showDataChart">Show Data</v-btn> -->
-          <div>
+          <div v-if="dataSet.id">
             <v-file-input
               placeholder="Please choose a file..."
               type="file"
@@ -147,7 +147,7 @@
           <v-btn @click="togglePieChart" small>Pie</v-btn>
           <v-btn @click="togglePolarAreaChart" small>Polar Area</v-btn>
         </v-btn-toggle>
-        <small class="ml-6 mb-2">{{xAxisLabel}}</small>
+        <small v-if="(dataSet.dataValues && dataSet.dataValues.items && dataSet.dataValues.items.length > 0)" class="ml-6 mb-2">{{xAxisLabel}}</small>
         <v-row v-if="(dataSet.dataValues && dataSet.dataValues.items && dataSet.dataValues.items.length > 0)" class="ml-2">
           <v-col class="d-inline-flex" cols="12" sm="4">
             <v-select v-model="xAxisValue" :items="xAxisKeys" :label="xAxisLabel" solo dense @change="onChangeAxis"></v-select>
@@ -256,6 +256,7 @@ export default {
   computed: {
     ...mapGetters([
       "dataSet",
+      "dataSets",
       "dataValue",
       "dataValues",
       "channels",
@@ -308,7 +309,7 @@ export default {
     } */
   },
   methods: {
-    ...mapActions(["addDataSet", "addDataValue", "updateDataSetById", "updateDataSet", "fetchDataSet", "fetchChannels", "fetchDataValue", "fetchDataValues"]),
+    ...mapActions(["addDataSet", "addDataValue", "updateDataSetById", "updateDataSet", "fetchDataSet", "fetchDataSets", "fetchChannels", "fetchDataValue", "fetchDataValues"]),
     ...mapMutations(["SET_DATA_SET", "SET_STATUS_CODE"]),
     onChange(event) {
       this.file = event.target.files ? event.target.files[0] : null;
@@ -343,7 +344,6 @@ export default {
     },
     async saveDataSet() {
       this.$refs.form.validate();
-
       if (!this.isReadOnly && this.dataSet.id) {
         await this.updateDataSetById({
           id: this.dataSet.id,
@@ -351,17 +351,23 @@ export default {
           description: this.dataSet.description,
           user: this.dataSet.user,
           channelId: this.currentChannel.id
-        });
+        }).then(this.isReadOnly = true)
       } else {
+        let oldDataSetIds = this.dataSets.filter(d => this.currentChannel.id == d.channelId).map(f => f.id)
         await this.addDataSet({
           title: this.dataSet.title,
           description: this.dataSet.description,
           user: this.dataSet.user,
           channelId: this.currentChannel.id
-        });
+        })
+        this.fetchDataSets().then(() => {
+          let lastAdded = this.dataSets.filter(d => this.currentChannel.id == d.channelId).filter(d => !oldDataSetIds.includes(d.id))
+          let id = lastAdded[0].id
+          this.$router.push(`/data-sets/${id}`)
+        })
+        //this.fetchDataSet(this.$route.params.dataSetId),
+        //this.addNewDataValue()
       }
-      this.$refs.form.reset();
-      this.isReadOnly = true
     },
     addNewDataValue() {
       //let objString = JSON.stringify(this.selected)
@@ -371,6 +377,7 @@ export default {
         dataSetId: this.dataSet.id
       });
       this.showDataChart()
+      this.clearInput("file")
     },
     async showDataChart() {
       await this.fetchDataSet(this.$route.params.dataSetId)
@@ -394,6 +401,14 @@ export default {
         value: item,
       }));*/
       this.setDataTable(newData)
+    },
+    clearInput(type) {
+      this.$refs.form.inputs.forEach(input => {
+        console.log(input)
+        if (input.type == type) {
+          input.reset()
+        }
+      })
     },
     editForm() {
       this.isReadOnly = false
@@ -447,6 +462,7 @@ export default {
   mounted() {
     this.onChangeSelected()
     this.fetchChannels();
+    this.fetchDataSets()
     if (!this.dataSet.user) {
       this.dataSet.user = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`
     }

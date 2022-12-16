@@ -329,7 +329,7 @@ export default {
         let data = {
           title: this.activeReport.title,
           description: this.activeReport.description,
-          channelId: this.activeReport.channelId,
+          channelId: this.currentChannel.id,
           chartType: this.activeReport.chartType,
           dataSetId: this.activeReport.dataSetId,
           // dataSet: this.activeReport.dataSet,
@@ -397,6 +397,7 @@ export default {
       "activeReport",
       "channels",
       "channelReports",
+      "currentChannel",
       "colors",
       "channelDataSets",
       "dataSets",
