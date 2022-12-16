@@ -1,8 +1,8 @@
 <template>
   <v-row>
     <v-col>
-      <div class="d-flex justify-space-between">
-        <h3>Channels</h3>
+      <div class="d-flex justify-space-between">      
+        <h3><v-icon class="mr-2 pb-2" color="green darken-2">mdi-television-classic</v-icon>Channels</h3>
         <v-btn class="mb-2" color="primary" small to="/add-channel"
           >Add Channel <v-icon small>mdi-plus</v-icon></v-btn
         >

@@ -300,6 +300,7 @@ export default {
       "addReport",
       "updateReportById",
       "deleteReport",
+      "updateChannelById"
     ]),
     ...mapMutations(["SET_REPORT_DATASET", "SET_STATUS_CODE"]),
     changeChartData() {
@@ -340,6 +341,15 @@ export default {
         if (this.activeReport.id) {
           data.id = this.activeReport.id;
           this.updateReportById(data);
+
+          // await this.updateReminderById({
+          //       id: goalActsArray[i].id,           
+          //       goalId: null,
+          //     });
+          this.updateChannelById({
+           id:  this.activeReport.channelId,
+           reports: [this.activeReport]
+          });
         } else {
           console.log(data)
           // data.user_id = this.user.id;

@@ -77,17 +77,17 @@ export default {
      }, */
     toReport() {
       this.$router.push(
-        `/channels/${this.report.channelId}/reports/${this.report.id}`
+        `/reports/${this.report.channelId}/report/${this.report.id}`
       );
     },
   },
   watch: {
-    dataSets() {
-      //console.log(this.dataSets)
-    },
-    report() {
-      //console.log(this.report)
-    },
+    // dataSets() {
+    //   console.log(this.dataSets)
+    // },
+    // report() {
+    //   console.log(this.report)
+    // },
   },
 };
 </script>

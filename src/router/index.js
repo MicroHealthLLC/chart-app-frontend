@@ -11,7 +11,8 @@ import DataSet from "../views/DataSet.vue";
 import DataSets from "../views/DataSets.vue";
 
 import PublicReports from "../views/PublicReports.vue";
-import PersonalReports from "../views/PersonalReports.vue";
+import Reports from "../views/Reports.vue";
+// import PersonalReports from "../views/PersonalReports.vue";
 import GroupReports from "../views/GroupReports.vue";
 
 import AddChannel from "../views/AddChannel.vue";
@@ -89,9 +90,9 @@ const routes = [
     component: PublicReports,
   },
   {
-    path: "/personal-reports",
-    name: "PersonalReports",
-    component: PersonalReports,
+    path: "/reports",
+    name: "Reports",
+    component: Reports,
   },
   {
     path: "/group-reports",
@@ -124,7 +125,7 @@ const routes = [
     component: ChannelReports,
   },
   {
-    path: "/channels/:channelId/reports/:reportId",
+    path: "/reports/:channelId/report/:reportId",
     name: "Report",
     component: Report,
   },

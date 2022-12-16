@@ -2,7 +2,8 @@
   <v-row>
     <v-col class="col-9">
       <!-- PUBLIC REPORTS -->
-      <h3><router-link to="/public-reports">Reports</router-link></h3>
+      <h3><v-icon class="mr-2 pb-2" color="orange darken-2">mdi-chart-box-outline</v-icon>
+      <router-link to="/public-reports">Reports</router-link></h3>
       <v-divider class="mb-4"></v-divider>
 
       <!-- <div v-if="reports.public.length > 0" class="grid">
