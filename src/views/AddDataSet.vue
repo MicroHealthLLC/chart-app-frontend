@@ -22,10 +22,7 @@ export default {
       title: "",
       description: "",
       data: [],
-      user: {
-        first_name: this.user.attributes.given_name,
-        last_name: this.user.attributes.family_name,
-      },
+      user: `${this.user.attributes.given_name} ${this.user.attributes.family_name}`,
     });
   },
 };

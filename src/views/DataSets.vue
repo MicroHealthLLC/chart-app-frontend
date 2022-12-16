@@ -9,7 +9,7 @@
 
       <v-divider class="mb-4"></v-divider>
       <v-card>
-        <v-data-table :headers="headers" :items="dataSets">
+        <v-data-table :headers="headers" :items="channelDataSets">
           
           <!-- Formatted Date -->
           <template v-slot:item.created_at="{ item }">
@@ -88,7 +88,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["dataSets", "user"]),
+    ...mapGetters(["dataSets", "user", "currentChannel"]),
+    channelDataSets(){
+        if (this.dataSets && this.dataSets.length > 0 && this.currentChannel && this.currentChannel.id){
+          return this.dataSets.filter(t => t.channelId == this.currentChannel.id)
+        } else return []
+      },
   },
   methods: {
     ...mapActions(["fetchDataSets", "removeDataSet", "fetchDataSet"]),
@@ -119,8 +124,8 @@ export default {
     this.fetchDataSets();
   },
   mounted() {
-    console.log(this.user)
-    console.log(this.dataSets)
+    //console.log(this.user)
+    //console.log(this.dataSets)
   }
 };
 </script>
