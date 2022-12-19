@@ -1,9 +1,9 @@
 <template>
   <v-navigation-drawer v-model="drawer" app permanent :mini-variant.sync="mini" v-if="user && user.attributes" >
     <v-list>
-      <v-list-item >
-        <v-list-item-icon class="clickable" @click.stop="mini = !mini">
-          <v-icon>mdi-menu</v-icon>
+      <v-list-item>
+        <v-list-item-icon  class="clickable" @click="mini = !mini" :disabled="tru">
+          <v-icon :class="mini == true ? 'liteGrey' : 'blu'">mdi-menu</v-icon>
         </v-list-item-icon>
         <v-list-item-content >
           <v-list-item-title @click="goHome" link  class="text-h6 text-bold cursor"
@@ -12,38 +12,35 @@
       </v-list-item>
     </v-list>
     <v-divider></v-divider> 
-         <v-list dense nav>
+         <v-list dense nav >
           <v-list-item>
             <v-list-item-icon>
-              <v-icon color="green darken-2" class="pt-1">mdi-television-classic</v-icon>
+              <v-icon :class="mini == true ? 'whitesmok' : 'gre'" class="pt-1">mdi-television-classic</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title ><span  class="text-h6 text--blue" color="text--blue">{{ regName }}</span>
-             
-              </v-list-item-title>
-             
-
+              <v-list-item-title ><span  class="text-h6 text--blue" color="text--blue">{{ regName }}</span>             
+              </v-list-item-title>  
             </v-list-item-content>
           </v-list-item>
-          <v-list-item :to="`/channel/${pathName}/data-sets`" link>
+          <v-list-item :disabled="tru" :to="`/${pathName}/data-sets`" link>
             <v-list-item-icon >
-              <v-icon color="blue darken-2">mdi-equalizer</v-icon>
+              <v-icon :class="mini == true ? 'whitesmok' : 'blu'">mdi-equalizer</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>Datasets</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item :to="`/channel/${pathName}/reports`" link>
+          <v-list-item :disabled="tru" :to="`/${pathName}/reports`" link>
             <v-list-item-icon >
-              <v-icon color="orange darken-2">mdi-chart-box-outline</v-icon>
+              <v-icon :class="mini == true ? 'whitesmok' : 'or'">mdi-chart-box-outline</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>Reports</v-list-item-title>
             </v-list-item-content>
           </v-list-item>  
-          <v-list-item :to="`/channel/${pathName}/dashboards`" link>
+          <v-list-item :disabled="tru"  :to="`/${pathName}/dashboards`" link>
             <v-list-item-icon >
-              <v-icon color="cyan">mdi-monitor-dashboard</v-icon>
+              <v-icon :class="mini == true ? 'whitesmok' : 'cya'">mdi-monitor-dashboard</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>Dashboards</v-list-item-title>
@@ -122,8 +119,9 @@ import { mapGetters, mapMutations, mapActions } from "vuex";
 export default {
   data() {
     return {
-      mini: false,
+      mini: true,
       drawer: true,
+      tru: false, 
       regName: '',
       pathName: '',
       channelId: null,
@@ -168,6 +166,10 @@ export default {
     ...mapMutations(["SET_SNACKBAR", "SET_USER"]),
     ...mapActions(["logout", "fetchChannels", "fetchReports", "removeCurrentChannel", "fetchCurrentChannels"]),
     async logOutUser() {
+      if(this.channelId){
+      let id = this.channelId
+      this.removeCurrentChannel({id: id})
+      }
       await this.logout();
       // this.$router.push("/signin");
     },
@@ -215,11 +217,23 @@ export default {
         console.log(this.currentChannels)
         console.log(this.currentChannels[0].channelId)
         console.log(this.currentChannels[0].regName)
+        this.mini = false
+        this.tru = false
         this.channelId = this.currentChannels[0].id
         this.regName = this.currentChannels[0].regName
         this.pathName = this.currentChannels[0].name
+      } else {
+        this.mini = true
+        this.tru = true
+        this.regName = ''
       }
-        },
+    },
+    mini(){
+      if (this.mini == true){
+        return true
+      }
+      console.log(this.mini)
+    },
     channels() {
       this.channelItems[0].channels = [];
       this.channelItems[1].channels = [];
@@ -244,6 +258,25 @@ export default {
 }
 .active-nav-item {
   color: #1976d2 !important;
+}
+
+.lightGrey {
+  color: whitesmokrey !important
+}
+.whitesmok {
+  color: ghostwhite !important;
+}
+.blu{
+  color: #1976D2 !important;
+}
+.gre{
+  color: #388E3C !important
+}
+.or {
+  color: #dd9036 !important;
+}
+.cya {
+  color: #00bcd4 !important 
 }
 .cursor{
   cursor: pointer;

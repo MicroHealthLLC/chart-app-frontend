@@ -363,7 +363,7 @@ export default {
         this.fetchDataSets().then(() => {
           let lastAdded = this.dataSets.filter(d => this.currentChannel.id == d.channelId).filter(d => !oldDataSetIds.includes(d.id))
           let id = lastAdded[0].id
-          this.$router.push(`/data-sets/${id}`)
+          this.$router.push(`/:title/data-sets/${id}`)
         })
         //this.fetchDataSet(this.$route.params.dataSetId),
         //this.addNewDataValue()

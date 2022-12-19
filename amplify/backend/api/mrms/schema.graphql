@@ -50,6 +50,7 @@ type CurrentChannel @model @auth(rules: [{ allow: public }]) {
   id: String!
   name: String!
   regName: String
+  channelId: String
 }
 
 # Create simple table for currentChannel

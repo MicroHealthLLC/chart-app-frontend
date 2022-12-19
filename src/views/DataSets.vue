@@ -3,7 +3,7 @@
     <v-col>
       <div class="d-flex justify-space-between">
         <h3><v-icon class="mr-2 pb-2" color="blue darken-2">mdi-equalizer</v-icon>Data Sets</h3>
-        <v-btn class="mb-2" color="primary" small to="/add-data-set">Add Data Set <v-icon
+        <v-btn class="mb-2" color="primary" small :to="`data-sets/add-data-set`">Add Data Set <v-icon
             small>mdi-plus</v-icon></v-btn>
       </div>
 
@@ -88,7 +88,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["dataSets", "user", "currentChannel"]),
+    ...mapGetters(["dataSets", "user", "currentChannels"]),
     channelDataSets(){
         if (this.dataSets && this.dataSets.length > 0 && this.currentChannel && this.currentChannel.id){
           return this.dataSets.filter(t => t.channelId == this.currentChannel.id)

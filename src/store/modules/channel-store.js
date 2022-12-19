@@ -80,11 +80,11 @@ export default {
       try {
         await API.graphql(graphqlOperation(createCurrentChannel, { input: current_channel }));
         dispatch("fetchCurrentChannels");
-        commit("SET_SNACKBAR", {
-          show: true,
-          message: "Channel Successfully Added!",
-          color: "var(--mh-green)",
-        });
+        // commit("SET_SNACKBAR", {
+        //   show: true,
+        //   message: "Channel Successfully Added!",
+        //   color: "var(--mh-green)",
+        // });
       } catch (error) {
         console.log("loser");
         console.log(error);
@@ -97,25 +97,25 @@ export default {
       try {
         await API.graphql(graphqlOperation(updateCurrentChannel, { input: current_channel }));
         dispatch("fetchCurrentChannels");
-        commit("SET_SNACKBAR", {
-          show: true,
-          message: "Channel Successfully Updated!",
-          color: "var(--mh-green)",
-        });
+        // commit("SET_SNACKBAR", {
+        //   show: true,
+        //   message: "Channel Successfully Updated!",
+        //   color: "var(--mh-green)",
+        // });
       } catch (error) {
         console.log(error);
       }
       commit("TOGGLE_SAVING", false);
     },
-    async removeCurrentChannel({ commit, dispatch }, id) {
+    async removeCurrentChannel({ dispatch }, id) {
       try {
         await API.graphql(graphqlOperation(deleteCurrentChannel, { input: id }));
         dispatch("fetchCurrentChannels");
-        commit("SET_SNACKBAR", {
-          show: true,
-          message: "Channel Successfully Removed",
-          color: "var(--mh-orange)",
-        });
+        // commit("SET_SNACKBAR", {
+        //   show: true,
+        //   message: "Channel Successfully Removed",
+        //   color: "var(--mh-orange)",
+        // });
       } catch (error) {
         console.log(error);
       }

@@ -80,7 +80,7 @@ export default {
      }, */
     toReport() {
       this.$router.push(
-        `/reports/${this.report.channelId}/report/${this.report.id}`
+        `reports/${this.report.id}`
       );
     },
   },

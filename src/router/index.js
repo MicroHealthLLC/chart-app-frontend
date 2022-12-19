@@ -81,23 +81,23 @@ const routes = [
     component: News,
   },
   {
-    path: "/add-data-set",
+    path: "/:title/add-data-set",
     name: "AddDataSet",
     component: AddDataSet,
   },
   {
-    path: "/channel/:title/data-sets",
+    path: "/:title/data-sets",
     name: "DataSets",
     component: DataSets,
   },
   {
-    path: "/channel/:title",
+    path: "/:title",
     name: "ChannelHome",
     component: () =>
     import("../views/ChannelHome.vue"),
 },
   {
-    path: "/data-sets/:dataSetId",
+    path: "/:title/data-sets/:dataSetId",
     name: "DataSet",
     component: DataSet,
   },
@@ -107,7 +107,7 @@ const routes = [
     component: PublicReports,
   },
   {
-    path: "/channel/:title/reports",
+    path: "/:title/reports",
     name: "Reports",
     component: Reports,
   },
@@ -137,12 +137,12 @@ const routes = [
     component: AddReport,
   },
   {
-    path: "/channels/:title/reports",
+    path: "/:title/reports",
     name: "ChannelReports",
     component: ChannelReports,
   },
   {
-    path: "/reports/:channelId/report/:reportId",
+    path: "/:title/reports/:reportId",
     name: "Report",
     component: Report,
   },
@@ -152,12 +152,12 @@ const routes = [
     component: AddDashboard,
   },
   {
-    path: "channel/:title/dashboards",
+    path: "/:title/dashboards",
     name: "Dashboards",
     component: Dashboards,
   },
   {
-    path: "/channels/:channelId/dashboards/:dashboardId",
+    path: "/:title/dashboards/:dashboardId",
     name: "Dashboard",
     component: Dashboard,
   },
