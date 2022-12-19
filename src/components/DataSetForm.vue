@@ -25,7 +25,7 @@
             small
             >Edit</v-btn
           >
-          <v-btn class="mb-2" @click="$router.go(-1)" small outlined
+          <v-btn class="mb-2" @click="$router.push(`/channel/${currentChannel.name}/data-sets`)" small outlined
             >Close</v-btn
           >
         </div>
@@ -80,7 +80,7 @@
             </template></v-text-field>
           </div> -->
           <!-- <v-btn v-if="dataSet.id" @click="showDataChart">Show Data</v-btn> -->
-          <div v-if="dataSet.id">
+          <div>
             <v-file-input
               placeholder="Please choose a file..."
               type="file"
@@ -155,11 +155,11 @@
           </v-col>
         </v-row>
         <!-- Table Preview -->
-        <div
-          class="ma-4"
-          v-if="chartType === 'Data Table'"
-        >
-          <v-data-table v-model="selected" :headers="selectedHeaders" :items="items" :item-key="headers[0].text" :single-select="false" show-select>
+        <v-card-title>
+          <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
+        </v-card-title>
+        <div class="ma-4" v-if="chartType === 'Data Table'">
+          <v-data-table v-model="selected" :headers="selectedHeaders" :items="items" :item-key="headers[0].text" :single-select="false" :search="search">
           </v-data-table>
         </div>
         <!-- Chart Previews -->
@@ -249,7 +249,8 @@ export default {
       formValid: true,
       submitAttempted: false,
       dataValueInput: '',
-      isReadOnly: false
+      isReadOnly: false,
+      search: ''
     };
   },
   mixins: [datasetMixin],
@@ -309,7 +310,7 @@ export default {
     } */
   },
   methods: {
-    ...mapActions(["addDataSet", "addDataValue", "updateDataSetById", "updateDataSet", "fetchDataSet", "fetchDataSets", "fetchChannels", "fetchDataValue", "fetchDataValues"]),
+    ...mapActions(["addDataSet", "addDataValue", "updateDataSetById", "updateDataSet", "fetchDataSet", "fetchDataSets", "fetchDataSetThenAddDataValue", "fetchChannels", "fetchDataValue", "fetchDataValues"]),
     ...mapMutations(["SET_DATA_SET", "SET_STATUS_CODE"]),
     onChange(event) {
       this.file = event.target.files ? event.target.files[0] : null;
@@ -364,14 +365,17 @@ export default {
           let lastAdded = this.dataSets.filter(d => this.currentChannel.id == d.channelId).filter(d => !oldDataSetIds.includes(d.id))
           let id = lastAdded[0].id
           this.$router.push(`/data-sets/${id}`)
+          console.log(this.selected)
+          this.fetchDataSetThenAddDataValue(id, this.selected)
+          
+          //this.dataSet.id = id
         })
-        //this.fetchDataSet(this.$route.params.dataSetId),
-        //this.addNewDataValue()
       }
     },
-    addNewDataValue() {
+    async addNewDataValue() {
       //let objString = JSON.stringify(this.selected)
-      console.log(this.selected)
+      console.log(this.dataSet)
+      
       this.addDataValue({
         data: JSON.stringify(this.selected),
         dataSetId: this.dataSet.id
@@ -379,8 +383,8 @@ export default {
       this.showDataChart()
       this.clearInput("file")
     },
-    async showDataChart() {
-      await this.fetchDataSet(this.$route.params.dataSetId)
+    showDataChart() {
+      //this.fetchDataSet(this.$route.params.dataSetId)
       console.log(this.dataSet)
       //this.createMasterData(this.dataSet.dataValues.items)
       this.uploadData(this.createMasterData(this.dataSet.dataValues.items))
@@ -404,7 +408,6 @@ export default {
     },
     clearInput(type) {
       this.$refs.form.inputs.forEach(input => {
-        console.log(input)
         if (input.type == type) {
           input.reset()
         }
@@ -484,7 +487,7 @@ export default {
     dataSet() {
       if (this.dataSet.id) {
         this.isReadOnly = true
-        
+               
         if (this.dataSet.id !== this.$route.params.dataSetId){
         this.clear()
         }
@@ -520,9 +523,9 @@ export default {
 </script>
 
 <style scoped>
-.preview-container {
-  /* height: 750px; */
-}
+/* .preview-container {
+  height: 750px;
+} */
 .placeholder-text,
 .placeholder-icon {
   color: #1976d2;
