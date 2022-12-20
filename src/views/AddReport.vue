@@ -18,25 +18,25 @@ export default {
   computed: {
     ...mapGetters(["user"]),
   },
-  beforeMount() {
-    this.SET_REPORT({
-      title: "",
-      description: "",
-      chartType: "line",
-      dataSet: { dataValues: [] },
-      // tags: [],
-      colorSchemeId: 1,
-      user: {
-        first_name: this.user.attributes.given_name,
-        last_name: this.user.attributes.family_name,
-      },
-      updated_at: "",
-    });
+  // beforeMount() {
+  //   this.SET_REPORT({
+  //     title: "",
+  //     description: "",
+  //     chartType: "line",
+  //     dataSet: { dataValues: [] },
+  //     // tags: [],
+  //     colorSchemeId: 1,
+  //     user: {
+  //       first_name: this.user.attributes.given_name,
+  //       last_name: this.user.attributes.family_name,
+  //     },
+  //     updated_at: "",
+  //   });
 
-    // TODO: Combine API calls below into one
-    // this.fetchDataSets();
-    // this.fetchTags();
-  },
+  //   // TODO: Combine API calls below into one
+  //   // this.fetchDataSets();
+  //   // this.fetchTags();
+  // },
 };
 </script>
 

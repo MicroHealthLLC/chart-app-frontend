@@ -25,7 +25,7 @@
             small
             >Edit</v-btn
           >
-          <v-btn class="mb-2" @click="$router.go(-1)" small outlined
+          <v-btn class="mb-2"  @click="resetAndGoBack" small outlined
             >Close</v-btn
           >
         </div>
@@ -260,7 +260,7 @@ export default {
       "dataValue",
       "dataValues",
       "channels",
-      "currentChannel",
+      "currentChannels",
       "colors",
       "statusCode",
       "user",
@@ -314,6 +314,10 @@ export default {
     onChange(event) {
       this.file = event.target.files ? event.target.files[0] : null;
     },
+    resetAndGoBack(){
+      this.$router.go(-1)
+      this.$refs.form.reset();
+    },
     clear() {
       this.file = null;
       /* this.data = [];
@@ -350,18 +354,18 @@ export default {
           title: this.dataSet.title,
           description: this.dataSet.description,
           user: this.dataSet.user,
-          channelId: this.currentChannel.id
+          channelId: this.currentChannels[0].channelId
         }).then(this.isReadOnly = true)
       } else {
-        let oldDataSetIds = this.dataSets.filter(d => this.currentChannel.id == d.channelId).map(f => f.id)
+        let oldDataSetIds = this.dataSets.filter(d => this.currentChannels[0].channelId == d.channelId).map(f => f.id)
         await this.addDataSet({
           title: this.dataSet.title,
           description: this.dataSet.description,
           user: this.dataSet.user,
-          channelId: this.currentChannel.id
+          channelId: this.currentChannels[0].channelId
         })
         this.fetchDataSets().then(() => {
-          let lastAdded = this.dataSets.filter(d => this.currentChannel.id == d.channelId).filter(d => !oldDataSetIds.includes(d.id))
+          let lastAdded = this.dataSets.filter(d => this.currentChannels[0].channelId == d.channelId).filter(d => !oldDataSetIds.includes(d.id))
           let id = lastAdded[0].id
           this.$router.push(`/:title/data-sets/${id}`)
         })
@@ -470,7 +474,7 @@ export default {
       this.xAxisValue = this.dataSet.xAxis
       this.onChangeAxis()
     }
-    console.log(this.currentChannel)
+    console.log(this.currentChannels[0])
   },
   /* beforeMount() {
     this.fetchDataSet(this.dataSet.id)

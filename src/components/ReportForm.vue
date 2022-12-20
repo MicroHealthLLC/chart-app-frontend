@@ -1,8 +1,8 @@
 <template>
-  <v-row>
+  <v-row :load="log(activeReport)" >
     <v-col>
       <div class="d-flex justify-space-between">
-        <h3 v-if="activeReport.title">{{ activeReport.title }}</h3>
+        <h3 v-if="activeReport && activeReport.title">{{ activeReport.title }}</h3>
         <h3 v-else class="placeholder-title">(Report Title)</h3>
         <div>
           <v-btn
@@ -83,7 +83,7 @@
       <h3>Report Details</h3>
       <v-divider class="mb-8"></v-divider>
       <!-- Form Fields -->
-      <v-form v-model="formValid" ref="form"
+      <v-form v-if="activeReport" v-model="formValid" ref="form"
         ><div class="grid">
           <div>
             <v-text-field
@@ -134,7 +134,7 @@
           </div>
           <div>
             <v-select
-               v-model="activeReport.dataSetId"
+              v-model="activeReport.dataSetId"
               :items="dataSetChoices"
               item-text="title"
               item-value="id"
@@ -185,7 +185,7 @@
         </div>
       </v-form>
       <!-- Delete Button -->
-      <div v-if="activeReport.id" class="d-flex justify-end mt-4">
+      <div v-if="activeReport && activeReport.id" class="d-flex justify-end mt-4">
         <v-btn
           @click="deleteDialog = true"
           small
@@ -198,7 +198,7 @@
       <!-- Delete Prompt -->
       <v-dialog v-model="deleteDialog" max-width="400">
         <v-card>
-          <v-card-title>Delete {{ activeReport.title }}?</v-card-title>
+          <v-card-title>Delete this report?</v-card-title>
           <v-divider class="mx-4 mb-2"></v-divider>
           <v-card-text
             >Are you sure you would like to delete this report?</v-card-text
@@ -221,7 +221,7 @@
       <v-dialog v-model="fullscreen" fullscreen eager>
         <v-card>
           <v-toolbar class="px-5" color="info" dark>
-            <h3>{{ activeReport.title }}</h3>
+            <h3>{{ activeReport }}</h3>
             <v-spacer></v-spacer>
             <v-btn @click="fullscreen = false" icon
               ><v-icon>mdi-close-thick</v-icon></v-btn
@@ -265,6 +265,7 @@ import PieChart from "../components/PieChart";
 import PolarAreaChart from "../components/PolarAreaChart";
 import Table from "../components/Table";
 import datasetMixin from "../mixins/dataset-mixin";
+import reportMixin from "../mixins/report-mixin";
 
 export default {
   name: "ReportForm",
@@ -290,7 +291,7 @@ export default {
       data: []
     };
   },
-  mixins: [datasetMixin],
+  mixins: [datasetMixin, reportMixin],
   methods: {
     ...mapActions([
       "fetchReport",
@@ -302,16 +303,15 @@ export default {
       "deleteReport",
       "updateChannelById"
     ]),
-    ...mapMutations(["SET_REPORT_DATASET", "SET_STATUS_CODE"]),
+    ...mapMutations(["SET_REPORT_DATASET", "SET_STATUS_CODE", "SET_REPORT"]),
     changeChartData() {
       this.$refs.chart.index =
         (this.$refs.chart.index + 1) %
         (Object.keys(this.$refs.chart.chartData[0]).length - 1);
     },
-    /* log(e){
-      //console.log(e)
-    }, */
-    // FS = Full Screen
+    log(e){
+    console.log(e)
+    }, 
     changeFSChartData() {
       this.$refs.fullscreenchart.index =
         (this.$refs.fullscreenchart.index + 1) %
@@ -441,7 +441,7 @@ export default {
       return window.innerHeight - 200;
     },
     createdBy() {
-      if (this.activeReport.id && this.user && this.user.attributes) {
+      if (this.activeReport && this.activeReport.id && this.user && this.user.attributes) {
         return `${this.user.attributes.given_name} ${this.user.attributes.family_name} on ${new Date(this.activeReport.createdAt).toLocaleString()}`;
       } else {
         return `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
@@ -465,38 +465,31 @@ export default {
     // this.colorScheme = this.colors.find(
     //   (scheme) => scheme.id == this.activeReport.colorSchemeId
     // ).scheme;
-    if (this.$route.params.reportId) {
-      await this.fetchReport(this.$route.params.reportId);
+    if (this.activeReport && this.activeReport.id) {
+      // await this.fetchReport(this.$route.params.reportId);
       this.updateChartData();
     }
-    if (this.$route.name == "AddReport") {
+    if (this.$route.name == "Report") {
       this.dataSetChoices = [...this.dataSets];
     } else {
       this.dataSetChoices = [...this.dataSets]; // was ...this.channelDataSets
     }
   },
   watch: {
-    // statusCode() {
-    //   if (this.statusCode == 201) {
-    //     this.$router.push(
-    //       `/channels/${this.activeReport.channel_id}/reports/${this.activeReport.id}`
-    //     );
-    //     this.SET_STATUS_CODE(0);
-    //   }
-    // },
-
     activeReport() {
-      this.colorScheme = this.colors.find((scheme) => scheme.id == this.activeReport.colorSchemeId).scheme;
+      // this.colorScheme = this.colors.find((scheme) => scheme.id == this.activeReport.colorSchemeId).scheme;
       //console.log(this.activeReport.colorSchemeId)
-      console.log(this.activeReport)
-      //console.log(this.colorScheme)
+      console.log(this.$route) 
+
+        console.log(this.newReport)
+        if(!this.activeReport){
+         this.SET_REPORT(this.newReport)
+          console.log("No Active Report")
+        }
     },
     dataSets() {
       this.dataSetChoices = [...this.dataSets];
     },
-    // channelDataSets() {
-    //   this.dataSetChoices = [...this.channelDataSets];
-    // },
   },
 };
 </script>
