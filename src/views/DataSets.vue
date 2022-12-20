@@ -2,14 +2,14 @@
   <v-row>
     <v-col>
       <div class="d-flex justify-space-between">
-        <h3>Data Sets</h3>
-        <v-btn class="mb-2" color="primary" small to="/add-data-set">Add Data Set <v-icon
+        <h3><v-icon class="mr-2 pb-2" color="blue darken-2">mdi-equalizer</v-icon>Data Sets</h3>
+        <v-btn class="mb-2" color="primary" small :to="`data-sets/add-data-set`">Add Data Set <v-icon
             small>mdi-plus</v-icon></v-btn>
       </div>
 
       <v-divider class="mb-4"></v-divider>
       <v-card>
-        <v-data-table :headers="headers" :items="dataSets">
+        <v-data-table :headers="headers" :items="channelDataSets">
           
           <!-- Formatted Date -->
           <template v-slot:item.created_at="{ item }">
@@ -88,7 +88,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["dataSets", "user"]),
+    ...mapGetters(["dataSets", "user", "currentChannels"]),
+    channelDataSets(){
+        if (this.dataSets && this.dataSets.length > 0 && this.currentChannel && this.currentChannel.id){
+          return this.dataSets.filter(t => t.channelId == this.currentChannel.id)
+        } else return []
+      },
   },
   methods: {
     ...mapActions(["fetchDataSets", "removeDataSet", "fetchDataSet"]),
@@ -119,8 +124,8 @@ export default {
     this.fetchDataSets();
   },
   mounted() {
-    console.log(this.user)
-    console.log(this.dataSets)
+    //console.log(this.user)
+    //console.log(this.dataSets)
   }
 };
 </script>

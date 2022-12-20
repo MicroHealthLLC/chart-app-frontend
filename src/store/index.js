@@ -15,6 +15,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    current_channel: {},
     status_code: 0,
     snackbar: {
       show: false,
@@ -42,9 +43,11 @@ export default new Vuex.Store({
     TOGGLE_LOADING: (state, isLoading) => (state.loading = isLoading),
     SET_STATUS_CODE: (state, code) => (state.status_code = code),
     SET_TAGS: (state, tags) => (state.tags = tags),
+    SET_CURRENT_CHANNEL: (state, ch) => (state.current_channel = ch)
   },
   getters: {
     statusCode: (state) => state.status_code,
+    currentChannel: (state) => state.current_channel,
     // tags: (state) => state.tags, snackbar: (state) => state.snackbar,
     snackbar: (state) => state.snackbar,
     saving: (state) => state.saving,

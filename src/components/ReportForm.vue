@@ -94,6 +94,15 @@
               :rules="[(v) => !!v || 'Title is required']"
             ></v-text-field>
           </div>
+          <div class="description">
+            <v-textarea
+              v-model="activeReport.description"
+              label="Description"
+              rows="1"
+              auto-grow
+              dense
+            ></v-textarea>
+          </div>
           <div>
             <v-text-field
               v-model="createdBy"
@@ -102,7 +111,7 @@
               readonly
             ></v-text-field>
           </div>
-          <div>
+          <!-- <div>
             <v-select
               v-model="activeReport.channelId"
               :items="channels"
@@ -114,7 +123,7 @@
               :rules="[(v) => !!v || 'Channel is required']"
               :readonly="newChannelReport"
             ></v-select>
-          </div>
+          </div> -->
           <div>
             <v-text-field
               v-model="updatedBy"
@@ -145,15 +154,6 @@
               label="Chart Type"
               dense
             ></v-select>
-          </div>
-          <div class="description">
-            <v-textarea
-              v-model="activeReport.description"
-              label="Description"
-              rows="1"
-              auto-grow
-              dense
-            ></v-textarea>
           </div>
           <!-- <div class="tags">
             <v-select
@@ -300,6 +300,7 @@ export default {
       "addReport",
       "updateReportById",
       "deleteReport",
+      "updateChannelById"
     ]),
     ...mapMutations(["SET_REPORT_DATASET", "SET_STATUS_CODE"]),
     changeChartData() {
@@ -328,7 +329,7 @@ export default {
         let data = {
           title: this.activeReport.title,
           description: this.activeReport.description,
-          channelId: this.activeReport.channelId,
+          channelId: this.currentChannel.id,
           chartType: this.activeReport.chartType,
           dataSetId: this.activeReport.dataSetId,
           // dataSet: this.activeReport.dataSet,
@@ -340,6 +341,11 @@ export default {
         if (this.activeReport.id) {
           data.id = this.activeReport.id;
           this.updateReportById(data);
+
+           // this.updateChannelById({
+          //  id:  this.activeReport.channelId,
+          //  reports: [this.activeReport]
+          // });
         } else {
           console.log(data)
           // data.user_id = this.user.id;
@@ -350,11 +356,19 @@ export default {
     async updateChartData() {
       try {
         await this.fetchDataSet(this.activeReport.dataSetId)
-        let dataSet = this.dataSet
-        console.log(dataSet)
-        this.SET_REPORT_DATASET(dataSet);
-        this.data = this.createMasterData(dataSet.dataValues.items)
-        console.log(this.activeReport)
+        let headers = Object.keys(this.dataSet.dataValues.items[0].data[0])
+        headers.forEach((k, i) => {
+          if (k == this.dataSet.xAxis) {
+            this.arrayMove(headers, i, 0)
+          }
+        })
+        let newHeaders = headers.map((item) => ({
+          text: item,
+          value: item,
+        }));
+        this.data = this.createMasterData(this.dataSet.dataValues.items)
+        this.data = this.filterData(newHeaders, this.data)
+        this.SET_REPORT_DATASET(this.dataSet);
       } catch (err) {
         console.log(err)
       }
@@ -376,22 +390,15 @@ export default {
         (color) => selectedSchemeId == color.id
       ).scheme;
     },
-    /* createMasterData(arr) {
-      let masterData = []
-      arr.forEach(d => masterData.unshift(d.data))
-      masterData = masterData.flat()
-      const uniqueArray = masterData.filter((object,index) => index === masterData.findIndex(obj => JSON.stringify(obj) === JSON.stringify(object)))
-      console.log(uniqueArray)
-      this.data = uniqueArray
-      //this.uploadData(this.sortByKey(uniqueArray))
-    }, */
   },
   computed: {
     ...mapGetters([
       "activeDataSet",
       "activeReport",
       "channels",
+      "currentChannel",
       "channelReports",
+      "currentChannel",
       "colors",
       "channelDataSets",
       "dataSets",
@@ -435,9 +442,9 @@ export default {
     },
     createdBy() {
       if (this.activeReport.id && this.user && this.user.attributes) {
-        return `${this.user.attributes.given_name}  ${this.user.attributes.family_name} on ${new Date(this.activeReport.createdAt).toLocaleString()}`;
+        return `${this.user.attributes.given_name} ${this.user.attributes.family_name} on ${new Date(this.activeReport.createdAt).toLocaleString()}`;
       } else {
-        return `${this.user.attributes.given_name}  ${this.user.attributes.family_name}`;
+        return `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
       }
     },
     updatedBy() {
@@ -477,6 +484,7 @@ export default {
     //     this.SET_STATUS_CODE(0);
     //   }
     // },
+
     activeReport() {
       this.colorScheme = this.colors.find((scheme) => scheme.id == this.activeReport.colorSchemeId).scheme;
       //console.log(this.activeReport.colorSchemeId)

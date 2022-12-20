@@ -1,92 +1,58 @@
 <template>
-  <v-navigation-drawer v-model="drawer" app permanent :mini-variant.sync="mini" v-if="user && user.attributes">
+  <v-navigation-drawer v-model="drawer" app permanent :mini-variant.sync="mini" v-if="user && user.attributes" >
     <v-list>
       <v-list-item>
-        <v-list-item-icon class="clickable" @click.stop="mini = !mini">
-          <v-icon>mdi-menu</v-icon>
+        <v-list-item-icon  class="clickable" @click="mini = !mini" :disabled="tru">
+          <v-icon :class="mini == true ? 'liteGrey' : 'blu'">mdi-menu</v-icon>
         </v-list-item-icon>
-        <v-list-item-content>
-          <v-list-item-title class="text-h6"
-            >mRMS
-            <v-icon color="primary" small
-              >mdi-chart-timeline-variant-shimmer</v-icon
-            ></v-list-item-title
-          >
-          <v-list-item-subtitle > Microhealth </v-list-item-subtitle>
+        <v-list-item-content >
+          <v-list-item-title @click="goHome" link  class="text-h6 text-bold cursor"
+            ><b>mRMS</b></v-list-item-title>   
         </v-list-item-content>
       </v-list-item>
     </v-list>
-
-    <v-divider></v-divider>
- 
-    <v-list dense nav>
-     <!-- <span v-if="mini" class="ml-0">
-  <v-list-item
-    
-        v-for="item in items"
-        :key="item.title"
-        link
-        :to="item.route"
-        active-class="active-nav-item"
-      >
-    
-        <v-tooltip right >
-        <template v-slot:activator="{ on, attrs }">
-          <v-list-item-icon>
-          <v-icon v-bind="attrs"
-          v-on="on">{{ item.icon }}</v-icon>
-        </v-list-item-icon>
-      </template>
-      <v-list-item-content>
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
-        </v-list-item-content>
-      </v-tooltip>
-      
-      </v-list-item>
-     </span>
-     -->
-
-      <!-- <span v-else> -->
-        <v-list-item      
-        v-for="item in items"
-        :key="item.title"
-        link
-        :to="item.route"
-        active-class="active-nav-item"
-      >
-        <v-list-item-icon>
-        <v-icon >{{ item.icon }}</v-icon>
-        </v-list-item-icon>
-        <v-list-item-content>
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
-        </v-list-item-content>
-  
-      </v-list-item>
-
-      <!-- </span> -->
-   
-   
-
-      <v-divider></v-divider>
-
-      <div v-show="!mini" class="ml-2 mt-2 text-caption">Channels</div>
-
-      <v-list-item to="/add-channel" active-class="active-nav-item">
-        <v-list-item-icon><v-icon>mdi-playlist-plus</v-icon></v-list-item-icon>
-        <v-list-item-content>
-          <v-list-item-title>Create Channel</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-
-      <v-list-item exact-path to="/channels" active-class="active-nav-item">
-        <v-list-item-icon><v-icon>mdi-forwardburger</v-icon></v-list-item-icon>
-        <v-list-item-content>
-          <v-list-item-title>Channel List</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-      <!-- Public, Personal, and Group -->
-      <v-list-group
+    <v-divider></v-divider> 
+         <v-list dense nav >
+          <v-list-item>
+            <v-list-item-icon>
+              <v-icon :class="mini == true ? 'whitesmok' : 'gre'" class="pt-1">mdi-television-classic</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title ><span  class="text-h6 text--blue" color="text--blue">{{ regName }}</span>             
+              </v-list-item-title>  
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item :disabled="tru" :to="`/${pathName}/data-sets`" link>
+            <v-list-item-icon >
+              <v-icon :class="mini == true ? 'whitesmok' : 'blu'">mdi-equalizer</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Datasets</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item :disabled="tru" :to="`/${pathName}/reports`" link>
+            <v-list-item-icon >
+              <v-icon :class="mini == true ? 'whitesmok' : 'or'">mdi-chart-box-outline</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Reports</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>  
+          <v-list-item :disabled="tru"  :to="`/${pathName}/dashboards`" link>
+            <v-list-item-icon >
+              <v-icon :class="mini == true ? 'whitesmok' : 'cya'">mdi-monitor-dashboard</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Dashboards</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>         
+        </v-list>
+    <!-- <v-list dense nav>
+    <div v-show="!mini" class="ml-2 mt-2 text-caption text-dark">Report Channels</div> -->
+     <!-- Public, Personal, and Group -->
+      <!-- <v-list-group
         v-for="(item, index) in channels"
+        :load="log(channels)"
         :key="index"
         :prepend-icon="item.icon"
         no-action
@@ -94,73 +60,54 @@
       >
         <template v-slot:activator>
           <v-list-item-content>
-            <v-list-item-title v-text="item.title"></v-list-item-title>
+          <v-list-item-title ><span class="pr-2"> (3)</span>{{ item.title }}</v-list-item-title>
           </v-list-item-content>
         </template>
-
-        <v-list-item
-          v-for="(child, index) in item.channels"
+           <v-list-item
+          v-for="(child, index) in reports"
           :key="index"
-          :to="`/channels/${child.id}`"
           link
-          dense
-        >
+          dense>
+      
           <v-list-item-content>
-            <v-list-item-title>{{ child.title }}</v-list-item-title>
+            <v-list-item-title v-show="child.channelId == item.id">{{ child.title }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-      </v-list-group>
-      <!-- Dashboards - Links to channel/id/dashboards -->
-      <!-- <v-list-group
-        v-if="dashboardChannels.length > 0"
-        prepend-icon="mdi-monitor-dashboard"
-        no-action
-        class="nav-group"
-      >
-        <template v-slot:activator>
-          <v-list-item-content>
-            <v-list-item-title>Dashboards</v-list-item-title>
-          </v-list-item-content>
-        </template>
-
-        <v-list-item
-          v-for="(child, index) in dashboardChannels"
-          :key="index"
-          :to="`/channels/${child.id}/dashboards`"
-          link
-          dense
-        >
-          <v-list-item-content>
-            <v-list-item-title>{{ child.title }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list-group> -->
-    </v-list>
+      </v-list-group>    -->
+    <!-- </v-list> -->
     <!-- Profile and Logout Nav Items -->
     <template v-slot:append>
       <div>
-        <v-divider></v-divider>
-        <div v-show="!mini" class="user-name text-caption font-weight-bold">        
-          <!-- <span class="ml-5">{{ user.attributes.given_name }} {{ user.attributes.family_name }}</span>  -->
+        <v-divider></v-divider>        
+        <div v-show="!mini" class="user-name text-caption font-weight-bold">     
         </div>
         <v-list dense nav>
-          <v-list-item link>
+           <v-list-item link>
             <v-list-item-icon>
-              <v-icon>mdi-account</v-icon>
+              <v-icon  color="blue-grey darken-2">mdi-account</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title v-if="user && user.attributes">Hi, {{user.attributes.given_name}}</v-list-item-title>
             </v-list-item-content>
-          </v-list-item>
+          </v-list-item> 
+          
+          <v-list-item link>
+            <v-list-item-icon>
+              <v-icon  color="purple-grey darken-2">mdi-cog-outline</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Channel Settings</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>    
           <v-list-item @click="logOutUser" link>
             <v-list-item-icon>
-              <v-icon>mdi-logout</v-icon>
+              <v-icon color="orange darken-2">mdi-logout</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>Logout</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-        </v-list>
+        </v-list>      
       </div>
     </template>
   </v-navigation-drawer>
@@ -172,8 +119,14 @@ import { mapGetters, mapMutations, mapActions } from "vuex";
 export default {
   data() {
     return {
-      mini: false,
+      mini: true,
       drawer: true,
+      tru: false, 
+      regName: '',
+      pathName: '',
+      channelId: null,
+
+      channelList: [],
       items: [
         { title: "Home", icon: "mdi-home", route: "/" },
         {
@@ -211,10 +164,27 @@ export default {
   },
   methods: {
     ...mapMutations(["SET_SNACKBAR", "SET_USER"]),
-    ...mapActions(["logout", "fetchChannels"]),
+    ...mapActions(["logout", "fetchChannels", "fetchReports", "removeCurrentChannel", "fetchCurrentChannels"]),
     async logOutUser() {
+      if(this.channelId){
+      let id = this.channelId
+      this.removeCurrentChannel({id: id})
+      }
       await this.logout();
       // this.$router.push("/signin");
+    },
+    log(e){
+      console.log(e)
+    },
+    goHome(){    
+      if(this.channelId){
+      let id = this.channelId
+      this.removeCurrentChannel({id: id})
+     }
+     this.$router.push("/");
+    },
+    resetChannelStation(){
+    
     },
     updateChannels() {
       this.channels.forEach((channel) => {
@@ -229,18 +199,41 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["channels", "user"]),
+    ...mapGetters(["channels", "user", "reports", "currentChannel", "currentChannels"]),
     // dashboardChannels() {
     //   return this.channels.filter((channel) => channel.dashboards.length > 0);
     // },
+
   },
   mounted() {
     this.updateChannels();
     this.fetchChannels()
-    console.log(this.user)
- 
+    this.fetchCurrentChannels()
+    this.fetchReports()
   },
-  watch: {    
+  watch: {   
+    currentChannels(){
+      if(this.currentChannels && this.currentChannels[0]){
+        console.log(this.currentChannels)
+        console.log(this.currentChannels[0].channelId)
+        console.log(this.currentChannels[0].regName)
+        this.mini = false
+        this.tru = false
+        this.channelId = this.currentChannels[0].id
+        this.regName = this.currentChannels[0].regName
+        this.pathName = this.currentChannels[0].name
+      } else {
+        this.mini = true
+        this.tru = true
+        this.regName = ''
+      }
+    },
+    mini(){
+      if (this.mini == true){
+        return true
+      }
+      console.log(this.mini)
+    },
     channels() {
       this.channelItems[0].channels = [];
       this.channelItems[1].channels = [];
@@ -250,7 +243,7 @@ export default {
     },
     user(){
       if(this.user && this.user.attributes){
-        console.log(this.user)
+        // console.log(this.user)
       } else {
         this.$router.push("/signin")
       }
@@ -265,6 +258,31 @@ export default {
 }
 .active-nav-item {
   color: #1976d2 !important;
+}
+
+.lightGrey {
+  color: whitesmokrey !important
+}
+.whitesmok {
+  color: ghostwhite !important;
+}
+.blu{
+  color: #1976D2 !important;
+}
+.gre{
+  color: #388E3C !important
+}
+.or {
+  color: #dd9036 !important;
+}
+.cya {
+  color: #00bcd4 !important 
+}
+.cursor{
+  cursor: pointer;
+  color: #1D336F;
+  font-weight: 900;
+  font-style: italic;
 }
 .user-name {
   background-color: rgba(25, 118, 210, 0.12);

@@ -2,14 +2,17 @@
 // this is an auto generated file. This will be overwritten
 
 export const onCreateReport = /* GraphQL */ `
-  subscription OnCreateReport {
-    onCreateReport {
+  subscription OnCreateReport($filter: ModelSubscriptionReportFilterInput) {
+    onCreateReport(filter: $filter) {
       id
       title
       channel {
         id
         description
         reports {
+          nextToken
+        }
+        dataSets {
           nextToken
         }
         type
@@ -26,9 +29,20 @@ export const onCreateReport = /* GraphQL */ `
         id
         title
         description
+        channel {
+          id
+          description
+          type
+          title
+          channelTypeId
+          createdAt
+          updatedAt
+        }
+        channelId
         dataValues {
           nextToken
         }
+        xAxis
         user
         createdAt
         updatedAt
@@ -41,14 +55,17 @@ export const onCreateReport = /* GraphQL */ `
   }
 `;
 export const onUpdateReport = /* GraphQL */ `
-  subscription OnUpdateReport {
-    onUpdateReport {
+  subscription OnUpdateReport($filter: ModelSubscriptionReportFilterInput) {
+    onUpdateReport(filter: $filter) {
       id
       title
       channel {
         id
         description
         reports {
+          nextToken
+        }
+        dataSets {
           nextToken
         }
         type
@@ -65,9 +82,20 @@ export const onUpdateReport = /* GraphQL */ `
         id
         title
         description
+        channel {
+          id
+          description
+          type
+          title
+          channelTypeId
+          createdAt
+          updatedAt
+        }
+        channelId
         dataValues {
           nextToken
         }
+        xAxis
         user
         createdAt
         updatedAt
@@ -80,14 +108,17 @@ export const onUpdateReport = /* GraphQL */ `
   }
 `;
 export const onDeleteReport = /* GraphQL */ `
-  subscription OnDeleteReport {
-    onDeleteReport {
+  subscription OnDeleteReport($filter: ModelSubscriptionReportFilterInput) {
+    onDeleteReport(filter: $filter) {
       id
       title
       channel {
         id
         description
         reports {
+          nextToken
+        }
+        dataSets {
           nextToken
         }
         type
@@ -104,9 +135,20 @@ export const onDeleteReport = /* GraphQL */ `
         id
         title
         description
+        channel {
+          id
+          description
+          type
+          title
+          channelTypeId
+          createdAt
+          updatedAt
+        }
+        channelId
         dataValues {
           nextToken
         }
+        xAxis
         user
         createdAt
         updatedAt
@@ -119,8 +161,8 @@ export const onDeleteReport = /* GraphQL */ `
   }
 `;
 export const onCreateChannel = /* GraphQL */ `
-  subscription OnCreateChannel {
-    onCreateChannel {
+  subscription OnCreateChannel($filter: ModelSubscriptionChannelFilterInput) {
+    onCreateChannel(filter: $filter) {
       id
       description
       reports {
@@ -135,6 +177,19 @@ export const onCreateChannel = /* GraphQL */ `
           createdAt
           updatedAt
           reportDataSetId
+        }
+        nextToken
+      }
+      dataSets {
+        items {
+          id
+          title
+          description
+          channelId
+          xAxis
+          user
+          createdAt
+          updatedAt
         }
         nextToken
       }
@@ -147,8 +202,8 @@ export const onCreateChannel = /* GraphQL */ `
   }
 `;
 export const onUpdateChannel = /* GraphQL */ `
-  subscription OnUpdateChannel {
-    onUpdateChannel {
+  subscription OnUpdateChannel($filter: ModelSubscriptionChannelFilterInput) {
+    onUpdateChannel(filter: $filter) {
       id
       description
       reports {
@@ -163,6 +218,19 @@ export const onUpdateChannel = /* GraphQL */ `
           createdAt
           updatedAt
           reportDataSetId
+        }
+        nextToken
+      }
+      dataSets {
+        items {
+          id
+          title
+          description
+          channelId
+          xAxis
+          user
+          createdAt
+          updatedAt
         }
         nextToken
       }
@@ -175,8 +243,8 @@ export const onUpdateChannel = /* GraphQL */ `
   }
 `;
 export const onDeleteChannel = /* GraphQL */ `
-  subscription OnDeleteChannel {
-    onDeleteChannel {
+  subscription OnDeleteChannel($filter: ModelSubscriptionChannelFilterInput) {
+    onDeleteChannel(filter: $filter) {
       id
       description
       reports {
@@ -194,6 +262,19 @@ export const onDeleteChannel = /* GraphQL */ `
         }
         nextToken
       }
+      dataSets {
+        items {
+          id
+          title
+          description
+          channelId
+          xAxis
+          user
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       type
       title
       channelTypeId
@@ -203,11 +284,27 @@ export const onDeleteChannel = /* GraphQL */ `
   }
 `;
 export const onCreateDataSet = /* GraphQL */ `
-  subscription OnCreateDataSet {
-    onCreateDataSet {
+  subscription OnCreateDataSet($filter: ModelSubscriptionDataSetFilterInput) {
+    onCreateDataSet(filter: $filter) {
       id
       title
       description
+      channel {
+        id
+        description
+        reports {
+          nextToken
+        }
+        dataSets {
+          nextToken
+        }
+        type
+        title
+        channelTypeId
+        createdAt
+        updatedAt
+      }
+      channelId
       dataValues {
         items {
           id
@@ -218,6 +315,7 @@ export const onCreateDataSet = /* GraphQL */ `
         }
         nextToken
       }
+      xAxis
       user
       createdAt
       updatedAt
@@ -225,11 +323,27 @@ export const onCreateDataSet = /* GraphQL */ `
   }
 `;
 export const onUpdateDataSet = /* GraphQL */ `
-  subscription OnUpdateDataSet {
-    onUpdateDataSet {
+  subscription OnUpdateDataSet($filter: ModelSubscriptionDataSetFilterInput) {
+    onUpdateDataSet(filter: $filter) {
       id
       title
       description
+      channel {
+        id
+        description
+        reports {
+          nextToken
+        }
+        dataSets {
+          nextToken
+        }
+        type
+        title
+        channelTypeId
+        createdAt
+        updatedAt
+      }
+      channelId
       dataValues {
         items {
           id
@@ -240,6 +354,7 @@ export const onUpdateDataSet = /* GraphQL */ `
         }
         nextToken
       }
+      xAxis
       user
       createdAt
       updatedAt
@@ -247,11 +362,27 @@ export const onUpdateDataSet = /* GraphQL */ `
   }
 `;
 export const onDeleteDataSet = /* GraphQL */ `
-  subscription OnDeleteDataSet {
-    onDeleteDataSet {
+  subscription OnDeleteDataSet($filter: ModelSubscriptionDataSetFilterInput) {
+    onDeleteDataSet(filter: $filter) {
       id
       title
       description
+      channel {
+        id
+        description
+        reports {
+          nextToken
+        }
+        dataSets {
+          nextToken
+        }
+        type
+        title
+        channelTypeId
+        createdAt
+        updatedAt
+      }
+      channelId
       dataValues {
         items {
           id
@@ -262,6 +393,7 @@ export const onDeleteDataSet = /* GraphQL */ `
         }
         nextToken
       }
+      xAxis
       user
       createdAt
       updatedAt
@@ -269,8 +401,10 @@ export const onDeleteDataSet = /* GraphQL */ `
   }
 `;
 export const onCreateDataValue = /* GraphQL */ `
-  subscription OnCreateDataValue {
-    onCreateDataValue {
+  subscription OnCreateDataValue(
+    $filter: ModelSubscriptionDataValueFilterInput
+  ) {
+    onCreateDataValue(filter: $filter) {
       id
       data
       dataSetId
@@ -278,9 +412,20 @@ export const onCreateDataValue = /* GraphQL */ `
         id
         title
         description
+        channel {
+          id
+          description
+          type
+          title
+          channelTypeId
+          createdAt
+          updatedAt
+        }
+        channelId
         dataValues {
           nextToken
         }
+        xAxis
         user
         createdAt
         updatedAt
@@ -291,8 +436,10 @@ export const onCreateDataValue = /* GraphQL */ `
   }
 `;
 export const onUpdateDataValue = /* GraphQL */ `
-  subscription OnUpdateDataValue {
-    onUpdateDataValue {
+  subscription OnUpdateDataValue(
+    $filter: ModelSubscriptionDataValueFilterInput
+  ) {
+    onUpdateDataValue(filter: $filter) {
       id
       data
       dataSetId
@@ -300,9 +447,20 @@ export const onUpdateDataValue = /* GraphQL */ `
         id
         title
         description
+        channel {
+          id
+          description
+          type
+          title
+          channelTypeId
+          createdAt
+          updatedAt
+        }
+        channelId
         dataValues {
           nextToken
         }
+        xAxis
         user
         createdAt
         updatedAt
@@ -313,8 +471,10 @@ export const onUpdateDataValue = /* GraphQL */ `
   }
 `;
 export const onDeleteDataValue = /* GraphQL */ `
-  subscription OnDeleteDataValue {
-    onDeleteDataValue {
+  subscription OnDeleteDataValue(
+    $filter: ModelSubscriptionDataValueFilterInput
+  ) {
+    onDeleteDataValue(filter: $filter) {
       id
       data
       dataSetId
@@ -322,9 +482,20 @@ export const onDeleteDataValue = /* GraphQL */ `
         id
         title
         description
+        channel {
+          id
+          description
+          type
+          title
+          channelTypeId
+          createdAt
+          updatedAt
+        }
+        channelId
         dataValues {
           nextToken
         }
+        xAxis
         user
         createdAt
         updatedAt
@@ -335,8 +506,10 @@ export const onDeleteDataValue = /* GraphQL */ `
   }
 `;
 export const onCreateChannelType = /* GraphQL */ `
-  subscription OnCreateChannelType {
-    onCreateChannelType {
+  subscription OnCreateChannelType(
+    $filter: ModelSubscriptionChannelTypeFilterInput
+  ) {
+    onCreateChannelType(filter: $filter) {
       title
       channels {
         items {
@@ -357,8 +530,10 @@ export const onCreateChannelType = /* GraphQL */ `
   }
 `;
 export const onUpdateChannelType = /* GraphQL */ `
-  subscription OnUpdateChannelType {
-    onUpdateChannelType {
+  subscription OnUpdateChannelType(
+    $filter: ModelSubscriptionChannelTypeFilterInput
+  ) {
+    onUpdateChannelType(filter: $filter) {
       title
       channels {
         items {
@@ -379,8 +554,10 @@ export const onUpdateChannelType = /* GraphQL */ `
   }
 `;
 export const onDeleteChannelType = /* GraphQL */ `
-  subscription OnDeleteChannelType {
-    onDeleteChannelType {
+  subscription OnDeleteChannelType(
+    $filter: ModelSubscriptionChannelTypeFilterInput
+  ) {
+    onDeleteChannelType(filter: $filter) {
       title
       channels {
         items {
@@ -395,6 +572,48 @@ export const onDeleteChannelType = /* GraphQL */ `
         nextToken
       }
       id
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateCurrentChannel = /* GraphQL */ `
+  subscription OnCreateCurrentChannel(
+    $filter: ModelSubscriptionCurrentChannelFilterInput
+  ) {
+    onCreateCurrentChannel(filter: $filter) {
+      id
+      name
+      regName
+      channelId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateCurrentChannel = /* GraphQL */ `
+  subscription OnUpdateCurrentChannel(
+    $filter: ModelSubscriptionCurrentChannelFilterInput
+  ) {
+    onUpdateCurrentChannel(filter: $filter) {
+      id
+      name
+      regName
+      channelId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteCurrentChannel = /* GraphQL */ `
+  subscription OnDeleteCurrentChannel(
+    $filter: ModelSubscriptionCurrentChannelFilterInput
+  ) {
+    onDeleteCurrentChannel(filter: $filter) {
+      id
+      name
+      regName
+      channelId
       createdAt
       updatedAt
     }

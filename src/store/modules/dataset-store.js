@@ -48,6 +48,7 @@ export default {
       commit("TOGGLE_SAVING", false);
     },
     async updateDataSetById({ commit, dispatch }, dataSet ) {
+      console.log(dataSet)
       commit("TOGGLE_SAVING", true);
       try {
         await API.graphql(graphqlOperation(updateDataSet, { input: dataSet }));

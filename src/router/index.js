@@ -11,7 +11,8 @@ import DataSet from "../views/DataSet.vue";
 import DataSets from "../views/DataSets.vue";
 
 import PublicReports from "../views/PublicReports.vue";
-import PersonalReports from "../views/PersonalReports.vue";
+import Reports from "../views/Reports.vue";
+// import PersonalReports from "../views/PersonalReports.vue";
 import GroupReports from "../views/GroupReports.vue";
 
 import AddChannel from "../views/AddChannel.vue";
@@ -51,6 +52,11 @@ const routes = [
       import("../views/auth/ResetPW.vue"),
   },
   {
+    path: "/dashboards",
+    name: "NewDashboards",
+    component: Dashboards,
+  },
+    {
     path: "/verify",
     name: "SignUpVerify",
     props: true,
@@ -64,22 +70,34 @@ const routes = [
       import("../views/Home.vue"),
   },
   {
+    path: "/channel-card",
+    name: "ChannelCard",
+    component: () =>
+      import("../components/ChannelCard.vue"),
+  },
+  {
     path: "/news",
     name: "News",
     component: News,
   },
   {
-    path: "/add-data-set",
+    path: "/:title/add-data-set",
     name: "AddDataSet",
     component: AddDataSet,
   },
   {
-    path: "/data-sets",
+    path: "/:title/data-sets",
     name: "DataSets",
     component: DataSets,
   },
   {
-    path: "/data-sets/:dataSetId",
+    path: "/:title",
+    name: "ChannelHome",
+    component: () =>
+    import("../views/ChannelHome.vue"),
+},
+  {
+    path: "/:title/data-sets/:dataSetId",
     name: "DataSet",
     component: DataSet,
   },
@@ -89,9 +107,9 @@ const routes = [
     component: PublicReports,
   },
   {
-    path: "/personal-reports",
-    name: "PersonalReports",
-    component: PersonalReports,
+    path: "/:title/reports",
+    name: "Reports",
+    component: Reports,
   },
   {
     path: "/group-reports",
@@ -114,17 +132,17 @@ const routes = [
     component: Channel,
   },
   {
-    path: "/add-report",
+    path: "/channel/:title/add-report",
     name: "AddReport",
     component: AddReport,
   },
   {
-    path: "/channels/:channelId/reports",
+    path: "/:title/reports",
     name: "ChannelReports",
     component: ChannelReports,
   },
   {
-    path: "/channels/:channelId/reports/:reportId",
+    path: "/:title/reports/:reportId",
     name: "Report",
     component: Report,
   },
@@ -134,12 +152,12 @@ const routes = [
     component: AddDashboard,
   },
   {
-    path: "/dashboards",
+    path: "/:title/dashboards",
     name: "Dashboards",
     component: Dashboards,
   },
   {
-    path: "/channels/:channelId/dashboards/:dashboardId",
+    path: "/:title/dashboards/:dashboardId",
     name: "Dashboard",
     component: Dashboard,
   },

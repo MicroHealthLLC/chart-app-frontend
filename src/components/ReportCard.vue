@@ -9,7 +9,7 @@
     <v-card-text>
       <ul class="mb-4 text-caption">
         <li v-if="(report && report.dataSetId)">
-          <strong>Data Set:</strong><span class="blueFont"> {{ dataSets.filter(d => d && d.id == report.dataSetId )[0].title }}</span>
+          <strong>Data Set:</strong><span class="blueFont"> {{ dataSetTitle }}</span>
         </li>
         <li v-else><strong>Data Set:</strong> None</li>
         <li><strong>Channel:</strong> {{ report.channel.title }}</li>
@@ -58,6 +58,13 @@ export default {
         ? "mdi-hexagon-slice-2"
         : "mdi-chart-line";
     },
+    dataSetTitle() {
+      if ((this.report.dataSetId)[0].title) {
+        let title = this.dataSets.filter(d => d && d.id == this.report.dataSetId)[0].title 
+        return title
+      } else return ""
+      
+    }
   },
   async beforeMount() {
     if(this.dataSets && this.dataSets.length < 1){
@@ -73,17 +80,17 @@ export default {
      }, */
     toReport() {
       this.$router.push(
-        `/channels/${this.report.channelId}/reports/${this.report.id}`
+        `reports/${this.report.id}`
       );
     },
   },
   watch: {
-    dataSets() {
-      console.log(this.dataSets)
-    },
-    report() {
-      console.log(this.report)
-    },
+    // dataSets() {
+    //   console.log(this.dataSets)
+    // },
+    // report() {
+    //   console.log(this.report)
+    // },
   },
 };
 </script>

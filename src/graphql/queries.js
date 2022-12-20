@@ -12,6 +12,9 @@ export const getReport = /* GraphQL */ `
         reports {
           nextToken
         }
+        dataSets {
+          nextToken
+        }
         type
         title
         channelTypeId
@@ -26,9 +29,20 @@ export const getReport = /* GraphQL */ `
         id
         title
         description
+        channel {
+          id
+          description
+          type
+          title
+          channelTypeId
+          createdAt
+          updatedAt
+        }
+        channelId
         dataValues {
           nextToken
         }
+        xAxis
         user
         createdAt
         updatedAt
@@ -67,6 +81,8 @@ export const listReports = /* GraphQL */ `
           id
           title
           description
+          channelId
+          xAxis
           user
           createdAt
           updatedAt
@@ -100,6 +116,19 @@ export const getChannel = /* GraphQL */ `
         }
         nextToken
       }
+      dataSets {
+        items {
+          id
+          title
+          description
+          channelId
+          xAxis
+          user
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       type
       title
       channelTypeId
@@ -121,6 +150,9 @@ export const listChannels = /* GraphQL */ `
         reports {
           nextToken
         }
+        dataSets {
+          nextToken
+        }
         type
         title
         channelTypeId
@@ -137,6 +169,22 @@ export const getDataSet = /* GraphQL */ `
       id
       title
       description
+      channel {
+        id
+        description
+        reports {
+          nextToken
+        }
+        dataSets {
+          nextToken
+        }
+        type
+        title
+        channelTypeId
+        createdAt
+        updatedAt
+      }
+      channelId
       dataValues {
         items {
           id
@@ -147,6 +195,7 @@ export const getDataSet = /* GraphQL */ `
         }
         nextToken
       }
+      xAxis
       user
       createdAt
       updatedAt
@@ -164,9 +213,20 @@ export const listDataSets = /* GraphQL */ `
         id
         title
         description
+        channel {
+          id
+          description
+          type
+          title
+          channelTypeId
+          createdAt
+          updatedAt
+        }
+        channelId
         dataValues {
           nextToken
         }
+        xAxis
         user
         createdAt
         updatedAt
@@ -185,9 +245,20 @@ export const getDataValue = /* GraphQL */ `
         id
         title
         description
+        channel {
+          id
+          description
+          type
+          title
+          channelTypeId
+          createdAt
+          updatedAt
+        }
+        channelId
         dataValues {
           nextToken
         }
+        xAxis
         user
         createdAt
         updatedAt
@@ -212,6 +283,8 @@ export const listDataValues = /* GraphQL */ `
           id
           title
           description
+          channelId
+          xAxis
           user
           createdAt
           updatedAt
@@ -258,6 +331,37 @@ export const listChannelTypes = /* GraphQL */ `
           nextToken
         }
         id
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getCurrentChannel = /* GraphQL */ `
+  query GetCurrentChannel($id: ID!) {
+    getCurrentChannel(id: $id) {
+      id
+      name
+      regName
+      channelId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listCurrentChannels = /* GraphQL */ `
+  query ListCurrentChannels(
+    $filter: ModelCurrentChannelFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCurrentChannels(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        regName
+        channelId
         createdAt
         updatedAt
       }
