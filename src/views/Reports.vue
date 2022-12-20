@@ -1,27 +1,12 @@
 <template>
     <v-row>
-      <v-col class="col-9">
-        <!-- PUBLIC REPORTS -->
-        <h3><v-icon class="mr-2 pb-2" color="orange darken-2">mdi-chart-box-outline</v-icon><router-link to="/public-reports">Reports</router-link></h3>
+      <v-col class="col-11">
+          <div class="d-flex justify-space-between">
+            <h3><v-icon class="mr-2 pb-2" color="orange darken-2">mdi-chart-box-outline</v-icon>Reports</h3>
+            <v-btn class="mb-2" color="primary" small @click.prevent="toNewReport">Add Report <v-icon
+              small>mdi-plus</v-icon></v-btn>
+          </div>  
         <v-divider class="mb-4"></v-divider>
-  
-        <!-- <div v-if="reports.public.length > 0" class="grid">
-          <ReportCard
-            v-for="(report, index) in reports.public"
-            :report="report"
-            :key="index"
-          ></ReportCard>
-          <div class="d-flex justify-end btn-container">
-            <v-btn
-              v-if="reports.public.length >= 6"
-              to="/public-reports"
-              class="d-flex-end"
-              color="primary"
-              text
-              >View All</v-btn
-            >
-          </div>
-        </div> -->
         <div v-if="channelReports.length > 0" class="grid">
           <ReportCard
             v-for="(report, index) in channelReports"
@@ -45,7 +30,7 @@
           class="placeholder d-flex flex-column justify-center align-center"
         >
           <p class="font-weight-light">No Reports on this Channel yet...</p>
-          <v-btn text small color="primary" :to="`/channel/${this.currentChannel.name}/add-report`">Add a Report</v-btn>
+          <v-btn text small color="primary" :to="`reports/add-report`">Add a Report</v-btn>
         </div>
         <!-- PERSONAL REPORTS -->
         <!-- <h3 class="mt-4">
@@ -111,7 +96,7 @@
   
   
       <!-- DETAILS -->
-      <v-col class="col-3">
+      <!-- <v-col class="col-3">
         <h3>Details</h3>
         <v-divider class="mb-4"></v-divider>
         <ul class="text-caption details">
@@ -133,7 +118,7 @@
             1
           </li>
         </ul>
-        <!-- NEWS -->
+    
         <h3 class="mt-4"><router-link to="/news">News</router-link></h3>
   
         <v-divider class="mb-4"></v-divider>
@@ -147,36 +132,40 @@
         <v-btn class="float-right" to="/news" color="primary" text
           >More News</v-btn
         >
-      </v-col>
+      </v-col> -->
     </v-row>
   </template>
   
   <script>
-  import { mapActions, mapGetters } from "vuex";
-  import NewsCard from "../components/NewsCard";
+  import { mapActions, mapGetters, mapMutations } from "vuex";
+  // import NewsCard from "../components/NewsCard";
   import ReportCard from "./../components/ReportCard";
   
   export default {
     name: "Home",
     components: {
       ReportCard,
-      NewsCard,
+      // NewsCard,
     },
     computed: {
-      ...mapGetters(["channels", "news", "reports", "user", "dataSets", "currentChannel"]),
-      reportCount() {
+      ...mapGetters(["channels", "news", "reports", "user", "dataSets", "currentChannel", "currentChannels"]),
+       reportCount() {
         return (
           this.reports.length
         );
       },
       channelReports(){
         if (this.reports && this.reports.length > 0){
-          return this.reports.filter(t => t.channelId == this.currentChannel.id)
+          return this.reports.filter(t => t.channelId == this.currentChannels[0].channelId)
         } else return []
       },
     },
     methods: {
       ...mapActions(["fetchNews", "fetchReports", "fetchCurrentUser", "fetchDataSets"]),
+      ...mapMutations(["SET_REPORT"]),
+      toNewReport(){
+        this.$router.push("reports/add-report"); 
+      },
     },
     mounted() {
       this.fetchReports();
@@ -184,12 +173,6 @@
     //  console.log(this.user)
     },
     watch:{
-      // reports(){
-      //   console.log(this.reports)
-      // },
-      // dataSets() {
-      //   console.log(this.dataSets)
-      // },
     }
   
   };

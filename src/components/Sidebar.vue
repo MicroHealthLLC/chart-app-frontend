@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer v-model="drawer" app permanent :mini-variant.sync="mini" v-if="user && user.attributes" >
+  <v-navigation-drawer app permanent :mini-variant.sync="mini" v-if="user && user.attributes" >
     <v-list>
       <v-list-item>
         <v-list-item-icon  class="clickable" @click="mini = !mini" :disabled="tru">

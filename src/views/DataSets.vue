@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col>
+    <v-col class="col-11">
       <div class="d-flex justify-space-between">
         <h3><v-icon class="mr-2 pb-2" color="blue darken-2">mdi-equalizer</v-icon>Data Sets</h3>
         <v-btn class="mb-2" color="primary" small :to="`data-sets/add-data-set`">Add Data Set <v-icon
@@ -90,8 +90,8 @@ export default {
   computed: {
     ...mapGetters(["dataSets", "user", "currentChannels"]),
     channelDataSets(){
-        if (this.dataSets && this.dataSets.length > 0 && this.currentChannel && this.currentChannel.id){
-          return this.dataSets.filter(t => t.channelId == this.currentChannel.id)
+        if (this.dataSets && this.dataSets.length > 0 && this.currentChannels && this.currentChannels[0].channelId){
+          return this.dataSets.filter(t => t.channelId == this.currentChannels[0].channelId)
         } else return []
       },
   },
@@ -104,7 +104,7 @@ export default {
       console.log(item)
       let id = item.id
       await this.fetchDataSet(id)
-      this.$router.push(`/data-sets/${id}`)
+      this.$router.push(`data-sets/${id}`)
     },
     deleteItem(item) {
       this.$confirm(
