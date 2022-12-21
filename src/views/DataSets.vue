@@ -3,7 +3,7 @@
     <v-col class="col-11">
       <div class="d-flex justify-space-between">
         <h3><v-icon class="mr-2 pb-2" color="blue darken-2">mdi-equalizer</v-icon>Data Sets</h3>
-        <v-btn class="mb-2" color="primary" small :to="`data-sets/add-data-set`">Add Data Set <v-icon
+        <v-btn class="mb-2" color="primary" small @click.prevent="toNewDataSet">Add Data Set <v-icon
             small>mdi-plus</v-icon></v-btn>
       </div>
 
@@ -99,6 +99,9 @@ export default {
     ...mapActions(["fetchDataSets", "removeDataSet", "fetchDataSet"]),
     log(e) {
       console.log(e)
+    },
+    toNewDataSet(){
+      this.$router.push("data-sets/add-data-set"); 
     },
     async editItem(item) {
       console.log(item)

@@ -3,7 +3,7 @@
     <!-- Title -->
     <v-col class="col-12">
       <div class="d-flex justify-space-between">
-        <h3 v-if="(!isReadOnly && dataSet.id)">Update {{ dataSet.title }}</h3>
+        <h3 v-if="(!isReadOnly && dataSet.id)">Update {{ dataSet.id }}</h3>
         <h3 v-else-if="dataSet.id">View {{ dataSet.title }}</h3>
         <h3 v-else>Add Data Set</h3>
         <div>
@@ -25,7 +25,7 @@
             small
             >Edit</v-btn
           >
-          <v-btn class="mb-2" @click="$router.push(`/channel/${currentChannel.name}/data-sets`)" small outlined
+          <v-btn class="mb-2" @click="resetAndGoBack" small outlined
             >Close</v-btn
           >
         </div>
@@ -85,7 +85,7 @@
               placeholder="Please choose a file..."
               type="file"
               @change.native="onChange"
-              @click:clear="clear"
+              @click:clear="clearInput('file')"
               dense
               required
               :rules="[(v) => !!v || 'Data File is required']"
@@ -159,7 +159,7 @@
           <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
         </v-card-title>
         <div class="ma-4" v-if="chartType === 'Data Table'">
-          <v-data-table v-model="selected" :headers="selectedHeaders" :items="items" :item-key="headers[0].text" :single-select="false" :search="search">
+          <v-data-table v-model="selected" :headers="selectedHeaders" :items="items"  :single-select="false" :search="search">
           </v-data-table>
         </div>
         <!-- Chart Previews -->
@@ -316,15 +316,16 @@ export default {
       this.file = event.target.files ? event.target.files[0] : null;
     },
     resetAndGoBack(){
-      this.$router.go(-1)
+      this.clear()
       this.$refs.form.reset();
+      this.$router.go(-1)
     },
     clear() {
       this.file = null;
-      /* this.data = [];
+      this.data = [];
       this.selected = [];
       this.headers = [];
-      this.items = []; */
+      this.items = [];
     },
     toggleDataTable() {
       this.chartType = "Data Table";
@@ -368,7 +369,8 @@ export default {
         this.fetchDataSets().then(() => {
           let lastAdded = this.dataSets.filter(d => this.currentChannels[0].channelId == d.channelId).filter(d => !oldDataSetIds.includes(d.id))
           let id = lastAdded[0].id
-          this.$router.push(`/data-sets/${id}`)
+          /* this.$router.push(`/data-sets/${id}`) */
+          this.$router.push(`/:title/data-sets/${id}`)
           console.log(this.selected)
           this.fetchDataSetThenAddDataValue(id, this.selected)
           
@@ -387,8 +389,8 @@ export default {
       this.showDataChart()
       this.clearInput("file")
     },
-    showDataChart() {
-      //this.fetchDataSet(this.$route.params.dataSetId)
+    async showDataChart() {
+      await this.fetchDataSet(this.$route.params.dataSetId)
       console.log(this.dataSet)
       //this.createMasterData(this.dataSet.dataValues.items)
       this.uploadData(this.createMasterData(this.dataSet.dataValues.items))
@@ -452,7 +454,7 @@ export default {
       if (this.dataSet && this.dataSet.dataValues && this.dataSet.dataValues.items && this.dataSet.dataValues.items.length > 0) {
         console.log(this.dataSet.dataValues.items)
         console.log(this.selected)
-        this.uploadData(this.createMasterData(this.dataSet.dataValues.items))
+        this.uploadData(this.createMasterData(this.dataSet.dataValues.items))   
       }
     },
     changeChartData() {
@@ -467,7 +469,12 @@ export default {
     },
   },
   mounted() {
-    this.onChangeSelected()
+    if (this.$route.params.dataSetId == "add-data-set"){ 
+      this.dataSet.id = ""
+      this.clear()
+    } else {
+      this.onChangeSelected()
+    }
     this.fetchChannels();
     this.fetchDataSets()
     if (!this.dataSet.user) {
@@ -477,7 +484,7 @@ export default {
       this.xAxisValue = this.dataSet.xAxis
       this.onChangeAxis()
     }
-    console.log(this.currentChannels[0])
+    //console.log(this.currentChannels[0])
   },
   /* beforeMount() {
     this.fetchDataSet(this.dataSet.id)
@@ -493,6 +500,7 @@ export default {
         this.isReadOnly = true
                
         if (this.dataSet.id !== this.$route.params.dataSetId){
+          console.log("true clear")
         this.clear()
         }
       } else this.isReadOnly = false

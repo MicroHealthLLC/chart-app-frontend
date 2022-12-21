@@ -12,8 +12,8 @@ export default {
   methods: {
     ...mapActions(["fetchDataSet"]),
   },
-  async beforeMount() {
-    await this.fetchDataSet(this.$route.params.dataSetId);
+  beforeMount() {
+    //this.fetchDataSet(this.$route.params.dataSetId);
   },
 };
 </script>
