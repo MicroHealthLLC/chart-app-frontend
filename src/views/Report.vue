@@ -25,16 +25,16 @@ export default {
       this.SET_REPORT({
         title: "",
         description: "",
-        chart_type: "line",
-        data_set: { data: [] },
-        channel_id: parseInt(this.$route.params.channelId),
+        chartType: "line",
+        dataSet: { dataValues: [] },
+        channelId: parseInt(this.$route.params.channelId),
         tags: [],
-        color_scheme_id: 1,
+        colorSchemeId: 1,
         user: {
           first_name: this.user.first_name,
           last_name: this.user.last_name,
         },
-        updated_at: "",
+        updatedAt: "",
       });
     }
     // TODO: Combine API calls below into one
@@ -45,16 +45,16 @@ export default {
     this.SET_REPORT({
       title: "",
       description: "",
-      chart_type: "line",
-      data_set: { data: [] },
+      chartType: "line",
+      dataSet: { dataValues: [] },
       tags: [],
-      color_scheme_id: 1,
+      colorSchemeId: 1,
       user: {
         first_name: "",
         last_name: "",
       },
-      last_updated_by: "",
-      updated_at: "",
+      lastUpdatedBy: "",
+      updatedAt: "",
     });
   },
 };
