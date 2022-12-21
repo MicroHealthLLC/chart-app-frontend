@@ -3,8 +3,11 @@
     <!-- Title -->
     <v-col class="col-12">
       <div class="d-flex justify-space-between">
-        <h3 v-if="channel.id">Update Channel</h3>
-        <h3 v-else>Add Channel</h3>
+         <h3 class="pr-2">
+         <v-icon class="gre pr-2 pb-1" >mdi-television-classic</v-icon>
+          <span v-if="channel.id">Update Channel</span>
+          <span v-else>Create Channel</span>
+         </h3>
         <div>
           <v-btn
             @click="saveChannel"
@@ -223,6 +226,9 @@ export default {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 10px;
+}
+.gre{
+  color: #388E3C !important
 }
 .description,
 .users {
