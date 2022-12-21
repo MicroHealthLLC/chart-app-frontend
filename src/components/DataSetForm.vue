@@ -495,6 +495,7 @@ export default {
       this.clear()
     } else {
       this.onChangeSelected()
+      this.isReadOnly = true
     }
     this.fetchChannels();
     this.fetchDataSets()
