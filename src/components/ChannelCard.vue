@@ -91,7 +91,7 @@
         this.setCurrentChannel(data)
         console.log(data)
         this.$router.push(
-          `/${this.channel.title.toLowerCase().replace(/\s/g, '_')}`
+          `/${this.channel.title.toLowerCase().replace(/\s/g, '_')}/dashboards`
         );
       },
     },

@@ -90,12 +90,12 @@ const routes = [
     name: "DataSets",
     component: DataSets,
   },
-  {
-    path: "/:title",
-    name: "ChannelHome",
-    component: () =>
-    import("../views/ChannelHome.vue"),
-},
+//   {
+//     path: "/:title",
+//     name: "ChannelHome",
+//     component: () =>
+//     import("../views/ChannelHome.vue"),
+// },
   {
     path: "/:title/data-sets/:dataSetId",
     name: "DataSet",
