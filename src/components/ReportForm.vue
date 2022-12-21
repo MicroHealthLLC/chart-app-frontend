@@ -472,7 +472,7 @@ export default {
     if (this.$route.name == "Report") {
       this.dataSetChoices = [...this.dataSets];
     } else {
-      this.dataSetChoices = [...this.dataSets]; // was ...this.channelDataSets
+      this.dataSetChoices = [...this.dataSets.filter(d => d.channelId == this.currentChannel.id)]; // was ...this.channelDataSets
     }
   },
   watch: {
