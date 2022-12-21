@@ -106,7 +106,7 @@ export default {
         console.log(error);
       }
     },
-    async fetchDataSetThenAddDataValue({ commit, dispatch } , id, data) {
+    async fetchDataSetThenAddDataValue({ commit, dispatch }, id, data) {
       console.log(data)
       try {     
        const res = await API.graphql(graphqlOperation(getDataSet, { id: id }));    

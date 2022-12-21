@@ -82,6 +82,7 @@
           <!-- <v-btn v-if="dataSet.id" @click="showDataChart">Show Data</v-btn> -->
           <div>
             <v-file-input
+              v-if="dataSet.id"
               placeholder="Please choose a file..."
               type="file"
               @change.native="onChange"
@@ -160,6 +161,26 @@
         </v-card-title>
         <div class="ma-4" v-if="chartType === 'Data Table'">
           <v-data-table v-model="selected" :headers="selectedHeaders" :items="items"  :single-select="false" :search="search">
+            <!-- Action Buttons -->
+          <!-- <template v-slot:item.actions="{ item }">
+            <v-tooltip top>
+              <template v-slot:activator="{ on, attrs }">
+                <v-icon color="primary" small class="mr-2" @click="editItem(item)" v-bind="attrs" v-on="on">
+                  mdi-table-eye
+                </v-icon>
+              </template>
+              <span>View</span>
+            </v-tooltip>
+            <v-tooltip top>
+              <template v-slot:activator="{ on, attrs }">
+                <v-icon
+                  color="primary" small @click="deleteItem(item)" v-bind="attrs" v-on="on">
+                  mdi-delete
+                </v-icon>
+              </template>
+              <span>Delete</span>
+            </v-tooltip>
+          </template> -->
           </v-data-table>
         </div>
         <!-- Chart Previews -->
@@ -318,7 +339,7 @@ export default {
     resetAndGoBack(){
       this.clear()
       this.$refs.form.reset();
-      this.$router.go(-1)
+      this.$router.push(`/${this.currentChannels[0].name}/data-sets`)
     },
     clear() {
       this.file = null;
