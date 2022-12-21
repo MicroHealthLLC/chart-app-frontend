@@ -7,7 +7,7 @@
         </v-list-item-icon>
         <v-list-item-content >
           <v-list-item-title @click="goHome" link  class="text-h6 text-bold cursor"
-            ><b>mRMS</b></v-list-item-title>   
+            ><b>mRMS</b>     <v-icon color="orange darken-2" class="pb-1" medium>mdi-chart-box-outline</v-icon></v-list-item-title>   
         </v-list-item-content>
       </v-list-item>
     </v-list>
