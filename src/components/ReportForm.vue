@@ -461,25 +461,29 @@ export default {
     } 
     
   },
-  async mounted() {
-    // this.colorScheme = this.colors.find(
-    //   (scheme) => scheme.id == this.activeReport.colorSchemeId
-    // ).scheme;
-    if (this.activeReport && this.activeReport.id) {
-      // await this.fetchReport(this.$route.params.reportId);
-      this.updateChartData();
-    }
+  mounted() {
     if (this.$route.name == "Report") {
       this.dataSetChoices = [...this.dataSets];
     } else {
-      this.dataSetChoices = [...this.dataSets]; // was ...this.channelDataSets
+      this.dataSetChoices = [...this.dataSets.filter(d => d.channelId == this.currentChannel.id)]; // was ...this.channelDataSets
     }
+  },
+  created() {
+    if (this.$route.params.reportId != 'add-report') {
+      this.colorScheme = this.colors.find(
+        (scheme) => scheme.id == this.activeReport.colorSchemeId
+      ).scheme;
+      console.log(this.colorScheme)
+      this.updateChartData();
+    }
+
   },
   watch: {
     activeReport() {
       // this.colorScheme = this.colors.find((scheme) => scheme.id == this.activeReport.colorSchemeId).scheme;
       //console.log(this.activeReport.colorSchemeId)
       console.log(this.$route) 
+      console.log(this.activeReport)
 
         console.log(this.newReport)
         if(!this.activeReport){

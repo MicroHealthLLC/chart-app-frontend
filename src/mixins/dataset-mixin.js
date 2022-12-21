@@ -2,13 +2,18 @@ import { mapGetters, mapActions } from "vuex";
 export default {
   data() {
     return {     
-      
+      newDataSet: {
+        title: "",
+        description: "",
+        dataValues: { items: []},
+        xAxis: ""
+        },
     };
   },
   methods: {
     ...mapActions([]),
     createMasterData(arr) {
-      console.log(arr)
+      //console.log(arr)
         let masterData = []
         if (arr.length > 1) {
           arr.forEach(d => masterData.unshift(d.data))
@@ -17,7 +22,7 @@ export default {
         }
         masterData = masterData.flat()
         const uniqueArray = masterData.filter((object,index) => index === masterData.findIndex(obj => JSON.stringify(obj) === JSON.stringify(object)))
-        console.log(uniqueArray)
+        //console.log(uniqueArray)
         return this.sortByKey(uniqueArray)
       },
       sortByKey(arr, key = "Date") {

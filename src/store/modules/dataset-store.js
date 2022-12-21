@@ -106,6 +106,38 @@ export default {
         console.log(error);
       }
     },
+    async fetchDataSetThenAddDataValue({ commit, dispatch }, id, data) {
+      console.log(data)
+      try {     
+       const res = await API.graphql(graphqlOperation(getDataSet, { id: id }));    
+       if (res.data.getDataSet.dataValues.items && res.data.getDataSet.dataValues.items.length > 0){
+        for (let i = 0; i < res.data.getDataSet.dataValues.items.length; i++) {
+          res.data.getDataSet.dataValues.items[i].data = JSON.parse(res.data.getDataSet.dataValues.items[i].data)
+        } 
+       } 
+       console.log(res.data.getDataSet)
+       commit("SET_DATA_SET", res.data.getDataSet);
+       try {
+        let newDataValue = ({
+          dataSetId: id,
+          data: JSON.stringify(data)
+        })
+        
+        console.log(newDataValue)
+          await API.graphql(graphqlOperation(createDataValue, { input: newDataValue }));
+          dispatch("fetchDataValues");
+          commit("SET_SNACKBAR", {
+            show: true,
+            message: "DataValue Successfully Added!",
+            color: "var(--mh-green)",
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
   mutations: {
     ADD_DATA_SET: (state, dataSet) => state.dataSets.push(dataSet),

@@ -7,19 +7,30 @@
         </v-list-item-icon>
         <v-list-item-content >
           <v-list-item-title @click="goHome" link  class="text-h6 text-bold cursor"
-            ><b>mRMS</b></v-list-item-title>   
+            ><b>mRMS</b>     <v-icon color="orange darken-2" class="pb-1" medium>mdi-chart-box-outline</v-icon></v-list-item-title>   
         </v-list-item-content>
       </v-list-item>
     </v-list>
-    <v-divider></v-divider> 
-         <v-list dense nav >
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon :class="mini == true ? 'whitesmok' : 'gre'" class="pt-1">mdi-television-classic</v-icon>
+    <v-divider class="mb-2"></v-divider> 
+         <span  class="text-h6 pl-3 pt-2 bluey" >{{ regName }}</span>  
+         <v-list dense nav >     
+
+          <v-list-item :disabled="tru" :to="`/${pathName}/add-channel`" link>
+            <v-list-item-icon >
+              <v-icon :class="mini == true ? 'whitesmok' : 'gre'">mdi-television-classic</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title ><span  class="text-h6 text--blue" color="text--blue">{{ regName }}</span>             
-              </v-list-item-title>  
+              <v-list-item-title>Create Channel</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+
+
+          <v-list-item @click="requestChannel" :disabled="tru" >
+            <v-list-item-icon >
+              <v-icon :class="mini == true ? 'whitesmok' : 'warn'">mdi-television-classic</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Request Channel</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
           <v-list-item :disabled="tru" :to="`/${pathName}/data-sets`" link>
@@ -91,12 +102,12 @@
             </v-list-item-content>
           </v-list-item> 
           
-          <v-list-item link>
+          <v-list-item :to="`/settings`"  link>
             <v-list-item-icon>
               <v-icon  color="purple-grey darken-2">mdi-cog-outline</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title>Channel Settings</v-list-item-title>
+              <v-list-item-title>Settings</v-list-item-title>
             </v-list-item-content>
           </v-list-item>    
           <v-list-item @click="logOutUser" link>
@@ -109,6 +120,43 @@
           </v-list-item>
         </v-list>      
       </div>
+
+      <v-dialog v-model="showForm" width="30%">
+      <v-card >
+        <v-card-title class="pl-0">  
+        <v-icon class="warn px-2" medium>mdi-television-classic</v-icon>          
+        Request Channel(s)
+        </v-card-title>
+        <v-divider></v-divider>
+        <template>
+          <v-list dense>
+           <v-list-item>           
+            <v-list-item-content >
+              <v-container class="grey lighten-5">
+                <v-row v-for="ch in reports" :key="ch.id">                   
+                  <v-col>{{ ch.title }}</v-col>
+                  <v-col> 
+                  <v-btn
+                    class="ma-2"        
+                    dark
+                    color="teal"         
+                    >
+                    REQUEST
+                  </v-btn>
+                  </v-col>
+                </v-row>
+              </v-container>
+        
+             
+              <!-- <v-list-item-title  v-for="ch in reports" :key="ch.id"><h3>{{ ch.title }}</h3></v-list-item-title>
+              <v-list-item-title  v-for="ch in reports" :key="ch.id"><v-btn>{{ ch.title }}</v-btn></v-list-item-title> -->
+            </v-list-item-content>
+          </v-list-item>              
+          </v-list>    
+        </template>
+      </v-card>
+      <!-- <ChannelModalForm @closeform="closeForm" /> -->
+    </v-dialog>
     </template>
   </v-navigation-drawer>
 </template>
@@ -125,7 +173,7 @@ export default {
       regName: '',
       pathName: '',
       channelId: null,
-
+      showForm: false, 
       channelList: [],
       items: [
         { title: "Home", icon: "mdi-home", route: "/" },
@@ -175,6 +223,9 @@ export default {
     },
     log(e){
       console.log(e)
+    },
+    requestChannel(){
+      this.showForm = true
     },
     goHome(){    
       if(this.channelId){
@@ -259,15 +310,23 @@ export default {
 .active-nav-item {
   color: #1976d2 !important;
 }
-
+.bluey {
+  color: #1d336f;
+}
 .lightGrey {
-  color: whitesmokrey !important
+  color: whitesmoke !important
 }
 .whitesmok {
   color: ghostwhite !important;
 }
+.warn {
+  color: #E4A11B !important;
+}
 .blu{
   color: #1976D2 !important;
+}
+.gry{
+  color: grey !important
 }
 .gre{
   color: #388E3C !important

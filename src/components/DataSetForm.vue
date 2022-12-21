@@ -3,7 +3,7 @@
     <!-- Title -->
     <v-col class="col-12">
       <div class="d-flex justify-space-between">
-        <h3 v-if="(!isReadOnly && dataSet.id)">Update {{ dataSet.title }}</h3>
+        <h3 v-if="(!isReadOnly && dataSet.id)">Update {{ dataSet.id }}</h3>
         <h3 v-else-if="dataSet.id">View {{ dataSet.title }}</h3>
         <h3 v-else>Add Data Set</h3>
         <div>
@@ -25,7 +25,7 @@
             small
             >Edit</v-btn
           >
-          <v-btn class="mb-2"  @click="resetAndGoBack" small outlined
+          <v-btn class="mb-2" @click="resetAndGoBack" small outlined
             >Close</v-btn
           >
         </div>
@@ -80,12 +80,13 @@
             </template></v-text-field>
           </div> -->
           <!-- <v-btn v-if="dataSet.id" @click="showDataChart">Show Data</v-btn> -->
-          <div v-if="dataSet.id">
+          <div>
             <v-file-input
+              v-if="dataSet.id"
               placeholder="Please choose a file..."
               type="file"
               @change.native="onChange"
-              @click:clear="clear"
+              @click:clear="clearInput('file')"
               dense
               required
               :rules="[(v) => !!v || 'Data File is required']"
@@ -155,11 +156,31 @@
           </v-col>
         </v-row>
         <!-- Table Preview -->
-        <div
-          class="ma-4"
-          v-if="chartType === 'Data Table'"
-        >
-          <v-data-table v-model="selected" :headers="selectedHeaders" :items="items" :item-key="headers[0].text" :single-select="false" show-select>
+        <v-card-title>
+          <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
+        </v-card-title>
+        <div class="ma-4" v-if="chartType === 'Data Table'">
+          <v-data-table v-model="selected" :headers="selectedHeaders" :items="items"  :single-select="false" :search="search">
+            <!-- Action Buttons -->
+          <!-- <template v-slot:item.actions="{ item }">
+            <v-tooltip top>
+              <template v-slot:activator="{ on, attrs }">
+                <v-icon color="primary" small class="mr-2" @click="editItem(item)" v-bind="attrs" v-on="on">
+                  mdi-table-eye
+                </v-icon>
+              </template>
+              <span>View</span>
+            </v-tooltip>
+            <v-tooltip top>
+              <template v-slot:activator="{ on, attrs }">
+                <v-icon
+                  color="primary" small @click="deleteItem(item)" v-bind="attrs" v-on="on">
+                  mdi-delete
+                </v-icon>
+              </template>
+              <span>Delete</span>
+            </v-tooltip>
+          </template> -->
           </v-data-table>
         </div>
         <!-- Chart Previews -->
@@ -249,7 +270,8 @@ export default {
       formValid: true,
       submitAttempted: false,
       dataValueInput: '',
-      isReadOnly: false
+      isReadOnly: false,
+      search: ''
     };
   },
   mixins: [datasetMixin],
@@ -309,21 +331,22 @@ export default {
     } */
   },
   methods: {
-    ...mapActions(["addDataSet", "addDataValue", "updateDataSetById", "updateDataSet", "fetchDataSet", "fetchDataSets", "fetchChannels", "fetchDataValue", "fetchDataValues"]),
+    ...mapActions(["addDataSet", "addDataValue", "updateDataSetById", "updateDataSet", "fetchDataSet", "fetchDataSets", "fetchDataSetThenAddDataValue", "fetchChannels", "fetchDataValue", "fetchDataValues"]),
     ...mapMutations(["SET_DATA_SET", "SET_STATUS_CODE"]),
     onChange(event) {
       this.file = event.target.files ? event.target.files[0] : null;
     },
     resetAndGoBack(){
-      this.$router.go(-1)
+      this.clear()
       this.$refs.form.reset();
+      this.$router.push(`/${this.currentChannels[0].name}/data-sets`)
     },
     clear() {
       this.file = null;
-      /* this.data = [];
+      this.data = [];
       this.selected = [];
       this.headers = [];
-      this.items = []; */
+      this.items = [];
     },
     toggleDataTable() {
       this.chartType = "Data Table";
@@ -367,15 +390,19 @@ export default {
         this.fetchDataSets().then(() => {
           let lastAdded = this.dataSets.filter(d => this.currentChannels[0].channelId == d.channelId).filter(d => !oldDataSetIds.includes(d.id))
           let id = lastAdded[0].id
+          /* this.$router.push(`/data-sets/${id}`) */
           this.$router.push(`/:title/data-sets/${id}`)
+          console.log(this.selected)
+          this.fetchDataSetThenAddDataValue(id, this.selected)
+          
+          //this.dataSet.id = id
         })
-        //this.fetchDataSet(this.$route.params.dataSetId),
-        //this.addNewDataValue()
       }
     },
-    addNewDataValue() {
+    async addNewDataValue() {
       //let objString = JSON.stringify(this.selected)
-      console.log(this.selected)
+      console.log(this.dataSet)
+      
       this.addDataValue({
         data: JSON.stringify(this.selected),
         dataSetId: this.dataSet.id
@@ -408,7 +435,6 @@ export default {
     },
     clearInput(type) {
       this.$refs.form.inputs.forEach(input => {
-        console.log(input)
         if (input.type == type) {
           input.reset()
         }
@@ -449,7 +475,7 @@ export default {
       if (this.dataSet && this.dataSet.dataValues && this.dataSet.dataValues.items && this.dataSet.dataValues.items.length > 0) {
         console.log(this.dataSet.dataValues.items)
         console.log(this.selected)
-        this.uploadData(this.createMasterData(this.dataSet.dataValues.items))
+        this.uploadData(this.createMasterData(this.dataSet.dataValues.items))   
       }
     },
     changeChartData() {
@@ -464,7 +490,13 @@ export default {
     },
   },
   mounted() {
-    this.onChangeSelected()
+    if (this.$route.params.dataSetId == "add-data-set"){ 
+      this.dataSet.id = ""
+      this.clear()
+    } else {
+      this.onChangeSelected()
+      this.isReadOnly = true
+    }
     this.fetchChannels();
     this.fetchDataSets()
     if (!this.dataSet.user) {
@@ -474,7 +506,7 @@ export default {
       this.xAxisValue = this.dataSet.xAxis
       this.onChangeAxis()
     }
-    console.log(this.currentChannels[0])
+    //console.log(this.currentChannels[0])
   },
   /* beforeMount() {
     this.fetchDataSet(this.dataSet.id)
@@ -488,8 +520,9 @@ export default {
     dataSet() {
       if (this.dataSet.id) {
         this.isReadOnly = true
-        
+               
         if (this.dataSet.id !== this.$route.params.dataSetId){
+          console.log("true clear")
         this.clear()
         }
       } else this.isReadOnly = false
@@ -524,9 +557,9 @@ export default {
 </script>
 
 <style scoped>
-.preview-container {
-  /* height: 750px; */
-}
+/* .preview-container {
+  height: 750px;
+} */
 .placeholder-text,
 .placeholder-icon {
   color: #1976d2;

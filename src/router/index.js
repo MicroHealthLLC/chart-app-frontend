@@ -27,6 +27,8 @@ import Dashboards from "../views/Dashboards.vue";
 import Dashboard from "../views/Dashboard.vue";
 import ChannelDashboards from "../views/ChannelDashboards.vue";
 
+import SettingsIndex from "../views/channelSettings/SettingsIndex.vue";
+
 import Forbidden from "../views/Forbidden.vue"
 import store from "../store";
 
@@ -102,6 +104,11 @@ const routes = [
     component: DataSet,
   },
   {
+    path: "/settings",
+    name: "SettingsIndex",
+    component: SettingsIndex,
+  },
+  {
     path: "/public-reports",
     name: "PublicReports",
     component: PublicReports,
@@ -117,7 +124,7 @@ const routes = [
     component: GroupReports,
   },
   {
-    path: "/add-channel",
+    path: "/:title/add-channel",
     name: "AddChannel",
     component: AddChannel,
   },
