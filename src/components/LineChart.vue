@@ -96,9 +96,9 @@ export default {
     graphType() {
       this.loadChart();
     },
-    /* chartColors() {
+    chartColors() {
       this.loadChart();
-    }, */
+    },
     chartData() {
       this.loadChart();
     },
