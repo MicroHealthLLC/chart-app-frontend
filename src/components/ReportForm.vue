@@ -221,7 +221,7 @@
       <v-dialog v-model="fullscreen" fullscreen eager>
         <v-card>
           <v-toolbar class="px-5" color="info" dark>
-            <h3>{{ activeReport }}</h3>
+            <h3>{{ activeReport.title }}</h3>
             <v-spacer></v-spacer>
             <v-btn @click="fullscreen = false" icon
               ><v-icon>mdi-close-thick</v-icon></v-btn

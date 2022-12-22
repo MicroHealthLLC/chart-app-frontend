@@ -98,20 +98,7 @@
               ></xlsx-json>
             </xlsx-read>
             <div>
-            <!-- <v-select
-              v-show="file"
-              v-model="value"
-              :items="file ? headers : []"
-              label="Select"
-              multiple
-              chips
-              small
-              hint="What are the target columns?"
-              persistent-hint
-              return-object
-              @change="onChangeSelected"
-            >
-          </v-select> --><v-btn v-if="dataSet.id" :disabled="(!file || !selectedHeaders)" class="mb-1" elevation="4" small @click="addNewDataValue"><v-icon>mdi-plus-circle-outline</v-icon> Add New Data</v-btn>
+            <v-btn v-if="dataSet.id" :disabled="(!file || !selectedHeaders)" class="mb-1" elevation="4" small @click="addNewDataValue"><v-icon>mdi-plus-circle-outline</v-icon> Add New Data</v-btn>
         </div>
           </div>
           <!-- <div class="channels">
@@ -153,6 +140,22 @@
           <v-col class="d-inline-flex" cols="12" sm="4">
             <v-select v-model="xAxisValue" :items="xAxisKeys" :label="xAxisLabel" solo dense @change="onChangeAxis"></v-select>
             <v-btn v-if="xAxisValue" @click="saveAxis" class="ml-2">Save</v-btn>
+          </v-col>
+          <v-col class="d-inline-flex" cols="12" sm="4">
+            <v-select
+              v-model="selectedHeaders"
+              :items="headers"
+              label="Select"
+              multiple
+              small
+              solo
+              dense
+              hint="What are the target columns?"
+              persistent-hint
+              return-object
+              @change="onChangeSelected"
+            >
+          </v-select>
           </v-col>
         </v-row>
         <!-- Table Preview -->
@@ -422,16 +425,8 @@ export default {
       const keys = Object.keys(newData[0])
       this.xAxisKeys = keys
       this.moveArrByKey(keys)
-      /* keys.forEach((k, i) => {
-        if (k.toLowerCase() == "date" || k.toLowerCase().includes(" date") || k.toLowerCase().includes("date ")) {
-          this.arrayMove(keys, i, 0)
-        }
-      }) 
-      this.headers = keys.map((item) => ({
-        text: item,
-        value: item,
-      }));*/
       this.setDataTable(newData)
+      //this.selectedHeaders = this.headers
     },
     clearInput(type) {
       this.$refs.form.inputs.forEach(input => {
@@ -446,6 +441,7 @@ export default {
     onChangeAxis() {
       this.moveArrByKey(this.xAxisKeys, this.xAxisValue)
       this.setDataTable(this.createMasterData(this.dataSet.dataValues.items))
+      this.selectedHeaders = this.headers
     },
     saveAxis() {
       this.updateDataSetById({
@@ -458,7 +454,7 @@ export default {
       this.items = newData;
       this.selected = newData;
       this.data = newData;
-      this.selectedHeaders = this.headers
+      //this.selectedHeaders = this.headers
     },
     moveArrByKey(keys, selected = "Date") {
       keys.forEach((k, i) => {
@@ -473,9 +469,10 @@ export default {
     },
     onChangeSelected() {
       if (this.dataSet && this.dataSet.dataValues && this.dataSet.dataValues.items && this.dataSet.dataValues.items.length > 0) {
-        console.log(this.dataSet.dataValues.items)
-        console.log(this.selected)
-        this.uploadData(this.createMasterData(this.dataSet.dataValues.items))   
+        ///console.log(this.dataSet.dataValues.items)
+        //console.log(this.selected)
+        let master = this.createMasterData(this.dataSet.dataValues.items)
+        this.uploadData(master)
       }
     },
     changeChartData() {
@@ -543,7 +540,7 @@ export default {
     }, */
     selected(){
       if (this.selected && this.selected.length > 0){
-        console.log(this.selected)
+        //console.log(this.selected)
       } else (console.log("no SELECTED data"))
     },
     statusCode() {
