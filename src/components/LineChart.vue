@@ -51,6 +51,7 @@ export default {
   },
   methods: {
     loadChart() {
+      console.log(this.chartData)
       const labels = this.chartData.map((item) => Object.values(item)[0]);
 
       const keys = Object.keys(this.chartData[0]).slice(1);

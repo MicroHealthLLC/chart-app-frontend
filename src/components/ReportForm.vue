@@ -372,8 +372,6 @@ export default {
       } catch (err) {
         console.log(err)
       }
-
-
     },
     removeReport() {
       this.deleteReport(this.activeReport.id);
