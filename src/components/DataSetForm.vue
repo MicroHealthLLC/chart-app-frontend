@@ -124,9 +124,9 @@
     </v-col> 
     <!-- Chart Preview -->
     <v-col class="col-12">
-      <v-card v-if="selectedHeaders.length > 0" class="d-flex flex-column preview-container">
+      <v-card class="d-flex flex-column preview-container">
         <!-- Chart Buttons -->
-        <v-btn-toggle class="ma-4" color="primary" mandatory>
+        <!-- <v-btn-toggle class="ma-4" color="primary" mandatory>
           <v-btn @click="toggleDataTable" small>Data Table</v-btn>
           <v-btn @click="toggleLineChart" small>Line</v-btn>
           <v-btn @click="toggleBarChart" small>Bar</v-btn>
@@ -139,9 +139,9 @@
         <v-row v-if="(dataSet.dataValues && dataSet.dataValues.items && dataSet.dataValues.items.length > 0)" class="ml-2">
           <v-col class="d-inline-flex" cols="12" sm="4">
             <v-select v-model="xAxisValue" :items="xAxisKeys" :label="xAxisLabel" solo dense @change="onChangeAxis"></v-select>
-            <v-btn v-if="xAxisValue" @click="saveAxis" class="ml-2">Save</v-btn>
+            
           </v-col>
-          <v-col class="d-inline-flex" cols="12" sm="4">
+          <v-col class="d-inline-flex" cols="16" sm="4">
             <v-select
               v-model="selectedHeaders"
               :items="headers"
@@ -155,9 +155,9 @@
               return-object
               @change="onChangeSelected"
             >
-          </v-select>
+          </v-select><v-btn v-if="xAxisValue" @click="saveAxis" class="ml-2">Save</v-btn>
           </v-col>
-        </v-row>
+        </v-row> -->
         <!-- Table Preview -->
         <v-card-title>
           <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
@@ -413,21 +413,6 @@ export default {
       this.showDataChart()
       this.clearInput("file")
     },
-    async showDataChart() {
-      await this.fetchDataSet(this.$route.params.dataSetId)
-      console.log(this.dataSet)
-      //this.createMasterData(this.dataSet.dataValues.items)
-      this.uploadData(this.createMasterData(this.dataSet.dataValues.items))
-    },
-    uploadData(data) {
-      console.log(data)
-      let newData = data
-      const keys = Object.keys(newData[0])
-      this.xAxisKeys = keys
-      this.moveArrByKey(keys)
-      this.setDataTable(newData)
-      //this.selectedHeaders = this.headers
-    },
     clearInput(type) {
       this.$refs.form.inputs.forEach(input => {
         if (input.type == type) {
@@ -438,19 +423,33 @@ export default {
     editForm() {
       this.isReadOnly = false
     },
+    async showDataChart() {
+      await this.fetchDataSet(this.$route.params.dataSetId)
+      console.log(this.dataSet)
+      //this.createMasterData(this.dataSet.dataValues.items)
+      this.uploadData(this.createMasterData(this.dataSet.dataValues.items))
+    },
+    uploadData(data) {
+      console.log(data)
+      let newData = data
+      /* const keys = Object.keys(newData[0])
+      this.xAxisKeys = keys */
+      this.moveArrByKey(this.xAxisKeys, this.xAxisValue)
+      this.setDataTable(newData)
+      //this.selectedHeaders = this.headers
+    },
     onChangeAxis() {
       this.moveArrByKey(this.xAxisKeys, this.xAxisValue)
       this.setDataTable(this.createMasterData(this.dataSet.dataValues.items))
-      this.selectedHeaders = this.headers
-    },
-    saveAxis() {
-      this.updateDataSetById({
-        id: this.dataSet.id,
-        xAxis: this.xAxisValue
-      });
+      //this.selectedHeaders = this.headers
     },
     setDataTable(data) {
-      let newData = this.filterData(this.headers, data)
+      let obj = this.xAxisKeys.map(x => ({
+        text: x,
+        value: x
+      }))
+      let newData = this.filterData(obj, data)
+      console.log(data, newData)
       this.items = newData;
       this.selected = newData;
       this.data = newData;
@@ -462,17 +461,24 @@ export default {
           this.arrayMove(keys, i, 0)
         }
       })
-      this.headers = keys.map((item) => ({
+      /* this.headers = keys.map((item) => ({
         text: item,
         value: item,
-      }));
+      })); */
+    },
+    saveAxis() {
+      this.updateDataSetById({
+        id: this.dataSet.id,
+        xAxis: this.xAxisValue,
+        headers: this.xAxisKeys
+      });
     },
     onChangeSelected() {
+      console.log(this.xAxisKeys, this.selectedHeaders)
+      this.xAxisKeys = this.selectedHeaders.map(h => h.text)
+      console.log(this.xAxisKeys)
       if (this.dataSet && this.dataSet.dataValues && this.dataSet.dataValues.items && this.dataSet.dataValues.items.length > 0) {
-        ///console.log(this.dataSet.dataValues.items)
-        //console.log(this.selected)
-        let master = this.createMasterData(this.dataSet.dataValues.items)
-        this.uploadData(master)
+        this.uploadData(this.createMasterData(this.dataSet.dataValues.items))
       }
     },
     changeChartData() {
@@ -491,7 +497,16 @@ export default {
       this.dataSet.id = ""
       this.clear()
     } else {
-      this.onChangeSelected()
+      if (this.dataSet && this.dataSet.dataValues && this.dataSet.dataValues.items && this.dataSet.dataValues.items.length > 0) {
+        const keys = Object.keys(this.createMasterData(this.dataSet.dataValues.items)[0])
+        this.xAxisKeys = keys
+        this.headers = keys.map((item) => ({
+        text: item,
+        value: item,
+        }));
+        this.selectedHeaders = this.headers
+        this.uploadData(this.createMasterData(this.dataSet.dataValues.items))
+      }
       this.isReadOnly = true
     }
     this.fetchChannels();
@@ -503,6 +518,7 @@ export default {
       this.xAxisValue = this.dataSet.xAxis
       this.onChangeAxis()
     }
+     
     //console.log(this.currentChannels[0])
   },
   /* beforeMount() {
@@ -526,7 +542,7 @@ export default {
 
     },
     selectedHeaders() {
-      //console.log(this.selected)
+      console.log(this.selectedHeaders)
     },
     headers() {
       //console.log(this.headers)

@@ -45,12 +45,15 @@ export const createReport = /* GraphQL */ `
         dataValues {
           nextToken
         }
-        xAxis
         user
         createdAt
         updatedAt
       }
       dataSetId
+      xAxis
+      columns
+      createdBy
+      updatedBy
       createdAt
       updatedAt
       reportDataSetId
@@ -101,12 +104,15 @@ export const updateReport = /* GraphQL */ `
         dataValues {
           nextToken
         }
-        xAxis
         user
         createdAt
         updatedAt
       }
       dataSetId
+      xAxis
+      columns
+      createdBy
+      updatedBy
       createdAt
       updatedAt
       reportDataSetId
@@ -157,12 +163,15 @@ export const deleteReport = /* GraphQL */ `
         dataValues {
           nextToken
         }
-        xAxis
         user
         createdAt
         updatedAt
       }
       dataSetId
+      xAxis
+      columns
+      createdBy
+      updatedBy
       createdAt
       updatedAt
       reportDataSetId
@@ -186,6 +195,10 @@ export const createChannel = /* GraphQL */ `
           colorSchemeId
           chartType
           dataSetId
+          xAxis
+          columns
+          createdBy
+          updatedBy
           createdAt
           updatedAt
           reportDataSetId
@@ -198,7 +211,6 @@ export const createChannel = /* GraphQL */ `
           title
           description
           channelId
-          xAxis
           user
           createdAt
           updatedAt
@@ -230,6 +242,10 @@ export const updateChannel = /* GraphQL */ `
           colorSchemeId
           chartType
           dataSetId
+          xAxis
+          columns
+          createdBy
+          updatedBy
           createdAt
           updatedAt
           reportDataSetId
@@ -242,7 +258,6 @@ export const updateChannel = /* GraphQL */ `
           title
           description
           channelId
-          xAxis
           user
           createdAt
           updatedAt
@@ -274,6 +289,10 @@ export const deleteChannel = /* GraphQL */ `
           colorSchemeId
           chartType
           dataSetId
+          xAxis
+          columns
+          createdBy
+          updatedBy
           createdAt
           updatedAt
           reportDataSetId
@@ -286,7 +305,6 @@ export const deleteChannel = /* GraphQL */ `
           title
           description
           channelId
-          xAxis
           user
           createdAt
           updatedAt
@@ -336,7 +354,6 @@ export const createDataSet = /* GraphQL */ `
         }
         nextToken
       }
-      xAxis
       user
       createdAt
       updatedAt
@@ -378,7 +395,6 @@ export const updateDataSet = /* GraphQL */ `
         }
         nextToken
       }
-      xAxis
       user
       createdAt
       updatedAt
@@ -420,7 +436,6 @@ export const deleteDataSet = /* GraphQL */ `
         }
         nextToken
       }
-      xAxis
       user
       createdAt
       updatedAt
@@ -453,7 +468,6 @@ export const createDataValue = /* GraphQL */ `
         dataValues {
           nextToken
         }
-        xAxis
         user
         createdAt
         updatedAt
@@ -489,7 +503,6 @@ export const updateDataValue = /* GraphQL */ `
         dataValues {
           nextToken
         }
-        xAxis
         user
         createdAt
         updatedAt
@@ -525,7 +538,6 @@ export const deleteDataValue = /* GraphQL */ `
         dataValues {
           nextToken
         }
-        xAxis
         user
         createdAt
         updatedAt

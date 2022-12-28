@@ -71,6 +71,9 @@ export default {
       //console.log(id);
       try {     
        const res = await API.graphql(graphqlOperation(getReport, { id: id }));
+       if (res.data.getReport.columns && typeof res.data.getReport.columns == 'string') {
+        res.data.getReport.columns = JSON.parse(res.data.getReport.columns)
+       }
         commit("SET_REPORT", res.data.getReport);
         console.log(res.data.getReport);
       } catch (error) {

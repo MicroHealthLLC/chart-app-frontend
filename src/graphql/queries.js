@@ -42,12 +42,15 @@ export const getReport = /* GraphQL */ `
         dataValues {
           nextToken
         }
-        xAxis
         user
         createdAt
         updatedAt
       }
       dataSetId
+      xAxis
+      columns
+      createdBy
+      updatedBy
       createdAt
       updatedAt
       reportDataSetId
@@ -82,12 +85,15 @@ export const listReports = /* GraphQL */ `
           title
           description
           channelId
-          xAxis
           user
           createdAt
           updatedAt
         }
         dataSetId
+        xAxis
+        columns
+        createdBy
+        updatedBy
         createdAt
         updatedAt
         reportDataSetId
@@ -110,6 +116,10 @@ export const getChannel = /* GraphQL */ `
           colorSchemeId
           chartType
           dataSetId
+          xAxis
+          columns
+          createdBy
+          updatedBy
           createdAt
           updatedAt
           reportDataSetId
@@ -122,7 +132,6 @@ export const getChannel = /* GraphQL */ `
           title
           description
           channelId
-          xAxis
           user
           createdAt
           updatedAt
@@ -195,7 +204,6 @@ export const getDataSet = /* GraphQL */ `
         }
         nextToken
       }
-      xAxis
       user
       createdAt
       updatedAt
@@ -226,7 +234,6 @@ export const listDataSets = /* GraphQL */ `
         dataValues {
           nextToken
         }
-        xAxis
         user
         createdAt
         updatedAt
@@ -258,7 +265,6 @@ export const getDataValue = /* GraphQL */ `
         dataValues {
           nextToken
         }
-        xAxis
         user
         createdAt
         updatedAt
@@ -284,7 +290,6 @@ export const listDataValues = /* GraphQL */ `
           title
           description
           channelId
-          xAxis
           user
           createdAt
           updatedAt
