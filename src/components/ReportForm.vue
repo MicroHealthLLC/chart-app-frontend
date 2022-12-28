@@ -480,11 +480,7 @@ export default {
     activeReport() {
       // this.colorScheme = this.colors.find((scheme) => scheme.id == this.activeReport.colorSchemeId).scheme;
       //console.log(this.activeReport.colorSchemeId)
-      console.log(this.$route) 
-      console.log(this.activeReport)
-
-        console.log(this.newReport)
-        if(!this.activeReport){
+      if(!this.activeReport){
          this.SET_REPORT(this.newReport)
           console.log("No Active Report")
         }

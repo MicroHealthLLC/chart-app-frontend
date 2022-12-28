@@ -1,35 +1,23 @@
 <template>
   <v-row >
-    <v-col cols="12" sm="5" v-for="(report, index) in channelReports" :key="index" :load="log(report)"  >     
-      <v-card   class="pa-4 mb-4">
-        {{ report.title  }}
-        <v-btn @click="fullscreenReport" class="chart-menu" icon>
+    <v-col cols="12" sm="5" v-for="(report, i) in channelReports" :key="i" :load="updateChartData(report.dataSetId)">     
+      <v-card   class="pa-4 mb-4" v-if="data && data.length > 0">         
+        <v-btn @click="fullscreenReport" class="chart-menu" icon >
           <v-icon>mdi-fullscreen</v-icon>    
         </v-btn>
-        <!-- Chart -->
+       <!-- Chart -->
          <Component        
           ref="chart"
           :is="graphType(report)"
           :chartData="data"
-          :chartColors="colorScheme"
+          :chartColors="colors.find((scheme) => scheme.id == report.colorSchemeId).scheme"
           :graphType="report.chartType"
           :height="350"
           :title="report.title"
           class="mb-4"
         >
-        </Component>
-        <!-- Placeholder -->
-        <!-- This div has a v-else directive -->
-        <!-- <div
-        
-          class="place-holder d-flex justify-center align-center ma-4"
-        >
-          <p class="text-center placeholder-text mb-0">
-            <v-icon class="placeholder-icon">mdi-chart-areaspline</v-icon>
-            Please load a data set to view preview...
-          </p>
-        </div> -->
-        <!-- Category Toggle Button -->
+        </Component>  
+       <!-- Category Toggle Button -->
         <div class="d-flex justify-end mb-4">
           <v-btn
             v-if="circleChart"
@@ -38,22 +26,9 @@
             small
             >Next Category <v-icon small>mdi-arrow-right</v-icon></v-btn
           >
-          <!-- <v-btn
-            v-if="
-               activeReport.dataSet &&
-               activeReport.dataSet.dataValues && activeReport.dataSet.dataValues[0] &&
-              Object.keys(activeReport.dataSet.dataValues[0]).length > 2 &&
-              circleChart
-            "
-            @click="changeChartData"
-            outlined
-            small
-            >Next Category <v-icon small>mdi-arrow-right</v-icon></v-btn
-          > -->
+         
         </div>
-      </v-card>
-
- 
+      </v-card> 
     </v-col>
   </v-row>
 </template>
@@ -113,9 +88,9 @@ export default {
         (this.$refs.chart.index + 1) %
         (Object.keys(this.$refs.chart.chartData[0]).length - 1);
     },
-    log(e){
-    console.log(e)
-    }, 
+    // log(e){
+    // console.log(e)
+    // }, 
     changeFSChartData() {
       this.$refs.fullscreenchart.index =
         (this.$refs.fullscreenchart.index + 1) %
@@ -175,9 +150,8 @@ export default {
         }
       }
     },
-    async updateChartData() {
-      try {
-        await this.fetchDataSet(this.activeReport.dataSetId)
+   updateChartData(report) {
+      this.fetchDataSet(report)
         let headers = Object.keys(this.dataSet.dataValues.items[0].data[0])
         headers.forEach((k, i) => {
           if (k == this.dataSet.xAxis) {
@@ -191,9 +165,8 @@ export default {
         this.data = this.createMasterData(this.dataSet.dataValues.items)
         this.data = this.filterData(newHeaders, this.data)
         this.SET_REPORT_DATASET(this.dataSet);
-      } catch (err) {
-        console.log(err)
-      }
+        // console.log(this.dataSet)
+
     },
     removeReport() {
       this.deleteReport(this.activeReport.id);
@@ -230,8 +203,7 @@ export default {
       "statusCode",
       "user",
     ]),
-
-    circleChart() {
+   circleChart() {
       return (
         this.activeReport.chartType == "donut" ||
         this.activeReport.chartType == "pie" ||
@@ -239,7 +211,7 @@ export default {
       );
     },
     channelReports(){
-        if (this.reports && this.reports.length > 0){
+    if (this.reports && this.reports.length > 0){
           return this.reports.filter(t => t.channelId == this.currentChannels[0].channelId)
         } else return []
       },
@@ -272,38 +244,23 @@ export default {
   },
   mounted() {
     this.fetchReports();
+    // this.updateChartData()
     if (this.$route.name == "Report") {
       this.dataSetChoices = [...this.dataSets];
     } else {
       this.dataSetChoices = [...this.dataSets.filter(d => d.channelId == this.currentChannel.id)]; // was ...this.channelDataSets
     }
   },
-//   created() {
-//     if (this.$route.params.reportId != 'add-report') {
-//       this.colorScheme = this.colors.find(
-//         (scheme) => scheme.id == this.activeReport.colorSchemeId
-//       ).scheme;
-//       console.log(this.colorScheme)
-//       this.updateChartData();
-//     }
-
-//   },
+  // created() {
+  //   if (this.$route.params.reportId != 'add-report') {      
+  //     this.updateChartData();  
+  //   }
+  // },
   watch: {
-    activeReport() {
-      // this.colorScheme = this.colors.find((scheme) => scheme.id == this.activeReport.colorSchemeId).scheme;
-      //console.log(this.activeReport.colorSchemeId)
-      console.log(this.$route) 
-      console.log(this.activeReport)
-
-        console.log(this.newReport)
-        if(!this.activeReport){
-         this.SET_REPORT(this.newReport)
-          console.log("No Active Report")
-        }
-    },
-    dataSets() {
+   dataSets() {
       this.dataSetChoices = [...this.dataSets];
     },
+ 
   },
 };
 </script>

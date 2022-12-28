@@ -51,7 +51,7 @@ export default {
   },
   methods: {
     loadChart() {
-      console.log(this.chartData)
+      // console.log(this.chartData)
       const labels = this.chartData.map((item) => Object.values(item)[0]);
 
       const keys = Object.keys(this.chartData[0]).slice(1);
@@ -64,7 +64,7 @@ export default {
         const data = this.chartData.map(
           (item) => Object.values(item)[index + 1]
         );
-        console.log(item)
+        
         dataSets.push({
           label: item,
           data: data,
