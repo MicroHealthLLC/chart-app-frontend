@@ -466,20 +466,16 @@ export default {
       this.dataSetChoices = [...this.dataSets.filter(d => d.channelId == this.currentChannel.id)]; // was ...this.channelDataSets
     }
   },
-  created() {
-    if (this.$route.params.reportId != 'add-report') {
+
+  watch: {
+    activeReport() {
+      if (this.$route.params.reportId != 'add-report') {
       this.colorScheme = this.colors.find(
         (scheme) => scheme.id == this.activeReport.colorSchemeId
       ).scheme;
       console.log(this.colorScheme)
       this.updateChartData();
-    }
-
-  },
-  watch: {
-    activeReport() {
-      // this.colorScheme = this.colors.find((scheme) => scheme.id == this.activeReport.colorSchemeId).scheme;
-      //console.log(this.activeReport.colorSchemeId)
+     }
       if(!this.activeReport){
          this.SET_REPORT(this.newReport)
           console.log("No Active Report")

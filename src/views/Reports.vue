@@ -72,6 +72,9 @@
     //  console.log(this.user)
     },
     watch:{
+    reports(){
+        console.log(this.channelReports)
+      }
     }
   
   };

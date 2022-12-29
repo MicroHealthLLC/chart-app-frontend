@@ -1,6 +1,6 @@
 <template>
   <v-row >
-    <v-col cols="12" sm="5" v-for="(report, i) in channelReports" :key="i" :load="updateChartData(report.dataSetId)">     
+    <v-col cols="12" sm="5" v-for="(report, i) in channelReports" :key="i">     
       <v-card   class="pa-4 mb-4" v-if="data && data.length > 0">         
         <v-btn @click="fullscreenReport" class="chart-menu" icon >
           <v-icon>mdi-fullscreen</v-icon>    
@@ -64,8 +64,8 @@ export default {
         { text: "Polar Area", value: "polar-area" },
         { text: "Table", value: "table" },
       ],
+      report: {},
       colorScheme: [],
-      dataSetChoices: [],
       data: []
     };
   },
@@ -150,8 +150,14 @@ export default {
         }
       }
     },
-   updateChartData(report) {
-      this.fetchDataSet(report)
+   updateChartData() {
+       if(this.channelReports && this.channelReports.length){
+
+       let dataSetIds = this.channelReports.map(t => t.dataSetId)
+
+       for (var i = 0; i < this.channelReports.length; i++) {
+            this.fetchDataSet(dataSetIds[i])
+         }         
         let headers = Object.keys(this.dataSet.dataValues.items[0].data[0])
         headers.forEach((k, i) => {
           if (k == this.dataSet.xAxis) {
@@ -165,8 +171,7 @@ export default {
         this.data = this.createMasterData(this.dataSet.dataValues.items)
         this.data = this.filterData(newHeaders, this.data)
         this.SET_REPORT_DATASET(this.dataSet);
-        // console.log(this.dataSet)
-
+        }
     },
     removeReport() {
       this.deleteReport(this.activeReport.id);
@@ -211,7 +216,8 @@ export default {
       );
     },
     channelReports(){
-    if (this.reports && this.reports.length > 0){
+    if (this.reports && this.reports.length > 0 &&  this.currentChannels &&  this.currentChannels[0]){
+      console.log(this.currentChannels[0])
           return this.reports.filter(t => t.channelId == this.currentChannels[0].channelId)
         } else return []
       },
@@ -236,26 +242,11 @@ export default {
       }
     },
   },
-  async beforeMount() {
-    if(this.dataSets && this.dataSets.length < 1){
-      await this.fetchDataSets();
-    } 
-    
-  },
   mounted() {
     this.fetchReports();
-    // this.updateChartData()
-    if (this.$route.name == "Report") {
-      this.dataSetChoices = [...this.dataSets];
-    } else {
-      this.dataSetChoices = [...this.dataSets.filter(d => d.channelId == this.currentChannel.id)]; // was ...this.channelDataSets
-    }
+    this.fetchDataSets();
+    this.updateChartData();    
   },
-  // created() {
-  //   if (this.$route.params.reportId != 'add-report') {      
-  //     this.updateChartData();  
-  //   }
-  // },
   watch: {
    dataSets() {
       this.dataSetChoices = [...this.dataSets];
