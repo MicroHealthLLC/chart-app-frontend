@@ -10,7 +10,11 @@ type Report @model @auth(rules: [{ allow: public }]) {
   colorSchemeId: Int
   chartType: String
   dataSet: DataSet @hasOne
-  dataSetId: String  
+  dataSetId: String
+  xAxis: String
+  columns: String
+  createdBy: String
+  updatedBy: String  
 }
 
 type Channel @model @auth(rules: [{ allow: public }]) {
@@ -31,7 +35,7 @@ type DataSet @model @auth(rules: [{ allow: public }]) {
   channel: Channel @belongsTo(fields: ["channelId"])
   channelId: ID @index(name: "byChannel")  
   dataValues: [DataValue] @hasMany (indexName: "byDataSet", fields: ["id"])
-  xAxis: String
+  
   user: String
 }
 type DataValue @model @auth(rules: [{ allow: public }]) {

@@ -3,7 +3,7 @@
     <!-- Title -->
     <v-col class="col-12">
       <div class="d-flex justify-space-between">
-        <h3 v-if="(!isReadOnly && dataSet.id)">Update {{ dataSet.id }}</h3>
+        <h3 v-if="(!isReadOnly && dataSet.id)">Update {{ dataSet.title }}</h3>
         <h3 v-else-if="dataSet.id">View {{ dataSet.title }}</h3>
         <h3 v-else>Add Data Set</h3>
         <div>
@@ -25,8 +25,11 @@
             small
             >Edit</v-btn
           >
-          <v-btn class="mb-2" @click="resetAndGoBack" small outlined
+          <v-btn v-if="isReadOnly" class="mb-2" @click="resetAndGoBack" small outlined
             >Close</v-btn
+          >
+          <v-btn v-if="!isReadOnly" class="mb-2" @click="isReadOnly = true" small outlined
+            >Cancel</v-btn
           >
         </div>
       </div>
@@ -98,20 +101,7 @@
               ></xlsx-json>
             </xlsx-read>
             <div>
-            <!-- <v-select
-              v-show="file"
-              v-model="value"
-              :items="file ? headers : []"
-              label="Select"
-              multiple
-              chips
-              small
-              hint="What are the target columns?"
-              persistent-hint
-              return-object
-              @change="onChangeSelected"
-            >
-          </v-select> --><v-btn v-if="dataSet.id" :disabled="(!file || !selectedHeaders)" class="mb-1" elevation="4" small @click="addNewDataValue"><v-icon>mdi-plus-circle-outline</v-icon> Add New Data</v-btn>
+            <v-btn v-if="dataSet.id" :disabled="(!file)" class="mb-1" elevation="4" small @click="addNewDataValue"><v-icon>mdi-plus-circle-outline</v-icon> Add New Data</v-btn>
         </div>
           </div>
           <!-- <div class="channels">
@@ -137,9 +127,9 @@
     </v-col> 
     <!-- Chart Preview -->
     <v-col class="col-12">
-      <v-card v-if="selectedHeaders.length > 0" class="d-flex flex-column preview-container">
+      <v-card class="d-flex flex-column preview-container">
         <!-- Chart Buttons -->
-        <v-btn-toggle class="ma-4" color="primary" mandatory>
+        <!-- <v-btn-toggle class="ma-4" color="primary" mandatory>
           <v-btn @click="toggleDataTable" small>Data Table</v-btn>
           <v-btn @click="toggleLineChart" small>Line</v-btn>
           <v-btn @click="toggleBarChart" small>Bar</v-btn>
@@ -152,15 +142,31 @@
         <v-row v-if="(dataSet.dataValues && dataSet.dataValues.items && dataSet.dataValues.items.length > 0)" class="ml-2">
           <v-col class="d-inline-flex" cols="12" sm="4">
             <v-select v-model="xAxisValue" :items="xAxisKeys" :label="xAxisLabel" solo dense @change="onChangeAxis"></v-select>
-            <v-btn v-if="xAxisValue" @click="saveAxis" class="ml-2">Save</v-btn>
+            
           </v-col>
-        </v-row>
+          <v-col class="d-inline-flex" cols="16" sm="4">
+            <v-select
+              v-model="selectedHeaders"
+              :items="headers"
+              label="Select"
+              multiple
+              small
+              solo
+              dense
+              hint="What are the target columns?"
+              persistent-hint
+              return-object
+              @change="onChangeSelected"
+            >
+          </v-select><v-btn v-if="xAxisValue" @click="saveAxis" class="ml-2">Save</v-btn>
+          </v-col>
+        </v-row> -->
         <!-- Table Preview -->
         <v-card-title>
           <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
         </v-card-title>
         <div class="ma-4" v-if="chartType === 'Data Table'">
-          <v-data-table v-model="selected" :headers="selectedHeaders" :items="items"  :single-select="false" :search="search">
+          <v-data-table :headers="headers" :items="items"  :single-select="false" :search="search">
             <!-- Action Buttons -->
           <!-- <template v-slot:item.actions="{ item }">
             <v-tooltip top>
@@ -184,7 +190,7 @@
           </v-data-table>
         </div>
         <!-- Chart Previews -->
-        <div
+        <!-- <div
           v-else-if="data.length > 0 && chartType !== 'Data Table'"
           class="ma-4"
         >
@@ -203,7 +209,7 @@
             small
             >Next Category <v-icon small>mdi-arrow-right</v-icon></v-btn
           >
-        </div>
+        </div> -->
         <!-- Placeholder Message -->
         <div v-else class="d-flex flex-grow-1 justify-center align-center ma-4">
           <p class="text-center placeholder-text">
@@ -218,12 +224,12 @@
 
 <script>
 // import DataTable from "../components/DataTable";
-import LineChart from "../components/LineChart";
+/* import LineChart from "../components/LineChart";
 import BarChart from "../components/BarChart";
 import RadarChart from "../components/RadarChart";
 import DoughnutChart from "../components/DoughnutChart";
 import PieChart from "../components/PieChart";
-import PolarAreaChart from "../components/PolarAreaChart";
+import PolarAreaChart from "../components/PolarAreaChart"; */
 import { XlsxRead } from "vue-xlsx";
 import { XlsxJson } from "vue-xlsx";
 import { mapActions, mapGetters, mapMutations } from "vuex";
@@ -232,19 +238,19 @@ import datasetMixin from "../mixins/dataset-mixin";
 export default {
   name: "DataSetForm",
   components: {
-    LineChart,
+    /* LineChart,
     BarChart,
     RadarChart,
     DoughnutChart,
     PieChart,
-    PolarAreaChart,
+    PolarAreaChart, */
     XlsxRead,
     XlsxJson,
   },
   data() {
     return {
       file: null,
-      data: [],
+      //data: [],
       chartOptions: {
         responsive: true,
         maintainAspectRatio: false,
@@ -261,7 +267,7 @@ export default {
         dateNF: "mm/dd/yyyy",
       },
       headers: [],
-      selectedHeaders:[],
+      //selectedHeaders:[],
       value: [],
       items: [],
       selected: [],
@@ -287,7 +293,7 @@ export default {
       "statusCode",
       "user",
     ]),
-    graphType() {
+    /*graphType() {
       if (this.chartType === "Line") {
         return LineChart;
       } else if (this.chartType === "Bar") {
@@ -317,7 +323,7 @@ export default {
         return 'X-Axis:'
       } else return 'Align Data By:'
     }
-    /* createdBy() {
+     createdBy() {
       if (!this.dataSet.id && this.user && this.user.attributes) {
         return `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
       } else {
@@ -343,12 +349,12 @@ export default {
     },
     clear() {
       this.file = null;
-      this.data = [];
+      //this.data = [];
       this.selected = [];
       this.headers = [];
       this.items = [];
     },
-    toggleDataTable() {
+    /* toggleDataTable() {
       this.chartType = "Data Table";
     },
     toggleLineChart() {
@@ -368,7 +374,7 @@ export default {
     },
     togglePolarAreaChart() {
       this.chartType = "Polar Area";
-    },
+    }, */
     async saveDataSet() {
       this.$refs.form.validate();
       if (!this.isReadOnly && this.dataSet.id) {
@@ -393,45 +399,21 @@ export default {
           /* this.$router.push(`/data-sets/${id}`) */
           this.$router.push(`/:title/data-sets/${id}`)
           console.log(this.selected)
-          this.fetchDataSetThenAddDataValue(id, this.selected)
+          /* console.log(this.selected)
+          this.fetchDataSetThenAddDataValue(id, this.selected) */
           
           //this.dataSet.id = id
         })
       }
     },
     async addNewDataValue() {
-      //let objString = JSON.stringify(this.selected)
-      console.log(this.dataSet)
-      
-      this.addDataValue({
-        data: JSON.stringify(this.selected),
+      let objString = JSON.stringify(this.selected)
+      await this.addDataValue({
+        data: objString,
         dataSetId: this.dataSet.id
       });
       this.showDataChart()
       this.clearInput("file")
-    },
-    async showDataChart() {
-      await this.fetchDataSet(this.$route.params.dataSetId)
-      console.log(this.dataSet)
-      //this.createMasterData(this.dataSet.dataValues.items)
-      this.uploadData(this.createMasterData(this.dataSet.dataValues.items))
-    },
-    uploadData(data) {
-      console.log(data)
-      let newData = data
-      const keys = Object.keys(newData[0])
-      this.xAxisKeys = keys
-      this.moveArrByKey(keys)
-      /* keys.forEach((k, i) => {
-        if (k.toLowerCase() == "date" || k.toLowerCase().includes(" date") || k.toLowerCase().includes("date ")) {
-          this.arrayMove(keys, i, 0)
-        }
-      }) 
-      this.headers = keys.map((item) => ({
-        text: item,
-        value: item,
-      }));*/
-      this.setDataTable(newData)
     },
     clearInput(type) {
       this.$refs.form.inputs.forEach(input => {
@@ -443,24 +425,44 @@ export default {
     editForm() {
       this.isReadOnly = false
     },
-    onChangeAxis() {
+    async showDataChart() {
+      await this.fetchDataSet(this.$route.params.dataSetId)
+      console.log(this.dataSet)
+      //this.createMasterData(this.dataSet.dataValues.items)
+      this.uploadData(this.createMasterData(this.dataSet.dataValues.items))
+    },
+    uploadData(data) {
+      console.log(data)
+      this.items = data;
+      this.selected = data;
+      const keys = Object.keys(data[0])
+        this.headers = keys.map((item) => ({
+        text: item,
+        value: item,
+        }));
+      /* const keys = Object.keys(newData[0])
+      this.xAxisKeys = keys */
+      //this.moveArrByKey(this.xAxisKeys, this.xAxisValue)
+      //this.setDataTable(data)
+      //this.selectedHeaders = this.headers
+    },
+    /* onChangeAxis() {
       this.moveArrByKey(this.xAxisKeys, this.xAxisValue)
       this.setDataTable(this.createMasterData(this.dataSet.dataValues.items))
-    },
-    saveAxis() {
-      this.updateDataSetById({
-        id: this.dataSet.id,
-        xAxis: this.xAxisValue
-      });
-    },
-    setDataTable(data) {
-      let newData = this.filterData(this.headers, data)
-      this.items = newData;
-      this.selected = newData;
-      this.data = newData;
-      this.selectedHeaders = this.headers
-    },
-    moveArrByKey(keys, selected = "Date") {
+      //this.selectedHeaders = this.headers
+    }, */
+    /* setDataTable(data) {
+      let obj = this.xAxisKeys.map(x => ({
+        text: x,
+        value: x
+      })) 
+      let newData = this.filterData(obj, data)
+      console.log(data)
+      
+      //this.data = data;
+      //this.selectedHeaders = this.headers
+    }, */
+    /* moveArrByKey(keys, selected = "Date") {
       keys.forEach((k, i) => {
         if (k == selected) {
           this.arrayMove(keys, i, 0)
@@ -470,31 +472,48 @@ export default {
         text: item,
         value: item,
       }));
-    },
-    onChangeSelected() {
+    }, */
+    /* saveAxis() {
+      this.updateDataSetById({
+        id: this.dataSet.id,
+        xAxis: this.xAxisValue,
+        headers: this.xAxisKeys
+      });
+    }, */
+    /* onChangeSelected() {
+      console.log(this.xAxisKeys, this.selectedHeaders)
+      this.xAxisKeys = this.selectedHeaders.map(h => h.text)
+      console.log(this.xAxisKeys)
       if (this.dataSet && this.dataSet.dataValues && this.dataSet.dataValues.items && this.dataSet.dataValues.items.length > 0) {
-        console.log(this.dataSet.dataValues.items)
-        console.log(this.selected)
-        this.uploadData(this.createMasterData(this.dataSet.dataValues.items))   
+        this.uploadData(this.createMasterData(this.dataSet.dataValues.items))
       }
-    },
-    changeChartData() {
+    }, */
+    /* changeChartData() {
       this.$refs.chart.index =
         (this.$refs.chart.index + 1) %
         (Object.keys(this.$refs.chart.chartData[0]).length - 1);
-    },
-    checkForId() {
+    }, */
+    /* checkForId() {
       if (this.dataSet.id) {
         return true
       } else return false
-    },
+    }, */
   },
   mounted() {
     if (this.$route.params.dataSetId == "add-data-set"){ 
       this.dataSet.id = ""
       this.clear()
     } else {
-      this.onChangeSelected()
+      if (this.dataSet && this.dataSet.dataValues && this.dataSet.dataValues.items && this.dataSet.dataValues.items.length > 0) {
+        const keys = Object.keys(this.createMasterData(this.dataSet.dataValues.items)[0])
+        //this.xAxisKeys = keys
+        this.headers = keys.map((item) => ({
+        text: item,
+        value: item,
+        }));
+        //this.selectedHeaders = this.headers
+        this.uploadData(this.createMasterData(this.dataSet.dataValues.items))
+      }
       this.isReadOnly = true
     }
     this.fetchChannels();
@@ -502,10 +521,11 @@ export default {
     if (!this.dataSet.user) {
       this.dataSet.user = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`
     }
-    if (this.dataSet.xAxis) {
+    /* if (this.dataSet.xAxis) {
       this.xAxisValue = this.dataSet.xAxis
       this.onChangeAxis()
-    }
+    } */
+     
     //console.log(this.currentChannels[0])
   },
   /* beforeMount() {
@@ -528,9 +548,9 @@ export default {
       } else this.isReadOnly = false
 
     },
-    selectedHeaders() {
-      //console.log(this.selected)
-    },
+    /* selectedHeaders() {
+      console.log(this.selectedHeaders)
+    }, */
     headers() {
       //console.log(this.headers)
       /* this.headers.forEach(h => {
@@ -543,7 +563,7 @@ export default {
     }, */
     selected(){
       if (this.selected && this.selected.length > 0){
-        console.log(this.selected)
+        //console.log(this.selected)
       } else (console.log("no SELECTED data"))
     },
     statusCode() {

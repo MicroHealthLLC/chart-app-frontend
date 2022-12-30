@@ -13,7 +13,8 @@ export default {
   methods: {
     ...mapActions([]),
     createMasterData(arr) {
-     let masterData = []
+      console.log(arr)
+        let masterData = []
         if (arr.length > 1) {
           arr.forEach(d => masterData.unshift(d.data))
         } else {
