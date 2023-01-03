@@ -12,14 +12,7 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
-import LineChart from "../components/LineChart";
-import BarChart from "../components/BarChart";
 import DashboardCard_test from "../components/DashboardCard_test.vue";
-import RadarChart from "../components/RadarChart";
-import DoughnutChart from "../components/DoughnutChart";
-import PieChart from "../components/PieChart";
-import PolarAreaChart from "../components/PolarAreaChart";
-import Table from "../components/Table";
 import datasetMixin from "../mixins/dataset-mixin";
 import reportMixin from "../mixins/report-mixin";
 
@@ -54,6 +47,7 @@ export default {
   methods: {
     ...mapActions([
       "fetchReport",
+      "fetchReports",
       "fetchDataSets",
       "fetchDataSet",
       "fetchTags",
@@ -71,84 +65,10 @@ export default {
     log(e){
     console.log(e)
     }, 
-    changeFSChartData() {
-      this.$refs.fullscreenchart.index =
-        (this.$refs.fullscreenchart.index + 1) %
-        (Object.keys(this.$refs.fullscreenchart.chartData[0]).length - 1);
-    },
     resetAndGoBack(){
       this.$router.go(-1)
       this.$refs.form.reset();
-    },
-    saveReport() {
-      this.$refs.form.validate();
-      this.submitAttempted = true;
-
-      if (this.formValid) {
-        let data = {
-          title: this.activeReport.title,
-          description: this.activeReport.description,
-          channelId: this.currentChannel.id,
-          chartType: this.activeReport.chartType,
-          dataSetId: this.activeReport.dataSetId,
-          // dataSet: this.activeReport.dataSet,
-          // tag_ids: this.activeReport.tags.map((tag) => tag.id),
-          colorSchemeId: this.activeReport.colorSchemeId,
-          // last_updated_by: `${this.user.first_name} ${this.user.last_name}`,
-        };
-
-        if (this.activeReport.id) {
-          data.id = this.activeReport.id;
-          this.updateReportById(data);
-
-           // this.updateChannelById({
-          //  id:  this.activeReport.channelId,
-          //  reports: [this.activeReport]
-          // });
-        } else {
-          console.log(data)
-          // data.user_id = this.user.id;
-           this.addReport(data);
-        }
-      }
-    },
-    async updateChartData() {
-      try {
-        await this.fetchDataSet(this.activeReport.dataSetId)
-        let headers = Object.keys(this.dataSet.dataValues.items[0].data[0])
-        headers.forEach((k, i) => {
-          if (k == this.dataSet.xAxis) {
-            this.arrayMove(headers, i, 0)
-          }
-        })
-        let newHeaders = headers.map((item) => ({
-          text: item,
-          value: item,
-        }));
-        this.data = this.createMasterData(this.dataSet.dataValues.items)
-        this.data = this.filterData(newHeaders, this.data)
-        this.SET_REPORT_DATASET(this.dataSet);
-      } catch (err) {
-        console.log(err)
-      }
-
-
-    },
-    removeReport() {
-      this.deleteReport(this.activeReport.id);
-      this.$router.push(`/channels/${this.$route.params.channelId}/reports`);
-    },
-    fullscreenReport() {
-      this.fullscreen = true;
-      setTimeout(() => {
-        this.$refs.fullscreenchart.loadChart();
-      }, 100);
-    },
-    updateColors(selectedSchemeId) {
-      this.colorScheme = this.colors.find(
-        (color) => selectedSchemeId == color.id
-      ).scheme;
-    },
+    },  
   },
   computed: {
     ...mapGetters([
@@ -167,88 +87,13 @@ export default {
       "statusCode",
       "user",
     ]),
-    graphType() {
-      if (this.activeReport.chartType === "line") {
-        return LineChart;
-      } else if (this.activeReport.chartType === "bar") {
-        return BarChart;
-      } else if (this.activeReport.chartType === "radar") {
-        return RadarChart;
-      } else if (this.activeReport.chartType === "donut") {
-        return DoughnutChart;
-      } else if (this.activeReport.chartType === "pie") {
-        return PieChart;
-      } else if (this.activeReport.chartType === "polar-area") {
-        return PolarAreaChart;
-      } else if (this.activeReport.chartType === "table") {
-        return Table;
-      } else {
-        return LineChart;
-      }
-    },
-    circleChart() {
-      return (
-        this.activeReport.chartType == "donut" ||
-        this.activeReport.chartType == "pie" ||
-        this.activeReport.chartType == "polar-area"
-      );
-    },
-    newChannelReport() {
-      return this.$route.params.reportId == "new";
-    },
-    screenHeight() {
-      return window.innerHeight - 200;
-    },
-    createdBy() {
-      if (this.activeReport && this.activeReport.id && this.user && this.user.attributes) {
-        return `${this.user.attributes.given_name} ${this.user.attributes.family_name} on ${new Date(this.activeReport.createdAt).toLocaleString()}`;
-      } else {
-        return `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
-      }
-    },
-    updatedBy() {
-      if (this.activeReport && this.activeReport.id) {
-        return `${this.user.attributes.given_name}  ${this.user.attributes.family_name} on ${new Date(this.activeReport.updatedAt).toLocaleString()}`;
-      } else {
-        return `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
-      }
-    },
-  },
-  async beforeMount() {
-    if(this.dataSets && this.dataSets.length < 1){
-      await this.fetchDataSets();
-    } 
-    
   },
   async mounted() {
-    // this.colorScheme = this.colors.find(
-    //   (scheme) => scheme.id == this.activeReport.colorSchemeId
-    // ).scheme;
-    if (this.activeReport && this.activeReport.id) {
-      // await this.fetchReport(this.$route.params.reportId);
-      this.updateChartData();
-    }
-    if (this.$route.name == "Report") {
-      this.dataSetChoices = [...this.dataSets];
-    } else {
-      this.dataSetChoices = [...this.dataSets]; // was ...this.channelDataSets
-    }
+    this.fetchReports();
+    this.fetchDataSets();
   },
   watch: {
-    activeReport() {
-      // this.colorScheme = this.colors.find((scheme) => scheme.id == this.activeReport.colorSchemeId).scheme;
-      //console.log(this.activeReport.colorSchemeId)
-      console.log(this.$route) 
-
-        console.log(this.newReport)
-        if(!this.activeReport){
-         this.SET_REPORT(this.newReport)
-          console.log("No Active Report")
-        }
-    },
-    dataSets() {
-      this.dataSetChoices = [...this.dataSets];
-    },
+  
   },
 };
 </script>

@@ -1,12 +1,12 @@
 <template>
   <v-row >
     <v-col cols="12" sm="5" v-for="(report, i) in channelReports" :key="i">     
-      <v-card   class="pa-4 mb-4" v-if="data && data.length > 0">         
+      <v-card   class="pa-4 mb-4"  v-if="data.length > 0">         
         <v-btn @click="fullscreenReport" class="chart-menu" icon >
           <v-icon>mdi-fullscreen</v-icon>    
         </v-btn>
        <!-- Chart -->
-         <Component        
+         <Component               
           ref="chart"
           :is="graphType(report)"
           :chartData="data"
@@ -29,6 +29,7 @@
          
         </div>
       </v-card> 
+      <!-- <span v-else>NO DATA</span> -->
     </v-col>
   </v-row>
 </template>
@@ -70,125 +71,6 @@ export default {
     };
   },
   mixins: [datasetMixin, reportMixin],
-  methods: {
-    ...mapActions([
-      "fetchReport",
-      "fetchReports",
-      "fetchDataSets",
-      "fetchDataSet",
-      "fetchTags",
-      "addReport",
-      "updateReportById",
-      "deleteReport",
-      "updateChannelById"
-    ]),
-    ...mapMutations(["SET_REPORT_DATASET", "SET_STATUS_CODE", "SET_REPORT"]),
-    changeChartData() {
-      this.$refs.chart.index =
-        (this.$refs.chart.index + 1) %
-        (Object.keys(this.$refs.chart.chartData[0]).length - 1);
-    },
-    // log(e){
-    // console.log(e)
-    // }, 
-    changeFSChartData() {
-      this.$refs.fullscreenchart.index =
-        (this.$refs.fullscreenchart.index + 1) %
-        (Object.keys(this.$refs.fullscreenchart.chartData[0]).length - 1);
-    },
-    resetAndGoBack(){
-      this.$router.go(-1)
-      this.$refs.form.reset();
-    },
-    graphType(report) {
-      if (report.chartType === "line") {
-        return LineChart;
-      } else if (report.chartType === "bar") {
-        return BarChart;
-      } else if (report.chartType === "radar") {
-        return RadarChart;
-      } else if (report.chartType === "donut") {
-        return DoughnutChart;
-      } else if (report.chartType === "pie") {
-        return PieChart;
-      } else if (report.chartType === "polar-area") {
-        return PolarAreaChart;
-      } else if (report.chartType === "table") {
-        return Table;
-      } else {
-        return LineChart;
-      }
-    },
-    saveReport() {
-      this.$refs.form.validate();
-      this.submitAttempted = true;
-      if (this.formValid) {
-        let data = {
-          title: this.activeReport.title,
-          description: this.activeReport.description,
-          channelId: this.currentChannel.id,
-          chartType: this.activeReport.chartType,
-          dataSetId: this.activeReport.dataSetId,
-          // dataSet: this.activeReport.dataSet,
-          // tag_ids: this.activeReport.tags.map((tag) => tag.id),
-          colorSchemeId: this.activeReport.colorSchemeId,
-          // last_updated_by: `${this.user.first_name} ${this.user.last_name}`,
-        };
-
-        if (this.activeReport.id) {
-          data.id = this.activeReport.id;
-          this.updateReportById(data);
-
-           // this.updateChannelById({
-          //  id:  this.activeReport.channelId,
-          //  reports: [this.activeReport]
-          // });
-        } else {
-          console.log(data)
-          // data.user_id = this.user.id;
-           this.addReport(data);
-        }
-      }
-    },
-   updateChartData() {
-       if(this.channelReports && this.channelReports.length){
-
-       let dataSetIds = this.channelReports.map(t => t.dataSetId)
-
-       for (var i = 0; i < this.channelReports.length; i++) {
-            this.fetchDataSet(dataSetIds[i])
-         }         
-        let headers = Object.keys(this.dataSet.dataValues.items[0].data[0])
-        headers.forEach((k, i) => {
-          if (k == this.dataSet.xAxis) {
-            this.arrayMove(headers, i, 0)
-          }
-        })
-        let newHeaders = headers.map((item) => ({
-          text: item,
-          value: item,
-        }));
-        this.data = this.createMasterData(this.dataSet.dataValues.items)
-        this.data = this.filterData(newHeaders, this.data)
-        this.SET_REPORT_DATASET(this.dataSet);
-        }
-    },
-    removeReport() {
-      this.deleteReport(this.activeReport.id);
-      this.$router.push(`/channels/${this.$route.params.channelId}/reports`);
-    },
-    fullscreenReport() {
-      this.fullscreen = true;
-      setTimeout(() => {
-        this.$refs.fullscreenchart.loadChart();
-      }, 100);
-    },
-    updateColors(selectedSchemeId) {
-      this.colorScheme = this.colors.find(
-        (color) => selectedSchemeId == color.id
-      ).scheme;
-    },
-  },
   computed: {
     ...mapGetters([
       "activeDataSet",
@@ -242,16 +124,135 @@ export default {
       }
     },
   },
+  methods: {
+    ...mapActions([
+      "fetchReport",
+      "fetchReports",
+      "fetchDataSets",
+      "fetchDataSet",
+      "fetchTags",
+      "addReport",
+      "updateReportById",
+      "deleteReport",
+      "updateChannelById"
+    ]),
+    ...mapMutations(["SET_REPORT_DATASET", "SET_STATUS_CODE", "SET_REPORT"]),
+    changeChartData() {
+      this.$refs.chart.index =
+        (this.$refs.chart.index + 1) %
+        (Object.keys(this.$refs.chart.chartData[0]).length - 1);
+    },
+    // log(e){
+    // console.log(e)
+    // }, 
+    changeFSChartData() {
+      this.$refs.fullscreenchart.index =
+        (this.$refs.fullscreenchart.index + 1) %
+        (Object.keys(this.$refs.fullscreenchart.chartData[0]).length - 1);
+    },
+    resetAndGoBack(){
+      this.$router.go(-1)
+      this.$refs.form.reset();
+    },
+    graphType(report) {
+      if (report.chartType === "line") {
+        return LineChart;
+      } else if (report.chartType === "bar") {
+        return BarChart;
+      } else if (report.chartType === "radar") {
+        return RadarChart;
+      } else if (report.chartType === "donut") {
+        return DoughnutChart;
+      } else if (report.chartType === "pie") {
+        return PieChart;
+      } else if (report.chartType === "polar-area") {
+        return PolarAreaChart;
+      } else if (report.chartType === "table") {
+        return Table;
+      } else {
+        return LineChart;
+      }
+    },
+  //  updateChartData() {
+  //      if(this.channelReports && this.channelReports.length > 0){
+
+  //      let dataSetIds = this.channelReports.map(t => t.dataSetId)
+  //      for (var i = 0; i < this.channelReports.length; i++) {
+  //           this.fetchDataSet(dataSetIds[i])
+  //        }  
+  //        if (this.dataSet  && this.dataSet.dataValues && this.dataSet.dataValues.items)   {
+  //         let headers = Object.keys(this.dataSet.dataValues.items[0].data[0])
+  //          headers.forEach((k, i) => {
+  //         if (k == this.dataSet.xAxis) {
+  //           this.arrayMove(headers, i, 0)
+  //         }
+  //       })
+  //       let newHeaders = headers.map((item) => ({
+  //         text: item,
+  //         value: item,
+  //       }));
+  //       this.data = this.createMasterData(this.dataSet.dataValues.items)
+  //       this.data = this.filterData(newHeaders, this.data)
+  //       this.SET_REPORT_DATASET(this.dataSet);
+  //        }    
+       
+  //       }
+  //   },
+    removeReport() {
+      this.deleteReport(this.activeReport.id);
+      this.$router.push(`/channels/${this.$route.params.channelId}/reports`);
+    },
+    fullscreenReport() {
+      this.fullscreen = true;
+      setTimeout(() => {
+        this.$refs.fullscreenchart.loadChart();
+      }, 100);
+    },
+    updateColors(selectedSchemeId) {
+      this.colorScheme = this.colors.find(
+        (color) => selectedSchemeId == color.id
+      ).scheme;
+    },
+  },
+ 
   mounted() {
+    // this.updateChartData();    
     this.fetchReports();
     this.fetchDataSets();
-    this.updateChartData();    
+    
   },
   watch: {
    dataSets() {
       this.dataSetChoices = [...this.dataSets];
     },
- 
+    channelReports(){
+      if (this.channelReports && this.channelReports.length > 0){
+        let dataSetIds = this.channelReports.map(t => t.dataSetId)
+        for (var i = 0; i < this.channelReports.length; i++) {
+            this.fetchDataSet(dataSetIds[i])
+         }  
+         if (this.dataSet  && this.dataSet.dataValues && this.dataSet.dataValues.items)   {
+          let headers = Object.keys(this.dataSet.dataValues.items[0].data[0])
+           headers.forEach((k, i) => {
+          if (k == this.dataSet.xAxis) {
+            this.arrayMove(headers, i, 0)
+          }
+        })
+        let newHeaders = headers.map((item) => ({
+          text: item,
+          value: item,
+        }));
+        this.data = this.createMasterData(this.dataSet.dataValues.items)
+        this.data = this.filterData(newHeaders, this.data)
+        this.SET_REPORT_DATASET(this.dataSet);
+         }    
+      }
+    }, 
+    data(){
+      if(this.data.length > 0){
+        return this.data 
+      }    
+    }, 
   },
 };
 </script>
