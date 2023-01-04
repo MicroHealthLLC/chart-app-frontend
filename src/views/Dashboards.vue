@@ -6,7 +6,11 @@
           small>mdi-plus</v-icon></v-btn>
       </div>  
       <v-divider class="mb-4"></v-divider>
-     <DashboardCard_test/>
+      <v-row>
+        <v-col cols="12" sm="5" v-for="(report, i) in channelReports" :key="i">
+          <DashboardCard_test :report="report"/>
+        </v-col>
+      </v-row>
   </div>
 </template>
 
@@ -27,7 +31,10 @@ export default {
   name: "Dashboards",
   components: {
       DashboardCard_test
-     },
+  },
+  /* props: {
+    report: Object  
+  }, */
   data() {
     return {
       formValid: true,
@@ -80,7 +87,7 @@ export default {
       this.$router.go(-1)
       this.$refs.form.reset();
     },
-    saveReport() {
+    /*saveReport() {
       this.$refs.form.validate();
       this.submitAttempted = true;
 
@@ -112,7 +119,7 @@ export default {
         }
       }
     },
-    async updateChartData() {
+     async updateChartData() {
       try {
         await this.fetchDataSet(this.activeReport.dataSetId)
         let headers = Object.keys(this.dataSet.dataValues.items[0].data[0])
@@ -133,7 +140,7 @@ export default {
       }
 
 
-    },
+    }, */
     removeReport() {
       this.deleteReport(this.activeReport.id);
       this.$router.push(`/channels/${this.$route.params.channelId}/reports`);
@@ -155,7 +162,7 @@ export default {
       "activeDataSet",
       "activeReport",
       "channels",
-      "currentChannel",
+      "currentChannels",
       "channelReports",
       "currentChannel",
       "colors",
@@ -166,7 +173,15 @@ export default {
       "tags",
       "statusCode",
       "user",
+      "reports"
     ]),
+    channelReports() {
+      if (this.reports && this.reports.length > 0 && this.currentChannels && this.currentChannels[0]) {
+        console.log(this.currentChannels[0])
+
+        return this.reports.filter(t => t.channelId == this.currentChannels[0].channelId)
+      } else return []
+    },
     graphType() {
       if (this.activeReport.chartType === "line") {
         return LineChart;
@@ -233,6 +248,7 @@ export default {
     } else {
       this.dataSetChoices = [...this.dataSets]; // was ...this.channelDataSets
     }
+    console.log(this.channelReports)
   },
   watch: {
     activeReport() {

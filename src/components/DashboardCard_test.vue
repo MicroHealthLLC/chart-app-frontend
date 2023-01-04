@@ -1,6 +1,6 @@
 <template>
-  <v-row >
-    <v-col cols="12" sm="5" v-for="(report, i) in channelReports" :key="i">     
+  <!-- <v-row > -->
+    <!-- <v-col cols="12" sm="5" v-for="(report, i) in channelReports" :key="i"> -->     
       <v-card   class="pa-4 mb-4" v-if="data && data.length > 0">         
         <v-btn @click="fullscreenReport" class="chart-menu" icon >
           <v-icon>mdi-fullscreen</v-icon>    
@@ -29,8 +29,8 @@
          
         </div>
       </v-card> 
-    </v-col>
-  </v-row>
+    <!-- </v-col> -->
+  <!-- </v-row> -->
 </template>
 
 <script>
@@ -47,6 +47,9 @@ import reportMixin from "../mixins/report-mixin";
 
 export default {
   name: "DashboardCard_test",
+  props: {
+    report: Object  
+  },
   data() {
     return {
       formValid: true,
@@ -64,7 +67,7 @@ export default {
         { text: "Polar Area", value: "polar-area" },
         { text: "Table", value: "table" },
       ],
-      report: {},
+      //report: {},
       colorScheme: [],
       data: []
     };
@@ -151,49 +154,45 @@ export default {
       }
     },
     async updateChartData() {
-      if (this.channelReports && this.channelReports.length) {
+      /* if (this.channelReports && this.channelReports.length) {
         console.log(this.dataSet)
         let dataSetIds = this.channelReports.map(t => t.dataSetId)
         console.log(dataSetIds)
         
-        for (var i = 0; i < this.channelReports.length; i++) {
-          await this.fetchDataSet(dataSetIds[i])
-          let ds = this.dataSet
-          console.log(this.channelReports[i])
-          let headers = Object.keys(ds.dataValues.items[0].data[0])
-          headers.forEach((k, j) => {
-            if (k == this.channelReports[i].xAxis) {
-              console.log(k)
-              console.log("true", this.channelReports[i].xAxis)
-              this.arrayMove(headers, j, 0)
-            }
-          })
-          let newHeaders = []
-          console.log(this.channelReports[i])
-          if (this.channelReports[i].columns && this.channelReports[i].columns.length > 0) {
-            
-            newHeaders = JSON.parse(this.channelReports[i].columns)
-          } else {
-            newHeaders = headers.map((item) => ({
-              text: item,
-              value: item,
-            }));
-          }
-          /* newHeaders = headers.map((item) => ({
-            text: item,
-            value: item,
-          })); */
-          console.log(newHeaders)
-          this.data = this.createMasterData(ds.dataValues.items)
-        this.data = this.filterData(newHeaders, this.data)
-        this.SET_REPORT_DATASET(ds);
+        for (var i = 0; i < this.channelReports.length; i++) { */
+      await this.fetchDataSet(this.report.dataSetId)
+      let ds = this.dataSet
+      console.log(this.report)
+      let headers = Object.keys(ds.dataValues.items[0].data[0])
+      headers.forEach((k, j) => {
+        if (k == this.report.xAxis) {
+          console.log(k)
+          console.log("true", this.report.xAxis)
+          this.arrayMove(headers, j, 0)
         }
-        
+      })
+      let newHeaders = []
+      console.log(this.report)
+      if (this.report.columns && this.report.columns.length > 0) {
+
+        newHeaders = JSON.parse(this.report.columns)
+      } else {
+        newHeaders = headers.map((item) => ({
+          text: item,
+          value: item,
+        }));
       }
-    },
-    removeReport() {
-      this.deleteReport(this.activeReport.id);
-      this.$router.push(`/channels/${this.$route.params.channelId}/reports`);
+      /* newHeaders = headers.map((item) => ({
+        text: item,
+        value: item,
+      })); */
+      console.log(newHeaders)
+      this.data = this.createMasterData(ds.dataValues.items)
+      this.data = this.filterData(newHeaders, this.data)
+      this.SET_REPORT_DATASET(ds);
+      //}
+
+      //}
     },
     fullscreenReport() {
       this.fullscreen = true;
@@ -233,19 +232,19 @@ export default {
         this.activeReport.chartType == "polar-area"
       );
     },
-    channelReports(){
+    /* channelReports(){
     if (this.reports && this.reports.length > 0 &&  this.currentChannels &&  this.currentChannels[0]){
       console.log(this.currentChannels[0])
           return this.reports.filter(t => t.channelId == this.currentChannels[0].channelId)
         } else return []
-      },
+      }, */
     newChannelReport() {
       return this.$route.params.reportId == "new";
     },
     screenHeight() {
       return window.innerHeight - 200;
     },
-    createdBy() {
+    /* createdBy() {
       if (this.activeReport && this.activeReport.id && this.user && this.user.attributes) {
         return `${this.user.attributes.given_name} ${this.user.attributes.family_name} on ${new Date(this.activeReport.createdAt).toLocaleString()}`;
       } else {
@@ -258,12 +257,13 @@ export default {
       } else {
         return `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
       }
-    },
+    }, */
   },
   mounted() {
     this.fetchReports();
     this.fetchDataSets();
-    this.updateChartData();    
+    this.updateChartData(); 
+    console.log(this.report)   
   },
   watch: {
    dataSets() {
