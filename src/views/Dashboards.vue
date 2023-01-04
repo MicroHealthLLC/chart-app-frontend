@@ -1,11 +1,31 @@
 <template>
   <div>
+      <v-dialog v-model="showForm" width="30%" >
+      <v-card class="px-4 py-4 modal">      
+        <v-select
+          v-model="hhh"       
+          item-text="title"
+          item-value="value"
+          multiple        
+          chips
+          :items="channelReports"
+          :disabled="!channelReports.length > 1"
+          label="Select dashboard content"
+          outlined
+        ></v-select>
+        <v-btn color="primary" large class="d-block margin-auto" >Add To Dashboard<v-icon
+          small>mdi-plus</v-icon></v-btn>
+      </v-card> 
+      <!-- <span v-else>NO DATA</span> -->
+
+    </v-dialog>
     <div class="d-flex justify-space-between">
-        <h3><v-icon class="mr-2 pb-2" color="cyan">mdi-monitor-dashboard</v-icon>Dashboards</h3>
-        <v-btn class="mb-2" color="primary" small @click.prevent="toNewReport">Add Dashboard <v-icon
+        <h3><v-icon class="mr-2 pb-2" color="cyan">mdi-monitor-dashboard</v-icon>Dashboard</h3>
+        <v-btn class="mb-2" color="primary" small @click="addDashboard">Add to Dashboard <v-icon
           small>mdi-plus</v-icon></v-btn>
       </div>  
       <v-divider class="mb-4"></v-divider>
+    
      <DashboardCard_test/>
   </div>
 </template>
@@ -24,6 +44,8 @@ export default {
   data() {
     return {
       formValid: true,
+      hhh: [], //replace once backend value is added
+      showForm: false, 
       submitAttempted: false,
       deleteDialog: false,
       fullscreen: false,
@@ -62,6 +84,9 @@ export default {
         (this.$refs.chart.index + 1) %
         (Object.keys(this.$refs.chart.chartData[0]).length - 1);
     },
+    addDashboard(){
+      this.showForm = true
+    },
     log(e){
     console.log(e)
     }, 
@@ -75,10 +100,10 @@ export default {
       "activeDataSet",
       "activeReport",
       "channels",
-      "currentChannel",
-      "channelReports",
+      "currentChannels",
       "currentChannel",
       "colors",
+      "reports",
       "channelDataSets",
       "dataSets",
       "dataSet",
@@ -87,6 +112,12 @@ export default {
       "statusCode",
       "user",
     ]),
+    channelReports(){
+    if (this.reports && this.reports.length > 0 &&  this.currentChannels &&  this.currentChannels[0]){
+      console.log(this.currentChannels[0])
+          return this.reports.filter(t => t.channelId == this.currentChannels[0].channelId)
+        } else return []
+      },
   },
   async mounted() {
     this.fetchReports();
@@ -99,10 +130,16 @@ export default {
 </script>
 
 <style scoped>
+.margin-auto {
+ margin: auto !important;
+}
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 10px;
+}
+.modal {
+  margin-top: ;
 }
 .description,
 .tags {

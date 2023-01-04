@@ -1,11 +1,29 @@
 <template>
   <v-row >
+
+    <!-- <v-col cols="12" sm="6">           
+      <v-card   class="pa-4 mb-4 card" >   
+        <v-row  align="center">
+          <v-col>        
+         <span class="no-content-msg">This Channel has no dashboard content.</span> 
+         </v-col>
+        </v-row>       
+         <v-row  align="center">
+          <v-col>
+            <v-btn color="primary" large  class="margin-auto d-block" @click="addDashboard" >
+               <v-icon smalll class="mr-1">mdi-monitor-dashboard</v-icon>Add Content
+            </v-btn>
+          </v-col>                   
+        </v-row>
+      </v-card> 
+
+    </v-col> -->
+
     <v-col cols="12" sm="5" v-for="(report, i) in channelReports" :key="i">     
       <v-card   class="pa-4 mb-4"  v-if="data.length > 0">         
         <v-btn @click="fullscreenReport" class="chart-menu" icon >
           <v-icon>mdi-fullscreen</v-icon>    
         </v-btn>
-       <!-- Chart -->
          <Component               
           ref="chart"
           :is="graphType(report)"
@@ -16,8 +34,7 @@
           :title="report.title"
           class="mb-4"
         >
-        </Component>  
-       <!-- Category Toggle Button -->
+        </Component> 
         <div class="d-flex justify-end mb-4">
           <v-btn
             v-if="circleChart"
@@ -25,12 +42,31 @@
             outlined
             small
             >Next Category <v-icon small>mdi-arrow-right</v-icon></v-btn
-          >
-         
+          >         
         </div>
       </v-card> 
-      <!-- <span v-else>NO DATA</span> -->
+
     </v-col>
+
+    <v-dialog v-model="showForm" width="30%" >
+      <v-card class="px-4 py-4 modal">      
+        <v-select
+          v-model="hhh"       
+          item-text="title"
+          item-value="value"
+          multiple        
+          chips
+          :items="channelReports"
+          :disabled="!channelReports.length > 1"
+          label="Select dashboard content"
+          outlined
+        ></v-select>
+        <v-btn color="primary" large class="d-block margin-auto" >Add To Dashboard<v-icon
+          small>mdi-plus</v-icon></v-btn>
+      </v-card> 
+      <!-- <span v-else>NO DATA</span> -->
+
+    </v-dialog>
   </v-row>
 </template>
 
@@ -51,9 +87,12 @@ export default {
   data() {
     return {
       formValid: true,
+      showForm: false, 
+      hhh: [],
       submitAttempted: false,
       deleteDialog: false,
       fullscreen: false,
+      items: ['Foo', 'Bar', 'Fizz', 'Buzz'],
       chartTypes: [
         { text: "Line", value: "line" },
         { text: "Curve", value: "curve" },
@@ -142,6 +181,9 @@ export default {
         (this.$refs.chart.index + 1) %
         (Object.keys(this.$refs.chart.chartData[0]).length - 1);
     },
+    addDashboard(){
+      this.showForm = true
+    },
     // log(e){
     // console.log(e)
     // }, 
@@ -173,31 +215,6 @@ export default {
         return LineChart;
       }
     },
-  //  updateChartData() {
-  //      if(this.channelReports && this.channelReports.length > 0){
-
-  //      let dataSetIds = this.channelReports.map(t => t.dataSetId)
-  //      for (var i = 0; i < this.channelReports.length; i++) {
-  //           this.fetchDataSet(dataSetIds[i])
-  //        }  
-  //        if (this.dataSet  && this.dataSet.dataValues && this.dataSet.dataValues.items)   {
-  //         let headers = Object.keys(this.dataSet.dataValues.items[0].data[0])
-  //          headers.forEach((k, i) => {
-  //         if (k == this.dataSet.xAxis) {
-  //           this.arrayMove(headers, i, 0)
-  //         }
-  //       })
-  //       let newHeaders = headers.map((item) => ({
-  //         text: item,
-  //         value: item,
-  //       }));
-  //       this.data = this.createMasterData(this.dataSet.dataValues.items)
-  //       this.data = this.filterData(newHeaders, this.data)
-  //       this.SET_REPORT_DATASET(this.dataSet);
-  //        }    
-       
-  //       }
-  //   },
     removeReport() {
       this.deleteReport(this.activeReport.id);
       this.$router.push(`/channels/${this.$route.params.channelId}/reports`);
@@ -258,11 +275,28 @@ export default {
 </script>
 
 <style scoped>
+.card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 350px;
+  min-height: 180px;
+  }
+.no-content-msg{
+  font-size: larger;
+  font-style: italic;
+  font-weight: 400;
+  }
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 10px;
 }
+.margin-auto {
+ margin: auto !important;
+}
+
 .description,
 .tags {
   grid-column: 1 / span 2;

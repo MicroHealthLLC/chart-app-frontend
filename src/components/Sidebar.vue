@@ -304,9 +304,18 @@ export default {
 </script>
 
 <style scoped>
+
 .nav-group.v-list-group--active {
   /* color: #ffffff !important; */
 }
+.card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 400px;
+    min-height: 400px;
+  }
 .active-nav-item {
   color: #1976d2 !important;
 }

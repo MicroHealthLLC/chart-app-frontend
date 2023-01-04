@@ -31,9 +31,9 @@
       >
         <v-list-item-title>
           <v-icon color="cyan">mdi-monitor-dashboard</v-icon>
-          Dashboards: </v-list-item-title>
+          Dashboard Items: </v-list-item-title>
         <v-list-item-subtitle class="text-right text-h6 text--primary">
-          <span class="pill px-2">  6</span>
+          <span class="pill px-2">  0</span>
         </v-list-item-subtitle>
       </v-list-item>
      
@@ -108,7 +108,7 @@
   
   <style scoped>
   .report-card {
-    width: 85%;
+    width: 90%;
     border: 1px solid lightgray;
     border-left: 5px solid #dd9036 !important;
     margin-bottom: 10px;
