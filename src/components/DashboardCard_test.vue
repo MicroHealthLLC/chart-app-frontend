@@ -1,26 +1,7 @@
 <template>
-  <v-row >
-
-    <!-- <v-col cols="12" sm="6">           
-      <v-card   class="pa-4 mb-4 card" >   
-        <v-row  align="center">
-          <v-col>        
-         <span class="no-content-msg">This Channel has no dashboard content.</span> 
-         </v-col>
-        </v-row>       
-         <v-row  align="center">
-          <v-col>
-            <v-btn color="primary" large  class="margin-auto d-block" @click="addDashboard" >
-               <v-icon smalll class="mr-1">mdi-monitor-dashboard</v-icon>Add Content
-            </v-btn>
-          </v-col>                   
-        </v-row>
-      </v-card> 
-
-    </v-col> -->
-
-    <v-col cols="12" sm="5" v-for="(report, i) in channelReports" :key="i">     
-      <v-card   class="pa-4 mb-4"  v-if="data.length > 0">         
+  <!-- <v-row > -->
+    <!-- <v-col cols="12" sm="5" v-for="(report, i) in channelReports" :key="i"> -->     
+      <v-card   class="pa-4 mb-4" v-if="data && data.length > 0">         
         <v-btn @click="fullscreenReport" class="chart-menu" icon >
           <v-icon>mdi-fullscreen</v-icon>    
         </v-btn>
@@ -45,29 +26,8 @@
           >         
         </div>
       </v-card> 
-
-    </v-col>
-
-    <v-dialog v-model="showForm" width="30%" >
-      <v-card class="px-4 py-4 modal">      
-        <v-select
-          v-model="hhh"       
-          item-text="title"
-          item-value="value"
-          multiple        
-          chips
-          :items="channelReports"
-          :disabled="!channelReports.length > 1"
-          label="Select dashboard content"
-          outlined
-        ></v-select>
-        <v-btn color="primary" large class="d-block margin-auto" >Add To Dashboard<v-icon
-          small>mdi-plus</v-icon></v-btn>
-      </v-card> 
-      <!-- <span v-else>NO DATA</span> -->
-
-    </v-dialog>
-  </v-row>
+    <!-- </v-col> -->
+  <!-- </v-row> -->
 </template>
 
 <script>
@@ -84,6 +44,9 @@ import reportMixin from "../mixins/report-mixin";
 
 export default {
   name: "DashboardCard_test",
+  props: {
+    report: Object  
+  },
   data() {
     return {
       formValid: true,
@@ -104,7 +67,7 @@ export default {
         { text: "Polar Area", value: "polar-area" },
         { text: "Table", value: "table" },
       ],
-      report: {},
+      //report: {},
       colorScheme: [],
       data: []
     };
@@ -215,9 +178,77 @@ export default {
         return LineChart;
       }
     },
-    removeReport() {
-      this.deleteReport(this.activeReport.id);
-      this.$router.push(`/channels/${this.$route.params.channelId}/reports`);
+    saveReport() {
+      this.$refs.form.validate();
+      this.submitAttempted = true;
+      if (this.formValid) {
+        let data = {
+          title: this.activeReport.title,
+          description: this.activeReport.description,
+          channelId: this.currentChannel.id,
+          chartType: this.activeReport.chartType,
+          dataSetId: this.activeReport.dataSetId,
+          // dataSet: this.activeReport.dataSet,
+          // tag_ids: this.activeReport.tags.map((tag) => tag.id),
+          colorSchemeId: this.activeReport.colorSchemeId,
+          // last_updated_by: `${this.user.first_name} ${this.user.last_name}`,
+        };
+
+        if (this.activeReport.id) {
+          data.id = this.activeReport.id;
+          this.updateReportById(data);
+
+           // this.updateChannelById({
+          //  id:  this.activeReport.channelId,
+          //  reports: [this.activeReport]
+          // });
+        } else {
+          console.log(data)
+          // data.user_id = this.user.id;
+           this.addReport(data);
+        }
+      }
+    },
+    async updateChartData() {
+      /* if (this.channelReports && this.channelReports.length) {
+        console.log(this.dataSet)
+        let dataSetIds = this.channelReports.map(t => t.dataSetId)
+        console.log(dataSetIds)
+        
+        for (var i = 0; i < this.channelReports.length; i++) { */
+      await this.fetchDataSet(this.report.dataSetId)
+      let ds = this.dataSet
+      console.log(this.report)
+      let headers = Object.keys(ds.dataValues.items[0].data[0])
+      headers.forEach((k, j) => {
+        if (k == this.report.xAxis) {
+          console.log(k)
+          console.log("true", this.report.xAxis)
+          this.arrayMove(headers, j, 0)
+        }
+      })
+      let newHeaders = []
+      console.log(this.report)
+      if (this.report.columns && this.report.columns.length > 0) {
+
+        newHeaders = JSON.parse(this.report.columns)
+      } else {
+        newHeaders = headers.map((item) => ({
+          text: item,
+          value: item,
+        }));
+      }
+      /* newHeaders = headers.map((item) => ({
+        text: item,
+        value: item,
+      })); */
+      console.log(newHeaders)
+      this.data = this.createMasterData(ds.dataValues.items)
+      this.data = this.filterData(newHeaders, this.data)
+      this.SET_REPORT_DATASET(ds);
+      //}
+
+      //}
     },
     fullscreenReport() {
       this.fullscreen = true;
@@ -231,12 +262,65 @@ export default {
       ).scheme;
     },
   },
- 
+  computed: {
+    ...mapGetters([
+      "activeDataSet",
+      "activeReport",
+      "channels",
+      "currentChannel",
+      "currentChannels",
+    //   "channelReports",
+      "currentChannel",
+      "colors",
+      "reports",
+      "channelDataSets",
+      "dataSets",
+      "dataSet",
+      "reportLoaded",
+      "tags",
+      "statusCode",
+      "user",
+    ]),
+   circleChart() {
+      return (
+        this.activeReport.chartType == "donut" ||
+        this.activeReport.chartType == "pie" ||
+        this.activeReport.chartType == "polar-area"
+      );
+    },
+    /* channelReports(){
+    if (this.reports && this.reports.length > 0 &&  this.currentChannels &&  this.currentChannels[0]){
+      console.log(this.currentChannels[0])
+          return this.reports.filter(t => t.channelId == this.currentChannels[0].channelId)
+        } else return []
+      }, */
+    newChannelReport() {
+      return this.$route.params.reportId == "new";
+    },
+    screenHeight() {
+      return window.innerHeight - 200;
+    },
+    /* createdBy() {
+      if (this.activeReport && this.activeReport.id && this.user && this.user.attributes) {
+        return `${this.user.attributes.given_name} ${this.user.attributes.family_name} on ${new Date(this.activeReport.createdAt).toLocaleString()}`;
+      } else {
+        return `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
+      }
+    },
+    updatedBy() {
+      if (this.activeReport && this.activeReport.id) {
+        return `${this.user.attributes.given_name}  ${this.user.attributes.family_name} on ${new Date(this.activeReport.updatedAt).toLocaleString()}`;
+      } else {
+        return `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
+      }
+    }, */
+  },
   mounted() {
     // this.updateChartData();    
     this.fetchReports();
     this.fetchDataSets();
-    
+    this.updateChartData(); 
+    console.log(this.report)   
   },
   watch: {
    dataSets() {

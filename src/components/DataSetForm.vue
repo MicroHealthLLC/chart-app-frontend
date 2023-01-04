@@ -85,7 +85,7 @@
           <!-- <v-btn v-if="dataSet.id" @click="showDataChart">Show Data</v-btn> -->
           <div>
             <v-file-input
-              v-if="dataSet.id"
+              v-show="dataSet.id != ''"
               placeholder="Please choose a file..."
               type="file"
               @change.native="onChange"
@@ -126,8 +126,8 @@
       </v-form>
     </v-col> 
     <!-- Chart Preview -->
-    <v-col class="col-12">
-      <v-card class="d-flex flex-column preview-container">
+    <v-col v-show="dataSet.id" class="col-12">
+      <v-card  class="d-flex flex-column preview-container">
         <!-- Chart Buttons -->
         <!-- <v-btn-toggle class="ma-4" color="primary" mandatory>
           <v-btn @click="toggleDataTable" small>Data Table</v-btn>
@@ -348,11 +348,13 @@ export default {
       this.$router.push(`/${this.currentChannels[0].name}/data-sets`)
     },
     clear() {
+      this.$refs.form.reset();
       this.file = null;
-      //this.data = [];
+      this.data = [];
       this.selected = [];
       this.headers = [];
       this.items = [];
+
     },
     /* toggleDataTable() {
       this.chartType = "Data Table";
@@ -402,7 +404,7 @@ export default {
           /* console.log(this.selected)
           this.fetchDataSetThenAddDataValue(id, this.selected) */
           
-          //this.dataSet.id = id
+          this.dataSet.id = id
         })
       }
     },

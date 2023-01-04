@@ -230,7 +230,7 @@
               color="secondary"
               >Cancel</v-btn
             >
-            <v-btn @click="removeReport" small depressed color="error"
+            <v-btn @click="deleteReport" small depressed color="error"
               >Delete</v-btn
             >
           </v-card-actions>
@@ -323,7 +323,7 @@ export default {
       "fetchTags",
       "addReport",
       "updateReportById",
-      "deleteReport",
+      "removeReport",
       "updateChannelById"
     ]),
     ...mapMutations(["SET_REPORT_DATASET", "SET_STATUS_CODE", "SET_REPORT"]),
@@ -399,7 +399,7 @@ export default {
           value: item,
         }));
       }
-
+      console.log(newHeaders)
       this.data = this.createMasterData(this.dataSet.dataValues.items)
       this.selectedHeaders = newHeaders
       this.data = this.filterData(this.selectedHeaders, this.data)
@@ -433,8 +433,8 @@ export default {
         }
       })
     },
-    removeReport() {
-      this.deleteReport(this.activeReport.id);
+    deleteReport() {
+      this.removeReport({ id: this.activeReport.id });
       this.$router.push(`/channels/${this.$route.params.channelId}/reports`);
     },
     fullscreenReport() {
