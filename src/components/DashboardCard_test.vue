@@ -262,59 +262,59 @@ export default {
       ).scheme;
     },
   },
-  computed: {
-    ...mapGetters([
-      "activeDataSet",
-      "activeReport",
-      "channels",
-      "currentChannel",
-      "currentChannels",
-    //   "channelReports",
-      "currentChannel",
-      "colors",
-      "reports",
-      "channelDataSets",
-      "dataSets",
-      "dataSet",
-      "reportLoaded",
-      "tags",
-      "statusCode",
-      "user",
-    ]),
-   circleChart() {
-      return (
-        this.activeReport.chartType == "donut" ||
-        this.activeReport.chartType == "pie" ||
-        this.activeReport.chartType == "polar-area"
-      );
-    },
-    /* channelReports(){
-    if (this.reports && this.reports.length > 0 &&  this.currentChannels &&  this.currentChannels[0]){
-      console.log(this.currentChannels[0])
-          return this.reports.filter(t => t.channelId == this.currentChannels[0].channelId)
-        } else return []
-      }, */
-    newChannelReport() {
-      return this.$route.params.reportId == "new";
-    },
-    screenHeight() {
-      return window.innerHeight - 200;
-    },
-    /* createdBy() {
-      if (this.activeReport && this.activeReport.id && this.user && this.user.attributes) {
-        return `${this.user.attributes.given_name} ${this.user.attributes.family_name} on ${new Date(this.activeReport.createdAt).toLocaleString()}`;
-      } else {
-        return `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
-      }
-    },
-    updatedBy() {
-      if (this.activeReport && this.activeReport.id) {
-        return `${this.user.attributes.given_name}  ${this.user.attributes.family_name} on ${new Date(this.activeReport.updatedAt).toLocaleString()}`;
-      } else {
-        return `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
-      }
-    }, */
-  },
+  // computed: {
+  //   ...mapGetters([
+  //     "activeDataSet",
+  //     "activeReport",
+  //     "channels",
+  //     "currentChannel",
+  //     "currentChannels",
+  //   //   "channelReports",
+  //     "currentChannel",
+  //     "colors",
+  //     "reports",
+  //     "channelDataSets",
+  //     "dataSets",
+  //     "dataSet",
+  //     "reportLoaded",
+  //     "tags",
+  //     "statusCode",
+  //     "user",
+  //   ]),
+  //  circleChart() {
+  //     return (
+  //       this.activeReport.chartType == "donut" ||
+  //       this.activeReport.chartType == "pie" ||
+  //       this.activeReport.chartType == "polar-area"
+  //     );
+  //   },
+  //   /* channelReports(){
+  //   if (this.reports && this.reports.length > 0 &&  this.currentChannels &&  this.currentChannels[0]){
+  //     console.log(this.currentChannels[0])
+  //         return this.reports.filter(t => t.channelId == this.currentChannels[0].channelId)
+  //       } else return []
+  //     }, */
+  //   newChannelReport() {
+  //     return this.$route.params.reportId == "new";
+  //   },
+  //   screenHeight() {
+  //     return window.innerHeight - 200;
+  //   },
+  //   /* createdBy() {
+  //     if (this.activeReport && this.activeReport.id && this.user && this.user.attributes) {
+  //       return `${this.user.attributes.given_name} ${this.user.attributes.family_name} on ${new Date(this.activeReport.createdAt).toLocaleString()}`;
+  //     } else {
+  //       return `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
+  //     }
+  //   },
+  //   updatedBy() {
+  //     if (this.activeReport && this.activeReport.id) {
+  //       return `${this.user.attributes.given_name}  ${this.user.attributes.family_name} on ${new Date(this.activeReport.updatedAt).toLocaleString()}`;
+  //     } else {
+  //       return `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
+  //     }
+  //   }, */
+  // },
   mounted() {
     // this.updateChartData();    
     this.fetchReports();
