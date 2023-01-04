@@ -150,28 +150,46 @@ export default {
         }
       }
     },
-   updateChartData() {
-       if(this.channelReports && this.channelReports.length){
-
-       let dataSetIds = this.channelReports.map(t => t.dataSetId)
-
-       for (var i = 0; i < this.channelReports.length; i++) {
-            this.fetchDataSet(dataSetIds[i])
-         }         
-        let headers = Object.keys(this.dataSet.dataValues.items[0].data[0])
-        headers.forEach((k, i) => {
-          if (k == this.dataSet.xAxis) {
-            this.arrayMove(headers, i, 0)
+    async updateChartData() {
+      if (this.channelReports && this.channelReports.length) {
+        console.log(this.dataSet)
+        let dataSetIds = this.channelReports.map(t => t.dataSetId)
+        console.log(dataSetIds)
+        
+        for (var i = 0; i < this.channelReports.length; i++) {
+          await this.fetchDataSet(dataSetIds[i])
+          let ds = this.dataSet
+          console.log(this.channelReports[i])
+          let headers = Object.keys(ds.dataValues.items[0].data[0])
+          headers.forEach((k, j) => {
+            if (k == this.channelReports[i].xAxis) {
+              console.log(k)
+              console.log("true", this.channelReports[i].xAxis)
+              this.arrayMove(headers, j, 0)
+            }
+          })
+          let newHeaders = []
+          console.log(this.channelReports[i])
+          if (this.channelReports[i].columns && this.channelReports[i].columns.length > 0) {
+            
+            newHeaders = JSON.parse(this.channelReports[i].columns)
+          } else {
+            newHeaders = headers.map((item) => ({
+              text: item,
+              value: item,
+            }));
           }
-        })
-        let newHeaders = headers.map((item) => ({
-          text: item,
-          value: item,
-        }));
-        this.data = this.createMasterData(this.dataSet.dataValues.items)
+          /* newHeaders = headers.map((item) => ({
+            text: item,
+            value: item,
+          })); */
+          console.log(newHeaders)
+          this.data = this.createMasterData(ds.dataValues.items)
         this.data = this.filterData(newHeaders, this.data)
-        this.SET_REPORT_DATASET(this.dataSet);
+        this.SET_REPORT_DATASET(ds);
         }
+        
+      }
     },
     removeReport() {
       this.deleteReport(this.activeReport.id);

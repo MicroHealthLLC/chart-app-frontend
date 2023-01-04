@@ -399,7 +399,7 @@ export default {
           value: item,
         }));
       }
-
+      console.log(newHeaders)
       this.data = this.createMasterData(this.dataSet.dataValues.items)
       this.selectedHeaders = newHeaders
       this.data = this.filterData(this.selectedHeaders, this.data)
@@ -434,9 +434,7 @@ export default {
       })
     },
     deleteReport() {
-      console.log(this.activeReport.id)
       this.removeReport({ id: this.activeReport.id });
-      console.log(this.$route.params)
       this.$router.push(`/channels/${this.$route.params.channelId}/reports`);
     },
     fullscreenReport() {
