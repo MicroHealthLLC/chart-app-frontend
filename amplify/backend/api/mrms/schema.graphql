@@ -31,7 +31,7 @@ type Channel @model @auth(rules: [{ allow: public }]) {
   id: ID!
   description: String,
   reports: [Report] @hasMany(indexName: "byChannel", fields: ["id"])
-  dataSets: [DataSet] @hasMany(indexName: "byChannel", fields: ["id", "title"])
+  dataSets: [DataSet] @hasMany(indexName: "byChannel", fields: ["id"])
   # type: ChannelType @belongsTo(fields: ["channelTypeId"])
   type: String
   title: String!
