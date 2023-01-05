@@ -325,30 +325,7 @@ export default {
   watch: {
    dataSets() {
       this.dataSetChoices = [...this.dataSets];
-    },
-    channelReports(){
-      if (this.channelReports && this.channelReports.length > 0){
-        let dataSetIds = this.channelReports.map(t => t.dataSetId)
-        for (var i = 0; i < this.channelReports.length; i++) {
-            this.fetchDataSet(dataSetIds[i])
-         }  
-         if (this.dataSet  && this.dataSet.dataValues && this.dataSet.dataValues.items)   {
-          let headers = Object.keys(this.dataSet.dataValues.items[0].data[0])
-           headers.forEach((k, i) => {
-          if (k == this.dataSet.xAxis) {
-            this.arrayMove(headers, i, 0)
-          }
-        })
-        let newHeaders = headers.map((item) => ({
-          text: item,
-          value: item,
-        }));
-        this.data = this.createMasterData(this.dataSet.dataValues.items)
-        this.data = this.filterData(newHeaders, this.data)
-        this.SET_REPORT_DATASET(this.dataSet);
-         }    
-      }
-    }, 
+    },    
     data(){
       if(this.data.length > 0){
         return this.data 

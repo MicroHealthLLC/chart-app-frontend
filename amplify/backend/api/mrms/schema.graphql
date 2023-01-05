@@ -5,7 +5,9 @@ type Report @model @auth(rules: [{ allow: public }]) {
   id: ID!
   title: String!
   channel: Channel @belongsTo(fields: ["channelId"])
+  reportGroup: ReportGroup @belongsTo(fields: ["reportGroupId"])
   description: String,
+  reportGroupId: ID @index(name: "byReportGroup")  
   channelId: ID @index(name: "byChannel")  
   colorSchemeId: Int
   chartType: String
@@ -17,11 +19,19 @@ type Report @model @auth(rules: [{ allow: public }]) {
   updatedBy: String  
 }
 
+type ReportGroup @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  title: String!
+  reports:[Report] @hasMany(indexName: "byReportGroup", fields: ["id"])
+  createdBy: String
+  updatedBy: String  
+}
+
 type Channel @model @auth(rules: [{ allow: public }]) {
   id: ID!
   description: String,
   reports: [Report] @hasMany(indexName: "byChannel", fields: ["id"])
-  dataSets: [DataSet] @hasMany(indexName: "byChannel", fields: ["id"])
+  dataSets: [DataSet] @hasMany(indexName: "byChannel", fields: ["id", "title"])
   # type: ChannelType @belongsTo(fields: ["channelTypeId"])
   type: String
   title: String!
