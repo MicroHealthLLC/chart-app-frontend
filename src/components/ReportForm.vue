@@ -452,6 +452,7 @@ export default {
       this.$router.push(`/channels/${this.$route.params.channelId}/reports`);
     },
     fullscreenReport() {
+      console.log(this.$refs.fullscreenchart)
       this.fullscreen = true;
       setTimeout(() => {
         this.$refs.fullscreenchart.loadChart();
