@@ -21,7 +21,20 @@ export const getReport = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      reportGroup {
+        id
+        title
+        reports {
+          nextToken
+        }
+        reportIds
+        createdBy
+        updatedBy
+        createdAt
+        updatedAt
+      }
       description
+      reportGroupId
       channelId
       colorSchemeId
       chartType
@@ -76,7 +89,17 @@ export const listReports = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        reportGroup {
+          id
+          title
+          reportIds
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+        }
         description
+        reportGroupId
         channelId
         colorSchemeId
         chartType
@@ -102,6 +125,62 @@ export const listReports = /* GraphQL */ `
     }
   }
 `;
+export const getReportGroup = /* GraphQL */ `
+  query GetReportGroup($id: ID!) {
+    getReportGroup(id: $id) {
+      id
+      title
+      reports {
+        items {
+          id
+          title
+          description
+          reportGroupId
+          channelId
+          colorSchemeId
+          chartType
+          dataSetId
+          xAxis
+          columns
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+          reportDataSetId
+        }
+        nextToken
+      }
+      reportIds
+      createdBy
+      updatedBy
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listReportGroups = /* GraphQL */ `
+  query ListReportGroups(
+    $filter: ModelReportGroupFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listReportGroups(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        title
+        reports {
+          nextToken
+        }
+        reportIds
+        createdBy
+        updatedBy
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getChannel = /* GraphQL */ `
   query GetChannel($id: ID!) {
     getChannel(id: $id) {
@@ -112,6 +191,7 @@ export const getChannel = /* GraphQL */ `
           id
           title
           description
+          reportGroupId
           channelId
           colorSchemeId
           chartType

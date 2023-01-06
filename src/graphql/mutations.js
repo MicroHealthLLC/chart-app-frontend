@@ -24,7 +24,20 @@ export const createReport = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      reportGroup {
+        id
+        title
+        reports {
+          nextToken
+        }
+        reportIds
+        createdBy
+        updatedBy
+        createdAt
+        updatedAt
+      }
       description
+      reportGroupId
       channelId
       colorSchemeId
       chartType
@@ -83,7 +96,20 @@ export const updateReport = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      reportGroup {
+        id
+        title
+        reports {
+          nextToken
+        }
+        reportIds
+        createdBy
+        updatedBy
+        createdAt
+        updatedAt
+      }
       description
+      reportGroupId
       channelId
       colorSchemeId
       chartType
@@ -142,7 +168,20 @@ export const deleteReport = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      reportGroup {
+        id
+        title
+        reports {
+          nextToken
+        }
+        reportIds
+        createdBy
+        updatedBy
+        createdAt
+        updatedAt
+      }
       description
+      reportGroupId
       channelId
       colorSchemeId
       chartType
@@ -178,6 +217,114 @@ export const deleteReport = /* GraphQL */ `
     }
   }
 `;
+export const createReportGroup = /* GraphQL */ `
+  mutation CreateReportGroup(
+    $input: CreateReportGroupInput!
+    $condition: ModelReportGroupConditionInput
+  ) {
+    createReportGroup(input: $input, condition: $condition) {
+      id
+      title
+      reports {
+        items {
+          id
+          title
+          description
+          reportGroupId
+          channelId
+          colorSchemeId
+          chartType
+          dataSetId
+          xAxis
+          columns
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+          reportDataSetId
+        }
+        nextToken
+      }
+      reportIds
+      createdBy
+      updatedBy
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateReportGroup = /* GraphQL */ `
+  mutation UpdateReportGroup(
+    $input: UpdateReportGroupInput!
+    $condition: ModelReportGroupConditionInput
+  ) {
+    updateReportGroup(input: $input, condition: $condition) {
+      id
+      title
+      reports {
+        items {
+          id
+          title
+          description
+          reportGroupId
+          channelId
+          colorSchemeId
+          chartType
+          dataSetId
+          xAxis
+          columns
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+          reportDataSetId
+        }
+        nextToken
+      }
+      reportIds
+      createdBy
+      updatedBy
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteReportGroup = /* GraphQL */ `
+  mutation DeleteReportGroup(
+    $input: DeleteReportGroupInput!
+    $condition: ModelReportGroupConditionInput
+  ) {
+    deleteReportGroup(input: $input, condition: $condition) {
+      id
+      title
+      reports {
+        items {
+          id
+          title
+          description
+          reportGroupId
+          channelId
+          colorSchemeId
+          chartType
+          dataSetId
+          xAxis
+          columns
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+          reportDataSetId
+        }
+        nextToken
+      }
+      reportIds
+      createdBy
+      updatedBy
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createChannel = /* GraphQL */ `
   mutation CreateChannel(
     $input: CreateChannelInput!
@@ -191,6 +338,7 @@ export const createChannel = /* GraphQL */ `
           id
           title
           description
+          reportGroupId
           channelId
           colorSchemeId
           chartType
@@ -238,6 +386,7 @@ export const updateChannel = /* GraphQL */ `
           id
           title
           description
+          reportGroupId
           channelId
           colorSchemeId
           chartType
@@ -285,6 +434,7 @@ export const deleteChannel = /* GraphQL */ `
           id
           title
           description
+          reportGroupId
           channelId
           colorSchemeId
           chartType

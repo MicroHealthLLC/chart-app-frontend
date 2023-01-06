@@ -15,24 +15,6 @@
          <span  class="text-h6 pl-3 pt-2 bluey" >{{ regName }}</span>  
          <v-list dense nav >     
 
-          <v-list-item :disabled="tru" :to="`/${pathName}/add-channel`" link>
-            <v-list-item-icon >
-              <v-icon :class="mini == true ? 'whitesmok' : 'gre'">mdi-television-classic</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>Create Channel</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-
-
-          <v-list-item @click="requestChannel" :disabled="tru" >
-            <v-list-item-icon >
-              <v-icon :class="mini == true ? 'whitesmok' : 'warn'">mdi-television-classic</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>Request Channel</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
           <v-list-item :disabled="tru" :to="`/${pathName}/data-sets`" link>
             <v-list-item-icon >
               <v-icon :class="mini == true ? 'whitesmok' : 'blu'">mdi-equalizer</v-icon>
@@ -101,6 +83,23 @@
               <v-list-item-title v-if="user && user.attributes">Hi, {{user.attributes.given_name}}</v-list-item-title>
             </v-list-item-content>
           </v-list-item> 
+          
+          <v-list-item :disabled="tru" :to="`/${pathName}/add-channel`" link>
+            <v-list-item-icon >
+              <v-icon :class="mini == true ? 'whitesmok' : 'gre'">mdi-television-classic</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Create Channel</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item @click="requestChannel" :disabled="tru" >
+            <v-list-item-icon >
+              <v-icon :class="mini == true ? 'whitesmok' : 'warn'">mdi-television-classic</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Request Channel</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
           
           <v-list-item :to="`/settings`"  link>
             <v-list-item-icon>
