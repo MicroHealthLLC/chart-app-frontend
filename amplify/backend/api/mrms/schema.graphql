@@ -23,6 +23,7 @@ type ReportGroup @model @auth(rules: [{ allow: public }]) {
   id: ID!
   title: String!
   reports:[Report] @hasMany(indexName: "byReportGroup", fields: ["id"])
+  reportGroupIds: [String]
   createdBy: String
   updatedBy: String  
 }

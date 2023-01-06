@@ -98,7 +98,7 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
       saveReportGroup() {  
         let data = {
           title: this.reportGroup.title,
-          reports: [{id: this.reportGroup.reports[0]}]
+          reportGroupIds: this.reportGroup.reports[0]
         };     
         console.log(data)  
         this.addReportGroup(data);

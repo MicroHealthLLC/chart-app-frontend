@@ -27,6 +27,7 @@ export const getReport = /* GraphQL */ `
         reports {
           nextToken
         }
+        reportGroupIds
         createdBy
         updatedBy
         createdAt
@@ -91,6 +92,7 @@ export const listReports = /* GraphQL */ `
         reportGroup {
           id
           title
+          reportGroupIds
           createdBy
           updatedBy
           createdAt
@@ -148,6 +150,7 @@ export const getReportGroup = /* GraphQL */ `
         }
         nextToken
       }
+      reportGroupIds
       createdBy
       updatedBy
       createdAt
@@ -168,6 +171,7 @@ export const listReportGroups = /* GraphQL */ `
         reports {
           nextToken
         }
+        reportGroupIds
         createdBy
         updatedBy
         createdAt
