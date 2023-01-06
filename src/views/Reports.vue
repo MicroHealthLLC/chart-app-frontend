@@ -33,13 +33,55 @@
               small class="pl-1">mdi-folder-multiple</v-icon></v-btn></span>
           </div>  
         <v-divider class="mb-4"></v-divider>
-        <div v-if="channelReports.length > 0" class="grid">
-          <ReportCard
-            v-for="(report, index) in channelReports"
-            :report="report"
-            :key="index"
-          ></ReportCard>
-          <div class="d-flex justify-end btn-container">
+        <h4>Report Groups</h4>
+        <div v-if="reportGroups.length > 0" class="grid">
+         <span v-for="item in reportGroups" :key="item.id">              
+          
+         <v-list-group
+          :value="true"
+          no-action
+          sub-group
+        >      
+          <template v-slot:activator>
+            <v-list-item-content>             
+              <v-list-item-title>   
+            <span v-if="item.reportIds && item.reportIds.length > 0">
+              <v-icon x-large class="pr-1" color="yellow darken-2">mdi-folder-open-outline</v-icon>             
+            </span> 
+            <span v-else>
+              <v-icon x-large class="pr-1" color="yellow darken-2">mdi-folder-outline</v-icon>             
+            </span>              
+                {{ item.title }}              
+              </v-list-item-title>
+            </v-list-item-content>
+          </template>
+          <v-list-item
+            v-for="(no, i) in item.reportIds"
+            :key="i"
+            link
+          >          
+          <v-list-item-icon>
+            <v-icon large color="orange darken-2">mdi-circle-small</v-icon>      
+          </v-list-item-icon>
+            <v-list-item-title 
+              v-text="channelReports.filter(t => item.reportIds.includes(t.id))[i].title" 
+              @click.prevent="toReport(channelReports.filter(t => item.reportIds.includes(t.id))[i].id)"
+            >
+            </v-list-item-title>
+          </v-list-item>
+          </v-list-group>             
+         </span>
+        </div>
+        <v-divider class="mb-4 mt-4"></v-divider>  
+        <h4 class="mb-3">Reports</h4>
+        <div v-if="channelReports.length > 0" class="singleReportGrid pl-5">
+          <span v-for="(report) in channelReports.filter(t => t && !t.reportGroupId)" :key="report.id">
+            <span class="click"  @click.prevent="toSingleReport(report.id)">
+             <v-icon x-large class="pl-2" color="orange darken-2">mdi-file-chart-outline</v-icon>  
+              {{ report.title }}  
+            </span>     
+          </span>
+          <!-- <div class="d-flex justify-end btn-container">
             <v-btn
               v-if="reports.length >= 6"
               to="/public-reports"
@@ -48,7 +90,7 @@
               text
               >View All</v-btn
             >
-          </div>
+          </div> -->
         </div>
         <div
           v-else
@@ -64,16 +106,17 @@
   <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
   // import NewsCard from "../components/NewsCard";
-  import ReportCard from "./../components/ReportCard";
+  // import ReportCard from "./../components/ReportCard";
   
   export default {
     name: "Home",
     components: {
-      ReportCard,  
+      // ReportCard,  
     },
     data() {
     return {
       showReportGroupForm: false, 
+      viewAllReports: true
     };
   },
     computed: {
@@ -84,9 +127,9 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
         );
       },
       channelReports(){
-        if (this.reports && this.reports.length > 0){
+        if (this.reports && this.reports.length > 0 && this.viewAllReports){
           return this.reports.filter(t => t.channelId == this.currentChannels[0].channelId)
-        } else return []
+        } else return  this.reports.filter(t => t.channelId == this.currentChannels[0].channelId && !t.reportGroupId)
       },
     },
     methods: {
@@ -95,16 +138,32 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
       toNewReport(){
         this.$router.push("reports/add-report"); 
       },
-      saveReportGroup() {  
+      toReport(reportId) {     
+      this.$router.push(
+        `reports/${reportId}`
+      );      
+    },
+    toSingleReport(reportId) {     
+      this.$router.push(
+        `reports/${reportId}`
+      );
+      
+    },
+     async saveReportGroup() {         
         let data = {
           title: this.reportGroup.title,
-          reportGroupIds: this.reportGroup.reports[0]
-        };     
+          reportIds: this.reportGroup.reports
+        }      
         console.log(data)  
-        this.addReportGroup(data);
+        await this.addReportGroup(data);        
+        
+        this.reportGroup.title = ""
+        this.reportGroup.reports = null
+        this.showReportGroupForm = false
+      
       },
       createReportGroup(){
-      this.showReportGroupForm = true
+      this.showReportGroupForm = true      
     },
     },
     mounted() {
@@ -131,6 +190,9 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
     text-decoration: none;
     color: unset;
   }
+  .click{
+    cursor: pointer;
+  }
   .details {
     list-style: none;
     margin: 0;
@@ -141,10 +203,18 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
     line-height: 1;
     word-break: normal;
   }
+  .warn {
+   color: #E4A11B !important;
+  }
   .grid {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-gap: 10px;
+  }
+  .singleReportGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-gap: 4rem;
   }
   .btn-container {
     width: 100%;

@@ -30,7 +30,7 @@ export const createReport = /* GraphQL */ `
         reports {
           nextToken
         }
-        reportGroupIds
+        reportIds
         createdBy
         updatedBy
         createdAt
@@ -102,7 +102,7 @@ export const updateReport = /* GraphQL */ `
         reports {
           nextToken
         }
-        reportGroupIds
+        reportIds
         createdBy
         updatedBy
         createdAt
@@ -174,7 +174,7 @@ export const deleteReport = /* GraphQL */ `
         reports {
           nextToken
         }
-        reportGroupIds
+        reportIds
         createdBy
         updatedBy
         createdAt
@@ -245,7 +245,7 @@ export const createReportGroup = /* GraphQL */ `
         }
         nextToken
       }
-      reportGroupIds
+      reportIds
       createdBy
       updatedBy
       createdAt
@@ -281,7 +281,7 @@ export const updateReportGroup = /* GraphQL */ `
         }
         nextToken
       }
-      reportGroupIds
+      reportIds
       createdBy
       updatedBy
       createdAt
@@ -317,7 +317,7 @@ export const deleteReportGroup = /* GraphQL */ `
         }
         nextToken
       }
-      reportGroupIds
+      reportIds
       createdBy
       updatedBy
       createdAt

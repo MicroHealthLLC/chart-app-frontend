@@ -94,6 +94,18 @@
               :rules="[(v) => !!v || 'Title is required']"
             ></v-text-field>
           </div>
+          <div>
+            <v-select
+              dense
+              v-model="activeReport.reportGroupId"
+              label="Report Group"
+              :items="reportGroups"
+              item-text="title"
+              item-value="id"         
+            ></v-select>
+
+          </div>
+           
           <div class="description">
             <v-textarea
               v-model="activeReport.description"
@@ -351,6 +363,7 @@ export default {
       if (this.formValid) {
         let data = {
           title: this.activeReport.title,
+          reportGroupId: this.activeReport.reportGroupId,
           description: this.activeReport.description,
           channelId: this.currentChannels[0].channelId,
           chartType: this.activeReport.chartType,
@@ -365,6 +378,7 @@ export default {
 
         if (this.activeReport.id) {
           data.id = this.activeReport.id;
+          data.reportGroupId = this.activeReport.reportGroupId
           data.updatedBy = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`
           this.updateReportById(data);
 
@@ -465,6 +479,7 @@ export default {
       "reportLoaded",
       "tags",
       "statusCode",
+      "reportGroups",
       "user",
     ]),
     graphType() {
