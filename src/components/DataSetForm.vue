@@ -501,12 +501,19 @@ export default {
       } else return false
     }, */
   },
-  mounted() {
+   /* beforeMount() {
+    if (this.$route.params.dataSetId != "add-data-set") {
+      await this.fetchDataSet(this.$route.params.dataSetId)
+    }
+  }, */
+  async mounted() {
     if (this.$route.params.dataSetId == "add-data-set"){ 
       this.dataSet.id = ""
       this.clear()
     } else {
+      await this.fetchDataSet(this.$route.params.dataSetId)
       if (this.dataSet && this.dataSet.dataValues && this.dataSet.dataValues.items && this.dataSet.dataValues.items.length > 0) {
+        console.log(this.dataSet.dataValues)
         const keys = Object.keys(this.createMasterData(this.dataSet.dataValues.items)[0])
         //this.xAxisKeys = keys
         this.headers = keys.map((item) => ({
