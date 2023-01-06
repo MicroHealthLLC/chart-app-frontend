@@ -19,6 +19,9 @@
       <!-- <span v-else>NO DATA</span> -->
 
     </v-dialog>
+
+    
+
     <div class="d-flex justify-space-between">
         <h3><v-icon class="mr-2 pb-2" color="cyan">mdi-monitor-dashboard</v-icon>Dashboard</h3>
         <v-btn class="mb-2" color="primary" small @click="addDashboard">Add to Dashboard <v-icon
@@ -28,6 +31,7 @@
       <v-row>
         <v-col cols="12" sm="5" v-for="(report, i) in channelReports" :key="i">
           <DashboardCard_test :report="report"/>
+          
         </v-col>
       </v-row>
   </div>
@@ -154,11 +158,12 @@ export default {
 
 
     }, */
-    removeReport() {
+    /* removeReport() {
       this.deleteReport(this.activeReport.id);
       this.$router.push(`/channels/${this.$route.params.channelId}/reports`);
     },
     fullscreenReport() {
+      console.log(this.$refs.fullscreenchart)
       this.fullscreen = true;
       setTimeout(() => {
         this.$refs.fullscreenchart.loadChart();
@@ -168,7 +173,7 @@ export default {
       this.colorScheme = this.colors.find(
         (color) => selectedSchemeId == color.id
       ).scheme;
-    },
+    }, */
   },
   computed: {
     ...mapGetters([
@@ -196,23 +201,26 @@ export default {
         return this.reports.filter(t => t.channelId == this.currentChannels[0].channelId)
       } else return []
     },
-    graphType() {
+    screenHeight() {
+      return window.innerHeight - 200;
+    },
+    /* graphType() {
       if (this.activeReport.chartType === "line") {
-        return LineChart;
+        return this.LineChart;
       } else if (this.activeReport.chartType === "bar") {
-        return BarChart;
+        return this.BarChart;
       } else if (this.activeReport.chartType === "radar") {
-        return RadarChart;
+        return this.RadarChart;
       } else if (this.activeReport.chartType === "donut") {
-        return DoughnutChart;
+        return this.DoughnutChart;
       } else if (this.activeReport.chartType === "pie") {
-        return PieChart;
+        return this.PieChart;
       } else if (this.activeReport.chartType === "polar-area") {
-        return PolarAreaChart;
+        return this.PolarAreaChart;
       } else if (this.activeReport.chartType === "table") {
-        return Table;
+        return this.Table;
       } else {
-        return LineChart;
+        return this.LineChart;
       }
     },
     circleChart() {
@@ -224,11 +232,9 @@ export default {
     },
     newChannelReport() {
       return this.$route.params.reportId == "new";
-    },
-    screenHeight() {
-      return window.innerHeight - 200;
-    },
-    createdBy() {
+    }, */
+    
+    /* createdBy() {
       if (this.activeReport && this.activeReport.id && this.user && this.user.attributes) {
         return `${this.user.attributes.given_name} ${this.user.attributes.family_name} on ${new Date(this.activeReport.createdAt).toLocaleString()}`;
       } else {
@@ -241,7 +247,7 @@ export default {
       } else {
         return `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
       }
-    },
+    }, */
   },
   async beforeMount() {
     if(this.dataSets && this.dataSets.length < 1){
@@ -279,9 +285,9 @@ export default {
   grid-template-columns: 1fr 1fr;
   grid-gap: 10px;
 }
-.modal {
+/* .modal {
   margin-top: ;
-}
+} */
 .description,
 .tags {
   grid-column: 1 / span 2;

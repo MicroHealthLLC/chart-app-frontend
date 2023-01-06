@@ -1,7 +1,8 @@
 <template>
   <!-- <v-row > -->
-    <!-- <v-col cols="12" sm="5" v-for="(report, i) in channelReports" :key="i"> -->     
-      <v-card   class="pa-4 mb-4" v-if="data && data.length > 0">         
+    <!-- <v-col cols="12" sm="5" v-for="(report, i) in channelReports" :key="i"> --> 
+      <span>    
+      <v-card class="pa-4 mb-4" v-if="data && data.length > 0">         
         <v-btn @click="fullscreenReport" class="chart-menu" icon >
           <v-icon>mdi-fullscreen</v-icon>    
         </v-btn>
@@ -25,7 +26,42 @@
             >Next Category <v-icon small>mdi-arrow-right</v-icon></v-btn
           >         
         </div>
-      </v-card> 
+        
+      </v-card>
+       <v-dialog v-model="fullscreen" fullscreen eager>
+            <v-card>
+              <v-toolbar class="px-5" color="info" dark>
+                <h3>{{ report.title }}</h3>
+                <v-spacer></v-spacer>
+                <v-btn @click="fullscreen = false" icon
+                  ><v-icon>mdi-close-thick</v-icon></v-btn
+                >
+              </v-toolbar>
+              <Component
+                v-if="fullscreen"
+                ref="fullscreenchart"
+                :is="graphType(report)"
+                :chartData="data"
+                :chartColors="colors.find((scheme) => scheme.id == report.colorSchemeId).scheme"
+                :graphType="report.chartType"
+                :height="screenHeight"
+                :title="report.title"
+                class="pa-6"
+              >
+              </Component>
+              <!-- Category Toggle Button -->
+              <div class="d-flex justify-end pr-6">
+                <v-btn
+                  v-if="circleChart"
+                  @click="changeFSChartData"
+                  outlined
+                  small
+                  >Next Category <v-icon small>mdi-arrow-right</v-icon></v-btn
+                >
+              </div>
+            </v-card>
+          </v-dialog>
+        </span>
     <!-- </v-col> -->
   <!-- </v-row> -->
 </template>
@@ -94,24 +130,24 @@ export default {
     ]),
    circleChart() {
       return (
-        this.activeReport.chartType == "donut" ||
-        this.activeReport.chartType == "pie" ||
-        this.activeReport.chartType == "polar-area"
+        this.report.chartType == "donut" ||
+        this.report.chartType == "pie" ||
+        this.report.chartType == "polar-area"
       );
     },
-    channelReports(){
+    /* channelReports(){
     if (this.reports && this.reports.length > 0 &&  this.currentChannels &&  this.currentChannels[0]){
       console.log(this.currentChannels[0])
           return this.reports.filter(t => t.channelId == this.currentChannels[0].channelId)
         } else return []
-      },
+      }, */
     newChannelReport() {
       return this.$route.params.reportId == "new";
     },
     screenHeight() {
       return window.innerHeight - 200;
     },
-    createdBy() {
+    /* createdBy() {
       if (this.activeReport && this.activeReport.id && this.user && this.user.attributes) {
         return `${this.user.attributes.given_name} ${this.user.attributes.family_name} on ${new Date(this.activeReport.createdAt).toLocaleString()}`;
       } else {
@@ -124,7 +160,7 @@ export default {
       } else {
         return `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
       }
-    },
+    }, */
   },
   methods: {
     ...mapActions([
@@ -218,17 +254,17 @@ export default {
         for (var i = 0; i < this.channelReports.length; i++) { */
       await this.fetchDataSet(this.report.dataSetId)
       let ds = this.dataSet
-      console.log(this.report)
+      //console.log(this.report)
       let headers = Object.keys(ds.dataValues.items[0].data[0])
       headers.forEach((k, j) => {
         if (k == this.report.xAxis) {
-          console.log(k)
-          console.log("true", this.report.xAxis)
+          /* console.log(k)
+          console.log("true", this.report.xAxis) */
           this.arrayMove(headers, j, 0)
         }
       })
       let newHeaders = []
-      console.log(this.report)
+      //console.log(this.report)
       if (this.report.columns && this.report.columns.length > 0) {
 
         newHeaders = JSON.parse(this.report.columns)
@@ -242,7 +278,7 @@ export default {
         text: item,
         value: item,
       })); */
-      console.log(newHeaders)
+      //console.log(newHeaders)
       this.data = this.createMasterData(ds.dataValues.items)
       this.data = this.filterData(newHeaders, this.data)
       this.SET_REPORT_DATASET(ds);
