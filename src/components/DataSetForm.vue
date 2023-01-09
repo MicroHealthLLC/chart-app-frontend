@@ -28,7 +28,7 @@
           <v-btn v-if="isReadOnly" class="mb-2" @click="resetAndGoBack" small outlined
             >Close</v-btn
           >
-          <v-btn v-if="!isReadOnly" class="mb-2" @click="isReadOnly = true" small outlined
+          <v-btn v-if="!isReadOnly" class="mb-2" @click="cancelForm" small outlined
             >Cancel</v-btn
           >
         </div>
@@ -126,8 +126,8 @@
       </v-form>
     </v-col> 
     <!-- Chart Preview -->
-    <v-col v-show="dataSet.id" class="col-12">
-      <v-card  class="d-flex flex-column preview-container">
+    <v-col v-show="dataSet.id && this.dataSet.dataValues && this.dataSet.dataValues.items && this.dataSet.dataValues.items.length > 0" class="col-12">
+      <v-card  class="d-flex flex-column preview-container justify-center">
         <!-- Chart Buttons -->
         <!-- <v-btn-toggle class="ma-4" color="primary" mandatory>
           <v-btn @click="toggleDataTable" small>Data Table</v-btn>
@@ -165,8 +165,12 @@
         <v-card-title>
           <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
         </v-card-title>
-        <div class="ma-4" v-if="chartType === 'Data Table'">
-          <v-data-table :headers="headers" :items="items"  :single-select="false" :search="search">
+        <v-card-title class="justify-center">
+          <!-- <v-progress-circular v-if="$store.getters.loading" :size="70" indeterminate color="primary"
+            class="m-2"></v-progress-circular> -->
+        </v-card-title>
+        <div class="ma-4" v-if="(chartType === 'Data Table')">
+          <v-data-table :headers="headers" :items="items" :single-select="false" :search="search" :loading="$store.getters.loading" loading-text="Loading... Please wait">
             <!-- Action Buttons -->
           <!-- <template v-slot:item.actions="{ item }">
             <v-tooltip top>
@@ -211,12 +215,12 @@
           >
         </div> -->
         <!-- Placeholder Message -->
-        <div v-else class="d-flex flex-grow-1 justify-center align-center ma-4">
+        <!-- <div v-else class="d-flex flex-grow-1 justify-center align-center ma-4">
           <p class="text-center placeholder-text">
             <v-icon class="placeholder-icon">mdi-chart-areaspline</v-icon>
             Please load a data set to view preview...
           </p>
-        </div>
+        </div> -->
       </v-card>
     </v-col>
   </v-row>
@@ -345,7 +349,14 @@ export default {
     resetAndGoBack(){
       this.clear()
       this.$refs.form.reset();
-      this.$router.push(`/${this.currentChannels[0].name}/data-sets`)
+      if (this.$route.path === "/it_apps/data-sets"){
+        this.$emit("closeForm")
+      } else {
+        this.$router.push(`/${this.currentChannels[0].name}/data-sets`)
+      }
+    },
+    cancelForm() {
+      this.$route.path === '/it_apps/data-sets' ? this.resetAndGoBack() : this.isReadOnly = true
     },
     clear() {
       this.$refs.form.reset();
@@ -507,8 +518,9 @@ export default {
     }
   }, */
   async mounted() {
-    if (this.$route.params.dataSetId == "add-data-set"){ 
+    if (this.$route.path === "/it_apps/data-sets"){ 
       this.dataSet.id = ""
+      this.isReadOnly = false
       this.clear()
     } else {
       await this.fetchDataSet(this.$route.params.dataSetId)
@@ -551,7 +563,7 @@ export default {
         this.isReadOnly = true
                
         if (this.dataSet.id !== this.$route.params.dataSetId){
-          console.log("true clear")
+          console.log(this.dataSet)
         this.clear()
         }
       } else this.isReadOnly = false

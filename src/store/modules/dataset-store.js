@@ -93,6 +93,7 @@ export default {
       }
     },
     async fetchDataSet({ commit } , id) {
+      commit("TOGGLE_LOADING", true);
       try {     
        const res = await API.graphql(graphqlOperation(getDataSet, { id: id }));    
        if (res.data.getDataSet.dataValues.items && res.data.getDataSet.dataValues.items.length > 0){
@@ -105,6 +106,7 @@ export default {
       } catch (error) {
         console.log(error);
       }
+      commit("TOGGLE_LOADING", false);
     },
     async fetchDataSetThenAddDataValue({ commit, dispatch }, id, data) {
       console.log(data)

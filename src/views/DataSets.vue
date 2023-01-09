@@ -7,6 +7,40 @@
             small>mdi-plus</v-icon></v-btn>
       </div>
 
+      <v-dialog v-model="showAddDataSetForm" width="40%">
+        <v-card class="px-4 py-4 modal">
+          <!-- <v-form v-model="formValid" ref="form">
+            <div class="grid">
+              <div>
+                <v-text-field v-model="dataSet.title" label="Title" dense required :readonly="isReadOnly"
+                  :rules="[(v) => !!v || 'Title is required']"></v-text-field>
+              </div>
+              <div>
+                <v-text-field :readonly="isReadOnly" v-model="dataSet.user" label="Created By" dense>
+                </v-text-field>
+              </div>
+              <div :class="{ description: dataSet.id }">
+                <v-text-field v-model="dataSet.description" label="Description" dense :readonly="isReadOnly"></v-text-field>
+              </div>
+              <div>
+                <v-file-input v-show="dataSet.id != ''" placeholder="Please choose a file..." type="file"
+                  @change.native="onChange" @click:clear="clearInput('file')" dense required
+                  :rules="[(v) => !!v || 'Data File is required']" />
+                <xlsx-read :options="readOptions" :file="file">
+                  <xlsx-json :options="readOptions" @parsed="uploadData"></xlsx-json>
+                </xlsx-read>
+                <div>
+                  <v-btn v-if="dataSet.id" :disabled="(!file)" class="mb-1" elevation="4" small
+                    @click="addNewDataValue"><v-icon>mdi-plus-circle-outline</v-icon> Add New Data</v-btn>
+                </div>
+              </div>
+            </div>
+          </v-form> -->
+        <DataSetForm @closeForm="closeForm" />  
+      </v-card> 
+      <!-- <span v-else>NO DATA</span> -->
+    </v-dialog>
+
       <v-divider class="mb-4"></v-divider>
       <v-card>
         <v-data-table :headers="headers" :items="channelDataSets">
@@ -51,11 +85,16 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import DataSetForm from "../components/DataSetForm.vue";
 
 export default {
   name: "DataSets",
+  components: {
+    DataSetForm
+  },
   data() {
     return {
+      showAddDataSetForm: false,
       headers: [
         {
           text: "Title",
@@ -101,7 +140,11 @@ export default {
       console.log(e)
     },
     toNewDataSet(){
-      this.$router.push(`data-sets/add-data-set`); 
+      this.showAddDataSetForm = true
+      //this.$router.push(`data-sets/add-data-set`); 
+    },
+    closeForm() {
+      this.showAddDataSetForm = false
     },
     async editItem(item) {
       console.log(item)
