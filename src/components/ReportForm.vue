@@ -2,7 +2,7 @@
   <v-row>
     <v-col>
       <div class="d-flex justify-space-between">
-        <h3 v-if="activeReport && activeReport.title">{{ activeReport.title }}</h3>
+        <h3 v-if="activeReport && activeReport.title" :load="log(activeReport)">{{ activeReport.title }}</h3>
         <h3 v-else class="placeholder-title">(Report Title)</h3>
         <div>
           <v-btn

@@ -35,7 +35,7 @@
         <v-divider class="mb-4"></v-divider>
         <h4>Report Groups</h4>
         <div v-if="reportGroups.length > 0" class="grid">
-         <span v-for="item in reportGroups" :key="item.id">              
+         <span v-for="item in reportGroups" :key="item.id" :load="log(reportGroups)">              
           
          <v-list-group
           :value="true"
@@ -67,6 +67,7 @@
               v-text="channelReports.filter(t => item.reportIds.includes(t.id))[i].title" 
               @click.prevent="toReport(channelReports.filter(t => item.reportIds.includes(t.id))[i].id)"
             >
+            
             </v-list-item-title>
           </v-list-item>
           </v-list-group>             
@@ -77,13 +78,9 @@
         <div v-if="channelReports.length > 0" class="singleReportGrid pl-5">
           <span v-for="(report) in channelReports" :key="report.id">
             <span class="click"  @click.prevent="toSingleReport(report.id)" >
-             
-          
-     
-             <v-icon x-large class="pl-2" color="orange darken-2">mdi-file-chart-outline</v-icon>  
+            <v-icon x-large class="pl-2" color="orange darken-2">mdi-file-chart-outline</v-icon>  
             {{ report.title }}  
-              <small class="d-inline blu" v-if="report.reportGroup && report.reportGroup.title">({{ report.reportGroup.title }})</small>
-                 
+            <small class="d-inline blu" v-if="report.reportGroup && report.reportGroup.title">({{ report.reportGroup.title }})</small>                 
             </span>     
           </span>
           <!-- <div class="d-flex justify-end btn-container">
@@ -148,12 +145,16 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
       toNewReport(){
         this.$router.push("reports/add-report"); 
       },
+      log(e){
+        console.log("Report Groups:")
+        console.log(e)
+      },
       toReport(reportId) {     
       this.$router.push(
         `reports/${reportId}`
       );      
     },
-    toSingleReport(reportId) {     
+      toSingleReport(reportId) {     
       this.$router.push(
         `reports/${reportId}`
       );
