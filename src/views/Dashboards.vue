@@ -1,110 +1,61 @@
 <template>
-  <v-row :load="log(activeReport)">
-    <v-col  class="col-11">     
-      <div class="d-flex justify-space-between">
-            <h3><v-icon class="mr-2 pb-2" color="cyan">mdi-monitor-dashboard</v-icon>Dashboards</h3>
-            <v-btn class="mb-2" color="primary" small @click.prevent="toNewReport">Add Dashboard <v-icon
-              small>mdi-plus</v-icon></v-btn>
-          </div>  
-          <v-divider class="mb-4"></v-divider>
-      <v-card v-if="(data && data.length > 0)" class="pa-4 mb-4">
-        <v-btn @click="fullscreenReport" class="chart-menu" icon>
-          <v-icon>mdi-fullscreen</v-icon>
-        </v-btn>
-        <!-- Chart -->
-        <Component
-          ref="chart"
-          :is="graphType"
-          :chartData="data"
-          :chartColors="colorScheme"
-          :graphType="activeReport.chartType"
-          :height="350"
-          :title="activeReport.title"
-          class="mb-4"
-        >
-        </Component>
-        <!-- Placeholder -->
-        <!-- This div has a v-else directive -->
-        <!-- <div
-        
-          class="place-holder d-flex justify-center align-center ma-4"
-        >
-          <p class="text-center placeholder-text mb-0">
-            <v-icon class="placeholder-icon">mdi-chart-areaspline</v-icon>
-            Please load a data set to view preview...
-          </p>
-        </div> -->
-        <!-- Category Toggle Button -->
-        <div class="d-flex justify-end mb-4">
-          <v-btn
-            v-if="circleChart"
-            @click="changeChartData"
-            outlined
-            small
-            >Next Category <v-icon small>mdi-arrow-right</v-icon></v-btn
-          >
-          <!-- <v-btn
-            v-if="
-               activeReport.dataSet &&
-               activeReport.dataSet.dataValues && activeReport.dataSet.dataValues[0] &&
-              Object.keys(activeReport.dataSet.dataValues[0]).length > 2 &&
-              circleChart
-            "
-            @click="changeChartData"
-            outlined
-            small
-            >Next Category <v-icon small>mdi-arrow-right</v-icon></v-btn
-          > -->
-        </div>
-      </v-card>
-      <v-dialog v-model="fullscreen" fullscreen eager>
-        <v-card>
-         
-          <Component
-            v-if="fullscreen && colorScheme"
-            ref="fullscreenchart"
-            :is="graphType"
-            :chartData="data"
-            :chartColors="colorScheme"
-            :graphType="activeReport.chartType"
-            :height="screenHeight"
-            :title="activeReport.title"
-            class="pa-6"
-          >
-          </Component>
-          <!-- Category Toggle Button -->
-          <div class="d-flex justify-end pr-6">
-            <v-btn
-              v-if="circleChart"
-              @click="changeFSChartData"
-              outlined
-              small
-              >Next Category <v-icon small>mdi-arrow-right</v-icon></v-btn
-            >
-          </div>
-        </v-card>
-      </v-dialog>
-    </v-col>
-  </v-row>
+  <div>
+      <v-dialog v-model="showForm" width="30%" >
+      <v-card class="px-4 py-4 modal">      
+        <v-select
+          v-model="hhh"       
+          item-text="title"
+          item-value="value"
+          multiple        
+          chips
+          :items="channelReports"
+          :disabled="!channelReports.length > 1"
+          label="Select dashboard content"
+          outlined
+        ></v-select>
+        <v-btn color="primary" large class="d-block margin-auto" >Add To Dashboard<v-icon
+          small>mdi-plus</v-icon></v-btn>
+      </v-card> 
+      <!-- <span v-else>NO DATA</span> -->
+
+    </v-dialog>
+
+    
+
+    <div class="d-flex justify-space-between">
+        <h3><v-icon class="mr-2 pb-2" color="cyan">mdi-monitor-dashboard</v-icon>Dashboard</h3>
+        <v-btn class="mb-2" color="primary" small @click="addDashboard">Add to Dashboard <v-icon
+          small>mdi-plus</v-icon></v-btn>
+      </div>  
+      <v-divider class="mb-4"></v-divider>
+      <v-row>
+        <v-col cols="12" sm="5" v-for="(report, i) in channelReports" :key="i">
+          <DashboardCard_test :report="report"/>
+          
+        </v-col>
+      </v-row>
+  </div>
 </template>
 
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
-import LineChart from "../components/LineChart";
-import BarChart from "../components/BarChart";
-import RadarChart from "../components/RadarChart";
-import DoughnutChart from "../components/DoughnutChart";
-import PieChart from "../components/PieChart";
-import PolarAreaChart from "../components/PolarAreaChart";
-import Table from "../components/Table";
+import DashboardCard_test from "../components/DashboardCard_test.vue";
 import datasetMixin from "../mixins/dataset-mixin";
 import reportMixin from "../mixins/report-mixin";
 
 export default {
   name: "Dashboards",
+  components: {
+      DashboardCard_test
+  },
+  /* props: {
+    report: Object  
+  }, */
   data() {
     return {
       formValid: true,
+      hhh: [], //replace once backend value is added
+      showForm: false, 
       submitAttempted: false,
       deleteDialog: false,
       fullscreen: false,
@@ -128,6 +79,7 @@ export default {
   methods: {
     ...mapActions([
       "fetchReport",
+      "fetchReports",
       "fetchDataSets",
       "fetchDataSet",
       "fetchTags",
@@ -142,19 +94,17 @@ export default {
         (this.$refs.chart.index + 1) %
         (Object.keys(this.$refs.chart.chartData[0]).length - 1);
     },
+    addDashboard(){
+      this.showForm = true
+    },
     log(e){
     console.log(e)
     }, 
-    changeFSChartData() {
-      this.$refs.fullscreenchart.index =
-        (this.$refs.fullscreenchart.index + 1) %
-        (Object.keys(this.$refs.fullscreenchart.chartData[0]).length - 1);
-    },
     resetAndGoBack(){
       this.$router.go(-1)
       this.$refs.form.reset();
     },
-    saveReport() {
+    /*saveReport() {
       this.$refs.form.validate();
       this.submitAttempted = true;
 
@@ -186,7 +136,7 @@ export default {
         }
       }
     },
-    async updateChartData() {
+     async updateChartData() {
       try {
         await this.fetchDataSet(this.activeReport.dataSetId)
         let headers = Object.keys(this.dataSet.dataValues.items[0].data[0])
@@ -207,12 +157,13 @@ export default {
       }
 
 
-    },
-    removeReport() {
+    }, */
+    /* removeReport() {
       this.deleteReport(this.activeReport.id);
       this.$router.push(`/channels/${this.$route.params.channelId}/reports`);
     },
     fullscreenReport() {
+      console.log(this.$refs.fullscreenchart)
       this.fullscreen = true;
       setTimeout(() => {
         this.$refs.fullscreenchart.loadChart();
@@ -222,17 +173,18 @@ export default {
       this.colorScheme = this.colors.find(
         (color) => selectedSchemeId == color.id
       ).scheme;
-    },
+    }, */
   },
   computed: {
     ...mapGetters([
       "activeDataSet",
       "activeReport",
       "channels",
-      "currentChannel",
+      "currentChannels",
       "channelReports",
       "currentChannel",
       "colors",
+      "reports",
       "channelDataSets",
       "dataSets",
       "dataSet",
@@ -240,24 +192,35 @@ export default {
       "tags",
       "statusCode",
       "user",
+      "reports"
     ]),
-    graphType() {
+    channelReports() {
+      if (this.reports && this.reports.length > 0 && this.currentChannels && this.currentChannels[0]) {
+        console.log(this.currentChannels[0])
+
+        return this.reports.filter(t => t.channelId == this.currentChannels[0].channelId)
+      } else return []
+    },
+    screenHeight() {
+      return window.innerHeight - 200;
+    },
+    /* graphType() {
       if (this.activeReport.chartType === "line") {
-        return LineChart;
+        return this.LineChart;
       } else if (this.activeReport.chartType === "bar") {
-        return BarChart;
+        return this.BarChart;
       } else if (this.activeReport.chartType === "radar") {
-        return RadarChart;
+        return this.RadarChart;
       } else if (this.activeReport.chartType === "donut") {
-        return DoughnutChart;
+        return this.DoughnutChart;
       } else if (this.activeReport.chartType === "pie") {
-        return PieChart;
+        return this.PieChart;
       } else if (this.activeReport.chartType === "polar-area") {
-        return PolarAreaChart;
+        return this.PolarAreaChart;
       } else if (this.activeReport.chartType === "table") {
-        return Table;
+        return this.Table;
       } else {
-        return LineChart;
+        return this.LineChart;
       }
     },
     circleChart() {
@@ -269,11 +232,9 @@ export default {
     },
     newChannelReport() {
       return this.$route.params.reportId == "new";
-    },
-    screenHeight() {
-      return window.innerHeight - 200;
-    },
-    createdBy() {
+    }, */
+    
+    /* createdBy() {
       if (this.activeReport && this.activeReport.id && this.user && this.user.attributes) {
         return `${this.user.attributes.given_name} ${this.user.attributes.family_name} on ${new Date(this.activeReport.createdAt).toLocaleString()}`;
       } else {
@@ -286,7 +247,7 @@ export default {
       } else {
         return `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
       }
-    },
+    }, */
   },
   async beforeMount() {
     if(this.dataSets && this.dataSets.length < 1){
@@ -307,32 +268,26 @@ export default {
     } else {
       this.dataSetChoices = [...this.dataSets]; // was ...this.channelDataSets
     }
+    console.log(this.channelReports)
   },
   watch: {
-    activeReport() {
-      // this.colorScheme = this.colors.find((scheme) => scheme.id == this.activeReport.colorSchemeId).scheme;
-      //console.log(this.activeReport.colorSchemeId)
-      console.log(this.$route) 
-
-        console.log(this.newReport)
-        if(!this.activeReport){
-         this.SET_REPORT(this.newReport)
-          console.log("No Active Report")
-        }
-    },
-    dataSets() {
-      this.dataSetChoices = [...this.dataSets];
-    },
+  
   },
 };
 </script>
 
 <style scoped>
+.margin-auto {
+ margin: auto !important;
+}
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 10px;
 }
+/* .modal {
+  margin-top: ;
+} */
 .description,
 .tags {
   grid-column: 1 / span 2;

@@ -51,8 +51,9 @@ export default {
   },
   methods: {
     loadChart() {
-      const labels = this.chartData.map((item) => Object.values(item)[0]);
-
+      // console.log(this.chartData)
+      if (this.chartData  && this.chartData[0]) {
+        const labels = this.chartData.map((item) => Object.values(item)[0]);
       const keys = Object.keys(this.chartData[0]).slice(1);
 
       const dataSets = [];
@@ -63,7 +64,6 @@ export default {
         const data = this.chartData.map(
           (item) => Object.values(item)[index + 1]
         );
-        console.log(item)
         dataSets.push({
           label: item,
           data: data,
@@ -83,6 +83,9 @@ export default {
         },
         this.options
       );
+     
+      }
+   
     },
   },
   computed: {},

@@ -21,7 +21,20 @@ export const onCreateReport = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      reportGroup {
+        id
+        title
+        reports {
+          nextToken
+        }
+        reportIds
+        createdBy
+        updatedBy
+        createdAt
+        updatedAt
+      }
       description
+      reportGroupId
       channelId
       colorSchemeId
       chartType
@@ -42,12 +55,15 @@ export const onCreateReport = /* GraphQL */ `
         dataValues {
           nextToken
         }
-        xAxis
         user
         createdAt
         updatedAt
       }
       dataSetId
+      xAxis
+      columns
+      createdBy
+      updatedBy
       createdAt
       updatedAt
       reportDataSetId
@@ -74,7 +90,20 @@ export const onUpdateReport = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      reportGroup {
+        id
+        title
+        reports {
+          nextToken
+        }
+        reportIds
+        createdBy
+        updatedBy
+        createdAt
+        updatedAt
+      }
       description
+      reportGroupId
       channelId
       colorSchemeId
       chartType
@@ -95,12 +124,15 @@ export const onUpdateReport = /* GraphQL */ `
         dataValues {
           nextToken
         }
-        xAxis
         user
         createdAt
         updatedAt
       }
       dataSetId
+      xAxis
+      columns
+      createdBy
+      updatedBy
       createdAt
       updatedAt
       reportDataSetId
@@ -127,7 +159,20 @@ export const onDeleteReport = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      reportGroup {
+        id
+        title
+        reports {
+          nextToken
+        }
+        reportIds
+        createdBy
+        updatedBy
+        createdAt
+        updatedAt
+      }
       description
+      reportGroupId
       channelId
       colorSchemeId
       chartType
@@ -148,15 +193,123 @@ export const onDeleteReport = /* GraphQL */ `
         dataValues {
           nextToken
         }
-        xAxis
         user
         createdAt
         updatedAt
       }
       dataSetId
+      xAxis
+      columns
+      createdBy
+      updatedBy
       createdAt
       updatedAt
       reportDataSetId
+    }
+  }
+`;
+export const onCreateReportGroup = /* GraphQL */ `
+  subscription OnCreateReportGroup(
+    $filter: ModelSubscriptionReportGroupFilterInput
+  ) {
+    onCreateReportGroup(filter: $filter) {
+      id
+      title
+      reports {
+        items {
+          id
+          title
+          description
+          reportGroupId
+          channelId
+          colorSchemeId
+          chartType
+          dataSetId
+          xAxis
+          columns
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+          reportDataSetId
+        }
+        nextToken
+      }
+      reportIds
+      createdBy
+      updatedBy
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateReportGroup = /* GraphQL */ `
+  subscription OnUpdateReportGroup(
+    $filter: ModelSubscriptionReportGroupFilterInput
+  ) {
+    onUpdateReportGroup(filter: $filter) {
+      id
+      title
+      reports {
+        items {
+          id
+          title
+          description
+          reportGroupId
+          channelId
+          colorSchemeId
+          chartType
+          dataSetId
+          xAxis
+          columns
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+          reportDataSetId
+        }
+        nextToken
+      }
+      reportIds
+      createdBy
+      updatedBy
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteReportGroup = /* GraphQL */ `
+  subscription OnDeleteReportGroup(
+    $filter: ModelSubscriptionReportGroupFilterInput
+  ) {
+    onDeleteReportGroup(filter: $filter) {
+      id
+      title
+      reports {
+        items {
+          id
+          title
+          description
+          reportGroupId
+          channelId
+          colorSchemeId
+          chartType
+          dataSetId
+          xAxis
+          columns
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+          reportDataSetId
+        }
+        nextToken
+      }
+      reportIds
+      createdBy
+      updatedBy
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -170,10 +323,15 @@ export const onCreateChannel = /* GraphQL */ `
           id
           title
           description
+          reportGroupId
           channelId
           colorSchemeId
           chartType
           dataSetId
+          xAxis
+          columns
+          createdBy
+          updatedBy
           createdAt
           updatedAt
           reportDataSetId
@@ -186,7 +344,6 @@ export const onCreateChannel = /* GraphQL */ `
           title
           description
           channelId
-          xAxis
           user
           createdAt
           updatedAt
@@ -211,10 +368,15 @@ export const onUpdateChannel = /* GraphQL */ `
           id
           title
           description
+          reportGroupId
           channelId
           colorSchemeId
           chartType
           dataSetId
+          xAxis
+          columns
+          createdBy
+          updatedBy
           createdAt
           updatedAt
           reportDataSetId
@@ -227,7 +389,6 @@ export const onUpdateChannel = /* GraphQL */ `
           title
           description
           channelId
-          xAxis
           user
           createdAt
           updatedAt
@@ -252,10 +413,15 @@ export const onDeleteChannel = /* GraphQL */ `
           id
           title
           description
+          reportGroupId
           channelId
           colorSchemeId
           chartType
           dataSetId
+          xAxis
+          columns
+          createdBy
+          updatedBy
           createdAt
           updatedAt
           reportDataSetId
@@ -268,7 +434,6 @@ export const onDeleteChannel = /* GraphQL */ `
           title
           description
           channelId
-          xAxis
           user
           createdAt
           updatedAt
@@ -315,7 +480,6 @@ export const onCreateDataSet = /* GraphQL */ `
         }
         nextToken
       }
-      xAxis
       user
       createdAt
       updatedAt
@@ -354,7 +518,6 @@ export const onUpdateDataSet = /* GraphQL */ `
         }
         nextToken
       }
-      xAxis
       user
       createdAt
       updatedAt
@@ -393,7 +556,6 @@ export const onDeleteDataSet = /* GraphQL */ `
         }
         nextToken
       }
-      xAxis
       user
       createdAt
       updatedAt
@@ -425,7 +587,6 @@ export const onCreateDataValue = /* GraphQL */ `
         dataValues {
           nextToken
         }
-        xAxis
         user
         createdAt
         updatedAt
@@ -460,7 +621,6 @@ export const onUpdateDataValue = /* GraphQL */ `
         dataValues {
           nextToken
         }
-        xAxis
         user
         createdAt
         updatedAt
@@ -495,7 +655,6 @@ export const onDeleteDataValue = /* GraphQL */ `
         dataValues {
           nextToken
         }
-        xAxis
         user
         createdAt
         updatedAt

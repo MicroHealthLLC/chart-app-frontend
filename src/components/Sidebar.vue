@@ -15,24 +15,6 @@
          <span  class="text-h6 pl-3 pt-2 bluey" >{{ regName }}</span>  
          <v-list dense nav >     
 
-          <v-list-item :disabled="tru" :to="`/${pathName}/add-channel`" link>
-            <v-list-item-icon >
-              <v-icon :class="mini == true ? 'whitesmok' : 'gre'">mdi-television-classic</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>Create Channel</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-
-
-          <v-list-item @click="requestChannel" :disabled="tru" >
-            <v-list-item-icon >
-              <v-icon :class="mini == true ? 'whitesmok' : 'warn'">mdi-television-classic</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>Request Channel</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
           <v-list-item :disabled="tru" :to="`/${pathName}/data-sets`" link>
             <v-list-item-icon >
               <v-icon :class="mini == true ? 'whitesmok' : 'blu'">mdi-equalizer</v-icon>
@@ -102,6 +84,23 @@
             </v-list-item-content>
           </v-list-item> 
           
+          <v-list-item :to="`/${pathName}/add-channel`" link v-show="$route.name == 'Home'">
+            <v-list-item-icon >
+              <v-icon class="gre">mdi-television-classic</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Create Channel</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item @click="requestChannel" v-show="$route.name == 'Home'">
+            <v-list-item-icon >
+              <v-icon class="warn">mdi-television-classic</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Request Channel</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          
           <v-list-item :to="`/settings`"  link>
             <v-list-item-icon>
               <v-icon  color="purple-grey darken-2">mdi-cog-outline</v-icon>
@@ -133,7 +132,7 @@
            <v-list-item>           
             <v-list-item-content >
               <v-container class="grey lighten-5">
-                <v-row v-for="ch in reports" :key="ch.id">                   
+                <v-row v-for="ch in channels" :key="ch.id">                   
                   <v-col>{{ ch.title }}</v-col>
                   <v-col> 
                   <v-btn
@@ -304,9 +303,18 @@ export default {
 </script>
 
 <style scoped>
+
 .nav-group.v-list-group--active {
   /* color: #ffffff !important; */
 }
+.card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 400px;
+    min-height: 400px;
+  }
 .active-nav-item {
   color: #1976d2 !important;
 }

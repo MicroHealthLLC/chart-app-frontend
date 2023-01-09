@@ -21,7 +21,20 @@ export const getReport = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      reportGroup {
+        id
+        title
+        reports {
+          nextToken
+        }
+        reportIds
+        createdBy
+        updatedBy
+        createdAt
+        updatedAt
+      }
       description
+      reportGroupId
       channelId
       colorSchemeId
       chartType
@@ -42,12 +55,15 @@ export const getReport = /* GraphQL */ `
         dataValues {
           nextToken
         }
-        xAxis
         user
         createdAt
         updatedAt
       }
       dataSetId
+      xAxis
+      columns
+      createdBy
+      updatedBy
       createdAt
       updatedAt
       reportDataSetId
@@ -73,7 +89,17 @@ export const listReports = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        reportGroup {
+          id
+          title
+          reportIds
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+        }
         description
+        reportGroupId
         channelId
         colorSchemeId
         chartType
@@ -82,15 +108,74 @@ export const listReports = /* GraphQL */ `
           title
           description
           channelId
-          xAxis
           user
           createdAt
           updatedAt
         }
         dataSetId
+        xAxis
+        columns
+        createdBy
+        updatedBy
         createdAt
         updatedAt
         reportDataSetId
+      }
+      nextToken
+    }
+  }
+`;
+export const getReportGroup = /* GraphQL */ `
+  query GetReportGroup($id: ID!) {
+    getReportGroup(id: $id) {
+      id
+      title
+      reports {
+        items {
+          id
+          title
+          description
+          reportGroupId
+          channelId
+          colorSchemeId
+          chartType
+          dataSetId
+          xAxis
+          columns
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+          reportDataSetId
+        }
+        nextToken
+      }
+      reportIds
+      createdBy
+      updatedBy
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listReportGroups = /* GraphQL */ `
+  query ListReportGroups(
+    $filter: ModelReportGroupFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listReportGroups(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        title
+        reports {
+          nextToken
+        }
+        reportIds
+        createdBy
+        updatedBy
+        createdAt
+        updatedAt
       }
       nextToken
     }
@@ -106,10 +191,15 @@ export const getChannel = /* GraphQL */ `
           id
           title
           description
+          reportGroupId
           channelId
           colorSchemeId
           chartType
           dataSetId
+          xAxis
+          columns
+          createdBy
+          updatedBy
           createdAt
           updatedAt
           reportDataSetId
@@ -122,7 +212,6 @@ export const getChannel = /* GraphQL */ `
           title
           description
           channelId
-          xAxis
           user
           createdAt
           updatedAt
@@ -195,7 +284,6 @@ export const getDataSet = /* GraphQL */ `
         }
         nextToken
       }
-      xAxis
       user
       createdAt
       updatedAt
@@ -226,7 +314,6 @@ export const listDataSets = /* GraphQL */ `
         dataValues {
           nextToken
         }
-        xAxis
         user
         createdAt
         updatedAt
@@ -258,7 +345,6 @@ export const getDataValue = /* GraphQL */ `
         dataValues {
           nextToken
         }
-        xAxis
         user
         createdAt
         updatedAt
@@ -284,7 +370,6 @@ export const listDataValues = /* GraphQL */ `
           title
           description
           channelId
-          xAxis
           user
           createdAt
           updatedAt

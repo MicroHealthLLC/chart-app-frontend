@@ -101,7 +101,7 @@ export default {
       console.log(e)
     },
     toNewDataSet(){
-      this.$router.push("data-sets/add-data-set"); 
+      this.$router.push(`data-sets/add-data-set`); 
     },
     async editItem(item) {
       console.log(item)

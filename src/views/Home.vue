@@ -13,6 +13,46 @@
   <v-row>
     <v-col class="col-12">
       <div v-if=" channels && channels.length > 0" class="grid">
+       <v-card class="report-card" @click="toChannel">      
+      <v-card-title>
+        <!-- <v-icon class="mr-4" color="info">{{ chartIcon }}</v-icon> -->
+        <span class="text-h6 font-weight-bold"  color="var(--mh-blue)">
+          <v-icon color="green darken-2" class="pb-2 pr-1">mdi-television-classic</v-icon>All My Channels
+        </span>
+      </v-card-title>
+      <v-divider></v-divider> 
+    
+      <v-list class="transparent px-2">
+        <v-list-item    
+      >
+        <v-list-item-title>
+          <v-icon color="blue darken-2">mdi-equalizer</v-icon>
+          Datasets: </v-list-item-title>
+        <v-list-item-subtitle class="text-right text-h6 text--primary" >
+          <span class="pill px-2"> {{this.dataSets.length}}</span> 
+        </v-list-item-subtitle>
+      </v-list-item>
+      <v-list-item    
+      >
+        <v-list-item-title>
+          <v-icon color="orange darken-2">mdi-chart-box-outline</v-icon>
+          Reports: </v-list-item-title>
+        <v-list-item-subtitle class="text-right text-h6" v-if="this.reports">
+      <span class="pill px-2"> {{this.reports.length}}</span>
+        </v-list-item-subtitle>
+      </v-list-item>
+      <v-list-item    
+      >
+        <v-list-item-title>
+          <v-icon color="cyan">mdi-monitor-dashboard</v-icon>
+          Dashboard Items: </v-list-item-title>
+        <v-list-item-subtitle class="text-right text-h6 text--primary">
+          <span class="pill px-2">  0</span>
+        </v-list-item-subtitle>
+      </v-list-item>
+     
+    </v-list>
+       </v-card>
         <ChannelCard
           v-for="(ch, index) in channels"
           :channel="ch"
@@ -37,49 +77,7 @@
         <v-btn text small color="primary" to="/add-report">Add a Report</v-btn>
       </div>
     </v-col>
-
-
-    <!-- DETAILS -->
-    <!-- <v-col class="col-3">
-      <h3>Details</h3>
-      <v-divider class="mb-4"></v-divider>
-      <ul class="text-caption details">
-        <li>
-          <strong
-            ><v-icon small>mdi-file-chart-outline</v-icon> Total
-            Reports:</strong
-          >
-          {{ reportCount }}
-        </li>
-        <li>
-          <strong><v-icon small>mdi-menu</v-icon> Channels:</strong>
-          {{ channels.length }}
-        </li>
-        <li>
-          <strong
-            ><v-icon small>mdi-account-group</v-icon> Active Users:</strong
-          >
-          1
-        </li>
-      </ul> -->
-      <!-- NEWS -->
-      <!-- <h3 class="mt-4"><router-link to="/news">News</router-link></h3>
-
-      <v-divider class="mb-4"></v-divider>
-
-      <NewsCard
-        v-for="(newsReport, index) in news"
-        :key="index"
-        :newsReport="newsReport"
-      ></NewsCard>
-
-      <v-btn class="float-right" to="/news" color="primary" text
-        >More News</v-btn
-      >
-    </v-col> -->
   </v-row>
-
-
   </div>
  
 </template>
@@ -129,6 +127,18 @@ export default {
 </script>
 
 <style scoped>
+.report-card {
+  width: 90%;
+  border: 1px solid lightgray;
+  border-left: 5px solid #dd9036 !important;
+  margin-bottom: 10px;
+}
+.pill {
+  background-color: #6c757d;
+  border-radius: 50%;
+  color: whitesmoke;
+}
+
 .rmsLogoFont{
   color: #1D336F;
   font-weight: 900;
@@ -158,7 +168,7 @@ export default {
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-gap: 10px;
+  grid-gap: 30px;
 }
 .btn-container {
   width: 100%;
