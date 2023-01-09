@@ -46,7 +46,7 @@
             <v-list-item-content>             
               <v-list-item-title>   
             <span v-if="item.reportIds && item.reportIds.length > 0">
-              <v-icon x-large class="pr-1" color="yellow darken-2">mdi-folder-open-outline</v-icon>             
+             <v-icon x-large class="pr-1" color="yellow darken-2">mdi-folder-open-outline</v-icon>                   
             </span> 
             <span v-else>
               <v-icon x-large class="pr-1" color="yellow darken-2">mdi-folder-outline</v-icon>             
@@ -75,10 +75,15 @@
         <v-divider class="mb-4 mt-4"></v-divider>  
         <h4 class="mb-3">Reports</h4>
         <div v-if="channelReports.length > 0" class="singleReportGrid pl-5">
-          <span v-for="(report) in channelReports.filter(t => t && !t.reportGroupId)" :key="report.id">
-            <span class="click"  @click.prevent="toSingleReport(report.id)">
+          <span v-for="(report) in channelReports" :key="report.id">
+            <span class="click"  @click.prevent="toSingleReport(report.id)" >
+             
+          
+     
              <v-icon x-large class="pl-2" color="orange darken-2">mdi-file-chart-outline</v-icon>  
-              {{ report.title }}  
+            {{ report.title }}  
+              <small class="d-inline blu" v-if="report.reportGroup && report.reportGroup.title">({{ report.reportGroup.title }})</small>
+                 
             </span>     
           </span>
           <!-- <div class="d-flex justify-end btn-container">
@@ -100,6 +105,11 @@
           <v-btn text small color="primary" :to="`reports/add-report`">Add a Report</v-btn>
         </div>
       </v-col>
+      <span class="views">
+        <v-icon x-large class="pl-2">mdi-view-dashboard-outline</v-icon>  
+        <v-icon x-large class="pl-2">mdi-view-list-outline</v-icon>  
+        <v-icon x-large class="pl-2">mdi-table-large</v-icon>  
+      </span>        
     </v-row>
   </template>
   
@@ -186,6 +196,14 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
   </script>
   
   <style scoped>
+  .blu {
+    color:#1976d2;
+  }
+  .views{
+    position:absolute;
+    bottom: 2.5%;
+    right: 5%;
+  }
   .v-application a {
     text-decoration: none;
     color: unset;
