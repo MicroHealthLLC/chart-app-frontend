@@ -85,11 +85,16 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import DataSetForm from "../components/DataSetForm.vue";
 
 export default {
   name: "DataSets",
+  components: {
+    DataSetForm
+  },
   data() {
     return {
+      showAddDataSetForm: false,
       headers: [
         {
           text: "Title",
