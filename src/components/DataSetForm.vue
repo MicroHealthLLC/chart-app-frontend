@@ -345,7 +345,14 @@ export default {
     resetAndGoBack(){
       this.clear()
       this.$refs.form.reset();
-      this.$router.push(`/${this.currentChannels[0].name}/data-sets`)
+      if (this.$route.path === "/it_apps/data-sets"){
+        this.$emit("closeDataSetForm")
+      } else {
+        this.$router.push(`/${this.currentChannels[0].name}/data-sets`)
+      }
+    },
+    cancelForm() {
+      this.$route.path === '/it_apps/data-sets' ? this.resetAndGoBack() : this.isReadOnly = true
     },
     clear() {
       this.$refs.form.reset();
