@@ -30,6 +30,7 @@ export const getReport = /* GraphQL */ `
         reportIds
         createdBy
         updatedBy
+        channelId
         createdAt
         updatedAt
       }
@@ -95,6 +96,7 @@ export const listReports = /* GraphQL */ `
           reportIds
           createdBy
           updatedBy
+          channelId
           createdAt
           updatedAt
         }
@@ -153,6 +155,7 @@ export const getReportGroup = /* GraphQL */ `
       reportIds
       createdBy
       updatedBy
+      channelId
       createdAt
       updatedAt
     }
@@ -174,6 +177,7 @@ export const listReportGroups = /* GraphQL */ `
         reportIds
         createdBy
         updatedBy
+        channelId
         createdAt
         updatedAt
       }

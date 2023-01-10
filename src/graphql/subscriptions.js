@@ -30,6 +30,7 @@ export const onCreateReport = /* GraphQL */ `
         reportIds
         createdBy
         updatedBy
+        channelId
         createdAt
         updatedAt
       }
@@ -99,6 +100,7 @@ export const onUpdateReport = /* GraphQL */ `
         reportIds
         createdBy
         updatedBy
+        channelId
         createdAt
         updatedAt
       }
@@ -168,6 +170,7 @@ export const onDeleteReport = /* GraphQL */ `
         reportIds
         createdBy
         updatedBy
+        channelId
         createdAt
         updatedAt
       }
@@ -238,6 +241,7 @@ export const onCreateReportGroup = /* GraphQL */ `
       reportIds
       createdBy
       updatedBy
+      channelId
       createdAt
       updatedAt
     }
@@ -273,6 +277,7 @@ export const onUpdateReportGroup = /* GraphQL */ `
       reportIds
       createdBy
       updatedBy
+      channelId
       createdAt
       updatedAt
     }
@@ -308,6 +313,7 @@ export const onDeleteReportGroup = /* GraphQL */ `
       reportIds
       createdBy
       updatedBy
+      channelId
       createdAt
       updatedAt
     }

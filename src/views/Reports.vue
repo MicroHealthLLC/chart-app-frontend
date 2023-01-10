@@ -29,13 +29,13 @@
           <div class="d-flex justify-space-between">
             <h3><v-icon class="mr-2 pb-2" color="orange darken-2">mdi-chart-box-outline</v-icon>Reports</h3>
             <span><v-btn class="mb-2 mr-1" color="primary" small @click.prevent="toNewReport">Add Report <v-icon
-              small>mdi-plus</v-icon></v-btn> <v-btn class="mb-2" color="success" small @click.prevent="createReportGroup">Create Report Group <v-icon
+              small>mdi-plus</v-icon></v-btn> <v-btn class="mb-2" color="success" small @click.prevent="createReportGroup">Create Report Folder <v-icon
               small class="pl-1">mdi-folder-multiple</v-icon></v-btn></span>
           </div>  
         <v-divider class="mb-4"></v-divider>
-        <h4>Report Groups</h4>
-        <div v-if="reportGroups.length > 0" class="grid">
-         <span v-for="item in reportGroups" :key="item.id" :load="log(reportGroups)">              
+        <h4>Report Folders</h4>
+        <div v-if="channelReportGroups && channelReportGroups.length > 0" class="grid">
+         <span v-for="item in channelReportGroups" :key="item.id" :load="log(channelReportGroups)">              
           
          <v-list-group
           :value="true"
@@ -67,12 +67,16 @@
               v-text="channelReports.filter(t => item.reportIds.includes(t.id))[i].title" 
               @click.prevent="toReport(channelReports.filter(t => item.reportIds.includes(t.id))[i].id)"
             >
-            
+              <!-- <v-list-item-title 
+              v-text="channelReports.filter(report => item.id.includes(report.reportGroupId)).title"
+            >
+             -->
             </v-list-item-title>
           </v-list-item>
           </v-list-group>             
          </span>
         </div>
+        <span v-else class="mt-4 mb-4">No Report Groups in this Channel</span>
         <v-divider class="mb-4 mt-4"></v-divider>  
         <h4 class="mb-3">Reports</h4>
         <div v-if="channelReports.length > 0" class="singleReportGrid pl-5">
@@ -133,6 +137,11 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
           this.reports.length
         );
       },
+      channelReportGroups(){
+        if (this.reportGroups && this.reportGroups.length > 0 ){
+          return this.reportGroups.filter(t => t.channelId == this.currentChannels[0].channelId)      
+        } else return []
+      },
       channelReports(){
         if (this.reports && this.reports.length > 0 && this.viewAllReports){
           return this.reports.filter(t => t.channelId == this.currentChannels[0].channelId)
@@ -163,6 +172,7 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
      async saveReportGroup() {         
         let data = {
           title: this.reportGroup.title,
+          channelId: this.currentChannels[0].channelId,
           reportIds: this.reportGroup.reports
         }      
         console.log(data)  

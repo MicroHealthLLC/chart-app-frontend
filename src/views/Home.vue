@@ -13,47 +13,7 @@
   <v-row>
     <v-col class="col-12">
       <div v-if=" channels && channels.length > 0" class="grid">
-       <v-card class="report-card" @click="toChannel">      
-      <v-card-title>
-        <!-- <v-icon class="mr-4" color="info">{{ chartIcon }}</v-icon> -->
-        <span class="text-h6 font-weight-bold"  color="var(--mh-blue)">
-          <v-icon color="green darken-2" class="pb-2 pr-1">mdi-television-classic</v-icon>All My Channels
-        </span>
-      </v-card-title>
-      <v-divider></v-divider> 
-    
-      <v-list class="transparent px-2">
-        <v-list-item    
-      >
-        <v-list-item-title>
-          <v-icon color="blue darken-2">mdi-equalizer</v-icon>
-          Datasets: </v-list-item-title>
-        <v-list-item-subtitle class="text-right text-h6 text--primary" >
-          <span class="pill px-2"> {{this.dataSets.length}}</span> 
-        </v-list-item-subtitle>
-      </v-list-item>
-      <v-list-item    
-      >
-        <v-list-item-title>
-          <v-icon color="orange darken-2">mdi-chart-box-outline</v-icon>
-          Reports: </v-list-item-title>
-        <v-list-item-subtitle class="text-right text-h6" v-if="this.reports">
-      <span class="pill px-2"> {{this.reports.length}}</span>
-        </v-list-item-subtitle>
-      </v-list-item>
-      <v-list-item    
-      >
-        <v-list-item-title>
-          <v-icon color="cyan">mdi-monitor-dashboard</v-icon>
-          Dashboard Items: </v-list-item-title>
-        <v-list-item-subtitle class="text-right text-h6 text--primary">
-          <span class="pill px-2">  0</span>
-        </v-list-item-subtitle>
-      </v-list-item>
-     
-    </v-list>
-       </v-card>
-        <ChannelCard
+       <ChannelCard
           v-for="(ch, index) in channels"
           :channel="ch"
           :key="index"

@@ -2,7 +2,8 @@
   <v-row>
     <v-col>
       <div class="d-flex justify-space-between">
-        <h3 v-if="activeReport && activeReport.title" :load="log(activeReport)">{{ activeReport.title }}</h3>
+        <h3 v-if="activeReport && activeReport.title" :load="log( reportGroups.filter(group => group.id == activeReport.reportGroupId)
+        )">{{ activeReport.title }}</h3>
         <h3 v-else class="placeholder-title">(Report Title)</h3>
         <div>
           <v-btn
@@ -98,7 +99,7 @@
             <v-select
               dense
               v-model="activeReport.reportGroupId"
-              label="Report Group"
+              label="Report Folder"
               :items="reportGroups"
               item-text="title"
               item-value="id"         
@@ -335,6 +336,7 @@ export default {
       "fetchTags",
       "addReport",
       "updateReportById",
+      "updateReportGroupById",
       "removeReport",
       "updateChannelById"
     ]),
@@ -382,10 +384,16 @@ export default {
           data.updatedBy = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`
           this.updateReportById(data);
 
-           // this.updateChannelById({
-          //  id:  this.activeReport.channelId,
-          //  reports: [this.activeReport]
-          // });
+        
+          if (this.activeReport.reportGroupId){
+            this.updateReportGroupById({
+           id:  this.activeReport.reportGroupId,
+           reportIds: this.activeReport.id
+          });
+
+          }
+
+      
         } else {
           console.log(data)
           data.createdBy = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`
