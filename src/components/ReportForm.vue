@@ -105,7 +105,7 @@
             <v-select
               dense
               v-model="activeReport.reportGroupId"
-              label="Report Folder"
+              label="Folder"
               :items="reportGroups"
               item-text="title"
               item-value="id"         
