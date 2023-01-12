@@ -30,11 +30,10 @@
       <v-divider class="mb-4"></v-divider>
       <v-row>
         <v-col cols="12" sm="5" v-for="(report, i) in channelReports" :key="i">
-          <DashboardCard_test :report="report"/>
-          
+          <DashboardCard_test :report="report" />
         </v-col>
       </v-row>
-  </div>
+      </div>
 </template>
 
 <script>

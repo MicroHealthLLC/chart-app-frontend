@@ -151,9 +151,10 @@ export default {
     ...mapActions(["addChannel", "updateChannelById", "addChannelType", "fetchChannelTypes", "fetchChannels"]),
     ...mapMutations(["SET_STATUS_CODE"]),
     resetAndGoBack(){
-      this.$router.go(-1)
+      //this.$router.go(-1)
       this.channel.type = null
       this.$refs.form.reset();
+      this.$emit("closeChannelForm")
     },
     saveChannel() {
       this.$refs.form.validate();
@@ -178,6 +179,7 @@ export default {
         }
         this.$refs.form.reset();
         this.channel.type = null
+        this.$emit("closeChannelForm")
       }
     },
 

@@ -12,8 +12,8 @@
    </v-row>
   <v-row>
     <v-col class="col-12">
-      <div v-if=" channels && channels.length > 0" class="grid">
-       <ChannelCard
+      <div v-if=" channels && channels.length > 0" class="grid">      
+        <ChannelCard
           v-for="(ch, index) in channels"
           :channel="ch"
           :key="index"

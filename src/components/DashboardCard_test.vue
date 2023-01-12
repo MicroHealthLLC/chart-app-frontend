@@ -1,8 +1,14 @@
 <template>
   <!-- <v-row > -->
     <!-- <v-col cols="12" sm="5" v-for="(report, i) in channelReports" :key="i"> --> 
-      <span>    
-      <v-card class="pa-4 mb-4" v-if="data && data.length > 0">         
+      <span>
+        <v-skeleton-loader
+        v-if="$store.getters.loading"
+      class="mx-auto"
+      type="card, article"
+    ></v-skeleton-loader>    
+      <v-card class="pa-4 mb-4" v-if="data && data.length > 0">
+                 
         <v-btn @click="fullscreenReport" class="chart-menu" icon >
           <v-icon>mdi-fullscreen</v-icon>    
         </v-btn>

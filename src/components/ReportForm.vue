@@ -29,6 +29,7 @@
         dismissible
         >Please fix highlighted fields below before sumbitting Report</v-alert
       >
+      
 
       <v-card v-if="(data && data.length > 0)" class="pa-4 mb-4">
         <v-btn @click="fullscreenReport" class="chart-menu" icon>
@@ -79,6 +80,11 @@
             >Next Category <v-icon small>mdi-arrow-right</v-icon></v-btn
           > -->
         </div>
+      </v-card>
+      <v-card class="pa-4 mb-4 text-center" v-else>
+        <v-progress-circular v-if="$store.getters.loading" :size="70" indeterminate color="primary"
+          class="m-2">
+        </v-progress-circular>
       </v-card>
 
       <h3>Report Details</h3>
@@ -556,7 +562,8 @@ export default {
     } 
     
   },
-  mounted() {
+  async mounted() {
+    await this.fetchDataSets();
     /* if (this.$route.name == "Report") {
       this.dataSetChoices = [...this.dataSets];
     } else { */
