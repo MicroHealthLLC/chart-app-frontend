@@ -113,12 +113,14 @@ export default {
       }
     },
     async fetchReports({ commit }) {
+      commit("TOGGLE_LOADING", true)
       try {     
        const res = await API.graphql(graphqlOperation(listReports));
         commit("SET_REPORTS", res.data.listReports.items);
       } catch (error) {
         console.log(error);
       }
+      commit("TOGGLE_LOADING", false)
     },
     async fetchReportGroups({ commit }) {
       try {     
@@ -130,7 +132,9 @@ export default {
     },
     async fetchReport({ commit }, id) {
       //console.log(id);
-      try {     
+      commit("TOGGLE_LOADING", true)
+      try { 
+          
        const res = await API.graphql(graphqlOperation(getReport, { id: id }));
        if (res.data.getReport.columns && typeof res.data.getReport.columns == 'string') {
         res.data.getReport.columns = JSON.parse(res.data.getReport.columns)
@@ -140,6 +144,7 @@ export default {
       } catch (error) {
         console.log(error);
       }
+      commit("TOGGLE_LOADING", false)
     },
     async fetchReportGroup({ commit }, id) {
       console.log(id);

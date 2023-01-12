@@ -26,6 +26,7 @@ type ReportGroup @model @auth(rules: [{ allow: public }]) {
   reportIds: [String]
   createdBy: String
   updatedBy: String  
+  channelId: ID @index(name: "byChannel")  
 }
 
 type Channel @model @auth(rules: [{ allow: public }]) {

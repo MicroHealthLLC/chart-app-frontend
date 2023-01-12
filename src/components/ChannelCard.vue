@@ -1,5 +1,5 @@
 <template>
-    <v-card class="report-card" @click="toChannel">      
+    <v-card class="report-card" @click.prevent="toChannel">      
       <v-card-title>
         <!-- <v-icon class="mr-4" color="info">{{ chartIcon }}</v-icon> -->
         <span class="text-h6 font-weight-bold"  color="var(--mh-blue)">

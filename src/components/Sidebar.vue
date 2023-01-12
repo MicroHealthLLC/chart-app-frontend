@@ -84,7 +84,7 @@
             </v-list-item-content>
           </v-list-item> 
           
-          <v-list-item :to="`/${pathName}/add-channel`" link v-show="$route.name == 'Home'">
+          <v-list-item @click="createChannel" link v-show="$route.name == 'Home'">
             <v-list-item-icon >
               <v-icon class="gre">mdi-television-classic</v-icon>
             </v-list-item-icon>
@@ -120,7 +120,7 @@
         </v-list>      
       </div>
 
-      <v-dialog v-model="showForm" width="30%">
+      <v-dialog v-model="showRequestForm" width="30%">
       <v-card >
         <v-card-title class="pl-0">  
         <v-icon class="warn px-2" medium>mdi-television-classic</v-icon>          
@@ -156,12 +156,18 @@
       </v-card>
       <!-- <ChannelModalForm @closeform="closeForm" /> -->
     </v-dialog>
+    <v-dialog v-model="showAddChannelForm" width="40%">
+      <v-card class="px-4 py-4 ">
+        <ChannelForm @closeChannelForm="closeChannelForm"/>
+      </v-card>
+    </v-dialog>
     </template>
   </v-navigation-drawer>
 </template>
 
 <script>
 import { mapGetters, mapMutations, mapActions } from "vuex";
+import ChannelForm from "./ChannelForm.vue";
 
 export default {
   data() {
@@ -172,7 +178,8 @@ export default {
       regName: '',
       pathName: '',
       channelId: null,
-      showForm: false, 
+      showRequestForm: false, 
+      showAddChannelForm: false, 
       channelList: [],
       items: [
         { title: "Home", icon: "mdi-home", route: "/" },
@@ -209,6 +216,9 @@ export default {
       right: null,
     };
   },
+  components: {
+    ChannelForm
+  },
   methods: {
     ...mapMutations(["SET_SNACKBAR", "SET_USER"]),
     ...mapActions(["logout", "fetchChannels", "fetchReports", "removeCurrentChannel", "fetchCurrentChannels"]),
@@ -224,7 +234,13 @@ export default {
       console.log(e)
     },
     requestChannel(){
-      this.showForm = true
+      this.showRequestForm = true
+    },
+    createChannel() {
+      this.showAddChannelForm = true
+    },
+    closeChannelForm() {
+      this.showAddChannelForm = false
     },
     goHome(){    
       if(this.channelId){

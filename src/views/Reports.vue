@@ -3,24 +3,28 @@
       <v-dialog v-model="showReportGroupForm" width="30%" >
       <v-card class="px-4 py-4 modal">  
           <v-text-field
-            label="Report Group Name"
+            label="Report Folder Name"
             v-model="reportGroup.title"
-            placeholder="Report Group Name"
+            placeholder="Enter Report Folder Name"
             outlined
           ></v-text-field>
-        <v-divider></v-divider>  
-        <v-select
+       <!-- <span  v-if="channelReports.filter(t => !t.reportGroupId).length > 0">
+       <v-divider></v-divider>  
+       <v-select        
           v-model="reportGroup.reports"       
           item-text="title"       
           item-value="id"  
           multiple        
           chips
-          :items="channelReports"
+          :items="channelReports.filter(t => !t.reportGroupId)"
           :disabled="!channelReports.length > 1"
           label="Select Reports"
           outlined
         ></v-select>
-        <v-btn color="primary" large class="d-block margin-auto" @click.prevent="saveReportGroup">Save Report Group</v-btn>
+       </span>       
+        -->
+        <!-- <span v-else>No Reports to save</span> -->
+        <v-btn color="primary" large class="d-block margin-auto" @click.prevent="saveReportGroup">Save Report Folder</v-btn>
       </v-card> 
       <!-- <span v-else>NO DATA</span> -->
 
@@ -29,13 +33,13 @@
           <div class="d-flex justify-space-between">
             <h3><v-icon class="mr-2 pb-2" color="orange darken-2">mdi-chart-box-outline</v-icon>Reports</h3>
             <span><v-btn class="mb-2 mr-1" color="primary" small @click.prevent="toNewReport">Add Report <v-icon
-              small>mdi-plus</v-icon></v-btn> <v-btn class="mb-2" color="success" small @click.prevent="createReportGroup">Create Report Group <v-icon
+              small>mdi-plus</v-icon></v-btn> <v-btn class="mb-2" color="success" small @click.prevent="createReportGroup">Create Report Folder <v-icon
               small class="pl-1">mdi-folder-multiple</v-icon></v-btn></span>
           </div>  
         <v-divider class="mb-4"></v-divider>
-        <h4>Report Groups</h4>
-        <div v-if="reportGroups.length > 0" class="grid">
-         <span v-for="item in reportGroups" :key="item.id">              
+        <h4>Report Folders</h4>
+        <div v-if="channelReportGroups && channelReportGroups.length > 0" class="grid">
+         <span v-for="item in channelReportGroups" :key="item.id" :load="log(channelReportGroups)">              
           
          <v-list-group
           :value="true"
@@ -46,7 +50,7 @@
             <v-list-item-content>             
               <v-list-item-title>   
             <span v-if="item.reportIds && item.reportIds.length > 0">
-              <v-icon x-large class="pr-1" color="yellow darken-2">mdi-folder-open-outline</v-icon>             
+             <v-icon x-large class="pr-1" color="yellow darken-2">mdi-folder-open-outline</v-icon>                   
             </span> 
             <span v-else>
               <v-icon x-large class="pr-1" color="yellow darken-2">mdi-folder-outline</v-icon>             
@@ -56,29 +60,31 @@
             </v-list-item-content>
           </template>
           <v-list-item
-            v-for="(no, i) in item.reportIds"
-            :key="i"
+            v-for="report in channelReports.filter(t => t.reportGroupId == item.id)" 
+            :key="report.id"     
             link
           >          
           <v-list-item-icon>
             <v-icon large color="orange darken-2">mdi-circle-small</v-icon>      
-          </v-list-item-icon>
-            <v-list-item-title 
-              v-text="channelReports.filter(t => item.reportIds.includes(t.id))[i].title" 
-              @click.prevent="toReport(channelReports.filter(t => item.reportIds.includes(t.id))[i].id)"
-            >
+          </v-list-item-icon>      
+            <v-list-item-title                        
+              v-text="report.title" 
+              @click.prevent="toReport(report.id)"
+            >            
             </v-list-item-title>
           </v-list-item>
           </v-list-group>             
          </span>
         </div>
+        <div v-else class="mt-4 mb-4">No Report Folders in this Channel</div>
         <v-divider class="mb-4 mt-4"></v-divider>  
         <h4 class="mb-3">Reports</h4>
         <div v-if="channelReports.length > 0" class="singleReportGrid pl-5">
           <span v-for="(report) in channelReports.filter(t => t && !t.reportGroupId)" :key="report.id">
-            <span class="click"  @click.prevent="toSingleReport(report.id)">
-             <v-icon x-large class="pl-2" color="orange darken-2">mdi-file-chart-outline</v-icon>  
-              {{ report.title }}  
+            <span class="click"  @click.prevent="toSingleReport(report.id)" >
+            <v-icon x-large class="pl-2" color="orange darken-2">mdi-file-chart-outline</v-icon>  
+            {{ report.title }}  
+            <small class="d-inline blu" v-if="report.reportGroup && report.reportGroup.title">({{ report.reportGroup.title }})</small>                 
             </span>     
           </span>
           <!-- <div class="d-flex justify-end btn-container">
@@ -100,6 +106,11 @@
           <v-btn text small color="primary" :to="`reports/add-report`">Add a Report</v-btn>
         </div>
       </v-col>
+      <span class="views">
+        <v-icon x-large class="pl-2">mdi-view-dashboard-outline</v-icon>  
+        <v-icon x-large class="pl-2">mdi-view-list-outline</v-icon>  
+        <v-icon x-large class="pl-2">mdi-table-large</v-icon>  
+      </span>        
     </v-row>
   </template>
   
@@ -126,6 +137,11 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
           this.reports.length
         );
       },
+      channelReportGroups(){
+        if (this.reportGroups && this.reportGroups.length > 0 ){
+          return this.reportGroups.filter(t => t.channelId == this.currentChannels[0].channelId)      
+        } else return []
+      },
       channelReports(){
         if (this.reports && this.reports.length > 0 && this.viewAllReports){
           return this.reports.filter(t => t.channelId == this.currentChannels[0].channelId)
@@ -138,12 +154,16 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
       toNewReport(){
         this.$router.push("reports/add-report"); 
       },
+      log(e){
+        console.log("Report Folders:")
+        console.log(e)
+      },
       toReport(reportId) {     
       this.$router.push(
         `reports/${reportId}`
       );      
     },
-    toSingleReport(reportId) {     
+      toSingleReport(reportId) {     
       this.$router.push(
         `reports/${reportId}`
       );
@@ -152,6 +172,7 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
      async saveReportGroup() {         
         let data = {
           title: this.reportGroup.title,
+          channelId: this.currentChannels[0].channelId,
           reportIds: this.reportGroup.reports
         }      
         console.log(data)  
@@ -186,6 +207,14 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
   </script>
   
   <style scoped>
+  .blu {
+    color:#1976d2;
+  }
+  .views{
+    position:absolute;
+    bottom: 2.5%;
+    right: 5%;
+  }
   .v-application a {
     text-decoration: none;
     color: unset;
