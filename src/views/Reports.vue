@@ -3,9 +3,9 @@
       <v-dialog v-model="showReportGroupForm" width="30%" >
       <v-card class="px-4 py-4 modal">  
           <v-text-field
-            label="Report Group Name"
+            label="Report Folder Name"
             v-model="reportGroup.title"
-            placeholder="Report Group Name"
+            placeholder="Enter Report Folder Name"
             outlined
           ></v-text-field>
        <!-- <span  v-if="channelReports.filter(t => !t.reportGroupId).length > 0">
@@ -24,7 +24,7 @@
        </span>       
         -->
         <!-- <span v-else>No Reports to save</span> -->
-        <v-btn color="primary" large class="d-block margin-auto" @click.prevent="saveReportGroup">Save Report Group</v-btn>
+        <v-btn color="primary" large class="d-block margin-auto" @click.prevent="saveReportGroup">Save Report Folder</v-btn>
       </v-card> 
       <!-- <span v-else>NO DATA</span> -->
 
@@ -76,7 +76,7 @@
           </v-list-group>             
          </span>
         </div>
-        <div v-else class="mt-4 mb-4">No Report Groups in this Channel</div>
+        <div v-else class="mt-4 mb-4">No Report Folders in this Channel</div>
         <v-divider class="mb-4 mt-4"></v-divider>  
         <h4 class="mb-3">Reports</h4>
         <div v-if="channelReports.length > 0" class="singleReportGrid pl-5">
@@ -155,7 +155,7 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
         this.$router.push("reports/add-report"); 
       },
       log(e){
-        console.log("Report Groups:")
+        console.log("Report Folders:")
         console.log(e)
       },
       toReport(reportId) {     
