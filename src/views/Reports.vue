@@ -49,13 +49,13 @@
           <template v-slot:activator>
             <v-list-item-content>             
               <v-list-item-title>   
-            <span v-if="item.reportIds && item.reportIds.length > 0">
+            <span v-if="channelReports.filter(t => t.reportGroupId == item.id).length > 0">
              <v-icon x-large class="pr-1" color="yellow darken-2">mdi-folder-open-outline</v-icon>                   
             </span> 
             <span v-else>
               <v-icon x-large class="pr-1" color="yellow darken-2">mdi-folder-outline</v-icon>             
             </span>              
-                {{ item.title }}              
+                {{ item.title }}  ({{channelReports.filter(t => t.reportGroupId == item.id).length}})
               </v-list-item-title>
             </v-list-item-content>
           </template>
