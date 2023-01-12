@@ -307,6 +307,7 @@ export default {
       submitAttempted: false,
       deleteDialog: false,
       fullscreen: false,
+      reportGroupIds:[],
       chartTypes: [
         { text: "Line", value: "line" },
         { text: "Curve", value: "curve" },
@@ -328,6 +329,78 @@ export default {
     };
   },
   mixins: [datasetMixin, reportMixin],
+ 
+  computed: {
+    ...mapGetters([
+      "activeDataSet",
+      "activeReport",
+      "channels",
+      "currentChannel",
+      "channelReports",
+      "currentChannels",
+      "colors",
+      "channelDataSets",
+      "dataSets",
+      "dataSet",
+      "reportLoaded",
+      "tags",
+      "statusCode",
+      "reports",
+      "reportGroups",
+      "user",
+    ]),
+    channelReports(){
+        if (this.reports && this.reports.length > 0){
+          return this.reports.filter(t => t.channelId == this.currentChannels[0].channelId)
+        } else return  this.reports.filter(t => t.channelId == this.currentChannels[0].channelId && !t.reportGroupId)
+      },
+    graphType() {
+      if (this.activeReport.chartType === "line") {
+        return LineChart;
+      } else if (this.activeReport.chartType === "bar") {
+        return BarChart;
+      } else if (this.activeReport.chartType === "radar") {
+        return RadarChart;
+      } else if (this.activeReport.chartType === "donut") {
+        return DoughnutChart;
+      } else if (this.activeReport.chartType === "pie") {
+        return PieChart;
+      } else if (this.activeReport.chartType === "polar-area") {
+        return PolarAreaChart;
+      } else if (this.activeReport.chartType === "table") {
+        return Table;
+      } else {
+        return LineChart;
+      }
+    },
+    circleChart() {
+      return (
+        this.activeReport.chartType == "donut" ||
+        this.activeReport.chartType == "pie" ||
+        this.activeReport.chartType == "polar-area"
+      );
+    },
+    newChannelReport() {
+      return this.$route.params.reportId == "new";
+    },
+    screenHeight() {
+      return window.innerHeight - 200;
+    },
+    /* createdBy() {
+      if (this.activeReport && this.activeReport.id && this.user && this.user.attributes) {
+        return `${this.user.attributes.given_name} ${this.user.attributes.family_name} on ${new Date(this.activeReport.createdAt).toLocaleString()}`;
+      } else {
+        return `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
+      }
+    },
+    updatedBy() {
+      if (this.activeReport && this.activeReport.id) {
+        return `${this.user.attributes.given_name}  ${this.user.attributes.family_name} on ${new Date(this.activeReport.updatedAt).toLocaleString()}`;
+      } else {
+        return `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
+      }
+    }, */
+  },
   methods: {
     ...mapActions([
       "fetchReport",
@@ -384,22 +457,26 @@ export default {
           data.updatedBy = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`
           this.updateReportById(data);
 
-        
-          if (this.activeReport.reportGroupId){
-            this.updateReportGroupById({
-           id:  this.activeReport.reportGroupId,
-           reportIds: this.activeReport.id
-          });
-
-          }
-
-      
         } else {
           console.log(data)
           data.createdBy = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`
           // data.user_id = this.user.id;
            this.addReport(data);
         }
+
+          
+    // if (this.activeReport.id) {
+    //   let ids = this.channelReports.filter( r => r.reportGroupId == this.activeReport.reportGroupId).map(t => t.id)
+    //   ids.push(this.activeReport.id) 
+
+    //   this.updateReportGroupById({ 
+    //     id: this.activeReport.reportGroupId,
+    //     reportIds:  ids
+    //   })          
+    // }   
+
+      
+     
       }
     },
     async updateChartData() {
@@ -472,71 +549,6 @@ export default {
       ).scheme;
     },
     
-  },
-  computed: {
-    ...mapGetters([
-      "activeDataSet",
-      "activeReport",
-      "channels",
-      "currentChannel",
-      "channelReports",
-      "currentChannels",
-      "colors",
-      "channelDataSets",
-      "dataSets",
-      "dataSet",
-      "reportLoaded",
-      "tags",
-      "statusCode",
-      "reportGroups",
-      "user",
-    ]),
-    graphType() {
-      if (this.activeReport.chartType === "line") {
-        return LineChart;
-      } else if (this.activeReport.chartType === "bar") {
-        return BarChart;
-      } else if (this.activeReport.chartType === "radar") {
-        return RadarChart;
-      } else if (this.activeReport.chartType === "donut") {
-        return DoughnutChart;
-      } else if (this.activeReport.chartType === "pie") {
-        return PieChart;
-      } else if (this.activeReport.chartType === "polar-area") {
-        return PolarAreaChart;
-      } else if (this.activeReport.chartType === "table") {
-        return Table;
-      } else {
-        return LineChart;
-      }
-    },
-    circleChart() {
-      return (
-        this.activeReport.chartType == "donut" ||
-        this.activeReport.chartType == "pie" ||
-        this.activeReport.chartType == "polar-area"
-      );
-    },
-    newChannelReport() {
-      return this.$route.params.reportId == "new";
-    },
-    screenHeight() {
-      return window.innerHeight - 200;
-    },
-    /* createdBy() {
-      if (this.activeReport && this.activeReport.id && this.user && this.user.attributes) {
-        return `${this.user.attributes.given_name} ${this.user.attributes.family_name} on ${new Date(this.activeReport.createdAt).toLocaleString()}`;
-      } else {
-        return `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
-      }
-    },
-    updatedBy() {
-      if (this.activeReport && this.activeReport.id) {
-        return `${this.user.attributes.given_name}  ${this.user.attributes.family_name} on ${new Date(this.activeReport.updatedAt).toLocaleString()}`;
-      } else {
-        return `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
-      }
-    }, */
   },
   async beforeMount() {
     if(this.dataSets && this.dataSets.length < 1){

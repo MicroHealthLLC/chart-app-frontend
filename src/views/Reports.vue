@@ -8,18 +8,22 @@
             placeholder="Report Group Name"
             outlined
           ></v-text-field>
-        <v-divider></v-divider>  
-        <v-select
+       <!-- <span  v-if="channelReports.filter(t => !t.reportGroupId).length > 0">
+       <v-divider></v-divider>  
+       <v-select        
           v-model="reportGroup.reports"       
           item-text="title"       
           item-value="id"  
           multiple        
           chips
-          :items="channelReports"
+          :items="channelReports.filter(t => !t.reportGroupId)"
           :disabled="!channelReports.length > 1"
           label="Select Reports"
           outlined
         ></v-select>
+       </span>       
+        -->
+        <!-- <span v-else>No Reports to save</span> -->
         <v-btn color="primary" large class="d-block margin-auto" @click.prevent="saveReportGroup">Save Report Group</v-btn>
       </v-card> 
       <!-- <span v-else>NO DATA</span> -->
@@ -56,31 +60,27 @@
             </v-list-item-content>
           </template>
           <v-list-item
-            v-for="(no, i) in item.reportIds"
-            :key="i"
+            v-for="report in channelReports.filter(t => t.reportGroupId == item.id)" 
+            :key="report.id"     
             link
           >          
           <v-list-item-icon>
             <v-icon large color="orange darken-2">mdi-circle-small</v-icon>      
-          </v-list-item-icon>
-            <v-list-item-title 
-              v-text="channelReports.filter(t => item.reportIds.includes(t.id))[i].title" 
-              @click.prevent="toReport(channelReports.filter(t => item.reportIds.includes(t.id))[i].id)"
-            >
-              <!-- <v-list-item-title 
-              v-text="channelReports.filter(report => item.id.includes(report.reportGroupId)).title"
-            >
-             -->
+          </v-list-item-icon>      
+            <v-list-item-title                        
+              v-text="report.title" 
+              @click.prevent="toReport(report.id)"
+            >            
             </v-list-item-title>
           </v-list-item>
           </v-list-group>             
          </span>
         </div>
-        <span v-else class="mt-4 mb-4">No Report Groups in this Channel</span>
+        <div v-else class="mt-4 mb-4">No Report Groups in this Channel</div>
         <v-divider class="mb-4 mt-4"></v-divider>  
         <h4 class="mb-3">Reports</h4>
         <div v-if="channelReports.length > 0" class="singleReportGrid pl-5">
-          <span v-for="(report) in channelReports" :key="report.id">
+          <span v-for="(report) in channelReports.filter(t => t && !t.reportGroupId)" :key="report.id">
             <span class="click"  @click.prevent="toSingleReport(report.id)" >
             <v-icon x-large class="pl-2" color="orange darken-2">mdi-file-chart-outline</v-icon>  
             {{ report.title }}  
