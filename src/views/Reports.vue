@@ -3,9 +3,9 @@
       <v-dialog v-model="showReportGroupForm" width="30%" >
       <v-card class="px-4 py-4 modal">  
           <v-text-field
-            label="Report Folder Name"
+            label="Folder Name"
             v-model="reportGroup.title"
-            placeholder="Enter Report Folder Name"
+            placeholder="Enter Folder Name"
             outlined
           ></v-text-field>
        <!-- <span  v-if="channelReports.filter(t => !t.reportGroupId).length > 0">
@@ -21,10 +21,10 @@
           label="Select Reports"
           outlined
         ></v-select>
-       </span>       
-        -->
+       </span>        -->
+       
         <!-- <span v-else>No Reports to save</span> -->
-        <v-btn color="primary" large class="d-block margin-auto" @click.prevent="saveReportGroup">Save Report Folder</v-btn>
+        <v-btn color="primary" large class="d-block margin-auto" @click.prevent="saveReportGroup">Save Folder</v-btn>
       </v-card> 
       <!-- <span v-else>NO DATA</span> -->
 
@@ -33,16 +33,16 @@
           <div class="d-flex justify-space-between">
             <h3><v-icon class="mr-2 pb-2" color="orange darken-2">mdi-chart-box-outline</v-icon>Reports</h3>
             <span><v-btn class="mb-2 mr-1" color="primary" small @click.prevent="toNewReport">Add Report <v-icon
-              small>mdi-plus</v-icon></v-btn> <v-btn class="mb-2" color="success" small @click.prevent="createReportGroup">Create Report Folder <v-icon
+              small>mdi-plus</v-icon></v-btn> <v-btn class="mb-2" color="success" small @click.prevent="createReportGroup">Create Folder <v-icon
               small class="pl-1">mdi-folder-multiple</v-icon></v-btn></span>
           </div>  
         <v-divider class="mb-4"></v-divider>
-        <h4>Report Folders</h4>
+        <h4>Folders</h4>
         <div v-if="channelReportGroups && channelReportGroups.length > 0" class="grid">
          <span v-for="item in channelReportGroups" :key="item.id" :load="log(channelReportGroups)">              
           
          <v-list-group
-          :value="true"
+          :value="false"
           no-action
           sub-group
         >      
@@ -76,7 +76,7 @@
           </v-list-group>             
          </span>
         </div>
-        <div v-else class="mt-4 mb-4">No Report Folders in this Channel</div>
+        <div v-else class="mt-4 mb-4">No Folders in this Channel</div>
         <v-divider class="mb-4 mt-4"></v-divider>  
         <h4 class="mb-3">Reports</h4>
         <div v-if="channelReports.length > 0" class="singleReportGrid pl-5">
@@ -172,12 +172,10 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
      async saveReportGroup() {         
         let data = {
           title: this.reportGroup.title,
-          channelId: this.currentChannels[0].channelId,
-          reportIds: this.reportGroup.reports
+          channelId: this.currentChannels[0].channelId,       
         }      
         console.log(data)  
-        await this.addReportGroup(data);        
-        
+        await this.addReportGroup(data);         
         this.reportGroup.title = ""
         this.reportGroup.reports = null
         this.showReportGroupForm = false
