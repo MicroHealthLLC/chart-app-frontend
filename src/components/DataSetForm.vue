@@ -356,7 +356,6 @@ export default {
       this.items = [];
 
     },
-    
     /* toggleDataTable() {
       this.chartType = "Data Table";
     },
