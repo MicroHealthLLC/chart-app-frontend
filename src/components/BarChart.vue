@@ -86,7 +86,6 @@ export default {
   mounted() {
     this.addPlugin(ChartDatalabels);
     this.loadChart();
-    //test
   },
   watch: {
     chartData() {
