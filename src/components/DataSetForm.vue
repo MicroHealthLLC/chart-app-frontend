@@ -91,8 +91,6 @@
               @change.native="onChange"
               @click:clear="clearInput('file')"
               dense
-              required
-              :rules="[(v) => !!v || 'Data File is required']"
             />
             <xlsx-read :options="readOptions" :file="file">
               <xlsx-json
@@ -390,33 +388,35 @@ export default {
     }, */
     async saveDataSet() {
       this.$refs.form.validate();
-      if (!this.isReadOnly && this.dataSet.id) {
-        await this.updateDataSetById({
-          id: this.dataSet.id,
-          title: this.dataSet.title,
-          description: this.dataSet.description,
-          user: this.dataSet.user,
-          channelId: this.currentChannels[0].channelId
-        }).then(this.isReadOnly = true)
-      } else {
-        let oldDataSetIds = this.dataSets.filter(d => this.currentChannels[0].channelId == d.channelId).map(f => f.id)
-        await this.addDataSet({
-          title: this.dataSet.title,
-          description: this.dataSet.description,
-          user: this.dataSet.user,
-          channelId: this.currentChannels[0].channelId
-        })
-        this.fetchDataSets().then(() => {
-          let lastAdded = this.dataSets.filter(d => this.currentChannels[0].channelId == d.channelId).filter(d => !oldDataSetIds.includes(d.id))
-          let id = lastAdded[0].id
-          /* this.$router.push(`/data-sets/${id}`) */
-          this.$router.push(`/:title/data-sets/${id}`)
-          console.log(this.selected)
-          /* console.log(this.selected)
-          this.fetchDataSetThenAddDataValue(id, this.selected) */
-          
-          this.dataSet.id = id
-        })
+      if (this.formValid) {
+        if (!this.isReadOnly && this.dataSet.id) {
+          await this.updateDataSetById({
+            id: this.dataSet.id,
+            title: this.dataSet.title,
+            description: this.dataSet.description,
+            user: this.dataSet.user,
+            channelId: this.currentChannels[0].channelId
+          }).then(this.isReadOnly = true)
+        } else {
+          let oldDataSetIds = this.dataSets.filter(d => this.currentChannels[0].channelId == d.channelId).map(f => f.id)
+          await this.addDataSet({
+            title: this.dataSet.title,
+            description: this.dataSet.description,
+            user: this.dataSet.user,
+            channelId: this.currentChannels[0].channelId
+          })
+          this.fetchDataSets().then(() => {
+            let lastAdded = this.dataSets.filter(d => this.currentChannels[0].channelId == d.channelId).filter(d => !oldDataSetIds.includes(d.id))
+            let id = lastAdded[0].id
+            /* this.$router.push(`/data-sets/${id}`) */
+            this.$router.push(`/:title/data-sets/${id}`)
+            console.log(this.selected)
+            /* console.log(this.selected)
+            this.fetchDataSetThenAddDataValue(id, this.selected) */
+
+            this.dataSet.id = id
+          })
+        }
       }
     },
     async addNewDataValue() {
