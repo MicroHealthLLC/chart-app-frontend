@@ -8,7 +8,7 @@
       </div>
 
       <v-dialog v-model="showAddDataSetForm" width="40%">
-        <v-card class="px-4 py-4 modal">
+        <v-card class="px-4 py-4">
           <!-- <v-form v-model="formValid" ref="form">
             <div class="grid">
               <div>

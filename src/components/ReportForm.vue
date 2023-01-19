@@ -31,7 +31,7 @@
       >
       
 
-      <v-card v-if="(data && data.length > 0)" class="pa-4 mb-4">
+      <v-card v-if="(data && data.length > 0) && activeReport.colorSchemeId && activeReport.chartType" class="pa-4 mb-4">
         <v-btn @click="fullscreenReport" class="chart-menu" icon>
           <v-icon>mdi-fullscreen</v-icon>
         </v-btn>
@@ -81,11 +81,11 @@
           > -->
         </div>
       </v-card>
-      <v-card class="pa-4 mb-4 text-center" v-else>
-        <v-progress-circular v-if="$store.getters.loading" :size="70" indeterminate color="primary"
+      <!-- <v-card v-else-if="$store.getters.loading" class="pa-4 mb-4 text-center">
+        <v-progress-circular  :size="70" indeterminate color="primary"
           class="m-2">
         </v-progress-circular>
-      </v-card>
+      </v-card> -->
 
       <h3>Report Details</h3>
       <v-divider class="mb-8"></v-divider>
@@ -434,8 +434,13 @@ export default {
         (Object.keys(this.$refs.fullscreenchart.chartData[0]).length - 1);
     },
     resetAndGoBack(){
-      this.$router.go(-1)
+      //this.$router.go(-1)
       this.$refs.form.reset();
+      if (this.$route.path === `/${this.currentChannels[0].name}/reports`){
+        this.$emit("closeAddReportForm")
+      } else {
+        this.$router.push(`/${this.currentChannels[0].name}/reports`)
+      }
     },
     saveReport() {
       this.$refs.form.validate();
@@ -564,6 +569,7 @@ export default {
   },
   async mounted() {
     await this.fetchDataSets();
+    console.log(this.data)
     /* if (this.$route.name == "Report") {
       this.dataSetChoices = [...this.dataSets];
     } else { */
