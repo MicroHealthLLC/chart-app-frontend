@@ -41,10 +41,10 @@
           </v-list-item>
           <v-list-item :disabled="tru"  :to="`/${pathName}/gauges`" link>
             <v-list-item-icon >
-              <v-icon :class="mini == true ? 'whitesmok' : 'bla'">mdi-gauge</v-icon>
+              <v-icon :class="mini == true ? 'whitesmok' : 'redd'">mdi-gauge</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title>Gauges</v-list-item-title>
+              <v-list-item-title>KPIs</v-list-item-title>
             </v-list-item-content>
           </v-list-item>         
         </v-list>
@@ -350,6 +350,9 @@ export default {
 }
 .whitesmok {
   color: ghostwhite !important;
+}
+.redd {
+  color: #D32F2F !important;
 }
 .warn {
   color: #E4A11B !important;

@@ -36,6 +36,14 @@
           <span class="pill px-2">  0</span>
         </v-list-item-subtitle>
       </v-list-item>
+      <v-list-item>
+      <v-list-item-title>
+          <v-icon color="red darken-2">mdi-gauge</v-icon>
+          KPIs: </v-list-item-title>
+        <v-list-item-subtitle class="text-right text-h6 text--primary">
+          <span class="pill px-2">  0</span>
+        </v-list-item-subtitle>
+      </v-list-item>
      
     </v-list>
     </v-card>

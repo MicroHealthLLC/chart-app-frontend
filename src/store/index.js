@@ -8,6 +8,7 @@ import newsStore from "./modules/news-store";
 // import snackbarStore from "./modules/snackbar-store";
 import reportStore from "./modules/report-store";
 // import userStore from "./modules/user-store";
+import gaugeStore from './modules/gauge-store'
 import utilStore from "./modules/util-store";
 import auth from "./modules/auth"
 
@@ -58,6 +59,7 @@ export default new Vuex.Store({
     dashboardStore,
     datasetStore,
     newsStore,
+    gaugeStore,
     // snackbarStore,
     reportStore,
     // userStore,
