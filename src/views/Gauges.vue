@@ -40,6 +40,28 @@
       <!-- <span v-else>NO DATA</span> -->
     </v-dialog>
       <v-divider class="mb-4"></v-divider>
+      <div v-if="channelGauges.length > 0" class="singleGaugeGrid pl-5">
+        <span v-for="(gauge) in channelGauges" :key="gauge.id">
+          <span class="click" @click.prevent="toGauge(gauge.id)">
+            {{ gauge.title }}
+            <vue-speedometer :value="gauge.value" />
+          </span>
+        </span>
+        <!-- <div class="d-flex justify-end btn-container">
+          <v-btn
+            v-if="reports.length >= 6"
+            to="/public-reports"
+            class="d-flex-end"
+            color="primary"
+            text
+            >View All</v-btn
+          >
+        </div> -->
+      </div>
+      <div v-else class="placeholder d-flex flex-column justify-center align-center">
+        <p class="font-weight-light">No Reports on this Channel yet...</p>
+        <v-btn text small color="primary" :to="`reports/add-report`">Add a Report</v-btn>
+      </div>
     </v-col>
     </v-row>
 </template>
@@ -47,12 +69,12 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import GaugeForm from "../components/GaugeForm.vue";
-//import VueSpeedometer from "vue-speedometer";
+import VueSpeedometer from "vue-speedometer";
 
 export default {
   name: "Gauges",
   components: {
-    //VueSpeedometer
+    VueSpeedometer,
     GaugeForm
   },
   data() {
@@ -61,7 +83,7 @@ export default {
     } 
   },
   methods: {
-    ...mapActions([]),
+    ...mapActions(["fetchGauges", "fetchGauge", "removeGauge"]),
     toNewGauge(){
       this.showAddGaugeForm = true
       //this.$router.push(`data-sets/add-data-set`); 
@@ -69,12 +91,41 @@ export default {
     closeGaugeForm() {
       this.showAddGaugeForm = false
     },
+    toGauge(gaugeId) {
+      this.$router.push(
+        `gauges/${gaugeId}`
+      );
+    },
+    async editItem(item) {
+      console.log(item)
+      let id = item.id
+      await this.fetchGauge(id)
+      this.$router.push(`gauges/${id}`)
+    },
+    deleteItem(item) {
+      this.$confirm(
+        `Are you sure you want to delete the "${item.title}" KPI?`,
+        "Confirm Delete",
+        {
+          confirmButtonText: "Delete",
+          cancelButtonText: "Cancel",
+          type: "warning",
+        }
+       ).then(() => {
+        this.removeGauge({ id: item.id });
+      });
+    }
   },
   computed: {
-    ...mapGetters([]),
+    ...mapGetters(["gauges", "currentChannels"]),
+    channelGauges(){
+        if (this.gauges && this.gauges.length > 0 && this.currentChannels && this.currentChannels[0].channelId){
+          return this.gauges.filter(t => t.channelId == this.currentChannels[0].channelId)
+        } else return []
+      },
   },
   beforeMount() {
-    
+    this.fetchGauges()
   },
 };
 </script>
@@ -87,5 +138,11 @@ export default {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 10px;
+}
+
+.singleGaugeGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-gap: 4rem;
 }
 </style>

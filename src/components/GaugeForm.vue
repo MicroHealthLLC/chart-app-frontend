@@ -44,7 +44,7 @@
           </div>
           <div>
             <v-text-field
-              v-model="gauge.value"
+              v-model.number="gauge.value"
               label="Value"
               dense
               required

@@ -25,6 +25,7 @@ import Report from "../views/Report.vue";
 import AddDashboard from "../views/AddDashboard.vue";
 import Dashboards from "../views/Dashboards.vue";
 import Gauges from "../views/Gauges.vue";
+import Gauge from "../views/Gauge.vue";
 import Dashboard from "../views/Dashboard.vue";
 import ChannelDashboards from "../views/ChannelDashboards.vue";
 
@@ -178,6 +179,11 @@ const routes = [
     path: "/:title/gauges",
     name: "Gauges",
     component: Gauges,
+  },
+  {
+    path: "/:title/gauges/:gaugeId",
+    name: "Gauge",
+    component: Gauge,
   },
   {
     path: "/forbidden",
