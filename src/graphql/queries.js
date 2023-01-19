@@ -15,6 +15,9 @@ export const getReport = /* GraphQL */ `
         dataSets {
           nextToken
         }
+        gauges {
+          nextToken
+        }
         type
         title
         channelTypeId
@@ -185,6 +188,68 @@ export const listReportGroups = /* GraphQL */ `
     }
   }
 `;
+export const getGauge = /* GraphQL */ `
+  query GetGauge($id: ID!) {
+    getGauge(id: $id) {
+      id
+      title
+      value
+      channel {
+        id
+        description
+        reports {
+          nextToken
+        }
+        dataSets {
+          nextToken
+        }
+        gauges {
+          nextToken
+        }
+        type
+        title
+        channelTypeId
+        createdAt
+        updatedAt
+      }
+      channelId
+      createdBy
+      updatedBy
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listGauges = /* GraphQL */ `
+  query ListGauges(
+    $filter: ModelGaugeFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listGauges(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        title
+        value
+        channel {
+          id
+          description
+          type
+          title
+          channelTypeId
+          createdAt
+          updatedAt
+        }
+        channelId
+        createdBy
+        updatedBy
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getChannel = /* GraphQL */ `
   query GetChannel($id: ID!) {
     getChannel(id: $id) {
@@ -222,6 +287,19 @@ export const getChannel = /* GraphQL */ `
         }
         nextToken
       }
+      gauges {
+        items {
+          id
+          title
+          value
+          channelId
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       type
       title
       channelTypeId
@@ -244,6 +322,9 @@ export const listChannels = /* GraphQL */ `
           nextToken
         }
         dataSets {
+          nextToken
+        }
+        gauges {
           nextToken
         }
         type
@@ -269,6 +350,9 @@ export const getDataSet = /* GraphQL */ `
           nextToken
         }
         dataSets {
+          nextToken
+        }
+        gauges {
           nextToken
         }
         type

@@ -18,6 +18,9 @@ export const createReport = /* GraphQL */ `
         dataSets {
           nextToken
         }
+        gauges {
+          nextToken
+        }
         type
         title
         channelTypeId
@@ -91,6 +94,9 @@ export const updateReport = /* GraphQL */ `
         dataSets {
           nextToken
         }
+        gauges {
+          nextToken
+        }
         type
         title
         channelTypeId
@@ -162,6 +168,9 @@ export const deleteReport = /* GraphQL */ `
           nextToken
         }
         dataSets {
+          nextToken
+        }
+        gauges {
           nextToken
         }
         type
@@ -331,6 +340,111 @@ export const deleteReportGroup = /* GraphQL */ `
     }
   }
 `;
+export const createGauge = /* GraphQL */ `
+  mutation CreateGauge(
+    $input: CreateGaugeInput!
+    $condition: ModelGaugeConditionInput
+  ) {
+    createGauge(input: $input, condition: $condition) {
+      id
+      title
+      value
+      channel {
+        id
+        description
+        reports {
+          nextToken
+        }
+        dataSets {
+          nextToken
+        }
+        gauges {
+          nextToken
+        }
+        type
+        title
+        channelTypeId
+        createdAt
+        updatedAt
+      }
+      channelId
+      createdBy
+      updatedBy
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateGauge = /* GraphQL */ `
+  mutation UpdateGauge(
+    $input: UpdateGaugeInput!
+    $condition: ModelGaugeConditionInput
+  ) {
+    updateGauge(input: $input, condition: $condition) {
+      id
+      title
+      value
+      channel {
+        id
+        description
+        reports {
+          nextToken
+        }
+        dataSets {
+          nextToken
+        }
+        gauges {
+          nextToken
+        }
+        type
+        title
+        channelTypeId
+        createdAt
+        updatedAt
+      }
+      channelId
+      createdBy
+      updatedBy
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteGauge = /* GraphQL */ `
+  mutation DeleteGauge(
+    $input: DeleteGaugeInput!
+    $condition: ModelGaugeConditionInput
+  ) {
+    deleteGauge(input: $input, condition: $condition) {
+      id
+      title
+      value
+      channel {
+        id
+        description
+        reports {
+          nextToken
+        }
+        dataSets {
+          nextToken
+        }
+        gauges {
+          nextToken
+        }
+        type
+        title
+        channelTypeId
+        createdAt
+        updatedAt
+      }
+      channelId
+      createdBy
+      updatedBy
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createChannel = /* GraphQL */ `
   mutation CreateChannel(
     $input: CreateChannelInput!
@@ -366,6 +480,19 @@ export const createChannel = /* GraphQL */ `
           description
           channelId
           user
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      gauges {
+        items {
+          id
+          title
+          value
+          channelId
+          createdBy
+          updatedBy
           createdAt
           updatedAt
         }
@@ -419,6 +546,19 @@ export const updateChannel = /* GraphQL */ `
         }
         nextToken
       }
+      gauges {
+        items {
+          id
+          title
+          value
+          channelId
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       type
       title
       channelTypeId
@@ -467,6 +607,19 @@ export const deleteChannel = /* GraphQL */ `
         }
         nextToken
       }
+      gauges {
+        items {
+          id
+          title
+          value
+          channelId
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       type
       title
       channelTypeId
@@ -491,6 +644,9 @@ export const createDataSet = /* GraphQL */ `
           nextToken
         }
         dataSets {
+          nextToken
+        }
+        gauges {
           nextToken
         }
         type
@@ -534,6 +690,9 @@ export const updateDataSet = /* GraphQL */ `
         dataSets {
           nextToken
         }
+        gauges {
+          nextToken
+        }
         type
         title
         channelTypeId
@@ -573,6 +732,9 @@ export const deleteDataSet = /* GraphQL */ `
           nextToken
         }
         dataSets {
+          nextToken
+        }
+        gauges {
           nextToken
         }
         type

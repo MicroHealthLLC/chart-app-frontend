@@ -80,17 +80,18 @@
         </v-data-table>
       </v-card>
     </v-col>
-  </v-row>
+  </v-row>  
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
 import DataSetForm from "../components/DataSetForm.vue";
+// and use it in your component like
 
 export default {
   name: "DataSets",
   components: {
-    DataSetForm
+    DataSetForm,
   },
   data() {
     return {
