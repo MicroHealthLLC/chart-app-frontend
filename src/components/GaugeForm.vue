@@ -1,7 +1,7 @@
 <template>
   <v-row>
     <!-- Title -->
-    <v-col class="col-12">
+    <v-col>
       <div class="d-flex justify-space-between">
         <h3 v-if="gauge.id">Update {{ gauge.title }}</h3>
         <h3 v-else>Add KPI</h3>
@@ -20,8 +20,9 @@
         </div>
       </div>
       <v-divider class="mb-4"></v-divider>
-    </v-col>
-    <v-col>
+      <v-card  class="pa-4 mb-4">
+        <KPIGauge :gauge="gauge" />
+      </v-card>
       <v-alert
         v-if="!formValid && submitAttempted"
         type="error"
@@ -47,6 +48,7 @@
               label="Chart Type"
               :items="['Traditional', 'Middle']"
               dense
+              @change="setChartType"
             ></v-select>
           </div>
           <div>
@@ -117,11 +119,12 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import gaugeMixin from "../mixins/gauge-mixin";
+import KPIGauge from "./KPIGauge.vue";
 
 export default {
   name: "GaugeForm",
   components: {
-    
+    KPIGauge
   },
   mixins: [gaugeMixin],
   data() {
@@ -175,6 +178,28 @@ export default {
       this.removeGauge({ id: this.gauge.id });
       this.$router.push(`/${this.$route.params.channelId}/gauges`);
     },
+    setChartType() {
+      if (this.gauge && this.gauge.chartType) {
+        switch (this.gauge.chartType) {
+          case "Traditional":
+            this.gauge.minValue = 0
+            this.gauge.maxValue = 100
+            if (this.gauge.value < this.gauge.minValue && this.gauge.value > this.gauge.maxValue) {
+              this.gauge.value = 75
+            }
+            break;
+          case "Middle":
+          this.gauge.minValue = -100
+            this.gauge.maxValue = 100
+            if (this.gauge.value < this.gauge.minValue && this.gauge.value > this.gauge.maxValue) {
+              this.gauge.value = 0
+            }
+            break;
+          default:
+          // code block
+        }
+      }
+    }
   },
   async mounted() {
     if (this.$route.path === `/${this.currentChannels[0].name}/gauges`){ 

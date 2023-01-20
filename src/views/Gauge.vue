@@ -1,15 +1,18 @@
 <template>
-    <GaugeForm />
+  <GaugeForm />
   </template>
   
   <script>
-  import GaugeForm from "./../components/GaugeForm.vue";
+  import GaugeForm from "../components/GaugeForm.vue";
   
   export default {
     name: "Gauge",
     components: {
-      GaugeForm,
+      GaugeForm
     },
+    mounted() {
+      console.log(this.gauge)
+    }
   };
   </script>
   

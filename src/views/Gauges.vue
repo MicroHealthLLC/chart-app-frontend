@@ -42,9 +42,9 @@
       <v-divider class="mb-4"></v-divider>
       <v-container v-if="channelGauges.length > 0" class="pl-5">
         <v-row>
-        <v-col xl="2" lg="3" md="6" sm="12" class="mx-auto" v-for="(gauge) in channelGauges" :key="gauge.id">
-          <v-card width="250px" min-width="215px" class="click" @click.prevent="toGauge(gauge.id)" tile elevation="4">
-            <vue-speedometer :value="gauge.value" :maxValue="gauge.maxValue" :minValue="gauge.minValue" :width="200" needleColor="black" :paddingVertical=20 :segmentColors='["tomato", "gold", "limegreen", "gold", "tomato"]' :forceRender="true" />
+        <v-col xl="2" lg="3" md="6" sm="12" v-for="(gauge) in channelGauges" :key="gauge.id">
+          <v-card width="250px" min-width="225px" @click.prevent="toGauge(gauge.id)" tile elevation="4">
+            <KPIGauge :gauge="gauge"/>
             <v-divider class="my-4"></v-divider>
             <v-card-title>{{ gauge.title }}</v-card-title>
             <v-card-subtitle></v-card-subtitle>
@@ -73,13 +73,15 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import GaugeForm from "../components/GaugeForm.vue";
-import VueSpeedometer from "vue-speedometer";
+import KPIGauge from "../components/KPIGauge.vue";
+//import VueSpeedometer from "vue-speedometer";
 
 export default {
   name: "Gauges",
   components: {
-    VueSpeedometer,
-    GaugeForm
+    //VueSpeedometer,
+    GaugeForm,
+    KPIGauge
   },
   data() {
     return {
@@ -101,7 +103,7 @@ export default {
         `gauges/${gaugeId}`
       );
     },
-    async editItem(item) {
+    /* async editItem(item) {
       console.log(item)
       let id = item.id
       await this.fetchGauge(id)
@@ -119,16 +121,28 @@ export default {
        ).then(() => {
         this.removeGauge({ id: item.id });
       });
-    }
+    }, */
+    /* setSegments(chartType, prop) {
+      if (chartType == "Traditional" ) {
+        return prop == 'color' ? ['tomato', 'gold', 'limegreen'] 
+          : (prop == 'count') ? 3 : ''
+      } else if (chartType == "Middle") {
+        return prop == 'color' ? ['tomato', 'gold', 'limegreen', 'gold', 'tomato'] 
+          : (prop == 'count') ? 5 : ''
+      } else {
+        return prop == 'color' ? ['tomato', 'gold', 'limegreen'] 
+          : (prop == 'count') ? 3 : ''
+      }
+    } */
   },
   computed: {
     ...mapGetters(["gauges", "currentChannels"]),
     channelGauges(){
-        if (this.gauges && this.gauges.length > 0 && this.currentChannels && this.currentChannels[0].channelId){
-          return this.gauges.filter(t => t.channelId == this.currentChannels[0].channelId)
-        } else return []
-      },
-
+      if (this.gauges && this.gauges.length > 0 && this.currentChannels && this.currentChannels[0].channelId){
+        return this.gauges.filter(t => t.channelId == this.currentChannels[0].channelId)
+      } else return []
+    },
+    
   },
   beforeMount() {
     this.fetchGauges()
