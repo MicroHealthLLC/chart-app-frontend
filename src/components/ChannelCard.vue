@@ -33,7 +33,7 @@
           <v-icon color="cyan">mdi-monitor-dashboard</v-icon>
           Dashboard Items: </v-list-item-title>
         <v-list-item-subtitle class="text-right text-h6 text--primary">
-          <span class="pill px-2">  0</span>
+          <span class="pill px-2"> {{/*temporary*/this.reports.filter(t => t.channelId == channel.id).length}}</span>
         </v-list-item-subtitle>
       </v-list-item>
       <v-list-item>
@@ -41,7 +41,7 @@
           <v-icon color="red darken-2">mdi-gauge</v-icon>
           KPIs: </v-list-item-title>
         <v-list-item-subtitle class="text-right text-h6 text--primary">
-          <span class="pill px-2">  0</span>
+          <span class="pill px-2"> {{ this.gauges.filter(t => t.channelId == channel.id).length }}</span>
         </v-list-item-subtitle>
       </v-list-item>
      
@@ -61,12 +61,14 @@
     computed: {
       ...mapGetters([
          "dataSets",
-         "reports"
+         "reports",
+         "gauges"
        ]),
    
     },
     async beforeMount() {
       this.fetchReports();
+      this.fetchGauges();
       if(this.dataSets && this.dataSets.length < 1){
         await this.fetchDataSets();
       }
@@ -74,6 +76,7 @@
     methods: {
       ...mapActions([
          "fetchDataSets",
+         "fetchGauges",
          "fetchReports",
          "setCurrentChannel"
        ]),

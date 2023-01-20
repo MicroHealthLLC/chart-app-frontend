@@ -40,13 +40,20 @@
       <!-- <span v-else>NO DATA</span> -->
     </v-dialog>
       <v-divider class="mb-4"></v-divider>
-      <div v-if="channelGauges.length > 0" class="singleGaugeGrid pl-5">
-        <span v-for="(gauge) in channelGauges" :key="gauge.id">
-          <span class="click" @click.prevent="toGauge(gauge.id)">
-            {{ gauge.title }}
-            <vue-speedometer :value="gauge.value" />
-          </span>
-        </span>
+      <v-container v-if="channelGauges.length > 0" class="pl-5">
+        <v-row>
+        <v-col xl="2" lg="3" md="6" sm="12" class="mx-auto" v-for="(gauge) in channelGauges" :key="gauge.id">
+          <v-card width="250px" min-width="215px" class="click" @click.prevent="toGauge(gauge.id)" tile elevation="4">
+            <v-row>
+              <v-col class="mx-auto">
+              <vue-speedometer :height="200" :width="200" :value="gauge.value" />
+            </v-col>
+            </v-row>
+            <v-divider class="my-4"></v-divider>
+            <v-card-title>{{ gauge.title }}</v-card-title>
+            <v-card-subtitle></v-card-subtitle>
+          </v-card>
+        </v-col>
         <!-- <div class="d-flex justify-end btn-container">
           <v-btn
             v-if="reports.length >= 6"
@@ -57,7 +64,8 @@
             >View All</v-btn
           >
         </div> -->
-      </div>
+        </v-row>
+      </v-container>
       <div v-else class="placeholder d-flex flex-column justify-center align-center">
         <p class="font-weight-light">No Reports on this Channel yet...</p>
         <v-btn text small color="primary" :to="`reports/add-report`">Add a Report</v-btn>
@@ -123,6 +131,7 @@ export default {
           return this.gauges.filter(t => t.channelId == this.currentChannels[0].channelId)
         } else return []
       },
+
   },
   beforeMount() {
     this.fetchGauges()
