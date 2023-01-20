@@ -328,6 +328,9 @@ export const onCreateGauge = /* GraphQL */ `
       id
       title
       value
+      maxValue
+      minValue
+      chartType
       channel {
         id
         description
@@ -360,6 +363,9 @@ export const onUpdateGauge = /* GraphQL */ `
       id
       title
       value
+      maxValue
+      minValue
+      chartType
       channel {
         id
         description
@@ -392,6 +398,9 @@ export const onDeleteGauge = /* GraphQL */ `
       id
       title
       value
+      maxValue
+      minValue
+      chartType
       channel {
         id
         description
@@ -460,6 +469,9 @@ export const onCreateChannel = /* GraphQL */ `
           id
           title
           value
+          maxValue
+          minValue
+          chartType
           channelId
           createdBy
           updatedBy
@@ -518,6 +530,9 @@ export const onUpdateChannel = /* GraphQL */ `
           id
           title
           value
+          maxValue
+          minValue
+          chartType
           channelId
           createdBy
           updatedBy
@@ -576,6 +591,9 @@ export const onDeleteChannel = /* GraphQL */ `
           id
           title
           value
+          maxValue
+          minValue
+          chartType
           channelId
           createdBy
           updatedBy

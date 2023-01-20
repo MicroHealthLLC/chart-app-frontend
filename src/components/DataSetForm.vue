@@ -518,7 +518,7 @@ export default {
     }
   }, */
   async mounted() {
-    if (this.$route.path === "/it_apps/data-sets"){ 
+    if (this.$route.path === `/${this.currentChannels[0].name}/data-sets`){ 
       this.dataSet.id = ""
       this.isReadOnly = false
       this.clear()

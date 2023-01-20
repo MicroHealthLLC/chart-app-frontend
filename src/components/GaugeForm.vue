@@ -3,9 +3,8 @@
     <!-- Title -->
     <v-col class="col-12">
       <div class="d-flex justify-space-between">
-        <!-- <h3 v-if="(!isReadOnly && dataSet.id)">Update {{ dataSet.title }}</h3>
-        <h3 v-else-if="dataSet.id">View {{ dataSet.title }}</h3> -->
-        <h3 >Add KPI</h3>
+        <h3 v-if="gauge.id">Update {{ gauge.title }}</h3>
+        <h3 v-else>Add KPI</h3>
         <div>
           <v-btn
             @click="saveGauge"
@@ -28,7 +27,7 @@
         type="error"
         dense
         dismissible
-        >Please fix highlighted fields below before sumbitting Report</v-alert
+        >Please fix highlighted fields below before sumbitting KPI</v-alert
       >
       <!-- Form Fields -->
       <v-form v-model="formValid" ref="form">
@@ -43,6 +42,14 @@
             ></v-text-field>
           </div>
           <div>
+            <v-select
+              v-model="gauge.chartType"
+              label="Chart Type"
+              :items="['Traditional', 'Middle']"
+              dense
+            ></v-select>
+          </div>
+          <div>
             <v-text-field
               v-model.number="gauge.value"
               label="Value"
@@ -51,8 +58,58 @@
               :rules="[v => Number.isInteger(Number(v)) || 'The value must be an integer number']"
             ></v-text-field>
           </div>
+          <div>
+            <v-text-field
+              v-model.number="gauge.minValue"
+              label="Minimum Value"
+              dense
+              required
+              :rules="[v => Number.isInteger(Number(v)) || 'The value must be an integer number']"
+            ></v-text-field>
+          </div>
+          <div>
+            <v-text-field
+              v-model.number="gauge.maxValue"
+              label="Maximum Value"
+              dense
+              required
+              :rules="[v => Number.isInteger(Number(v)) || 'The value must be an integer number']"
+            ></v-text-field>
+
+          </div>
         </div>
       </v-form>
+      <div v-if="gauge && gauge.id" class="d-flex justify-end mt-4">
+        <v-btn
+          @click="deleteDialog = true"
+          small
+          color="error"
+          depressed
+          outlined
+          >Delete KPI</v-btn
+        >
+      </div>
+      <v-dialog v-model="deleteDialog" max-width="400">
+        <v-card>
+          <v-card-title>Delete this KPI?</v-card-title>
+          <v-divider class="mx-4 mb-2"></v-divider>
+          <v-card-text
+            >Are you sure you would like to delete this KPI?</v-card-text
+          >
+          <v-card-actions class="d-flex justify-end">
+            <v-btn
+              @click="deleteDialog = false"
+              small
+              outlined
+              color="secondary"
+              >Cancel</v-btn
+            >
+            <v-btn @click="deleteGauge" small depressed color="error"
+              >Delete</v-btn
+            >
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-col> 
   </v-row>
 </template>
@@ -70,7 +127,8 @@ export default {
   data() {
     return {
       formValid: true,
-      submitAttempted: false
+      submitAttempted: false,
+      deleteDialog: false
     };
   },
   computed: {
@@ -78,7 +136,7 @@ export default {
     
   },
   methods: {
-    ...mapActions(["addGauge", "updateGaugeById", "fetchGauge"]),
+    ...mapActions(["addGauge", "updateGaugeById", "fetchGauge", "removeGauge"]),
     ...mapMutations([]),
     resetAndGoBack(){
       this.clear()
@@ -97,6 +155,9 @@ export default {
         let data = {
           title: this.gauge.title,
           value: parseInt(this.gauge.value),
+          maxValue: parseInt(this.gauge.maxValue),
+          minValue: parseInt(this.gauge.minValue),
+          chartType: this.gauge.chartType,
           channelId: this.currentChannels[0].channelId
         }
         console.log(data)
@@ -109,10 +170,18 @@ export default {
           await this.addGauge(data)
         }
       }
-    }
+    },
+    deleteGauge() {
+      this.removeGauge({ id: this.gauge.id });
+      this.$router.push(`/${this.$route.params.channelId}/gauges`);
+    },
   },
-  mounted() {
-    
+  async mounted() {
+    if (this.$route.path === `/${this.currentChannels[0].name}/gauges`){ 
+      this.gauge.id = ""
+      this.clear()
+    }
+    console.log(this.gauge)
   },
   watch: {
     gauge() {
@@ -120,6 +189,10 @@ export default {
         this.SET_GAUGE(this.newGauge)
         console.log("No Active Gauge")
       }
+      if (this.$route.path === `/${this.currentChannels[0].name}/gauges`){ 
+      this.gauge.id = ""
+      this.clear()
+    }
     }
   },
 };

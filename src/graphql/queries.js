@@ -194,6 +194,9 @@ export const getGauge = /* GraphQL */ `
       id
       title
       value
+      maxValue
+      minValue
+      chartType
       channel {
         id
         description
@@ -231,6 +234,9 @@ export const listGauges = /* GraphQL */ `
         id
         title
         value
+        maxValue
+        minValue
+        chartType
         channel {
           id
           description
@@ -292,6 +298,9 @@ export const getChannel = /* GraphQL */ `
           id
           title
           value
+          maxValue
+          minValue
+          chartType
           channelId
           createdBy
           updatedBy

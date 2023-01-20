@@ -44,11 +44,7 @@
         <v-row>
         <v-col xl="2" lg="3" md="6" sm="12" class="mx-auto" v-for="(gauge) in channelGauges" :key="gauge.id">
           <v-card width="250px" min-width="215px" class="click" @click.prevent="toGauge(gauge.id)" tile elevation="4">
-            <v-row>
-              <v-col class="mx-auto">
-              <vue-speedometer :height="200" :width="200" :value="gauge.value" />
-            </v-col>
-            </v-row>
+            <vue-speedometer :value="gauge.value" :maxValue="gauge.maxValue" :minValue="gauge.minValue" :width="200" needleColor="black" :paddingVertical=20 :segmentColors='["tomato", "gold", "limegreen", "gold", "tomato"]' :forceRender="true" />
             <v-divider class="my-4"></v-divider>
             <v-card-title>{{ gauge.title }}</v-card-title>
             <v-card-subtitle></v-card-subtitle>
@@ -67,8 +63,8 @@
         </v-row>
       </v-container>
       <div v-else class="placeholder d-flex flex-column justify-center align-center">
-        <p class="font-weight-light">No Reports on this Channel yet...</p>
-        <v-btn text small color="primary" :to="`reports/add-report`">Add a Report</v-btn>
+        <p class="font-weight-light">No KPIs on this Channel yet...</p>
+        <v-btn text small color="primary" @click.prevent="toNewGauge">Add a KPI</v-btn>
       </div>
     </v-col>
     </v-row>
@@ -100,6 +96,7 @@ export default {
       this.showAddGaugeForm = false
     },
     toGauge(gaugeId) {
+      this.fetchGauge(gaugeId)
       this.$router.push(
         `gauges/${gaugeId}`
       );
