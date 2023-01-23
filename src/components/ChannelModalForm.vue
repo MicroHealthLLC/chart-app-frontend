@@ -38,8 +38,6 @@
           required
           :rules="usersRules"
         ></v-select>
-
-        <!-- test -->
         <v-textarea
           v-model="description"
           class="mt-4"
@@ -58,7 +56,7 @@
     </v-card-actions>
   </v-card>
 </template>
-
+<!-- Another test -->
 <script>
 import { mapActions, mapGetters } from "vuex";
 export default {
