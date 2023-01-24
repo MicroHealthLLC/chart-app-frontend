@@ -4,7 +4,9 @@ export default {
     return {     
     newGauge: {
         title: "",
-        value: 0
+        value: 0,
+        chartType: "Traditional",
+        segmentStops: [0, 70, 90, 100]
         },
     };
   },

@@ -6,7 +6,7 @@
         <v-btn class="mb-2" color="primary" small @click.prevent="toNewGauge">Add KPI <v-icon small>mdi-plus</v-icon>
         </v-btn>
       </div>
-      <v-dialog v-model="showAddGaugeForm" width="40%">
+      <v-dialog v-model="showAddGaugeForm" width="50%">
         <v-card class="px-4 py-4 modal">
           <!-- <v-form v-model="formValid" ref="form">
             <div class="grid">
@@ -43,11 +43,11 @@
       <v-container v-if="channelGauges.length > 0" class="pl-5">
         <v-row>
         <v-col xl="2" lg="3" md="6" sm="12" v-for="(gauge) in channelGauges" :key="gauge.id">
-          <v-card width="250px" min-width="225px" @click.prevent="toGauge(gauge.id)" tile elevation="4">
-            <KPIGauge :gauge="gauge"/>
-            <v-divider class="my-4"></v-divider>
+          <v-card width="250px" min-width="250px" @click.prevent="toGauge(gauge.id)" tile elevation="4">
+            <KPIGauge :gauge="gauge" :height="130" :width="200" :segmentStops="gauge.segmentStops.split(',').map(x => parseInt(x))" />
+            <v-divider class="my-2"></v-divider>
             <v-card-title>{{ gauge.title }}</v-card-title>
-            <v-card-subtitle></v-card-subtitle>
+            <v-card-subtitle>{{ gauge.createdBy }}</v-card-subtitle>
           </v-card>
         </v-col>
         <!-- <div class="d-flex justify-end btn-container">

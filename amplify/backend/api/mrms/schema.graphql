@@ -33,8 +33,7 @@ type Gauge @model @auth(rules: [{ allow: public }]) {
   id: ID!
   title: String!
   value: Int!
-  maxValue: Int!
-  minValue: Int!
+  segmentStops: String
   chartType: String!
   channel: Channel @belongsTo(fields: ["channelId"])
   channelId: ID @index(name: "byChannel")

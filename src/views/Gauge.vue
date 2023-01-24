@@ -11,7 +11,6 @@
       GaugeForm
     },
     mounted() {
-      console.log(this.gauge)
     }
   };
   </script>
