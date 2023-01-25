@@ -2,8 +2,7 @@
   <v-container>
   <v-row align="center" justify="center">
     <v-col>
-      <vue-speedometer class="mx-5" :value="gauge.value" :width="width" :height="height" needleColor="black" :paddingVertical="20" :minValue="segmentStops[0]" :maxValue="segmentStops[segmentStops.length - 1]" :segmentColors="setSegments(gauge.chartType, 'color')" :maxSegmentLabels="setSegments(gauge.chartType, 'label')" :forceRender="true" :customSegmentStops="segmentStops" /> 
-        
+      <vue-speedometer class="ml-3" :value="gauge.value" :width="width" :height="height" needleColor="black" :paddingVertical="20" :minValue="segmentStops[0]" :maxValue="segmentStops[segmentStops.length - 1]" :segmentColors="setSegments(gauge.chartType, 'color')" :maxSegmentLabels="setSegments(gauge.chartType, 'label')" :forceRender="true" :customSegmentStops="segmentStops" /> 
     </v-col>
   </v-row>
 </v-container>
@@ -35,6 +34,11 @@ export default {
           : (prop == 'label') ? 6
             : (prop == 'segments') ? 5
             /* : (prop == 'stops') ? [-100, -60, -25, 25, 60, 100] */ : ''
+      } else if (chartType == "Left") {
+        return prop == 'color' ? ['limegreen', 'gold', 'tomato']
+          : (prop == 'label') ? 4
+            : (prop == 'segments') ? 3
+            /* : (prop == 'stops') ? [-100, -60, -25, 25, 60, 100] */ : ''
       } else {
         return prop == 'color' ? ['tomato', 'gold', 'limegreen']
           : (prop == 'segments') ? 3
@@ -46,15 +50,15 @@ export default {
   watch: {
     gauge() {
       if (this.gauge) {
-        console.log(this.gauge)
+        //console.log(this.gauge)
         
       }
     },
     segmentStops() {
-      console.log(this.segmentStops)
+      //console.log(this.segmentStops)
     },
     customSegmentStops() {
-      console.log(this.customSegmentStops)
+      //console.log(this.customSegmentStops)
     }
   },
   mounted() {

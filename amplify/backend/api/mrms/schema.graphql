@@ -32,7 +32,7 @@ type ReportGroup @model @auth(rules: [{ allow: public }]) {
 type Gauge @model @auth(rules: [{ allow: public }]) {
   id: ID!
   title: String!
-  value: Int!
+  value: Float!
   segmentStops: String
   chartType: String!
   channel: Channel @belongsTo(fields: ["channelId"])

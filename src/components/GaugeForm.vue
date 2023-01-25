@@ -11,55 +11,57 @@
         </div>
       </div>
       <v-divider class="mb-4"></v-divider>
-      <v-card class="pa-4 mb-4">
-        <KPIGauge :gauge="gauge" :height="430" :width="800" :segmentStops="activeSteps" />
-      </v-card>
-
+      <v-row justify="center">
+        <v-col cols="11">
+          <v-card class="pa-4 mb-4" maxWidth="900">
+            <KPIGauge :gauge="gauge" :height="gaugeHeight" :width="gaugeWidth" :segmentStops="activeSteps" />
+          </v-card>
+        </v-col>
+      </v-row>
       <v-alert v-if="!formValid && submitAttempted" type="error" dense dismissible>Please fix highlighted fields below before sumbitting KPI</v-alert>
 
       <!-- Form Fields -->
       <v-form v-model="formValid" ref="form">
         <v-container>
           <v-row>
-            <v-col>
+            <v-col cols="4">
               <v-text-field v-model="gauge.title" label="Title" dense required
                 :rules="[(v) => !!v || 'Title is required']"></v-text-field>
             </v-col>
-            <v-col cols="4">
-              <v-select v-model="gauge.chartType" label="Chart Type" :items="['Traditional', 'Middle']" dense @change="setChartType"
+            <v-col cols="2">
+              <v-select v-model="gauge.chartType" label="Gauge Type" :items="['Traditional', 'Middle', 'Left']" dense @change="setChartType"
                ></v-select>
             </v-col>
           </v-row>
           <v-row>
-            <v-col>
+            <v-col cols="2">
               <v-text-field v-model.number="gauge.value" label="Value" dense required
-                :rules="[v => Number.isInteger(Number(v)) || 'The value must be an integer number']"></v-text-field>
+                :rules="[v => !Number.isNaN(Number(v)) || 'The value must be a number']"></v-text-field>
             </v-col>
           </v-row>
           <v-row>
-            <v-col>
+            <v-col cols="2">
               <v-text-field v-model="activeSteps[0]" label="Minimum Value" dense required
-                :rules="[v => Number.isInteger(Number(v)) || 'The value must be an integer number']"></v-text-field>
+                :rules="[v => !Number.isNaN(Number(v)) || 'The value must be a number']"></v-text-field>
             </v-col>
-            <v-col v-if="gauge.chartType == 'Traditional' || gauge.chartType == 'Middle'">
+            <v-col cols="2" v-if="gauge.chartType == 'Traditional' || gauge.chartType == 'Middle' || gauge.chartType == 'Left'">
               <v-text-field v-model="activeSteps[1]" label="1st Stop" dense required
-                :rules="[v => Number.isInteger(Number(v)) || 'The value must be an integer number']"></v-text-field>
+                :rules="[v => !Number.isNaN(Number(v)) || 'The value must be a number']"></v-text-field>
             </v-col>
-            <v-col v-if="gauge.chartType == 'Traditional' || gauge.chartType == 'Middle'">
+            <v-col cols="2" v-if="gauge.chartType == 'Traditional' || gauge.chartType == 'Middle' || gauge.chartType == 'Left'">
               <v-text-field v-model="activeSteps[2]" label="2nd Stop" dense required
-                :rules="[v => Number.isInteger(Number(v)) || 'The value must be an integer number']"></v-text-field>
+                :rules="[v => !Number.isNaN(Number(v)) || 'The value must be a number']"></v-text-field>
             </v-col>
-            <v-col v-if="gauge.chartType == 'Middle'">
+            <v-col cols="2" v-if="gauge.chartType == 'Middle'">
               <v-text-field v-model="activeSteps[3]" label="3rd Stop" dense required
-                :rules="[v => Number.isInteger(Number(v)) || 'The value must be an integer number']"></v-text-field>
+                :rules="[v => !Number.isNaN(Number(v)) || 'The value must be a number']"></v-text-field>
             </v-col>
-            <v-col v-if="gauge.chartType == 'Middle'">
+            <v-col cols="2" v-if="gauge.chartType == 'Middle'">
               <v-text-field v-model="activeSteps[4]" label="4th Stop" dense required
-                :rules="[v => Number.isInteger(Number(v)) || 'The value must be an integer number']"></v-text-field>
+                :rules="[v => !Number.isNaN(Number(v)) || 'The value must be a number']"></v-text-field>
             </v-col>
-            <v-col>
-              <v-text-field v-model="activeSteps[activeSteps.length - 1]" label="Maximum Value" dense required
-                :rules="[v => Number.isInteger(Number(v)) || 'The value must be an integer number']"></v-text-field>
+            <v-col cols="2">
+              <v-text-field v-model="activeSteps[activeSteps.length - 1]" label="Maximum Value" dense required :rules="[v => !Number.isNaN(Number(v)) || 'The value must be a number']"></v-text-field>
             </v-col>
           </v-row>
         </v-container>
@@ -109,10 +111,11 @@ export default {
   },
   computed: {
     ...mapGetters(["currentChannels", "gauge", "gauges", "user"]),
+    
   },
   methods: {
     ...mapActions(["addGauge", "updateGaugeById", "fetchGauge", "removeGauge"]),
-    ...mapMutations([]),
+    ...mapMutations(["SET_GAUGE"]),
     resetAndGoBack() {
       this.clear()
       if (this.$route.path === `/${this.currentChannels[0].name}/gauges`) {
@@ -129,7 +132,7 @@ export default {
       if (this.formValid) {
         let data = {
           title: this.gauge.title,
-          value: parseInt(this.gauge.value),
+          value: parseFloat(this.gauge.value),
           segmentStops: this.activeSteps.toString(),
           chartType: this.gauge.chartType,
           channelId: this.currentChannels[0].channelId
@@ -158,7 +161,7 @@ export default {
             if (!this.gauge.segmentStops) {
               this.activeSteps = [0, 70, 85, 100]
             } else {
-              this.activeSteps = this.gauge.segmentStops.split(',').map(x => parseInt(x))
+              this.activeSteps = this.gauge.segmentStops.split(',').map(x => parseFloat(x))
             }
             console.log(this.activeSteps)
             /*if (this.gauge.value < this.gauge.minValue || this.gauge.value > this.gauge.maxValue) {
@@ -169,10 +172,21 @@ export default {
             if (!this.gauge.segmentStops) {
               this.activeSteps = [-100, -60, -25, 25, 60, 100]
             } else {
-              this.activeSteps = this.gauge.segmentStops.split(',').map(x => parseInt(x))
+              this.activeSteps = this.gauge.segmentStops.split(',').map(x => parseFloat(x))
             }
             /*if (this.gauge.value < this.gauge.minValue || this.gauge.value > this.gauge.maxValue) {
              this.gauge.value = 0
+           } */
+            break;
+          case "Left":
+            if (!this.gauge.segmentStops) {
+              this.activeSteps = [0, 25, 75, 100]
+            } else {
+              this.activeSteps = this.gauge.segmentStops.split(',').map(x => parseFloat(x))
+            }
+            console.log(this.activeSteps)
+            /*if (this.gauge.value < this.gauge.minValue || this.gauge.value > this.gauge.maxValue) {
+             this.gauge.value = 75
            } */
             break;
           default:
@@ -185,6 +199,9 @@ export default {
     if (this.$route.path === `/${this.currentChannels[0].name}/gauges`) {
       this.gauge.id = ""
       this.clear()
+      this.gauge.chartType = "Traditional"
+      this.gauge.segmentStops = ''
+      this.setChartType()
     }
     console.log(this.gauge)
   },
@@ -193,6 +210,8 @@ export default {
       if (this.$route.path === `/${this.currentChannels[0].name}/gauges`) {
         this.gauge.id = ""
         this.clear()
+        this.gauge.chartType = "Traditional"
+        //this.SET_GAUGE(this.newGauge)
       }
       this.setChartType()
       /* if (!this.gauge.segmentStops) {
