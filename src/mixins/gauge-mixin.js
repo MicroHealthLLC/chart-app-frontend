@@ -35,7 +35,16 @@ export default {
         case 'lg': return 280
         case 'xl': return 430
       }
-    }
+    },
+    ringWidth () {
+      switch (this.$vuetify.breakpoint.name) {
+        case 'xs': return 40
+        case 'sm': return 50
+        case 'md': return 60
+        case 'lg': return 100
+        case 'xl': return 150
+      }
+    },
   },
   watch: {
   

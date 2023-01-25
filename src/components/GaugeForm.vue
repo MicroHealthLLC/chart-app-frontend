@@ -14,7 +14,7 @@
       <v-row justify="center">
         <v-col cols="11">
           <v-card class="pa-4 mb-4" maxWidth="900">
-            <KPIGauge :gauge="gauge" :height="gaugeHeight" :width="gaugeWidth" :segmentStops="activeSteps" />
+            <KPIGauge :gauge="gauge" :height="gaugeHeight" :width="gaugeWidth" :segmentStops="activeSteps" :ringWidth="ringWidth" />
           </v-card>
         </v-col>
       </v-row>
@@ -24,21 +24,16 @@
       <v-form v-model="formValid" ref="form">
         <v-container>
           <v-row>
-            <v-col cols="4">
+            <v-col cols="6">
               <v-text-field v-model="gauge.title" label="Title" dense required
                 :rules="[(v) => !!v || 'Title is required']"></v-text-field>
             </v-col>
-            <v-col cols="2">
+            <v-col cols="4">
               <v-select v-model="gauge.chartType" label="Gauge Type" :items="['Traditional', 'Middle', 'Left']" dense @change="setChartType"
                ></v-select>
             </v-col>
           </v-row>
-          <v-row>
-            <v-col cols="2">
-              <v-text-field v-model.number="gauge.value" label="Value" dense required
-                :rules="[v => !Number.isNaN(Number(v)) || 'The value must be a number']"></v-text-field>
-            </v-col>
-          </v-row>
+          
           <v-row>
             <v-col cols="2">
               <v-text-field v-model="activeSteps[0]" label="Minimum Value" dense required
@@ -62,6 +57,12 @@
             </v-col>
             <v-col cols="2">
               <v-text-field v-model="activeSteps[activeSteps.length - 1]" label="Maximum Value" dense required :rules="[v => !Number.isNaN(Number(v)) || 'The value must be a number']"></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="2">
+              <v-text-field v-model.number="gauge.value" label="KPI Value" dense required
+                :rules="[v => !Number.isNaN(Number(v)) || 'The value must be a number']"></v-text-field>
             </v-col>
           </v-row>
         </v-container>
@@ -109,6 +110,9 @@ export default {
       activeSteps: []
     };
   },
+  props:{
+    showAddGaugeForm: Boolean
+  },
   computed: {
     ...mapGetters(["currentChannels", "gauge", "gauges", "user"]),
     
@@ -118,7 +122,7 @@ export default {
     ...mapMutations(["SET_GAUGE"]),
     resetAndGoBack() {
       this.clear()
-      if (this.$route.path === `/${this.currentChannels[0].name}/gauges`) {
+      if (this.$route.path === `/${this.currentChannels[0].name}/gauges` && this.showAddGaugeForm) {
         this.$emit("closeGaugeForm")
       } else {
         this.$router.push(`/${this.currentChannels[0].name}/gauges`)
@@ -196,12 +200,15 @@ export default {
     }
   },
   async mounted() {
-    if (this.$route.path === `/${this.currentChannels[0].name}/gauges`) {
+    if (this.$route.path === `/${this.currentChannels[0].name}/gauges` && this.showAddGaugeForm) {
       this.gauge.id = ""
       this.clear()
       this.gauge.chartType = "Traditional"
       this.gauge.segmentStops = ''
       this.setChartType()
+    }
+    if (this.$route.params.gaugeId) {
+      await this.fetchGauge(this.$route.params.gaugeId)
     }
     console.log(this.gauge)
   },

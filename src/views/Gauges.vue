@@ -35,7 +35,7 @@
               </div>
             </div>
           </v-form> -->
-        <GaugeForm @closeGaugeForm="closeGaugeForm" />  
+        <GaugeForm @closeGaugeForm="closeGaugeForm" :showAddGaugeForm="showAddGaugeForm" />  
       </v-card> 
       <!-- <span v-else>NO DATA</span> -->
     </v-dialog>
