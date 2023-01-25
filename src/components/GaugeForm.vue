@@ -13,8 +13,16 @@
       <v-divider class="mb-4"></v-divider>
       <v-row justify="center">
         <v-col cols="11">
-          <v-card class="pa-4 mb-4" maxWidth="900">
-            <KPIGauge :gauge="gauge" :height="gaugeHeight" :width="gaugeWidth" :segmentStops="activeSteps" :ringWidth="ringWidth" />
+          <v-card class="pa-4 mb-4">
+            <v-row>
+              <v-col cols="8">
+                <KPIGauge :gauge="gauge" :height="gaugeHeight" :width="gaugeWidth" :segmentStops="activeSteps"
+                  :ringWidth="ringWidth" />
+              </v-col>
+              <v-col cols="4">
+                <v-textarea v-model="gauge.notes" solo auto-grow background-color="grey lighten-4" label="Enter notes here" rows="4"></v-textarea>
+              </v-col>
+            </v-row>
           </v-card>
         </v-col>
       </v-row>
@@ -131,11 +139,15 @@ export default {
     clear() {
       this.$refs.form.reset();
     },
+    clearNote() {
+      console.log(this)
+    },
     async saveGauge() {
       this.$refs.form.validate();
       if (this.formValid) {
         let data = {
           title: this.gauge.title,
+          notes: this.gauge.notes,
           value: parseFloat(this.gauge.value),
           segmentStops: this.activeSteps.toString(),
           chartType: this.gauge.chartType,

@@ -32,6 +32,7 @@ type ReportGroup @model @auth(rules: [{ allow: public }]) {
 type Gauge @model @auth(rules: [{ allow: public }]) {
   id: ID!
   title: String!
+  notes: String
   value: Float!
   segmentStops: String
   chartType: String!

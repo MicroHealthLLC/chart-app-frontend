@@ -348,6 +348,7 @@ export const createGauge = /* GraphQL */ `
     createGauge(input: $input, condition: $condition) {
       id
       title
+      notes
       value
       segmentStops
       chartType
@@ -385,6 +386,7 @@ export const updateGauge = /* GraphQL */ `
     updateGauge(input: $input, condition: $condition) {
       id
       title
+      notes
       value
       segmentStops
       chartType
@@ -422,6 +424,7 @@ export const deleteGauge = /* GraphQL */ `
     deleteGauge(input: $input, condition: $condition) {
       id
       title
+      notes
       value
       segmentStops
       chartType
@@ -495,6 +498,7 @@ export const createChannel = /* GraphQL */ `
         items {
           id
           title
+          notes
           value
           segmentStops
           chartType
@@ -558,6 +562,7 @@ export const updateChannel = /* GraphQL */ `
         items {
           id
           title
+          notes
           value
           segmentStops
           chartType
@@ -621,6 +626,7 @@ export const deleteChannel = /* GraphQL */ `
         items {
           id
           title
+          notes
           value
           segmentStops
           chartType

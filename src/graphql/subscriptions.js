@@ -327,6 +327,7 @@ export const onCreateGauge = /* GraphQL */ `
     onCreateGauge {
       id
       title
+      notes
       value
       segmentStops
       chartType
@@ -361,6 +362,7 @@ export const onUpdateGauge = /* GraphQL */ `
     onUpdateGauge {
       id
       title
+      notes
       value
       segmentStops
       chartType
@@ -395,6 +397,7 @@ export const onDeleteGauge = /* GraphQL */ `
     onDeleteGauge {
       id
       title
+      notes
       value
       segmentStops
       chartType
@@ -465,6 +468,7 @@ export const onCreateChannel = /* GraphQL */ `
         items {
           id
           title
+          notes
           value
           segmentStops
           chartType
@@ -525,6 +529,7 @@ export const onUpdateChannel = /* GraphQL */ `
         items {
           id
           title
+          notes
           value
           segmentStops
           chartType
@@ -585,6 +590,7 @@ export const onDeleteChannel = /* GraphQL */ `
         items {
           id
           title
+          notes
           value
           segmentStops
           chartType

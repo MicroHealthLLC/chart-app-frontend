@@ -193,6 +193,7 @@ export const getGauge = /* GraphQL */ `
     getGauge(id: $id) {
       id
       title
+      notes
       value
       segmentStops
       chartType
@@ -232,6 +233,7 @@ export const listGauges = /* GraphQL */ `
       items {
         id
         title
+        notes
         value
         segmentStops
         chartType
@@ -295,6 +297,7 @@ export const getChannel = /* GraphQL */ `
         items {
           id
           title
+          notes
           value
           segmentStops
           chartType
