@@ -43,6 +43,19 @@ export const createReport = /* GraphQL */ `
       description
       reportGroupId
       channelId
+      dashboard {
+        id
+        title
+        reports {
+          nextToken
+        }
+        gauges {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      dashboardId
       colorSchemeId
       chartType
       dataSet {
@@ -119,6 +132,19 @@ export const updateReport = /* GraphQL */ `
       description
       reportGroupId
       channelId
+      dashboard {
+        id
+        title
+        reports {
+          nextToken
+        }
+        gauges {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      dashboardId
       colorSchemeId
       chartType
       dataSet {
@@ -195,6 +221,19 @@ export const deleteReport = /* GraphQL */ `
       description
       reportGroupId
       channelId
+      dashboard {
+        id
+        title
+        reports {
+          nextToken
+        }
+        gauges {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      dashboardId
       colorSchemeId
       chartType
       dataSet {
@@ -244,6 +283,7 @@ export const createReportGroup = /* GraphQL */ `
           description
           reportGroupId
           channelId
+          dashboardId
           colorSchemeId
           chartType
           dataSetId
@@ -281,6 +321,7 @@ export const updateReportGroup = /* GraphQL */ `
           description
           reportGroupId
           channelId
+          dashboardId
           colorSchemeId
           chartType
           dataSetId
@@ -318,6 +359,7 @@ export const deleteReportGroup = /* GraphQL */ `
           description
           reportGroupId
           channelId
+          dashboardId
           colorSchemeId
           chartType
           dataSetId
@@ -371,6 +413,19 @@ export const createGauge = /* GraphQL */ `
         updatedAt
       }
       channelId
+      dashboard {
+        id
+        title
+        reports {
+          nextToken
+        }
+        gauges {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      dashboardId
       createdBy
       updatedBy
       createdAt
@@ -409,6 +464,19 @@ export const updateGauge = /* GraphQL */ `
         updatedAt
       }
       channelId
+      dashboard {
+        id
+        title
+        reports {
+          nextToken
+        }
+        gauges {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      dashboardId
       createdBy
       updatedBy
       createdAt
@@ -447,8 +515,174 @@ export const deleteGauge = /* GraphQL */ `
         updatedAt
       }
       channelId
+      dashboard {
+        id
+        title
+        reports {
+          nextToken
+        }
+        gauges {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      dashboardId
       createdBy
       updatedBy
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createDashboard = /* GraphQL */ `
+  mutation CreateDashboard(
+    $input: CreateDashboardInput!
+    $condition: ModelDashboardConditionInput
+  ) {
+    createDashboard(input: $input, condition: $condition) {
+      id
+      title
+      reports {
+        items {
+          id
+          title
+          description
+          reportGroupId
+          channelId
+          dashboardId
+          colorSchemeId
+          chartType
+          dataSetId
+          xAxis
+          columns
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+          reportDataSetId
+        }
+        nextToken
+      }
+      gauges {
+        items {
+          id
+          title
+          notes
+          value
+          segmentStops
+          chartType
+          channelId
+          dashboardId
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateDashboard = /* GraphQL */ `
+  mutation UpdateDashboard(
+    $input: UpdateDashboardInput!
+    $condition: ModelDashboardConditionInput
+  ) {
+    updateDashboard(input: $input, condition: $condition) {
+      id
+      title
+      reports {
+        items {
+          id
+          title
+          description
+          reportGroupId
+          channelId
+          dashboardId
+          colorSchemeId
+          chartType
+          dataSetId
+          xAxis
+          columns
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+          reportDataSetId
+        }
+        nextToken
+      }
+      gauges {
+        items {
+          id
+          title
+          notes
+          value
+          segmentStops
+          chartType
+          channelId
+          dashboardId
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteDashboard = /* GraphQL */ `
+  mutation DeleteDashboard(
+    $input: DeleteDashboardInput!
+    $condition: ModelDashboardConditionInput
+  ) {
+    deleteDashboard(input: $input, condition: $condition) {
+      id
+      title
+      reports {
+        items {
+          id
+          title
+          description
+          reportGroupId
+          channelId
+          dashboardId
+          colorSchemeId
+          chartType
+          dataSetId
+          xAxis
+          columns
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+          reportDataSetId
+        }
+        nextToken
+      }
+      gauges {
+        items {
+          id
+          title
+          notes
+          value
+          segmentStops
+          chartType
+          channelId
+          dashboardId
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -469,6 +703,7 @@ export const createChannel = /* GraphQL */ `
           description
           reportGroupId
           channelId
+          dashboardId
           colorSchemeId
           chartType
           dataSetId
@@ -503,6 +738,7 @@ export const createChannel = /* GraphQL */ `
           segmentStops
           chartType
           channelId
+          dashboardId
           createdBy
           updatedBy
           createdAt
@@ -533,6 +769,7 @@ export const updateChannel = /* GraphQL */ `
           description
           reportGroupId
           channelId
+          dashboardId
           colorSchemeId
           chartType
           dataSetId
@@ -567,6 +804,7 @@ export const updateChannel = /* GraphQL */ `
           segmentStops
           chartType
           channelId
+          dashboardId
           createdBy
           updatedBy
           createdAt
@@ -597,6 +835,7 @@ export const deleteChannel = /* GraphQL */ `
           description
           reportGroupId
           channelId
+          dashboardId
           colorSchemeId
           chartType
           dataSetId
@@ -631,6 +870,7 @@ export const deleteChannel = /* GraphQL */ `
           segmentStops
           chartType
           channelId
+          dashboardId
           createdBy
           updatedBy
           createdAt

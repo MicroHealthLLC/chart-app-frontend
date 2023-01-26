@@ -29,8 +29,8 @@
       <v-alert v-if="!formValid && submitAttempted" type="error" dense dismissible>Please fix highlighted fields below before sumbitting KPI</v-alert>
 
       <!-- Form Fields -->
-      <v-form v-model="formValid" ref="form">
-        <v-container>
+      <v-form v-model="formValid" ref="form" class="px-4 mx-4">
+        <v-container class="px-4 mx-4">
           <v-row>
             <v-col cols="6">
               <v-text-field v-model="gauge.title" label="Title" dense required
@@ -137,10 +137,12 @@ export default {
       }
     },
     clear() {
+      this.gauge.id = ""
+      this.gauge.chartType = "Traditional"
+      this.activeSteps = []
+      this.gauge.notes = ''
       this.$refs.form.reset();
-    },
-    clearNote() {
-      console.log(this)
+      
     },
     async saveGauge() {
       this.$refs.form.validate();
@@ -169,8 +171,6 @@ export default {
       this.$router.push(`/${this.$route.params.channelId}/gauges`);
     },
     setChartType() {
-      console.log(this.activeSteps)
-      console.log(this.gauge.segmentStops)
       if (this.gauge && this.gauge.chartType) {
         switch (this.gauge.chartType) {
           case "Traditional":
@@ -179,10 +179,6 @@ export default {
             } else {
               this.activeSteps = this.gauge.segmentStops.split(',').map(x => parseFloat(x))
             }
-            console.log(this.activeSteps)
-            /*if (this.gauge.value < this.gauge.minValue || this.gauge.value > this.gauge.maxValue) {
-             this.gauge.value = 75
-           } */
             break;
           case "Middle":
             if (!this.gauge.segmentStops) {
@@ -190,9 +186,6 @@ export default {
             } else {
               this.activeSteps = this.gauge.segmentStops.split(',').map(x => parseFloat(x))
             }
-            /*if (this.gauge.value < this.gauge.minValue || this.gauge.value > this.gauge.maxValue) {
-             this.gauge.value = 0
-           } */
             break;
           case "Left":
             if (!this.gauge.segmentStops) {
@@ -201,9 +194,6 @@ export default {
               this.activeSteps = this.gauge.segmentStops.split(',').map(x => parseFloat(x))
             }
             console.log(this.activeSteps)
-            /*if (this.gauge.value < this.gauge.minValue || this.gauge.value > this.gauge.maxValue) {
-             this.gauge.value = 75
-           } */
             break;
           default:
           // code block
@@ -213,10 +203,9 @@ export default {
   },
   async mounted() {
     if (this.$route.path === `/${this.currentChannels[0].name}/gauges` && this.showAddGaugeForm) {
-      this.gauge.id = ""
-      this.clear()
-      this.gauge.chartType = "Traditional"
-      this.gauge.segmentStops = ''
+      console.log("mount")
+      await this.clear()
+      this.SET_GAUGE(this.newGauge)
       this.setChartType()
     }
     if (this.$route.params.gaugeId) {
@@ -226,22 +215,13 @@ export default {
   },
   watch: {
     gauge() {
-      if (this.$route.path === `/${this.currentChannels[0].name}/gauges`) {
-        this.gauge.id = ""
+      /* if (this.$route.path === `/${this.currentChannels[0].name}/gauges` && this.showAddGaugeForm) {
+        console.log("watch")
         this.clear()
-        this.gauge.chartType = "Traditional"
-        //this.SET_GAUGE(this.newGauge)
-      }
-      this.setChartType()
-      /* if (!this.gauge.segmentStops) {
-        this.gauge.segmentStops = []
+
       } */
+      this.setChartType()
     },
-    activeSteps() {
-      if (this.activeSteps) {
-        console.log(this.activeSteps)
-      }
-    }
   },
 };
 </script>

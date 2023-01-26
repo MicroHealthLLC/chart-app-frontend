@@ -11,13 +11,18 @@ export default {
     };
   },
   methods: {
-    ...mapActions([]),
-   
+    ...mapActions(["fetchGauge"]),
+    toGauge(gaugeId) {
+      this.fetchGauge(gaugeId)
+      this.$router.push(
+        `gauges/${gaugeId}`
+      );
+    },
   },
   mounted() {
   },
   computed: {
-    ...mapGetters([]),
+    ...mapGetters(["gauges", "currentChannels"]),
     gaugeWidth () {
       switch (this.$vuetify.breakpoint.name) {
         case 'xs': return 200
@@ -44,6 +49,11 @@ export default {
         case 'lg': return 100
         case 'xl': return 150
       }
+    },
+    channelGauges(){
+      if (this.gauges && this.gauges.length > 0 && this.currentChannels && this.currentChannels[0].channelId){
+        return this.gauges.filter(t => t.channelId == this.currentChannels[0].channelId)
+      } else return []
     },
   },
   watch: {

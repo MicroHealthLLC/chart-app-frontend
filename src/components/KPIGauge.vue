@@ -2,7 +2,7 @@
   <v-container>
   <v-row align="center" justify="center">
     <v-col>
-      <vue-speedometer class="ml-3" :value="gauge.value" :width="width" :height="height" needleColor="black" :paddingVertical="20" :minValue="segmentStops[0]" :maxValue="segmentStops[segmentStops.length - 1]" :segmentColors="setSegments(gauge.chartType, 'color')" :maxSegmentLabels="setSegments(gauge.chartType, 'label')" :forceRender="true" :customSegmentStops="segmentStops" :ringWidth="ringWidth"/> 
+      <vue-speedometer class="ml-3" :value="gauge.value" :width="width" :height="height" needleColor="black" :paddingVertical="20" :minValue="segmentStops[0]" :maxValue="segmentStops[segmentStops.length - 1]" :segmentColors="setSegments(gauge.chartType, 'color')" :maxSegmentLabels="setSegments(gauge.chartType, 'label')" :forceRender="true" :customSegmentStops="segmentStops" :ringWidth="ringWidth" :needleHeightRatio="needleHeightRatio"/> 
     </v-col>
   </v-row>
 </v-container>
@@ -21,7 +21,8 @@ export default {
     width: Number,
     gauge: Object,
     segmentStops: Array,
-    ringWidth: Number
+    ringWidth: Number,
+    needleHeightRatio: Number
   },
   methods: {
     setSegments(chartType, prop) {

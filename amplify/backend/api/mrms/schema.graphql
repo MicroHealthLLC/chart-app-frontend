@@ -8,7 +8,9 @@ type Report @model @auth(rules: [{ allow: public }]) {
   reportGroup: ReportGroup @belongsTo(fields: ["reportGroupId"])
   description: String,
   reportGroupId: ID @index(name: "byReportGroup")  
-  channelId: ID @index(name: "byChannel")  
+  channelId: ID @index(name: "byChannel")
+  dashboard: Dashboard @belongsTo(fields: ["dashboardId"])
+  dashboardId: ID @index(name: "byDashboard")  
   colorSchemeId: Int
   chartType: String
   dataSet: DataSet @hasOne
@@ -38,6 +40,18 @@ type Gauge @model @auth(rules: [{ allow: public }]) {
   chartType: String!
   channel: Channel @belongsTo(fields: ["channelId"])
   channelId: ID @index(name: "byChannel")
+  dashboard: Dashboard @belongsTo(fields: ["dashboardId"])
+  dashboardId: ID @index(name: "byDashboard")
+  createdBy: String
+  updatedBy: String
+}
+
+type Dashboard @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  title: String!
+  description: String
+  reports: [Report] @hasMany(indexName: "byChannel", fields: ["id"])
+  gauges: [Gauge] @hasMany(indexName: "byChannel", fields: ["id"])
   createdBy: String
   updatedBy: String
 }

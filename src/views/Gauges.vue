@@ -6,45 +6,17 @@
         <v-btn class="mb-2" color="primary" small @click.prevent="toNewGauge">Add KPI <v-icon small>mdi-plus</v-icon>
         </v-btn>
       </div>
-      <v-dialog v-model="showAddGaugeForm" width="50%">
+      <v-dialog v-model="showAddGaugeForm" width="60%">
         <v-card class="px-4 py-4 modal">
-          <!-- <v-form v-model="formValid" ref="form">
-            <div class="grid">
-              <div>
-                <v-text-field v-model="dataSet.title" label="Title" dense required :readonly="isReadOnly"
-                  :rules="[(v) => !!v || 'Title is required']"></v-text-field>
-              </div>
-              <div>
-                <v-text-field :readonly="isReadOnly" v-model="dataSet.user" label="Created By" dense>
-                </v-text-field>
-              </div>
-              <div :class="{ description: dataSet.id }">
-                <v-text-field v-model="dataSet.description" label="Description" dense :readonly="isReadOnly"></v-text-field>
-              </div>
-              <div>
-                <v-file-input v-show="dataSet.id != ''" placeholder="Please choose a file..." type="file"
-                  @change.native="onChange" @click:clear="clearInput('file')" dense required
-                  :rules="[(v) => !!v || 'Data File is required']" />
-                <xlsx-read :options="readOptions" :file="file">
-                  <xlsx-json :options="readOptions" @parsed="uploadData"></xlsx-json>
-                </xlsx-read>
-                <div>
-                  <v-btn v-if="dataSet.id" :disabled="(!file)" class="mb-1" elevation="4" small
-                    @click="addNewDataValue"><v-icon>mdi-plus-circle-outline</v-icon> Add New Data</v-btn>
-                </div>
-              </div>
-            </div>
-          </v-form> -->
-        <GaugeForm @closeGaugeForm="closeGaugeForm" :showAddGaugeForm="showAddGaugeForm" />  
-      </v-card> 
-      <!-- <span v-else>NO DATA</span> -->
-    </v-dialog>
+          <GaugeForm @closeGaugeForm="closeGaugeForm" :showAddGaugeForm="showAddGaugeForm" />  
+        </v-card> 
+      </v-dialog>
       <v-divider class="mb-4"></v-divider>
       <v-container v-if="channelGauges.length > 0" class="pl-5">
         <v-row>
         <v-col xl="2" lg="3" md="4" sm="6" v-for="(gauge) in channelGauges" :key="gauge.id">
           <v-card width="250px" min-width="250px" @click.prevent="toGauge(gauge.id)" tile elevation="4">
-            <KPIGauge :gauge="gauge" :height="130" :width="200" :segmentStops="gauge.segmentStops.split(',').map(x => parseFloat(x))" />
+            <KPIGauge :gauge="gauge" :height="130" :width="200" :segmentStops="gauge.segmentStops.split(',').map(x => parseFloat(x))" :needleHeightRatio=".7" />
             <v-divider class="my-2"></v-divider>
             <v-card-title>{{ gauge.title }}</v-card-title>
             <v-card-subtitle>By: {{ gauge.createdBy }}</v-card-subtitle>
@@ -74,7 +46,7 @@
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import GaugeForm from "../components/GaugeForm.vue";
 import KPIGauge from "../components/KPIGauge.vue";
-//import gaugeMixin from "../mixins/gauge-mixin";
+import gaugeMixin from "../mixins/gauge-mixin";
 //import VueSpeedometer from "vue-speedometer";
 
 export default {
@@ -84,7 +56,7 @@ export default {
     GaugeForm,
     KPIGauge
   },
-  //mixins: [gaugeMixin],
+  mixins: [gaugeMixin],
   data() {
     return {
       showAddGaugeForm: false,
@@ -95,18 +67,19 @@ export default {
     ...mapMutations(["SET_GAUGE"]),
     toNewGauge(){
       this.showAddGaugeForm = true
-      //this.SET_GAUGE(this.newGauge)
+      this.SET_GAUGE(this.newGauge)
+      console.log(this.gauge)
       //this.$router.push(`data-sets/add-data-set`); 
     },
     closeGaugeForm() {
       this.showAddGaugeForm = false
     },
-    toGauge(gaugeId) {
+    /* toGauge(gaugeId) {
       this.fetchGauge(gaugeId)
       this.$router.push(
         `gauges/${gaugeId}`
       );
-    },
+    }, */
     /* async editItem(item) {
       console.log(item)
       let id = item.id
@@ -140,12 +113,12 @@ export default {
     } */
   },
   computed: {
-    ...mapGetters(["gauges", "currentChannels"]),
-    channelGauges(){
+    ...mapGetters(["gauges", "currentChannels", "gauge"]),
+    /* channelGauges(){
       if (this.gauges && this.gauges.length > 0 && this.currentChannels && this.currentChannels[0].channelId){
         return this.gauges.filter(t => t.channelId == this.currentChannels[0].channelId)
       } else return []
-    },
+    }, */
     
   },
   beforeMount() {
