@@ -96,6 +96,9 @@
         <v-btn text small color="primary" :to="`reports/add-report`">Add a Report</v-btn>
       </div>
     </v-col>
+    <v-col lg="4" md="10">
+      <KPITable />
+    </v-col>
     <span class="views">
       <v-icon x-large class="pl-2">mdi-view-dashboard-outline</v-icon>
       <v-icon x-large class="pl-2">mdi-view-list-outline</v-icon>
@@ -107,13 +110,15 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import ReportForm from "../components/ReportForm.vue";
+import KPITable from "../components/KPITable.vue";
 // import NewsCard from "../components/NewsCard";
 // import ReportCard from "./../components/ReportCard";
 
 export default {
   name: "Home",
   components: {
-    ReportForm
+    ReportForm,
+    KPITable
 },
   data() {
     return {
