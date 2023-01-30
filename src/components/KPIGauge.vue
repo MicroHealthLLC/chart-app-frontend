@@ -24,25 +24,32 @@ export default {
     ringWidth: Number,
     needleHeightRatio: Number
   },
+  data() {
+    return {
+      red: '#EF5350',
+      yellow: '#FFCA28',
+      green: '#66BB6A'
+    }
+  },
   methods: {
     setSegments(chartType, prop) {
       if (chartType == "Traditional") {
-        return prop == 'color' ? ['tomato', 'gold', 'limegreen']
+        return prop == 'color' ? [this.red, this.yellow, this.green]
           : (prop == 'label') ? 4
             : (prop == 'segments') ? 3
             /* : (prop == 'stops') ? [0, 70, 85, 100] */ : ''
       } else if (chartType == "Middle") {
-        return prop == 'color' ? ['tomato', 'gold', 'limegreen', 'gold', 'tomato']
+        return prop == 'color' ? [this.red, this.yellow, this.green, this.yellow, this.red]
           : (prop == 'label') ? 6
             : (prop == 'segments') ? 5
             /* : (prop == 'stops') ? [-100, -60, -25, 25, 60, 100] */ : ''
       } else if (chartType == "Left") {
-        return prop == 'color' ? ['limegreen', 'gold', 'tomato']
+        return prop == 'color' ? [this.green, this.yellow, this.red]
           : (prop == 'label') ? 4
             : (prop == 'segments') ? 3
             /* : (prop == 'stops') ? [-100, -60, -25, 25, 60, 100] */ : ''
       } else {
-        return prop == 'color' ? ['tomato', 'gold', 'limegreen']
+        return prop == 'color' ? [this.red, this.yellow, this.green]
           : (prop == 'segments') ? 3
             : (prop == 'label') ? 4
             /* : (prop == 'stops') ? [] */ : ''

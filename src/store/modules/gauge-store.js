@@ -10,6 +10,8 @@ export default {
   state: {
     gauges: [],
     gauge: {},
+    heatMaps: [],
+    heatMap: {}
   },
   actions: {
     async addGauge({ commit, dispatch }, gauge) {

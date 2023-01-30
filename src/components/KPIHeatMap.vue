@@ -1,21 +1,26 @@
 <template>
-  <v-row>
+  <v-row justify="space-between">
     <v-col cols="7">
-      <v-data-table :headers="headers" :items="dataItems" class="elevation-1" :hide-default-footer="dataItems.length <= 15" :disable-pagination="dataItems.length <= 15">
+      <v-data-table :headers="headers" :items="dataItems" class="elevation-4 ml-2" :hide-default-footer="dataItems.length <= 15" :disable-pagination="dataItems.length <= 15" calculate-widths>
         <template v-slot:item.one="{ item }">
-          <v-chip :color="getColor(item, item.one)" label>
+          <v-chip :color="getColor(item, item.one, 0)" label>
             {{ item.one }}
           </v-chip>
         </template>
         <template v-slot:item.two="{ item }">
-          <v-chip :color="getColor(item, item.two)" label>
+          <v-chip :color="getColor(item, item.two, 1)" label>
             {{ item.two }}
+          </v-chip>
+        </template>
+        <template v-slot:item.thr="{ item }">
+          <v-chip :color="getColor(item, item.thr, 2)" label>
+            {{ item.thr }}
           </v-chip>
         </template>
       </v-data-table>
     </v-col>
     <v-col cols="5">
-      <v-card>
+      <v-card class="mr-2">
         <v-card-title>
           Project Name
         </v-card-title>
@@ -81,7 +86,7 @@
 <script>
 
 export default {
-  name: "KPITable",
+  name: "KPIHeatMap",
   components: {
   },
   props: {
@@ -99,7 +104,12 @@ export default {
           abs: true,
           yel: 5,
           gre: 1,
-        }
+        },
+        {
+          abs: false,
+          yel: 1,
+          gre: 2,
+        } 
       ],
       headers: [
         {
@@ -110,6 +120,7 @@ export default {
         },
         { text: '', value: 'one' },
         { text: '', value: 'two' },
+        { text: '', value: 'thr' }
       ],
       footers: {
         showFirstLastPage: true,
@@ -120,61 +131,73 @@ export default {
           Month: 'January',
           one: 97,
           two: -2.3,
+          thr: 1,
         },
         {
           Month: 'Feburary',
           one: 86,
           two: 3.5,
+          thr: 1.67,
         },
         {
           Month: 'March',
           one: 70,
           two: 6,
+          thr: 1.05,
         },
         {
           Month: 'April',
           one: 90,
           two: 1.1,
+          thr: .97,
         },
         {
           Month: 'May',
           one: 68,
           two: -4.0,
+          thr: 1.8,
         },
         {
           Month: 'June',
           one: 50,
           two: -.4,
+          thr: 2,
         },
         {
           Month: 'July',
           one: 87,
           two: 0.2,
+          thr: 1.32,
         },
         {
           Month: 'August',
           one: 93,
           two: 3.2,
+          thr: 1,
         },
         {
           Month: 'September',
           one: 95,
           two: 2.1,
+          thr: .97,
         },
         {
           Month: 'October',
           one: 92,
           two: 0,
+          thr: 1,
         },
         {
           Month: 'November',
           one: 100,
           two: -.2,
+          thr: 2.31,
         },
         {
           Month: 'December',
           one: 96,
           two: .1,
+          thr: 1.09,
         },
       ],
     }
@@ -195,15 +218,15 @@ export default {
         this.headers[n].text = names[n]
       }
     },
-    getColor(item, val) {
+    getColor(item, val, num) {
       let name = this.getKeyByValue(item, val)
       console.log(name)
-      if (name == 'one') {
-        return val >= this.heat[0].gre ? 'green lighten-1' : val >= this.heat[0].yel ? 'amber lighten-1' : 'red lighten-1'
+      if (name == 'one' || name == 'thr') {
+        return val >= this.heat[num].gre ? 'green lighten-1' : val >= this.heat[num].yel ? 'amber lighten-1' : 'red lighten-1'
       } else if (name == 'two') {
         let abs = Math.abs(val)
         console.log(abs)
-        return abs > this.heat[1].yel ? 'red lighten-1' : abs >= this.heat[1].gre ? 'amber lighten-1' : 'green lighten-1'
+        return abs > this.heat[num].yel ? 'red lighten-1' : abs >= this.heat[num].gre ? 'amber lighten-1' : 'green lighten-1'
       }
     },
   },
