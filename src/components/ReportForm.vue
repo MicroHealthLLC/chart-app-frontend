@@ -439,7 +439,8 @@ export default {
       if (this.$route.path === `/${this.currentChannels[0].name}/reports`){
         this.$emit("closeAddReportForm")
       } else {
-        this.$router.push(`/${this.currentChannels[0].name}/reports`)
+        this.$router.go(-1)
+        //this.$router.push(`/${this.currentChannels[0].name}/reports`)
       }
     },
     saveReport() {

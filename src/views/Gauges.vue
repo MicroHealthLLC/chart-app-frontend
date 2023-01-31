@@ -16,7 +16,7 @@
         </v-card> 
       </v-dialog>
       <v-dialog v-model="showAddHeatMapForm" width="60%">
-        <v-card class="px-4 py-4 modal">
+        <v-card class="px-2 py-2 modal">
           <HeatMapForm @closeHeatMapForm="closeHeatMapForm" :showAddHeatMapForm="showAddHeatMapForm" />  
         </v-card> 
       </v-dialog>
@@ -42,8 +42,8 @@
           >
         </div> -->
         </v-row>
-      </v-container>
-      <v-divider class="mb-4"></v-divider>
+       </v-container>
+      <!--<v-divider class="mb-4"></v-divider>
       <v-container class="pl-5">
         <v-row>
         <v-col xl="6" lg="6" md="10" sm="12">
@@ -54,18 +54,8 @@
             <v-card-subtitle>By: "Name"</v-card-subtitle>
           </v-card>
         </v-col>
-        <!-- <div class="d-flex justify-end btn-container">
-          <v-btn
-            v-if="reports.length >= 6"
-            to="/public-reports"
-            class="d-flex-end"
-            color="primary"
-            text
-            >View All</v-btn
-          >
-        </div> -->
         </v-row>
-      </v-container>
+      </v-container> -->
       <div v-if="channelGauges.length == 0" class="placeholder d-flex flex-column justify-center align-center">
         <p class="font-weight-light">No KPIs on this Channel yet...</p>
         <v-btn text small color="primary" @click.prevent="toNewGauge">Add a KPI</v-btn>
@@ -78,7 +68,7 @@
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import GaugeForm from "../components/GaugeForm.vue";
 import HeatMapForm from "../components/HeatMapForm.vue";
-import KPIHeatMap from "../components/KPIHeatMap.vue";
+//import KPIHeatMap from "../components/KPIHeatMap.vue";
 import KPIGauge from "../components/KPIGauge.vue";
 import gaugeMixin from "../mixins/gauge-mixin";
 //import VueSpeedometer from "vue-speedometer";
@@ -90,7 +80,7 @@ export default {
     GaugeForm,
     HeatMapForm,
     KPIGauge,
-    KPIHeatMap
+    //KPIHeatMap
   },
   mixins: [gaugeMixin],
   data() {
@@ -100,7 +90,7 @@ export default {
     } 
   },
   methods: {
-    ...mapActions(["fetchGauges", "fetchGauge", "removeGauge"]),
+    ...mapActions(["fetchGauges", "fetchGauge", "removeGauge", "fetchDataSets"]),
     ...mapMutations(["SET_GAUGE"]),
     toNewGauge(){
       this.showAddGaugeForm = true
@@ -110,7 +100,7 @@ export default {
     },
     toNewHeatMap(){
       this.showAddHeatMapForm = true
-      this.SET_HEATMAP(this.newHeatMap)
+      //this.SET_HEATMAP(this.newHeatMap)
       //this.$router.push(`data-sets/add-data-set`); 
     },
     closeGaugeForm() {
@@ -166,9 +156,20 @@ export default {
     }, */
     
   },
+  mounted() {
+    console.log(this.gauges)
+  },
   beforeMount() {
     this.fetchGauges()
+    this.fetchDataSets()
   },
+  watch: {
+    gauges() {
+      if (this.gauges) {
+        console.log(this.gauges)
+      }
+    }
+  }
 };
 </script>
 

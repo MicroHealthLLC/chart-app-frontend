@@ -1,0 +1,6 @@
+{
+  "AppSyncApiName": "mrms",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthModeLastUpdated": "2022-12-01T14:02:55.698Z"
+}

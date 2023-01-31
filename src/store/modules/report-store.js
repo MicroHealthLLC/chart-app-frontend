@@ -125,6 +125,7 @@ export default {
     async fetchReportGroups({ commit }) {
       try {     
        const res = await API.graphql(graphqlOperation(listReportGroups));
+       console.log(res.data)
         commit("SET_REPORT_GROUPS", res.data.listReportGroups.items);
       } catch (error) {
         console.log(error);

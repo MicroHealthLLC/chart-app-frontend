@@ -90,6 +90,7 @@ export default {
   components: {
   },
   props: {
+    tableData: Object
   },
   data() {
     return {
@@ -220,12 +221,12 @@ export default {
     },
     getColor(item, val, num) {
       let name = this.getKeyByValue(item, val)
-      console.log(name)
+      //console.log(name)
       if (name == 'one' || name == 'thr') {
         return val >= this.heat[num].gre ? 'green lighten-1' : val >= this.heat[num].yel ? 'amber lighten-1' : 'red lighten-1'
       } else if (name == 'two') {
         let abs = Math.abs(val)
-        console.log(abs)
+        //console.log(abs)
         return abs > this.heat[num].yel ? 'red lighten-1' : abs >= this.heat[num].gre ? 'amber lighten-1' : 'green lighten-1'
       }
     },
@@ -234,6 +235,7 @@ export default {
   },
   mounted() {
     this.setHeaders(this.dataItems)
+    console.log(this.tableData)
   }
 };
 </script>

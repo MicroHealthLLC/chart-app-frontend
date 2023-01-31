@@ -114,7 +114,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["channel", "dashboards"]),
+    ...mapGetters(["channel"]),
   },
   methods: {
     ...mapActions(["fetchChannel", "fetchDashboards", "fetchUsers"]),

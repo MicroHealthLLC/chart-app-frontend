@@ -43,12 +43,15 @@ export const getReport = /* GraphQL */ `
       dashboard {
         id
         title
+        description
         reports {
           nextToken
         }
         gauges {
           nextToken
         }
+        createdBy
+        updatedBy
         createdAt
         updatedAt
       }
@@ -72,9 +75,20 @@ export const getReport = /* GraphQL */ `
         dataValues {
           nextToken
         }
+        heatMap {
+          id
+          title
+          options
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+          heatMapDataSetId
+        }
         user
         createdAt
         updatedAt
+        dataSetHeatMapId
       }
       dataSetId
       xAxis
@@ -122,6 +136,9 @@ export const listReports = /* GraphQL */ `
         dashboard {
           id
           title
+          description
+          createdBy
+          updatedBy
           createdAt
           updatedAt
         }
@@ -136,6 +153,7 @@ export const listReports = /* GraphQL */ `
           user
           createdAt
           updatedAt
+          dataSetHeatMapId
         }
         dataSetId
         xAxis
@@ -240,12 +258,15 @@ export const getGauge = /* GraphQL */ `
       dashboard {
         id
         title
+        description
         reports {
           nextToken
         }
         gauges {
           nextToken
         }
+        createdBy
+        updatedBy
         createdAt
         updatedAt
       }
@@ -284,6 +305,9 @@ export const listGauges = /* GraphQL */ `
         dashboard {
           id
           title
+          description
+          createdBy
+          updatedBy
           createdAt
           updatedAt
         }
@@ -297,11 +321,89 @@ export const listGauges = /* GraphQL */ `
     }
   }
 `;
+export const getHeatMap = /* GraphQL */ `
+  query GetHeatMap($id: ID!) {
+    getHeatMap(id: $id) {
+      id
+      title
+      dataSet {
+        id
+        title
+        description
+        channel {
+          id
+          description
+          type
+          title
+          channelTypeId
+          createdAt
+          updatedAt
+        }
+        channelId
+        dataValues {
+          nextToken
+        }
+        heatMap {
+          id
+          title
+          options
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+          heatMapDataSetId
+        }
+        user
+        createdAt
+        updatedAt
+        dataSetHeatMapId
+      }
+      options
+      createdBy
+      updatedBy
+      createdAt
+      updatedAt
+      heatMapDataSetId
+    }
+  }
+`;
+export const listHeatMaps = /* GraphQL */ `
+  query ListHeatMaps(
+    $filter: ModelHeatMapFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listHeatMaps(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        title
+        dataSet {
+          id
+          title
+          description
+          channelId
+          user
+          createdAt
+          updatedAt
+          dataSetHeatMapId
+        }
+        options
+        createdBy
+        updatedBy
+        createdAt
+        updatedAt
+        heatMapDataSetId
+      }
+      nextToken
+    }
+  }
+`;
 export const getDashboard = /* GraphQL */ `
   query GetDashboard($id: ID!) {
     getDashboard(id: $id) {
       id
       title
+      description
       reports {
         items {
           id
@@ -340,6 +442,8 @@ export const getDashboard = /* GraphQL */ `
         }
         nextToken
       }
+      createdBy
+      updatedBy
       createdAt
       updatedAt
     }
@@ -355,12 +459,15 @@ export const listDashboards = /* GraphQL */ `
       items {
         id
         title
+        description
         reports {
           nextToken
         }
         gauges {
           nextToken
         }
+        createdBy
+        updatedBy
         createdAt
         updatedAt
       }
@@ -403,6 +510,7 @@ export const getChannel = /* GraphQL */ `
           user
           createdAt
           updatedAt
+          dataSetHeatMapId
         }
         nextToken
       }
@@ -495,9 +603,30 @@ export const getDataSet = /* GraphQL */ `
         }
         nextToken
       }
+      heatMap {
+        id
+        title
+        dataSet {
+          id
+          title
+          description
+          channelId
+          user
+          createdAt
+          updatedAt
+          dataSetHeatMapId
+        }
+        options
+        createdBy
+        updatedBy
+        createdAt
+        updatedAt
+        heatMapDataSetId
+      }
       user
       createdAt
       updatedAt
+      dataSetHeatMapId
     }
   }
 `;
@@ -525,9 +654,20 @@ export const listDataSets = /* GraphQL */ `
         dataValues {
           nextToken
         }
+        heatMap {
+          id
+          title
+          options
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+          heatMapDataSetId
+        }
         user
         createdAt
         updatedAt
+        dataSetHeatMapId
       }
       nextToken
     }
@@ -556,9 +696,20 @@ export const getDataValue = /* GraphQL */ `
         dataValues {
           nextToken
         }
+        heatMap {
+          id
+          title
+          options
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+          heatMapDataSetId
+        }
         user
         createdAt
         updatedAt
+        dataSetHeatMapId
       }
       createdAt
       updatedAt
@@ -584,6 +735,7 @@ export const listDataValues = /* GraphQL */ `
           user
           createdAt
           updatedAt
+          dataSetHeatMapId
         }
         createdAt
         updatedAt

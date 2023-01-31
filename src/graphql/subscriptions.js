@@ -43,12 +43,15 @@ export const onCreateReport = /* GraphQL */ `
       dashboard {
         id
         title
+        description
         reports {
           nextToken
         }
         gauges {
           nextToken
         }
+        createdBy
+        updatedBy
         createdAt
         updatedAt
       }
@@ -72,9 +75,20 @@ export const onCreateReport = /* GraphQL */ `
         dataValues {
           nextToken
         }
+        heatMap {
+          id
+          title
+          options
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+          heatMapDataSetId
+        }
         user
         createdAt
         updatedAt
+        dataSetHeatMapId
       }
       dataSetId
       xAxis
@@ -129,12 +143,15 @@ export const onUpdateReport = /* GraphQL */ `
       dashboard {
         id
         title
+        description
         reports {
           nextToken
         }
         gauges {
           nextToken
         }
+        createdBy
+        updatedBy
         createdAt
         updatedAt
       }
@@ -158,9 +175,20 @@ export const onUpdateReport = /* GraphQL */ `
         dataValues {
           nextToken
         }
+        heatMap {
+          id
+          title
+          options
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+          heatMapDataSetId
+        }
         user
         createdAt
         updatedAt
+        dataSetHeatMapId
       }
       dataSetId
       xAxis
@@ -215,12 +243,15 @@ export const onDeleteReport = /* GraphQL */ `
       dashboard {
         id
         title
+        description
         reports {
           nextToken
         }
         gauges {
           nextToken
         }
+        createdBy
+        updatedBy
         createdAt
         updatedAt
       }
@@ -244,9 +275,20 @@ export const onDeleteReport = /* GraphQL */ `
         dataValues {
           nextToken
         }
+        heatMap {
+          id
+          title
+          options
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+          heatMapDataSetId
+        }
         user
         createdAt
         updatedAt
+        dataSetHeatMapId
       }
       dataSetId
       xAxis
@@ -395,12 +437,15 @@ export const onCreateGauge = /* GraphQL */ `
       dashboard {
         id
         title
+        description
         reports {
           nextToken
         }
         gauges {
           nextToken
         }
+        createdBy
+        updatedBy
         createdAt
         updatedAt
       }
@@ -443,12 +488,15 @@ export const onUpdateGauge = /* GraphQL */ `
       dashboard {
         id
         title
+        description
         reports {
           nextToken
         }
         gauges {
           nextToken
         }
+        createdBy
+        updatedBy
         createdAt
         updatedAt
       }
@@ -491,12 +539,15 @@ export const onDeleteGauge = /* GraphQL */ `
       dashboard {
         id
         title
+        description
         reports {
           nextToken
         }
         gauges {
           nextToken
         }
+        createdBy
+        updatedBy
         createdAt
         updatedAt
       }
@@ -508,11 +559,150 @@ export const onDeleteGauge = /* GraphQL */ `
     }
   }
 `;
+export const onCreateHeatMap = /* GraphQL */ `
+  subscription OnCreateHeatMap {
+    onCreateHeatMap {
+      id
+      title
+      dataSet {
+        id
+        title
+        description
+        channel {
+          id
+          description
+          type
+          title
+          channelTypeId
+          createdAt
+          updatedAt
+        }
+        channelId
+        dataValues {
+          nextToken
+        }
+        heatMap {
+          id
+          title
+          options
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+          heatMapDataSetId
+        }
+        user
+        createdAt
+        updatedAt
+        dataSetHeatMapId
+      }
+      options
+      createdBy
+      updatedBy
+      createdAt
+      updatedAt
+      heatMapDataSetId
+    }
+  }
+`;
+export const onUpdateHeatMap = /* GraphQL */ `
+  subscription OnUpdateHeatMap {
+    onUpdateHeatMap {
+      id
+      title
+      dataSet {
+        id
+        title
+        description
+        channel {
+          id
+          description
+          type
+          title
+          channelTypeId
+          createdAt
+          updatedAt
+        }
+        channelId
+        dataValues {
+          nextToken
+        }
+        heatMap {
+          id
+          title
+          options
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+          heatMapDataSetId
+        }
+        user
+        createdAt
+        updatedAt
+        dataSetHeatMapId
+      }
+      options
+      createdBy
+      updatedBy
+      createdAt
+      updatedAt
+      heatMapDataSetId
+    }
+  }
+`;
+export const onDeleteHeatMap = /* GraphQL */ `
+  subscription OnDeleteHeatMap {
+    onDeleteHeatMap {
+      id
+      title
+      dataSet {
+        id
+        title
+        description
+        channel {
+          id
+          description
+          type
+          title
+          channelTypeId
+          createdAt
+          updatedAt
+        }
+        channelId
+        dataValues {
+          nextToken
+        }
+        heatMap {
+          id
+          title
+          options
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+          heatMapDataSetId
+        }
+        user
+        createdAt
+        updatedAt
+        dataSetHeatMapId
+      }
+      options
+      createdBy
+      updatedBy
+      createdAt
+      updatedAt
+      heatMapDataSetId
+    }
+  }
+`;
 export const onCreateDashboard = /* GraphQL */ `
   subscription OnCreateDashboard {
     onCreateDashboard {
       id
       title
+      description
       reports {
         items {
           id
@@ -551,6 +741,8 @@ export const onCreateDashboard = /* GraphQL */ `
         }
         nextToken
       }
+      createdBy
+      updatedBy
       createdAt
       updatedAt
     }
@@ -561,6 +753,7 @@ export const onUpdateDashboard = /* GraphQL */ `
     onUpdateDashboard {
       id
       title
+      description
       reports {
         items {
           id
@@ -599,6 +792,8 @@ export const onUpdateDashboard = /* GraphQL */ `
         }
         nextToken
       }
+      createdBy
+      updatedBy
       createdAt
       updatedAt
     }
@@ -609,6 +804,7 @@ export const onDeleteDashboard = /* GraphQL */ `
     onDeleteDashboard {
       id
       title
+      description
       reports {
         items {
           id
@@ -647,6 +843,8 @@ export const onDeleteDashboard = /* GraphQL */ `
         }
         nextToken
       }
+      createdBy
+      updatedBy
       createdAt
       updatedAt
     }
@@ -687,6 +885,7 @@ export const onCreateChannel = /* GraphQL */ `
           user
           createdAt
           updatedAt
+          dataSetHeatMapId
         }
         nextToken
       }
@@ -750,6 +949,7 @@ export const onUpdateChannel = /* GraphQL */ `
           user
           createdAt
           updatedAt
+          dataSetHeatMapId
         }
         nextToken
       }
@@ -813,6 +1013,7 @@ export const onDeleteChannel = /* GraphQL */ `
           user
           createdAt
           updatedAt
+          dataSetHeatMapId
         }
         nextToken
       }
@@ -876,9 +1077,30 @@ export const onCreateDataSet = /* GraphQL */ `
         }
         nextToken
       }
+      heatMap {
+        id
+        title
+        dataSet {
+          id
+          title
+          description
+          channelId
+          user
+          createdAt
+          updatedAt
+          dataSetHeatMapId
+        }
+        options
+        createdBy
+        updatedBy
+        createdAt
+        updatedAt
+        heatMapDataSetId
+      }
       user
       createdAt
       updatedAt
+      dataSetHeatMapId
     }
   }
 `;
@@ -917,9 +1139,30 @@ export const onUpdateDataSet = /* GraphQL */ `
         }
         nextToken
       }
+      heatMap {
+        id
+        title
+        dataSet {
+          id
+          title
+          description
+          channelId
+          user
+          createdAt
+          updatedAt
+          dataSetHeatMapId
+        }
+        options
+        createdBy
+        updatedBy
+        createdAt
+        updatedAt
+        heatMapDataSetId
+      }
       user
       createdAt
       updatedAt
+      dataSetHeatMapId
     }
   }
 `;
@@ -958,9 +1201,30 @@ export const onDeleteDataSet = /* GraphQL */ `
         }
         nextToken
       }
+      heatMap {
+        id
+        title
+        dataSet {
+          id
+          title
+          description
+          channelId
+          user
+          createdAt
+          updatedAt
+          dataSetHeatMapId
+        }
+        options
+        createdBy
+        updatedBy
+        createdAt
+        updatedAt
+        heatMapDataSetId
+      }
       user
       createdAt
       updatedAt
+      dataSetHeatMapId
     }
   }
 `;
@@ -987,9 +1251,20 @@ export const onCreateDataValue = /* GraphQL */ `
         dataValues {
           nextToken
         }
+        heatMap {
+          id
+          title
+          options
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+          heatMapDataSetId
+        }
         user
         createdAt
         updatedAt
+        dataSetHeatMapId
       }
       createdAt
       updatedAt
@@ -1019,9 +1294,20 @@ export const onUpdateDataValue = /* GraphQL */ `
         dataValues {
           nextToken
         }
+        heatMap {
+          id
+          title
+          options
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+          heatMapDataSetId
+        }
         user
         createdAt
         updatedAt
+        dataSetHeatMapId
       }
       createdAt
       updatedAt
@@ -1051,9 +1337,20 @@ export const onDeleteDataValue = /* GraphQL */ `
         dataValues {
           nextToken
         }
+        heatMap {
+          id
+          title
+          options
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+          heatMapDataSetId
+        }
         user
         createdAt
         updatedAt
+        dataSetHeatMapId
       }
       createdAt
       updatedAt

@@ -42,3 +42,6 @@ amplifytools.xcconfig
 .secret-*
 **.sample
 #amplify-do-not-edit-end
+
+C:/Users/ZachEgner/Documents/MicroHealthRepo/chart-app-frontend/amplify/mock-data
+amplify/mock-api-resources

@@ -128,6 +128,11 @@ export default {
       this.$router.go(-1)
       this.$refs.form.reset();
     },
+    toReport(reportId) {
+      this.$router.push(
+        `reports/${reportId}`
+      );
+    },
     /*saveReport() {
       this.$refs.form.validate();
       this.submitAttempted = true;
@@ -220,7 +225,7 @@ export default {
     ]),
     channelReports() {
       if (this.reports && this.reports.length > 0 && this.currentChannels && this.currentChannels[0]) {
-        console.log(this.currentChannels[0])
+        //console.log(this.currentChannels[0])
 
         return this.reports.filter(t => t.channelId == this.currentChannels[0].channelId)
       } else return []

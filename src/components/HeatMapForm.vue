@@ -1,10 +1,11 @@
 <template>
+  <v-container >
     <v-row>
       <!-- Title -->
-      <v-col class="col-12">
+      <v-col cols="12">
         <div class="d-flex justify-space-between">
-          <h3 v-if="heatMap.id">Update {{ heatMap.title }}</h3>
-          <h3 v-else>Add Heat Map</h3>
+          <!-- <h3 v-if="heatMap.id">Update {{ heatMap.title }}</h3> -->
+          <h3>Add Heat Map</h3>
           <div>
             <v-btn
               @click="saveHeatMap"
@@ -21,16 +22,23 @@
         </div>
         <v-divider></v-divider>
       </v-col>
+      <v-col v-if="heatMap.dataSet" class="mt-2 mb-4">
+        <v-card>
+          <KPIHeatMap :tableData="heatMap" />
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row>
       <v-col>
         <v-alert
           v-if="!formValid && submitAttempted"
           type="error"
           dense
           dismissible
-          >Please fix highlighted fields below before sumbitting Report</v-alert
+          >Please fix highlighted fields below before submitting Heat Map</v-alert
         >
         <!-- Form Fields -->
-        <v-form v-model="formValid" ref="form">
+        <v-form v-model="formValid" ref="form" class="mt-2">
           <div class="grid">
             <div>
               <v-text-field
@@ -38,102 +46,46 @@
                 label="Title"
                 dense
                 required
-                :readonly="isReadOnly"
                 :rules="[(v) => !!v || 'Title is required']"
               ></v-text-field>
             </div>
-            <div>
-              <v-text-field :readonly="isReadOnly" v-model="heatMap.user" label="Created By" dense>
+            <!-- <div>
+              <v-text-field v-model="heatMap.user" label="Created By" dense>
               </v-text-field>
-            </div>
-            <div :class="{ description: heatMap.id }">
-              <v-text-field
-                v-model="heatMap.description"
-                label="Description"
-                dense
-                :readonly="isReadOnly"
-              ></v-text-field>
-            </div>
+            </div> -->
             <div>
-              <v-file-input
-                v-show="heatMap.id != ''"
-                placeholder="Please choose a file..."
-                type="file"
-                @change.native="onChange"
-                @click:clear="clearInput('file')"
-                dense
-              />
-              <xlsx-read :options="readOptions" :file="file">
-                <xlsx-json
-                  :options="readOptions"
-                  @parsed="uploadData"
-                ></xlsx-json>
-              </xlsx-read>
-              <div>
-              <v-btn v-if="heatMap.id" :disabled="(!file)" class="mb-1" elevation="4" small @click="addNewDataValue"><v-icon>mdi-plus-circle-outline</v-icon> Add New Data</v-btn>
+            <v-select
+              v-model="heatMap.dataSet"
+              :items="dataSetChoices"
+              item-text="title"
+              item-value="id"
+              label="Data Set"
+              dense
+              required
+              :rules="[(v) => !!v || 'Data Set is required']"
+            ></v-select>
           </div>
-            </div>
           </div>
         </v-form>
       </v-col> 
-      <!-- Chart Preview -->
-      <v-col v-show="heatMap.id && this.heatMap.dataValues && this.heatMap.dataValues.items && this.heatMap.dataValues.items.length > 0" class="col-12">
-        <v-card  class="d-flex flex-column preview-container justify-center">
-          <v-card-title>
-            <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
-          </v-card-title>
-          <v-card-title class="justify-center">
-          </v-card-title>
-          <div class="ma-4" v-if="(chartType === 'Data Table')">
-            <v-data-table :headers="headers" :items="items" :single-select="false" :search="search" :loading="$store.getters.loading" loading-text="Loading... Please wait">
-            </v-data-table>
-          </div>
-        </v-card>
-      </v-col>
     </v-row>
+    </v-container>
   </template>
   
   <script>
-  import { XlsxRead } from "vue-xlsx";
-  import { XlsxJson } from "vue-xlsx";
+  import KPIHeatMap from "./KPIHeatMap.vue";
   import { mapActions, mapGetters, mapMutations } from "vuex";
   import datasetMixin from "../mixins/dataset-mixin";
   
   export default {
     name: "HeatMapForm",
     components: {
-      XlsxRead,
-      XlsxJson,
+      KPIHeatMap
     },
     data() {
       return {
-        file: null,
-        chartOptions: {
-          responsive: true,
-          maintainAspectRatio: false,
-          title: {
-            display: true,
-            text: ["", ""],
-          },
-          bezierCurve: false,
-        },
-        chartType: "Data Table",
-        readOptions: {
-          cellDates: true,
-          raw: false,
-          dateNF: "mm/dd/yyyy",
-        },
-        headers: [],
-        value: [],
-        items: [],
-        selected: [],
-        xAxisKeys: [],
-        xAxisValue: "",
-        formValid: true,
         submitAttempted: false,
-        dataValueInput: '',
-        isReadOnly: false,
-        search: ''
+        formValid: true,
       };
     },
     mixins: [datasetMixin],
@@ -141,12 +93,19 @@
       ...mapGetters([
         "heatMap",
         "currentChannels",
+        "dataSets",
         "statusCode",
         "user",
       ]),
+      dataSetChoices(){
+        if(this.dataSets) {
+          return this.dataSets.filter(d => d.channelId == this.currentChannels[0].channelId);
+        }
+        return ""
+      }
     },
     methods: {
-      ...mapActions([]),
+      ...mapActions(["fetchHeatMaps", "fetchHeatMap", "addHeatMap"]),
       ...mapMutations([]),
       onChange(event) {
         this.file = event.target.files ? event.target.files[0] : null;
@@ -155,9 +114,10 @@
         this.clear()
         this.$refs.form.reset();
         if (this.$route.path === `/${this.currentChannels[0].name}/gauges`){
-          this.$emit("closeAddHeatMapForm")
+          this.$emit("closeHeatMapForm")
         } else {
-          this.$router.push(`/${this.currentChannels[0].name}/gauges`)
+          this.$router.go(-1)
+          //this.$router.push(`/${this.currentChannels[0].name}/gauges`)
         }
       },
       clear() {
@@ -170,6 +130,7 @@
   
       },
       async saveHeatMap() {
+        this.submitAttempted = true
         this.$refs.form.validate();
         if (this.formValid) {
           if (!this.isReadOnly && this.heatMap.id) {
@@ -239,13 +200,14 @@
       },
     },
     async mounted() {
-      if (this.$route.path === `/${this.currentChannels[0].name}/data-sets`){ 
+      if (this.$route.path === `/${this.currentChannels[0].name}/gauges`){ 
         this.heatMap.id = ""
         this.isReadOnly = false
         this.clear()
       } else {
+        console.log("else")
         await this.fetchHeatMap(this.$route.params.dataSetId)
-        if (this.heatMap && this.heatMap.dataValues && this.heatMap.dataValues.items && this.heatMap.dataValues.items.length > 0) {
+        /* if (this.heatMap && this.heatMap.dataValues && this.heatMap.dataValues.items && this.heatMap.dataValues.items.length > 0) {
           console.log(this.heatMap.dataValues)
           const keys = Object.keys(this.createMasterData(this.heatMap.dataValues.items)[0])
           //this.xAxisKeys = keys
@@ -259,10 +221,11 @@
         this.isReadOnly = true
       }
       this.fetchChannels();
-      this.fetchHeatMaps()
+      this.fetchHeatMaps() */
       if (!this.heatMap.user) {
         this.heatMap.user = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`
       }
+    }
     },
     watch: {
       heatMap() {

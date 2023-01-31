@@ -133,7 +133,8 @@ export default {
       if (this.$route.path === `/${this.currentChannels[0].name}/gauges` && this.showAddGaugeForm) {
         this.$emit("closeGaugeForm")
       } else {
-        this.$router.push(`/${this.currentChannels[0].name}/gauges`)
+        this.$router.go(-1)
+        //this.$router.push(`/${this.currentChannels[0].name}/gauges`)
       }
     },
     clear() {

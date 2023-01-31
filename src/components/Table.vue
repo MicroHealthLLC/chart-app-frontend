@@ -6,6 +6,11 @@
 import { mapGetters } from "vuex";
 
 export default {
+  props: {
+    chartData: {
+      type: Array,
+    },
+  },
   data() {
     return {
       headers: [],
@@ -15,7 +20,7 @@ export default {
   methods: {
     loadTable() {
       console.log(this.activeReport)
-      const data = this.activeReport.data_set.data;
+      const data = this.chartData;
 
       const keys = Object.keys(data[0]);
 

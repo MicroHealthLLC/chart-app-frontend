@@ -120,10 +120,10 @@ export default {
     ChannelDetails,
   },
   computed: {
-    ...mapGetters(["channel", "dashboards"]),
+    ...mapGetters(["channel"]),
   },
   methods: {
-    ...mapActions(["fetchChannel", "fetchDashboards", "fetchUsers"]),
+    ...mapActions(["fetchChannel", "fetchUsers"]),
     openForm() {
       this.showForm = true;
     },
@@ -133,7 +133,6 @@ export default {
   },
   beforeMount() {
     this.fetchChannel(this.$route.params.channelId);
-    this.fetchDashboards();
     this.fetchUsers();
   },
   watch: {
