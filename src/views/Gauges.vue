@@ -43,7 +43,7 @@
         </div> -->
         </v-row>
        </v-container>
-      <!--<v-divider class="mb-4"></v-divider>
+      <v-divider class="mb-4"></v-divider>
       <v-container class="pl-5">
         <v-row>
         <v-col xl="6" lg="6" md="10" sm="12">
@@ -55,7 +55,7 @@
           </v-card>
         </v-col>
         </v-row>
-      </v-container> -->
+      </v-container>
       <div v-if="channelGauges.length == 0" class="placeholder d-flex flex-column justify-center align-center">
         <p class="font-weight-light">No KPIs on this Channel yet...</p>
         <v-btn text small color="primary" @click.prevent="toNewGauge">Add a KPI</v-btn>
@@ -68,7 +68,7 @@
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import GaugeForm from "../components/GaugeForm.vue";
 import HeatMapForm from "../components/HeatMapForm.vue";
-//import KPIHeatMap from "../components/KPIHeatMap.vue";
+import KPIHeatMap from "../components/KPIHeatMap.vue";
 import KPIGauge from "../components/KPIGauge.vue";
 import gaugeMixin from "../mixins/gauge-mixin";
 //import VueSpeedometer from "vue-speedometer";
@@ -80,7 +80,7 @@ export default {
     GaugeForm,
     HeatMapForm,
     KPIGauge,
-    //KPIHeatMap
+    KPIHeatMap
   },
   mixins: [gaugeMixin],
   data() {
@@ -90,7 +90,7 @@ export default {
     } 
   },
   methods: {
-    ...mapActions(["fetchGauges", "fetchGauge", "removeGauge", "fetchDataSets"]),
+    ...mapActions(["fetchGauges", "fetchGauge", "removeGauge", "fetchHeatMaps", "fetchDataSets"]),
     ...mapMutations(["SET_GAUGE"]),
     toNewGauge(){
       this.showAddGaugeForm = true
@@ -109,64 +109,27 @@ export default {
     closeHeatMapForm() {
       this.showAddHeatMapForm = false
     },
-    /* toGauge(gaugeId) {
-      this.fetchGauge(gaugeId)
-      this.$router.push(
-        `gauges/${gaugeId}`
-      );
-    }, */
-    /* async editItem(item) {
-      console.log(item)
-      let id = item.id
-      await this.fetchGauge(id)
-      this.$router.push(`gauges/${id}`)
-    },
-    deleteItem(item) {
-      this.$confirm(
-        `Are you sure you want to delete the "${item.title}" KPI?`,
-        "Confirm Delete",
-        {
-          confirmButtonText: "Delete",
-          cancelButtonText: "Cancel",
-          type: "warning",
-        }
-       ).then(() => {
-        this.removeGauge({ id: item.id });
-      });
-    }, */
-    /* setSegments(chartType, prop) {
-      if (chartType == "Traditional" ) {
-        return prop == 'color' ? ['tomato', 'gold', 'limegreen'] 
-          : (prop == 'count') ? 3 : ''
-      } else if (chartType == "Middle") {
-        return prop == 'color' ? ['tomato', 'gold', 'limegreen', 'gold', 'tomato'] 
-          : (prop == 'count') ? 5 : ''
-      } else {
-        return prop == 'color' ? ['tomato', 'gold', 'limegreen'] 
-          : (prop == 'count') ? 3 : ''
-      }
-    } */
   },
   computed: {
-    ...mapGetters(["gauges", "currentChannels", "gauge"]),
-    /* channelGauges(){
-      if (this.gauges && this.gauges.length > 0 && this.currentChannels && this.currentChannels[0].channelId){
-        return this.gauges.filter(t => t.channelId == this.currentChannels[0].channelId)
-      } else return []
-    }, */
-    
+    ...mapGetters(["gauges", "currentChannels", "gauge", "heatMaps"]),
   },
   mounted() {
-    console.log(this.gauges)
+    //console.log(this.gauges)
   },
   beforeMount() {
     this.fetchGauges()
+    this.fetchHeatMaps()
     this.fetchDataSets()
   },
   watch: {
     gauges() {
       if (this.gauges) {
-        console.log(this.gauges)
+        //console.log(this.gauges)
+      }
+    },
+    heatMaps() {
+      if (this.heatMaps) {
+        console.log(this.heatMaps)
       }
     }
   }

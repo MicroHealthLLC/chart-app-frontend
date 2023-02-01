@@ -127,7 +127,7 @@ export default {
       try {     
        const res = await API.graphql(graphqlOperation(listHeatMaps));
        console.log(res.data.listHeatMaps)
-        commit("SET_GAUGES", res.data.listHeatMaps.items);
+        commit("SET_HEAT_MAPS", res.data.listHeatMaps.items);
       } catch (error) {
         console.log(error);
       }
@@ -136,7 +136,7 @@ export default {
       commit("TOGGLE_LOADING", true);
       try {     
        const res = await API.graphql(graphqlOperation(getHeatMap, { id: id }));    
-        commit("SET_GAUGE", res.data.getHeatMap);
+        commit("SET_HEAT_MAP", res.data.getHeatMap);
       } catch (error) {
         console.log(error);
       }
@@ -144,7 +144,6 @@ export default {
     },
   },
   mutations: {
-    ADD_GAUGE: (state, gauge) => state.gauges.push(gauge),
     SET_GAUGES: (state, gauges) => (state.gauges = gauges),
     SET_GAUGE: (state, gauge) => (state.gauge = gauge),
     ADD_HEAT_MAP: (state, heatMap) => state.heatMaps.push(heatMap),
