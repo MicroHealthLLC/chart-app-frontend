@@ -4,8 +4,8 @@
     <!-- Title -->
     <v-col cols="12">
       <div class="d-flex justify-space-between">
-        <!-- <h3 v-if="heatMap.id">Update {{ heatMap.title }}</h3> -->
-        <h3>Add Heat Map</h3>
+        <h3 v-if="heatMap.id">Update {{ heatMap.title }}</h3>
+        <h3 v-else>Add Heat Map</h3>
         <div>
           <v-btn
             @click="saveHeatMap"
@@ -113,6 +113,7 @@ export default {
       "heatMap",
       "currentChannels",
       "dataSets",
+      "dataSet",
       "statusCode",
       "user",
     ]),
@@ -124,7 +125,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["fetchHeatMaps", "fetchHeatMap", "addHeatMap"]),
+    ...mapActions(["fetchDataSets","fetchDataSet", "fetchHeatMaps", "fetchHeatMap", "addHeatMap"]),
     ...mapMutations([]),
     onChange(event) {
       this.file = event.target.files ? event.target.files[0] : null;
@@ -141,11 +142,11 @@ export default {
     },
     clear() {
       this.$refs.form.reset();
-      this.file = null;
+      /* this.file = null;
       this.data = [];
       this.selected = [];
       this.headers = [];
-      this.items = [];
+      this.items = []; */
 
     },
     async saveHeatMap() {
@@ -168,15 +169,6 @@ export default {
         }
       }
     },
-    async addNewDataValue() {
-      let objString = JSON.stringify(this.selected)
-      await this.addDataValue({
-        data: objString,
-        dataSetId: this.heatMap.id
-      });
-      this.showDataChart()
-      this.clearInput("file")
-    },
     clearInput(type) {
       this.$refs.form.inputs.forEach(input => {
         if (input.type == type) {
@@ -184,14 +176,11 @@ export default {
         }
       })
     },
-    editForm() {
-      this.isReadOnly = false
-    },
     async showDataChart() {
-      await this.fetchHeatMap(this.$route.params.dataSetId)
+      await this.fetchHeatMap(this.$route.params.heatMapId)
       console.log(this.heatMap)
-      //this.createMasterData(this.heatMap.dataValues.items)
-      this.uploadData(this.createMasterData(this.heatMap.dataValues.items))
+      console.log(this.createMasterData(this.heatMap.dataSet.dataValues.items))
+      //this.uploadData(this.createMasterData(this.heatMap.dataSet.dataValues.items))
     },
     uploadData(data) {
       console.log(data)
@@ -211,7 +200,12 @@ export default {
       this.clear()
     } else {
       console.log("else")
-      await this.fetchHeatMap(this.$route.params.dataSetId)
+      await this.fetchDataSets()
+      await this.fetchHeatMap(this.$route.params.heatMapId)
+      await this.fetchDataSet(this.heatMap.dataSetId)
+      console.log(this.heatMap)
+      console.log(this.dataSet)
+      console.log(this.createMasterData(this.dataSet.dataValues.items))
       /* if (this.heatMap && this.heatMap.dataValues && this.heatMap.dataValues.items && this.heatMap.dataValues.items.length > 0) {
         console.log(this.heatMap.dataValues)
         const keys = Object.keys(this.createMasterData(this.heatMap.dataValues.items)[0])
@@ -239,7 +233,6 @@ export default {
                
         if (this.heatMap.id !== this.$route.params.dataSetId){
           console.log(this.heatMap)
-        this.clear()
         }
       } else this.isReadOnly = false
 

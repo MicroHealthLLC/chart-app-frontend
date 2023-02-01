@@ -46,12 +46,14 @@
       <v-divider class="mb-4"></v-divider>
       <v-container class="pl-5">
         <v-row>
-        <v-col v-for="(heatMap) in channelHeatMaps" :key="heatMap.id" xl="6" lg="6" md="10" sm="12">
-          <v-card tile elevation="4" @click.prevent="toHeatMap(heatMap.id)">
-            <KPIHeatMap  :heatMap="heatMap" />
+        <v-col v-for="(heatMap) in channelHeatMaps" :key="heatMap.id" xl="2" lg="3" md="4" sm="6">
+          <v-card @click.prevent="toHeatMap(heatMap.id)" width="250px" min-width="250px" tile elevation="4">
+            <v-icon x-large class="tableIcon">mdi-table-large</v-icon>
+            <!-- <KPIHeatMap :heatMap="heatMap" /> -->
             <v-divider class="my-2"></v-divider>
-            <v-card-title>Title</v-card-title>
-            <v-card-subtitle>By: "Name"</v-card-subtitle>
+            <v-card-title >{{ heatMap.title }}</v-card-title>
+            <v-card-subtitle v-if="heatMap.createdBy">By: {{ heatMap.createdBy }}</v-card-subtitle>
+            <v-card-subtitle v-else>By: John Smith</v-card-subtitle>
           </v-card>
         </v-col>
         </v-row>
@@ -68,7 +70,7 @@
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import GaugeForm from "../components/GaugeForm.vue";
 import HeatMapForm from "../components/HeatMapForm.vue";
-import KPIHeatMap from "../components/KPIHeatMap.vue";
+//import KPIHeatMap from "../components/KPIHeatMap.vue";
 import KPIGauge from "../components/KPIGauge.vue";
 import gaugeMixin from "../mixins/gauge-mixin";
 //import VueSpeedometer from "vue-speedometer";
@@ -80,7 +82,7 @@ export default {
     GaugeForm,
     HeatMapForm,
     KPIGauge,
-    KPIHeatMap
+    //KPIHeatMap
   },
   mixins: [gaugeMixin],
   data() {
@@ -151,4 +153,10 @@ export default {
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-gap: 4rem;
 }
+
+.mdi-table-large {
+  background: linear-gradient(to right, #EF5350, #EF5350 33.33%, #FFCA28 33.33%, #FFCA28 66.66%, #66BB6A 66.66%);
+  background-clip: text;
+}
+
 </style>

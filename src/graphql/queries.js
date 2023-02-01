@@ -18,6 +18,9 @@ export const getReport = /* GraphQL */ `
         gauges {
           nextToken
         }
+        heatMap {
+          nextToken
+        }
         type
         title
         channelTypeId
@@ -78,12 +81,13 @@ export const getReport = /* GraphQL */ `
         heatMap {
           id
           title
+          dataSetId
           options
+          channelId
           createdBy
           updatedBy
           createdAt
           updatedAt
-          heatMapDataSetId
         }
         user
         createdAt
@@ -248,6 +252,9 @@ export const getGauge = /* GraphQL */ `
         gauges {
           nextToken
         }
+        heatMap {
+          nextToken
+        }
         type
         title
         channelTypeId
@@ -346,24 +353,47 @@ export const getHeatMap = /* GraphQL */ `
         heatMap {
           id
           title
+          dataSetId
           options
+          channelId
           createdBy
           updatedBy
           createdAt
           updatedAt
-          heatMapDataSetId
         }
         user
         createdAt
         updatedAt
         dataSetHeatMapId
       }
+      dataSetId
       options
+      channel {
+        id
+        description
+        reports {
+          nextToken
+        }
+        dataSets {
+          nextToken
+        }
+        gauges {
+          nextToken
+        }
+        heatMap {
+          nextToken
+        }
+        type
+        title
+        channelTypeId
+        createdAt
+        updatedAt
+      }
+      channelId
       createdBy
       updatedBy
       createdAt
       updatedAt
-      heatMapDataSetId
     }
   }
 `;
@@ -387,12 +417,22 @@ export const listHeatMaps = /* GraphQL */ `
           updatedAt
           dataSetHeatMapId
         }
+        dataSetId
         options
+        channel {
+          id
+          description
+          type
+          title
+          channelTypeId
+          createdAt
+          updatedAt
+        }
+        channelId
         createdBy
         updatedBy
         createdAt
         updatedAt
-        heatMapDataSetId
       }
       nextToken
     }
@@ -531,6 +571,20 @@ export const getChannel = /* GraphQL */ `
         }
         nextToken
       }
+      heatMap {
+        items {
+          id
+          title
+          dataSetId
+          options
+          channelId
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       type
       title
       channelTypeId
@@ -556,6 +610,9 @@ export const listChannels = /* GraphQL */ `
           nextToken
         }
         gauges {
+          nextToken
+        }
+        heatMap {
           nextToken
         }
         type
@@ -584,6 +641,9 @@ export const getDataSet = /* GraphQL */ `
           nextToken
         }
         gauges {
+          nextToken
+        }
+        heatMap {
           nextToken
         }
         type
@@ -616,12 +676,22 @@ export const getDataSet = /* GraphQL */ `
           updatedAt
           dataSetHeatMapId
         }
+        dataSetId
         options
+        channel {
+          id
+          description
+          type
+          title
+          channelTypeId
+          createdAt
+          updatedAt
+        }
+        channelId
         createdBy
         updatedBy
         createdAt
         updatedAt
-        heatMapDataSetId
       }
       user
       createdAt
@@ -657,12 +727,13 @@ export const listDataSets = /* GraphQL */ `
         heatMap {
           id
           title
+          dataSetId
           options
+          channelId
           createdBy
           updatedBy
           createdAt
           updatedAt
-          heatMapDataSetId
         }
         user
         createdAt
@@ -699,12 +770,13 @@ export const getDataValue = /* GraphQL */ `
         heatMap {
           id
           title
+          dataSetId
           options
+          channelId
           createdBy
           updatedBy
           createdAt
           updatedAt
-          heatMapDataSetId
         }
         user
         createdAt
