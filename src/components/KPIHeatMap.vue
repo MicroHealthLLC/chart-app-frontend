@@ -22,7 +22,7 @@
     <v-col cols="5">
       <v-card class="mr-2">
         <v-card-title>
-          Project Name
+          {{ heatMap.title }}
         </v-card-title>
         <v-card-subtitle>
           Legend
@@ -90,7 +90,7 @@ export default {
   components: {
   },
   props: {
-    tableData: Object
+    heatMap: Object
   },
   data() {
     return {
@@ -235,7 +235,7 @@ export default {
   },
   mounted() {
     this.setHeaders(this.dataItems)
-    console.log(this.tableData)
+    console.log(this.heatMap)
   }
 };
 </script>

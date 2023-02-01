@@ -46,9 +46,9 @@
       <v-divider class="mb-4"></v-divider>
       <v-container class="pl-5">
         <v-row>
-        <v-col xl="6" lg="6" md="10" sm="12">
-          <v-card tile elevation="4">
-            <KPIHeatMap />
+        <v-col v-for="(heatMap) in channelHeatMaps" :key="heatMap.id" xl="6" lg="6" md="10" sm="12">
+          <v-card tile elevation="4" @click.prevent="toHeatMap(heatMap.id)">
+            <KPIHeatMap  :heatMap="heatMap" />
             <v-divider class="my-2"></v-divider>
             <v-card-title>Title</v-card-title>
             <v-card-subtitle>By: "Name"</v-card-subtitle>
@@ -56,7 +56,7 @@
         </v-col>
         </v-row>
       </v-container>
-      <div v-if="channelGauges.length == 0" class="placeholder d-flex flex-column justify-center align-center">
+      <div v-if="channelGauges.length == 0 && channelHeatMaps.length == 0" class="placeholder d-flex flex-column justify-center align-center">
         <p class="font-weight-light">No KPIs on this Channel yet...</p>
         <v-btn text small color="primary" @click.prevent="toNewGauge">Add a KPI</v-btn>
       </div>

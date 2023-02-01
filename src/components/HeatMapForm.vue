@@ -24,7 +24,7 @@
     </v-col>
     <v-col v-if="heatMap.dataSet" class="mt-2 mb-4">
       <v-card>
-        <KPIHeatMap :tableData="heatMap" />
+        <KPIHeatMap :heatMap="heatMap" />
       </v-card>
     </v-col>
   </v-row>
@@ -152,31 +152,19 @@ export default {
       this.submitAttempted = true
       this.$refs.form.validate();
       if (this.formValid) {
+        let data = {
+          title: this.heatMap.title,
+          dataSetId: this.heatMap.dataSet,
+          options: JSON.stringify(this.mapOptions),
+          channelId: this.currentChannels[0].channelId
+        }
         if (this.heatMap.id) {
-          await this.updateHeatMapById({
-            id: this.heatMap.id,
-            title: this.heatMap.title,
-            dataSetId: this.heatMap.dataSet,
-            options: JSON.stringify(this.mapOptions),
-
-            channelId: this.currentChannels[0].channelId
-          }).then(this.isReadOnly = true)
+          data.id = this.heatMap.id
+          data.updatedBy = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`
+          await this.updateHeatMapById(data)
         } else {
-          //let oldHeatMapIds = this.heatMaps.filter(d => this.currentChannels[0].channelId == d.channelId).map(f => f.id)
-          await this.addHeatMap({
-            title: this.heatMap.title,
-            dataSetId: this.heatMap.dataSet,
-            options: JSON.stringify(this.mapOptions),
-
-            channelId: this.currentChannels[0].channelId
-          })
-          //console.log(oldHeatMapIds)
-          /* this.fetchHeatMaps().then(() => {
-            let lastAdded = this.dataSets.filter(d => this.currentChannels[0].channelId == d.channelId).filter(d => !oldHeatMapIds.includes(d.id))
-            let id = lastAdded[0].id
-            this.$router.push(`/:title/data-sets/${id}`)
-            this.heatMap.id = id
-          }) */
+          data.createdBy = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`
+          await this.addHeatMap(data)
         }
       }
     },

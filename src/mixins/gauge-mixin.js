@@ -11,18 +11,24 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["fetchGauge"]),
+    ...mapActions(["fetchGauge", "fetchHeatMap"]),
     toGauge(gaugeId) {
       this.fetchGauge(gaugeId)
       this.$router.push(
         `gauges/${gaugeId}`
       );
     },
+    toHeatMap(heatMapId) {
+      this.fetchHeatMap(heatMapId)
+      this.$router.push(
+        `heatMaps/${heatMapId}`
+      );
+    },
   },
   mounted() {
   },
   computed: {
-    ...mapGetters(["gauges", "currentChannels"]),
+    ...mapGetters(["gauges", "currentChannels", "heatMaps"]),
     gaugeWidth () {
       switch (this.$vuetify.breakpoint.name) {
         case 'xs': return 200
@@ -53,6 +59,11 @@ export default {
     channelGauges(){
       if (this.gauges && this.gauges.length > 0 && this.currentChannels && this.currentChannels[0].channelId){
         return this.gauges.filter(t => t.channelId == this.currentChannels[0].channelId)
+      } else return []
+    },
+    channelHeatMaps(){
+      if (this.heatMaps && this.heatMaps.length > 0 && this.currentChannels && this.currentChannels[0].channelId){
+        return this.heatMaps.filter(t => t.channelId == this.currentChannels[0].channelId)
       } else return []
     },
   },
