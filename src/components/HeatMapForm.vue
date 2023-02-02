@@ -1,77 +1,48 @@
 <template>
-<v-container >
-  <v-row>
-    <!-- Title -->
-    <v-col cols="11">
-      <div class="d-flex justify-space-between">
-        <h3 v-if="heatMap.id">Update {{ heatMap.title }}</h3>
-        <h3 v-else>Add Heat Map</h3>
-        <div>
-          <v-btn
-            @click="saveHeatMap"
-            class="px-5 mr-2 mb-2"
-            color="primary"
-            depressed
-            small
-            >Save</v-btn
-          >
-          <v-btn class="mb-2" @click="resetAndGoBack" small outlined
-            >Close</v-btn
-          >
+  <v-container>
+    <v-row>
+      <!-- Title -->
+      <v-col cols="11">
+        <div class="d-flex justify-space-between">
+          <h3 v-if="heatMap.id">Update {{ heatMap.title }}</h3>
+          <h3 v-else>Add Heat Map</h3>
+          <div>
+            <v-btn @click="saveHeatMap" class="px-5 mr-2 mb-2" color="primary" depressed small>Save</v-btn>
+            <v-btn class="mb-2" @click="resetAndGoBack" small outlined>Close</v-btn>
+          </div>
         </div>
-      </div>
-      <v-divider></v-divider>
-    </v-col>
+        <v-divider></v-divider>
+      </v-col>
     </v-row>
     <v-row>
-    <v-col cols="11">
-      <v-alert
-        v-if="!formValid && submitAttempted"
-        type="error"
-        dense
-        dismissible
-        >Please fix highlighted fields below before submitting Heat Map</v-alert
-      >
-      <!-- Form Fields -->
-      <v-form v-model="formValid" ref="form" class="mt-2">
-        <div class="grid">
-          <div>
-            <v-text-field
-              v-model="heatMap.title"
-              label="Title"
-              dense
-              required
-              :rules="[(v) => !!v || 'Title is required']"
-            ></v-text-field>
-          </div>
-          <!-- <div>
+      <v-col cols="11">
+        <v-alert v-if="!formValid && submitAttempted" type="error" dense dismissible>Please fix highlighted fields below
+          before submitting Heat Map</v-alert>
+        <!-- Form Fields -->
+        <v-form v-model="formValid" ref="form" class="mt-2">
+          <div class="grid">
+            <div>
+              <v-text-field v-model="heatMap.title" label="Title" dense required
+                :rules="[(v) => !!v || 'Title is required']"></v-text-field>
+            </div>
+            <!-- <div>
             <v-text-field v-model="heatMap.user" label="Created By" dense>
             </v-text-field>
           </div> -->
-          <div>
-          <v-select
-            v-model="heatMap.dataSet"
-            :items="dataSetChoices"
-            item-text="title"
-            item-value="id"
-            label="Data Set"
-            dense
-            required
-            :rules="[(v) => !!v || 'Data Set is required']"
-          ></v-select>
-        </div>
-        </div>
-      </v-form>
-    </v-col>
-  </v-row>
-  <v-row>
-    <v-col v-if="heatMap.dataSet" class="mt-2 mb-4" cols="11">
-      <v-card>
-        <KPIHeatMap :heatMap="heatMap" :headers="headers" :items="items" :options="options" />
-      </v-card>
-    </v-col>
-  </v-row>
-     
+            <div>
+              <v-select v-model="heatMap.dataSet" :items="dataSetChoices" item-text="title" item-value="id" label="Data Set" dense required :rules="[(v) => !!v || 'Data Set is required']" @change="loadTable"></v-select>
+            </div>
+          </div>
+        </v-form>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col v-if="heatMap.dataSet" class="mt-2 mb-4" cols="11">
+        <v-card>
+          <KPIHeatMap :heatMap="heatMap" :headers="headers" :items="items" :options="options" />
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -201,6 +172,9 @@ export default {
         value: item,
       }));
     },
+    loadTable() {
+      this.uploadData(this.createMasterData(this.dataSet.dataValues.items))
+    }
   },
   async mounted() {
     if (this.$route.path === `/${this.currentChannels[0].name}/gauges`){ 
@@ -237,14 +211,12 @@ export default {
   },
   watch: {
     heatMap() {
-      if (this.heatMap.id) {
-        this.isReadOnly = true
-               
-        if (this.heatMap.id !== this.$route.params.heatMapId){
-          console.log(this.heatMap)
-        }
-      } else this.isReadOnly = false
-
+        console.log(this.heatMap.dataSet)
+    },
+    dataSet() {
+      if (this.dataSet) {
+        console.log(this.dataSet)
+      }
     },
     selected(){
       if (this.selected && this.selected.length > 0){
