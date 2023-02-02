@@ -1,22 +1,22 @@
 <template>
   <v-row justify="space-between">
     <v-col cols="7">
-      <v-data-table :headers="headers" :items="dataItems" class="elevation-4 ml-2" :hide-default-footer="dataItems.length <= 15" :disable-pagination="dataItems.length <= 15" calculate-widths>
-        <template v-slot:item.one="{ item }">
-          <v-chip :color="getColor(item, item.one, 0)" label>
-            {{ item.one }}
+      <v-data-table :headers="headers" :items="items" class="elevation-4 ml-2" :hide-default-footer="items.length <= 15" :disable-pagination="items.length <= 15" calculate-widths :loading="$store.getters.loading" loading-text="Loading... Please wait">
+        <template v-slot:item.Score="{ item }">
+          <v-chip :color="getColor(item, item.Score, 0)" label>
+            {{ item.Score }}
           </v-chip>
         </template>
-        <template v-slot:item.two="{ item }">
-          <v-chip :color="getColor(item, item.two, 1)" label>
-            {{ item.two }}
+        <!-- <template v-slot:item.{{ `Score 2` }}="{ item }">
+          <v-chip :color="getColor(item, item.`Score 2`, 1)" label>
+            {{ item.{{}} }}
           </v-chip>
         </template>
         <template v-slot:item.thr="{ item }">
           <v-chip :color="getColor(item, item.thr, 2)" label>
             {{ item.thr }}
           </v-chip>
-        </template>
+        </template> -->
       </v-data-table>
     </v-col>
     <v-col cols="5">
@@ -28,7 +28,7 @@
           Legend
         </v-card-subtitle>
         <v-divider></v-divider>
-        <v-container fluid v-for="name, index in getKeyNames(dataItems).slice(1)" :key="name" class="pb-5">
+        <!-- <v-container fluid v-for="name, index in getKeyNames(items).slice(1)" :key="name" class="pb-5">
           <v-row>
             <v-col cols="12">
               <v-card>
@@ -63,21 +63,7 @@
               </v-card>
             </v-col>
           </v-row>
-        </v-container>
-        <!-- <v-card-actions>
-          <v-btn color="orange lighten-2" text>
-            Expand
-          </v-btn>
-          <v-spacer></v-spacer>
-          <v-btn icon @click="show = !show">
-            <v-icon>{{ show? 'mdi-chevron-up': 'mdi-chevron-down' }}</v-icon>
-          </v-btn>
-        </v-card-actions>
-        <v-expand-transition>
-          <div v-show="show">
-            <v-divider></v-divider>
-          </div>
-        </v-expand-transition> -->
+        </v-container> -->
       </v-card>
     </v-col>
   </v-row>
@@ -90,12 +76,19 @@ export default {
   components: {
   },
   props: {
-    heatMap: Object
+    heatMap: Object,
+    headers: Array,
+    items: Array,
+    options: Object,
   },
   data() {
     return {
       show: false,
-      heat: [
+      footers: {
+        showFirstLastPage: true,
+        disableItemsPerPage: true,
+      },
+      /* heat: [
         {
           abs: false,
           yel: 70,
@@ -111,8 +104,8 @@ export default {
           yel: 1,
           gre: 2,
         } 
-      ],
-      headers: [
+      ], */
+      /* headers: [
         {
           text: '',
           align: 'start',
@@ -122,12 +115,9 @@ export default {
         { text: '', value: 'one' },
         { text: '', value: 'two' },
         { text: '', value: 'thr' }
-      ],
-      footers: {
-        showFirstLastPage: true,
-        disableItemsPerPage: true,
-      },
-      dataItems: [
+      ], */
+      
+      /* dataItems: [
         {
           Month: 'January',
           one: 97,
@@ -200,7 +190,7 @@ export default {
           two: .1,
           thr: 1.09,
         },
-      ],
+      ], */
     }
   },
   computed: {
@@ -214,28 +204,38 @@ export default {
       return Object.keys(obj[0])
     },
     setHeaders(items) {
-      let names = this.getKeyNames(items)
-      for (let n = 0; n < names.length; n++) {
-        this.headers[n].text = names[n]
+      if (items) {
+        let names = this.getKeyNames(items)
+        for (let n = 0; n < names.length; n++) {
+          console.log(names[n])
+          this.headers[n].text = names[n]
+        }
       }
     },
     getColor(item, val, num) {
+      //console.log(item, val, num)
       let name = this.getKeyByValue(item, val)
-      //console.log(name)
-      if (name == 'one' || name == 'thr') {
+      let options = this.options
+      console.log(name)
+      return val >= options.cols[num].gre ? 'green lighten-1' : val >= options.cols[num].yel ? 'amber lighten-1' : 'red lighten-1'
+      /* if (name == 'one' || name == 'thr') {
         return val >= this.heat[num].gre ? 'green lighten-1' : val >= this.heat[num].yel ? 'amber lighten-1' : 'red lighten-1'
       } else if (name == 'two') {
         let abs = Math.abs(val)
         //console.log(abs)
         return abs > this.heat[num].yel ? 'red lighten-1' : abs >= this.heat[num].gre ? 'amber lighten-1' : 'green lighten-1'
-      }
+      } */
     },
   },
   watch: {
+    items() {
+      if (this.items) {
+        this.setHeaders(this.items)
+      }
+    }
   },
   mounted() {
-    this.setHeaders(this.dataItems)
-    console.log(this.heatMap)
+  
   }
 };
 </script>

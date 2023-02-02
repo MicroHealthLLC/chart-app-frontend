@@ -157,6 +157,6 @@ export default {
 .mdi-table-large {
   background: linear-gradient(to right, #EF5350, #EF5350 33.33%, #FFCA28 33.33%, #FFCA28 66.66%, #66BB6A 66.66%);
   background-clip: text;
+  color: rgba(0, 0, 0, 0.2) !important;
 }
-
 </style>

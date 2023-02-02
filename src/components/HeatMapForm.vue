@@ -2,7 +2,7 @@
 <v-container >
   <v-row>
     <!-- Title -->
-    <v-col cols="12">
+    <v-col cols="11">
       <div class="d-flex justify-space-between">
         <h3 v-if="heatMap.id">Update {{ heatMap.title }}</h3>
         <h3 v-else>Add Heat Map</h3>
@@ -22,14 +22,9 @@
       </div>
       <v-divider></v-divider>
     </v-col>
-    <v-col v-if="heatMap.dataSet" class="mt-2 mb-4">
-      <v-card>
-        <KPIHeatMap :heatMap="heatMap" />
-      </v-card>
-    </v-col>
-  </v-row>
-  <v-row>
-    <v-col>
+    </v-row>
+    <v-row>
+    <v-col cols="11">
       <v-alert
         v-if="!formValid && submitAttempted"
         type="error"
@@ -67,8 +62,16 @@
         </div>
         </div>
       </v-form>
-    </v-col> 
+    </v-col>
   </v-row>
+  <v-row>
+    <v-col v-if="heatMap.dataSet" class="mt-2 mb-4" cols="11">
+      <v-card>
+        <KPIHeatMap :heatMap="heatMap" :headers="headers" :items="items" :options="options" />
+      </v-card>
+    </v-col>
+  </v-row>
+     
   </v-container>
 </template>
 
@@ -86,12 +89,15 @@ export default {
     return {
       submitAttempted: false,
       formValid: true,
+      headers: [],
+      items: [],
+      options: {},
       mapOptions: {
         cols: [
         {
           abs: false,
-          yel: 70,
-          gre: 90,
+          yel: 50,
+          gre: 80,
         },
         {
           abs: true,
@@ -125,7 +131,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["fetchDataSets","fetchDataSet", "fetchHeatMaps", "fetchHeatMap", "addHeatMap"]),
+    ...mapActions(["fetchDataSets","fetchDataSet", "fetchHeatMaps", "fetchHeatMap", "addHeatMap", "updateHeatMapById"]),
     ...mapMutations([]),
     onChange(event) {
       this.file = event.target.files ? event.target.files[0] : null;
@@ -176,21 +182,24 @@ export default {
         }
       })
     },
-    async showDataChart() {
+    /* async showDataChart() {
       await this.fetchHeatMap(this.$route.params.heatMapId)
       console.log(this.heatMap)
       console.log(this.createMasterData(this.heatMap.dataSet.dataValues.items))
-      //this.uploadData(this.createMasterData(this.heatMap.dataSet.dataValues.items))
-    },
+      this.uploadData(this.createMasterData(this.heatMap.dataSet.dataValues.items))
+    }, */
     uploadData(data) {
       console.log(data)
       this.items = data;
-      this.selected = data;
+      console.log(this.heatMap.options)
+      this.options = JSON.parse(this.heatMap.options)
+      console.log(this.options)
+      //this.selected = data;
       const keys = Object.keys(data[0])
-        this.headers = keys.map((item) => ({
+      this.headers = keys.map((item) => ({
         text: item,
         value: item,
-        })); 
+      }));
     },
   },
   async mounted() {
@@ -199,13 +208,13 @@ export default {
       this.isReadOnly = false
       this.clear()
     } else {
-      console.log("else")
       await this.fetchDataSets()
       await this.fetchHeatMap(this.$route.params.heatMapId)
       await this.fetchDataSet(this.heatMap.dataSetId)
       console.log(this.heatMap)
       console.log(this.dataSet)
       console.log(this.createMasterData(this.dataSet.dataValues.items))
+      this.uploadData(this.createMasterData(this.dataSet.dataValues.items))
       /* if (this.heatMap && this.heatMap.dataValues && this.heatMap.dataValues.items && this.heatMap.dataValues.items.length > 0) {
         console.log(this.heatMap.dataValues)
         const keys = Object.keys(this.createMasterData(this.heatMap.dataValues.items)[0])
@@ -231,7 +240,7 @@ export default {
       if (this.heatMap.id) {
         this.isReadOnly = true
                
-        if (this.heatMap.id !== this.$route.params.dataSetId){
+        if (this.heatMap.id !== this.$route.params.heatMapId){
           console.log(this.heatMap)
         }
       } else this.isReadOnly = false
@@ -244,7 +253,7 @@ export default {
     },
     statusCode() {
       if (this.statusCode == 201) {
-        this.$router.push(`/data-sets/${this.heatMap.id}`);
+        this.$router.push(`/heatMaps/${this.heatMap.id}`);
         this.SET_STATUS_CODE(0);
       }
     },
