@@ -135,7 +135,14 @@ export default {
     async fetchHeatMap({ commit } , id) {
       commit("TOGGLE_LOADING", true);
       try {     
-       const res = await API.graphql(graphqlOperation(getHeatMap, { id: id }));    
+       const res = await API.graphql(graphqlOperation(getHeatMap, { id: id }));
+       console.log(res.data.getHeatMap)
+       if (res.data.getHeatMap.columns && typeof res.data.getHeatMap.columns == 'string') {
+        res.data.getHeatMap.columns = JSON.parse(res.data.getHeatMap.columns)
+       }
+       if (res.data.getHeatMap.options && typeof res.data.getHeatMap.options == 'string') {
+        res.data.getHeatMap.options = JSON.parse(res.data.getHeatMap.options)
+       }    
         commit("SET_HEAT_MAP", res.data.getHeatMap);
       } catch (error) {
         console.log(error);

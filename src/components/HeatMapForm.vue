@@ -59,21 +59,57 @@
         </v-col>
       </v-row> -->
       <v-row>
-        <v-col v-for="header, i in dataHeaders" :key="i">
-          <v-text-field :v-model="options.cols[i].gre" :label="options.cols[i]" dense required :rules="[(v) => !!v || 'Title is required']">
-            <template v-slot:label>
-              {{ option }}
-            </template>
+        <v-col cols='2' v-for="header, i in selectedHeaders" :key="i">
+          <v-title>{{ header }}</v-title>
+          <v-text-field v-model="options.cols[i].gre" dense required :rules="[(v) => !!v || 'Title is required']">
+            <!-- <template v-slot:label>
+              {{ options.cols[i].gre }}
+            </template> -->
           </v-text-field>
-          <v-text-field :v-model="options.cols[i].yel" :label="options.cols[i]" dense required :rules="[(v) => !!v || 'Title is required']">
-            <template v-slot:label>
-              {{ option }}
-            </template>
+          <v-text-field v-model="options.cols[i].yel" dense required :rules="[(v) => !!v || 'Title is required']">
+            <!-- <template v-slot:label>
+              {{ options.cols[i].yel }}
+            </template> -->
           </v-text-field>
-          <v-checkbox v-model="options.cols[i].abs" :label="options.cols[i].abs"></v-checkbox>
+          <v-checkbox v-model="options.cols[i].abs"><template v-slot:label>
+              Use Absolute Value
+            </template></v-checkbox>
           </v-col>
       </v-row>
     </div>
+    <!-- Delete Button -->
+    <div v-if="heatMap && heatMap.id" class="d-flex justify-end mt-4">
+        <v-btn
+          @click="deleteDialog = true"
+          small
+          color="error"
+          depressed
+          outlined
+          >Delete Heat Map</v-btn
+        >
+      </div>
+      <!-- Delete Prompt -->
+      <v-dialog v-model="deleteDialog" max-width="400">
+        <v-card>
+          <v-card-title>Delete this Heat Map?</v-card-title>
+          <v-divider class="mx-4 mb-2"></v-divider>
+          <v-card-text
+            >Are you sure you would like to delete this heat map?</v-card-text
+          >
+          <v-card-actions class="d-flex justify-end">
+            <v-btn
+              @click="deleteDialog = false"
+              small
+              outlined
+              color="secondary"
+              >Cancel</v-btn
+            >
+            <v-btn @click="deleteHeatMap" small depressed color="error"
+              >Delete</v-btn
+            >
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
   </v-container>
 </template>
 
@@ -90,6 +126,7 @@ export default {
   data() {
     return {
       submitAttempted: false,
+      deleteDialog: false,
       formValid: true,
       headers: [],
       dataHeaders: [],
@@ -137,8 +174,11 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["fetchDataSets", "fetchDataSet", "fetchHeatMaps", "fetchHeatMap", "addHeatMap", "updateHeatMapById"]),
+    ...mapActions(["fetchDataSets", "fetchDataSet", "fetchHeatMaps", "fetchHeatMap", "addHeatMap", "updateHeatMapById", "removeHeatMap"]),
     ...mapMutations([]),
+    log(e) {
+      console.log(e)
+    },
     onChange(event) {
       this.file = event.target.files ? event.target.files[0] : null;
     },
@@ -185,7 +225,7 @@ export default {
     },
     deleteHeatMap() {
       this.removeHeatMap({ id: this.heatMap.id });
-      this.$router.push(`/${this.$route.params.channelId}/heatMaps`);
+      this.$router.push(`/${this.$route.params.channelId}/gauges`);
     },
     clearInput(type) {
       this.$refs.form.inputs.forEach(input => {
@@ -201,11 +241,11 @@ export default {
       this.uploadData(this.createMasterData(this.heatMap.dataSet.dataValues.items))
     }, */
     uploadData(data) {
-      console.log(data)
+      //console.log(data)
       this.items = data;
-      console.log(this.heatMap.options)
-      this.options = JSON.parse(this.heatMap.options)
-      console.log(this.options)
+      //console.log(this.heatMap.options)
+      this.options = this.heatMap.options
+      //console.log(this.options)
       //this.selected = data;
       const keys = Object.keys(data[0])
       this.headers = keys.map((item) => ({
@@ -251,11 +291,7 @@ export default {
       await this.fetchDataSets()
       await this.fetchHeatMap(this.$route.params.heatMapId)
       await this.fetchDataSet(this.heatMap.dataSetId)
-      console.log(this.heatMap)
-      console.log(this.dataSet)
-      console.log(this.createMasterData(this.dataSet.dataValues.items))
       this.uploadData(this.createMasterData(this.dataSet.dataValues.items))
-      console.log(this.options.cols[0])
       /* if (this.heatMap && this.heatMap.dataValues && this.heatMap.dataValues.items && this.heatMap.dataValues.items.length > 0) {
         console.log(this.heatMap.dataValues)
         const keys = Object.keys(this.createMasterData(this.heatMap.dataValues.items)[0])
@@ -283,20 +319,22 @@ export default {
       }
     },
     heatMap() {
-      console.log(this.heatMap.dataSet)
+      console.log(this.heatMap)
       if (this.heatMap.id){ 
         if (this.heatMap.leadCol) {
         this.leadCol = this.heatMap.leadCol
         }
         if (this.heatMap.columns) {
         this.selectedHeaders = this.heatMap.columns
+        this.onChangeSelected()
+        this.onChangeAxis()
       }
       }
       
     },
     dataSet() {
       if (this.dataSet) {
-        console.log(this.dataSet)
+        //console.log(this.dataSet)
       }
     },
     selected() {

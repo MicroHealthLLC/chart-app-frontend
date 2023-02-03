@@ -2,8 +2,8 @@
   <v-row justify="space-between">
     <v-col cols="7">
       <v-data-table :headers="headers" :items="dataItems" class="elevation-4 ml-2" :hide-default-footer="dataItems.length <= 12" :disable-pagination="dataItems.length <= 12" calculate-widths :loading="$store.getters.loading" loading-text="Loading... Please wait">
-        <template v-for="h, i in headers" v-slot:[`item.${h.text}`]="{ item }">
-          <v-chip :color="getColor(item, item[`${h.text}`], i)" label :key="h.text">
+        <template  v-for="h, i in headers" v-slot:[`item.${h.text}`]="{ item }">
+          <v-chip :color="i != 0 ? getColor(item, item[`${h.text}`], i-1) : 'white'" label :key="i">
             {{ item[`${h.text}`] }}
           </v-chip>
         </template>
@@ -88,23 +88,6 @@ export default {
         showFirstLastPage: true,
         disableItemsPerPage: true,
       },
-      /* heat: [
-        {
-          abs: false,
-          yel: 70,
-          gre: 90,
-        },
-        {
-          abs: true,
-          yel: 5,
-          gre: 1,
-        },
-        {
-          abs: false,
-          yel: 1,
-          gre: 2,
-        } 
-      ], */
       /* headers: [
         {
           text: '',
@@ -115,81 +98,6 @@ export default {
         { text: '', value: 'one' },
         { text: '', value: 'two' },
         { text: '', value: 'thr' }
-      ], */
-      
-      /* dataItems: [
-        {
-          Month: 'January',
-          one: 97,
-          two: -2.3,
-          thr: 1,
-        },
-        {
-          Month: 'Feburary',
-          one: 86,
-          two: 3.5,
-          thr: 1.67,
-        },
-        {
-          Month: 'March',
-          one: 70,
-          two: 6,
-          thr: 1.05,
-        },
-        {
-          Month: 'April',
-          one: 90,
-          two: 1.1,
-          thr: .97,
-        },
-        {
-          Month: 'May',
-          one: 68,
-          two: -4.0,
-          thr: 1.8,
-        },
-        {
-          Month: 'June',
-          one: 50,
-          two: -.4,
-          thr: 2,
-        },
-        {
-          Month: 'July',
-          one: 87,
-          two: 0.2,
-          thr: 1.32,
-        },
-        {
-          Month: 'August',
-          one: 93,
-          two: 3.2,
-          thr: 1,
-        },
-        {
-          Month: 'September',
-          one: 95,
-          two: 2.1,
-          thr: .97,
-        },
-        {
-          Month: 'October',
-          one: 92,
-          two: 0,
-          thr: 1,
-        },
-        {
-          Month: 'November',
-          one: 100,
-          two: -.2,
-          thr: 2.31,
-        },
-        {
-          Month: 'December',
-          one: 96,
-          two: .1,
-          thr: 1.09,
-        },
       ], */
     }
   },
@@ -211,6 +119,7 @@ export default {
         let names = this.getKeyNames(items)
         for (let n = 0; n < names.length; n++) {
           console.log(names[n])
+          console.log(this.headers)
           this.headers[n].text = names[n]
         }
       }
