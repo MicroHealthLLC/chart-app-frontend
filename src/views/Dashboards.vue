@@ -282,16 +282,19 @@ export default {
     if(this.dataSets && this.dataSets.length < 1){
       await this.fetchDataSets();
     } 
-    
+    if (this.activeReport && this.activeReport.id) {
+      // await this.fetchReport(this.$route.params.reportId);
+      this.updateChartData();
+    }
   },
   async mounted() {
     // this.colorScheme = this.colors.find(
     //   (scheme) => scheme.id == this.activeReport.colorSchemeId
     // ).scheme;
-    if (this.activeReport && this.activeReport.id) {
+    /* if (this.activeReport && this.activeReport.id) {
       // await this.fetchReport(this.$route.params.reportId);
       this.updateChartData();
-    }
+    } */
     if (this.$route.name == "Report") {
       this.dataSetChoices = [...this.dataSets];
     } else {

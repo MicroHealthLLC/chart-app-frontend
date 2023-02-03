@@ -1,10 +1,10 @@
 <template>
   <v-row justify="space-between">
     <v-col cols="7">
-      <v-data-table :headers="headers" :items="items" class="elevation-4 ml-2" :hide-default-footer="items.length <= 15" :disable-pagination="items.length <= 15" calculate-widths :loading="$store.getters.loading" loading-text="Loading... Please wait">
-        <template v-slot:item.Score="{ item }">
-          <v-chip :color="getColor(item, item.Score, 0)" label>
-            {{ item.Score }}
+      <v-data-table :headers="headers" :items="dataItems" class="elevation-4 ml-2" :hide-default-footer="dataItems.length <= 12" :disable-pagination="dataItems.length <= 12" calculate-widths :loading="$store.getters.loading" loading-text="Loading... Please wait">
+        <template v-for="h, i in headers" v-slot:[`item.${h.text}`]="{ item }">
+          <v-chip :color="getColor(item, item[`${h.text}`], i)" label :key="h.text">
+            {{ item[`${h.text}`] }}
           </v-chip>
         </template>
         <!-- <template v-slot:item.{{ `Score 2` }}="{ item }">
@@ -28,42 +28,42 @@
           Legend
         </v-card-subtitle>
         <v-divider></v-divider>
-        <!-- <v-container fluid v-for="name, index in getKeyNames(items).slice(1)" :key="name" class="pb-5">
+        <v-container fluid v-for="name, index in getKeyNames(dataItems).slice(1)" :key="name" class="pb-5">
           <v-row>
             <v-col cols="12">
               <v-card>
                 <v-card-title class="py-2">Column: {{ name }}</v-card-title>
-                <v-card-subtitle v-if="heat[index].abs">Absolute Value</v-card-subtitle>
-                <v-row v-if="!heat[index].abs" justify="space-around" class="pb-3 px-2" dense>
+                <v-card-subtitle v-if="options.cols[index].abs">Absolute Value</v-card-subtitle>
+                <v-row v-if="!options.cols[index].abs" justify="space-around" class="pb-3 px-2" dense>
                   <v-chip small label color="green lighten-1">
                     <v-icon color="grey darken-4">mdi-greater-than-or-equal</v-icon>
-                    {{ heat[index].gre }}
+                    {{ options.cols[index].gre }}
                   </v-chip>
                   <v-chip small label color="amber lighten-1">
                     <v-icon color="grey darken-4">mdi-greater-than-or-equal</v-icon>
-                    {{ heat[index].yel }}
+                    {{ options.cols[index].yel }}
                   </v-chip>
                   <v-chip small label color="red lighten-1"><v-icon color="grey darken-4">mdi-less-than</v-icon>
-                    {{ heat[index].yel }}
+                    {{ options.cols[index].yel }}
                   </v-chip>
                 </v-row>
                 <v-row v-else justify="space-around" class="pb-3 px-2" dense>
                   <v-chip small label color="green lighten-1">
                     <v-icon color="grey darken-4">mdi-less-than-or-equal</v-icon>
-                    {{ heat[index].gre }}
+                    {{ options.cols[index].gre }}
                   </v-chip>
                   <v-chip small label color="amber lighten-1">
                     <v-icon color="grey darken-4">mdi-less-than-or-equal</v-icon>
-                    {{ heat[index].yel }}
+                    {{ options.cols[index].yel }}
                   </v-chip>
                   <v-chip small label color="red lighten-1"><v-icon color="grey darken-4">mdi-greater-than</v-icon>
-                    {{ heat[index].yel }}
+                    {{ options.cols[index].yel }}
                   </v-chip>
                 </v-row>
               </v-card>
             </v-col>
           </v-row>
-        </v-container> -->
+        </v-container>
       </v-card>
     </v-col>
   </v-row>
@@ -78,7 +78,7 @@ export default {
   props: {
     heatMap: Object,
     headers: Array,
-    items: Array,
+    dataItems: Array,
     options: Object,
   },
   data() {
@@ -197,6 +197,9 @@ export default {
 
   },
   methods: {
+    log(e) {
+      console.log(e)
+    },
     getKeyByValue(obj, val) {
       return Object.keys(obj).find(k => obj[k] === val)
     },
@@ -214,9 +217,9 @@ export default {
     },
     getColor(item, val, num) {
       //console.log(item, val, num)
-      let name = this.getKeyByValue(item, val)
+      //let name = this.getKeyByValue(item, val)
       let options = this.options
-      console.log(name)
+      //console.log(name)
       return val >= options.cols[num].gre ? 'green lighten-1' : val >= options.cols[num].yel ? 'amber lighten-1' : 'red lighten-1'
       /* if (name == 'one' || name == 'thr') {
         return val >= this.heat[num].gre ? 'green lighten-1' : val >= this.heat[num].yel ? 'amber lighten-1' : 'red lighten-1'
@@ -228,14 +231,15 @@ export default {
     },
   },
   watch: {
-    items() {
-      if (this.items) {
-        this.setHeaders(this.items)
+    dataItems() {
+      if (this.dataItems) {
+        console.log(this.headers)
+        this.setHeaders(this.dataItems)
       }
     }
   },
   mounted() {
-  
+
   }
 };
 </script>

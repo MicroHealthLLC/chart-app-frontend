@@ -48,12 +48,17 @@
         <v-row>
         <v-col v-for="(heatMap) in channelHeatMaps" :key="heatMap.id" xl="2" lg="3" md="4" sm="6">
           <v-card @click.prevent="toHeatMap(heatMap.id)" width="250px" min-width="250px" tile elevation="4">
-            <v-icon x-large class="tableIcon">mdi-table-large</v-icon>
+            
             <!-- <KPIHeatMap :heatMap="heatMap" /> -->
-            <v-divider class="my-2"></v-divider>
-            <v-card-title >{{ heatMap.title }}</v-card-title>
-            <v-card-subtitle v-if="heatMap.createdBy">By: {{ heatMap.createdBy }}</v-card-subtitle>
-            <v-card-subtitle v-else>By: John Smith</v-card-subtitle>
+            <!-- <v-divider class="my-2"></v-divider> -->
+            <v-row justify="center" align="center">
+              <v-icon cols="6" x-large>mdi-table-large</v-icon>
+              <v-col cols="6">
+                <v-card-title>{{ heatMap.title }}</v-card-title>
+                <v-card-subtitle v-if="heatMap.createdBy">By: {{ heatMap.createdBy }}</v-card-subtitle>
+                <v-card-subtitle v-else>By: John Smith</v-card-subtitle>
+              </v-col>
+            </v-row>
           </v-card>
         </v-col>
         </v-row>

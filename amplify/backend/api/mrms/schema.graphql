@@ -52,6 +52,8 @@ type HeatMap @model @auth(rules: [{ allow: public }]) {
   dataSet: DataSet @hasOne(fields: ["dataSetId"])
   dataSetId: ID
   options: AWSJSON
+  leadCol: String
+  columns: String
   channel: Channel @belongsTo(fields: ["channelId"])
   channelId: ID @index(name: "byChannel")
   createdBy: String

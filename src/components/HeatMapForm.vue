@@ -25,12 +25,17 @@
               <v-text-field v-model="heatMap.title" label="Title" dense required
                 :rules="[(v) => !!v || 'Title is required']"></v-text-field>
             </div>
-            <!-- <div>
-            <v-text-field v-model="heatMap.user" label="Created By" dense>
-            </v-text-field>
-          </div> -->
             <div>
-              <v-select v-model="heatMap.dataSet" :items="dataSetChoices" item-text="title" item-value="id" label="Data Set" dense required :rules="[(v) => !!v || 'Data Set is required']" @change="loadTable"></v-select>
+              <v-select v-model="heatMap.dataSet" :items="dataSetChoices" item-text="title" item-value="id" label="Data Set"
+                dense required :rules="[(v) => !!v || 'Data Set is required']" @change="loadTable"></v-select>
+            </div>
+            <div>
+              <v-select v-model="selectedHeaders" :items="headers" label="Target Columns" multiple small dense return-object
+                @change="onChangeSelected">
+              </v-select>
+            </div>
+            <div>
+              <v-select v-model="leadCol" :items="leadColKeys" label="Lead Column" dense @change="onChangeAxis"></v-select>
             </div>
           </div>
         </v-form>
@@ -39,10 +44,36 @@
     <v-row>
       <v-col v-if="heatMap.dataSet" class="mt-2 mb-4" cols="11">
         <v-card>
-          <KPIHeatMap :heatMap="heatMap" :headers="headers" :items="items" :options="options" />
+          <KPIHeatMap :heatMap="heatMap" :headers="selectedHeaders" :dataItems="items" :options="options" />
         </v-card>
       </v-col>
     </v-row>
+    <div v-if="heatMap.dataSet">
+      <!-- <v-row v-for="header, j in headers" :key="j">
+        <v-col v-for="option, i in options.cols" :key="i" cols="3">
+          <v-text-field :v-model="options.cols[i]" :label="options.cols[i]" dense required :rules="[(v) => !!v || 'Title is required']">
+            <template v-slot:label>
+              {{ option }}
+            </template>
+          </v-text-field>
+        </v-col>
+      </v-row> -->
+      <v-row>
+        <v-col v-for="header, i in dataHeaders" :key="i">
+          <v-text-field :v-model="options.cols[i].gre" :label="options.cols[i]" dense required :rules="[(v) => !!v || 'Title is required']">
+            <template v-slot:label>
+              {{ option }}
+            </template>
+          </v-text-field>
+          <v-text-field :v-model="options.cols[i].yel" :label="options.cols[i]" dense required :rules="[(v) => !!v || 'Title is required']">
+            <template v-slot:label>
+              {{ option }}
+            </template>
+          </v-text-field>
+          <v-checkbox v-model="options.cols[i].abs" :label="options.cols[i].abs"></v-checkbox>
+          </v-col>
+      </v-row>
+    </div>
   </v-container>
 </template>
 
@@ -61,27 +92,31 @@ export default {
       submitAttempted: false,
       formValid: true,
       headers: [],
+      dataHeaders: [],
+      selectedHeaders: [],
+      leadColKeys: [],
+      leadCol: '',
       items: [],
       options: {},
       mapOptions: {
         cols: [
-        {
-          abs: false,
-          yel: 50,
-          gre: 80,
-        },
-        {
-          abs: true,
-          yel: 5,
-          gre: 1,
-        },
-        {
-          abs: false,
-          yel: 1,
-          gre: 2,
-        }
-      ]
-      } 
+          {
+            abs: false,
+            yel: 50,
+            gre: 80,
+          },
+          {
+            abs: true,
+            yel: 5,
+            gre: 1,
+          },
+          {
+            abs: false,
+            yel: 1,
+            gre: 2,
+          }
+        ]
+      }
     };
   },
   mixins: [datasetMixin],
@@ -94,23 +129,23 @@ export default {
       "statusCode",
       "user",
     ]),
-    dataSetChoices(){
-      if(this.dataSets) {
+    dataSetChoices() {
+      if (this.dataSets) {
         return this.dataSets.filter(d => d.channelId == this.currentChannels[0].channelId);
       }
       return ""
     }
   },
   methods: {
-    ...mapActions(["fetchDataSets","fetchDataSet", "fetchHeatMaps", "fetchHeatMap", "addHeatMap", "updateHeatMapById"]),
+    ...mapActions(["fetchDataSets", "fetchDataSet", "fetchHeatMaps", "fetchHeatMap", "addHeatMap", "updateHeatMapById"]),
     ...mapMutations([]),
     onChange(event) {
       this.file = event.target.files ? event.target.files[0] : null;
     },
-    resetAndGoBack(){
+    resetAndGoBack() {
       this.clear()
       this.$refs.form.reset();
-      if (this.$route.path === `/${this.currentChannels[0].name}/gauges`){
+      if (this.$route.path === `/${this.currentChannels[0].name}/gauges`) {
         this.$emit("closeHeatMapForm")
       } else {
         this.$router.go(-1)
@@ -134,6 +169,8 @@ export default {
           title: this.heatMap.title,
           dataSetId: this.heatMap.dataSet,
           options: JSON.stringify(this.mapOptions),
+          leadCol: this.leadCol,
+          columns: JSON.stringify(this.selectedHeaders),
           channelId: this.currentChannels[0].channelId
         }
         if (this.heatMap.id) {
@@ -145,6 +182,10 @@ export default {
           await this.addHeatMap(data)
         }
       }
+    },
+    deleteHeatMap() {
+      this.removeHeatMap({ id: this.heatMap.id });
+      this.$router.push(`/${this.$route.params.channelId}/heatMaps`);
     },
     clearInput(type) {
       this.$refs.form.inputs.forEach(input => {
@@ -174,10 +215,35 @@ export default {
     },
     loadTable() {
       this.uploadData(this.createMasterData(this.dataSet.dataValues.items))
-    }
+    },
+    onChangeSelected() {
+      this.selectedHeaders.forEach((s, i) => {
+        if (typeof s == "string") {
+          this.selectedHeaders[i] = ({ text: s, value: s, })
+        }
+      })
+      this.leadColKeys = this.selectedHeaders.map(h => h.text || h)
+      this.items = this.filterData(this.selectedHeaders, this.createMasterData(this.dataSet.dataValues.items))
+    },
+    onChangeAxis() {
+      this.leadColKeys = this.selectedHeaders.map(h => h.text || h)
+      this.moveArrByKey(this.leadColKeys, this.leadCol)
+      this.selectedHeaders = this.leadColKeys.map(x => ({
+        text: x,
+        value: x
+      }))
+      this.items = this.filterData(this.selectedHeaders, this.createMasterData(this.dataSet.dataValues.items))
+    },
+    moveArrByKey(keys, selected) {
+      keys.forEach((k, i) => {
+        if (k == selected) {
+          this.arrayMove(keys, i, 0)
+        }
+      })
+    },
   },
   async mounted() {
-    if (this.$route.path === `/${this.currentChannels[0].name}/gauges`){ 
+    if (this.$route.path === `/${this.currentChannels[0].name}/gauges`) {
       this.heatMap.id = ""
       this.isReadOnly = false
       this.clear()
@@ -189,10 +255,11 @@ export default {
       console.log(this.dataSet)
       console.log(this.createMasterData(this.dataSet.dataValues.items))
       this.uploadData(this.createMasterData(this.dataSet.dataValues.items))
+      console.log(this.options.cols[0])
       /* if (this.heatMap && this.heatMap.dataValues && this.heatMap.dataValues.items && this.heatMap.dataValues.items.length > 0) {
         console.log(this.heatMap.dataValues)
         const keys = Object.keys(this.createMasterData(this.heatMap.dataValues.items)[0])
-        //this.xAxisKeys = keys
+        //this.leadColKeys = keys
         this.headers = keys.map((item) => ({
         text: item,
         value: item,
@@ -204,22 +271,36 @@ export default {
     }
     this.fetchChannels();
     this.fetchHeatMaps() */
-    if (!this.heatMap.user) {
-      this.heatMap.user = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`
+      if (!this.heatMap.user) {
+        this.heatMap.user = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`
+      }
     }
-  }
   },
   watch: {
+    headers() {
+      if (this.selectedHeaders && !this.dataHeaders) {
+        this.dataHeaders = this.selectedHeaders.shift()
+      }
+    },
     heatMap() {
-        console.log(this.heatMap.dataSet)
+      console.log(this.heatMap.dataSet)
+      if (this.heatMap.id){ 
+        if (this.heatMap.leadCol) {
+        this.leadCol = this.heatMap.leadCol
+        }
+        if (this.heatMap.columns) {
+        this.selectedHeaders = this.heatMap.columns
+      }
+      }
+      
     },
     dataSet() {
       if (this.dataSet) {
         console.log(this.dataSet)
       }
     },
-    selected(){
-      if (this.selected && this.selected.length > 0){
+    selected() {
+      if (this.selected && this.selected.length > 0) {
         //console.log(this.selected)
       } else (console.log("no SELECTED data"))
     },
@@ -238,24 +319,29 @@ export default {
 .placeholder-icon {
   color: #1976d2;
 }
+
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 10px;
 }
+
 .channels,
 .description {
   grid-column: 1 / span 2;
 }
-div >>> .v-select__selections {
+
+div>>>.v-select__selections {
   padding-top: 5px;
   padding-bottom: 5px;
 }
-div >>> .v-select__selections .v-chip {
+
+div>>>.v-select__selections .v-chip {
   color: white;
   background-color: #2196F3;
 }
-div >>> .v-select__selections .v-chip .v-icon {
+
+div>>>.v-select__selections .v-chip .v-icon {
   color: white;
 }
 </style>
