@@ -60,12 +60,20 @@
       <v-row>
         <v-col xl="1" md="2" sm="3" xs="4" :key="i" v-for="col, i in heatMap.options.cols">
           <v-card-title>{{ col.name }}</v-card-title>
-          <v-text-field v-model="heatMap.options.cols[i].gre" solo class="text-green" :prepend-inner-icon="!heatMap.options.cols[i].abs ? 'mdi-greater-than-or-equal' : 'mdi-less-than-or-equal'" dense required :rules="[(v) => !!v || 'required']">
-            <v-icon></v-icon>
+          <v-text-field v-model="heatMap.options.cols[i].gre" solo class="text-green" dense required :rules="[(v) => !!v || 'required']">
+            <v-icon color="green lighten-1" slot="prepend-inner">
+              {{!heatMap.options.cols[i].abs ? 'mdi-greater-than-or-equal' : 'mdi-less-than-or-equal'}}
+            </v-icon>
           </v-text-field>
           <v-text-field v-model="heatMap.options.cols[i].yel" solo class="text-yellow" :prepend-inner-icon="!heatMap.options.cols[i].abs ? 'mdi-greater-than-or-equal' : 'mdi-less-than-or-equal'" dense required :rules="[(v) => !!v || 'required']">
+            <v-icon color="amber lighten-1" slot="prepend-inner">
+              {{!heatMap.options.cols[i].abs ? 'mdi-greater-than-or-equal' : 'mdi-less-than-or-equal'}}
+            </v-icon>
           </v-text-field>
           <v-text-field v-model="heatMap.options.cols[i].yel" solo class="text-red" :prepend-inner-icon="!heatMap.options.cols[i].abs ? 'mdi-less-than' : 'mdi-greater-than'" dense required :rules="[(v) => !!v || 'required']">
+            <v-icon color="red lighten-1" slot="prepend-inner">
+              {{heatMap.options.cols[i].abs ? 'mdi-greater-than' : 'mdi-less-than'}}
+            </v-icon>
           </v-text-field>
           <v-checkbox v-model="heatMap.options.cols[i].abs" label="Use Absolute Value"></v-checkbox>
           </v-col>
@@ -389,7 +397,6 @@ export default {
 </script>
 
 <style scoped>
-
 .placeholder-text,
 .placeholder-icon {
   color: #1976d2;

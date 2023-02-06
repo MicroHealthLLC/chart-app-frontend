@@ -2,24 +2,14 @@
   <v-row justify="space-between">
     <v-col cols="7">
       <v-data-table :headers="headers" :items="dataItems" class="elevation-4 ml-2" :hide-default-footer="dataItems.length <= 12" :disable-pagination="dataItems.length <= 12" calculate-widths :loading="$store.getters.loading" loading-text="Loading... Please wait">
-        <template  v-for="h, i in headers" v-slot:[`item.${h.text}`]="{ item }">
-          <v-chip :color="i != 0 ? getColor(item, item[`${h.text}`], i-1) : 'white'" label :key="i">
+        <template v-for="h, i in headers.slice(1)" v-slot:[`item.${h.text}`]="{ item }">
+          <v-chip :color="getColor(item, item[`${h.text}`], i)" label :key="i">
             {{ item[`${h.text}`] }}
           </v-chip>
         </template>
-        <!-- <template v-slot:item.{{ `Score 2` }}="{ item }">
-          <v-chip :color="getColor(item, item.`Score 2`, 1)" label>
-            {{ item.{{}} }}
-          </v-chip>
-        </template>
-        <template v-slot:item.thr="{ item }">
-          <v-chip :color="getColor(item, item.thr, 2)" label>
-            {{ item.thr }}
-          </v-chip>
-        </template> -->
       </v-data-table>
     </v-col>
-    <v-col cols="5">
+    <!-- <v-col cols="5">
       <v-card class="mr-2">
         <v-card-title>
           {{ heatMap.title }}
@@ -27,7 +17,7 @@
         <v-card-subtitle>
           Legend
         </v-card-subtitle>
-        <v-divider></v-divider>
+        <v-divider></v-divider> -->
         <!-- <v-container fluid v-for="name, index in getKeyNames(dataItems).slice(1)" :key="name" class="pb-5">
           <v-row>
             <v-col cols="12">
@@ -64,8 +54,8 @@
             </v-col>
           </v-row>
         </v-container> -->
-      </v-card>
-    </v-col>
+      <!-- </v-card>
+    </v-col> -->
   </v-row>
 </template>
     
@@ -165,5 +155,7 @@ export default {
 </script>
     
 <style scoped>
-
+.v-chip.v-chip--label.theme--light.v-size--default {
+  width: 60px;
+}
 </style>
