@@ -28,7 +28,7 @@
           Legend
         </v-card-subtitle>
         <v-divider></v-divider>
-        <v-container fluid v-for="name, index in getKeyNames(dataItems).slice(1)" :key="name" class="pb-5">
+        <!-- <v-container fluid v-for="name, index in getKeyNames(dataItems).slice(1)" :key="name" class="pb-5">
           <v-row>
             <v-col cols="12">
               <v-card>
@@ -63,7 +63,7 @@
               </v-card>
             </v-col>
           </v-row>
-        </v-container>
+        </v-container> -->
       </v-card>
     </v-col>
   </v-row>
@@ -112,15 +112,19 @@ export default {
       return Object.keys(obj).find(k => obj[k] === val)
     },
     getKeyNames(obj) {
+      //console.log(obj)
       return Object.keys(obj[0])
     },
     setHeaders(items) {
       if (items) {
+        //console.log(items)
         let names = this.getKeyNames(items)
+        //console.log(names)
         for (let n = 0; n < names.length; n++) {
+          console.log(this.headers[n])
           console.log(names[n])
-          console.log(this.headers)
           this.headers[n].text = names[n]
+          this.headers[n].value = names[n]
         }
       }
     },
@@ -128,8 +132,15 @@ export default {
       //console.log(item, val, num)
       //let name = this.getKeyByValue(item, val)
       let options = this.options
-      //console.log(name)
-      return val >= options.cols[num].gre ? 'green lighten-1' : val >= options.cols[num].yel ? 'amber lighten-1' : 'red lighten-1'
+      //console.log(options)
+      if (!options.cols[num].abs) {
+        return val >= options.cols[num].gre ? 'green lighten-1' : val >= options.cols[num].yel ? 'amber lighten-1' : 'red lighten-1'
+      } else {
+        let abs = Math.abs(val)
+        //console.log(abs)
+        return abs > options.cols[num].yel ? 'red lighten-1' : abs >= options.cols[num].gre ? 'amber lighten-1' : 'green lighten-1'
+      }
+      
       /* if (name == 'one' || name == 'thr') {
         return val >= this.heat[num].gre ? 'green lighten-1' : val >= this.heat[num].yel ? 'amber lighten-1' : 'red lighten-1'
       } else if (name == 'two') {
@@ -142,7 +153,7 @@ export default {
   watch: {
     dataItems() {
       if (this.dataItems) {
-        console.log(this.headers)
+        //console.log(this.dataItems)
         this.setHeaders(this.dataItems)
       }
     }

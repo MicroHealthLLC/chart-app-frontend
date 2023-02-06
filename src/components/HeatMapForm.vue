@@ -16,8 +16,7 @@
     </v-row>
     <v-row>
       <v-col cols="11">
-        <v-alert v-if="!formValid && submitAttempted" type="error" dense dismissible>Please fix highlighted fields below
-          before submitting Heat Map</v-alert>
+        <v-alert v-if="!formValid && submitAttempted" type="error" dense dismissible>Please fix highlighted fields below before submitting Heat Map</v-alert>
         <!-- Form Fields -->
         <v-form v-model="formValid" ref="form" class="mt-2">
           <div class="grid">
@@ -59,21 +58,16 @@
         </v-col>
       </v-row> -->
       <v-row>
-        <v-col cols='2' v-for="header, i in selectedHeaders" :key="i">
-          <v-title>{{ header }}</v-title>
-          <v-text-field v-model="options.cols[i].gre" dense required :rules="[(v) => !!v || 'Title is required']">
-            <!-- <template v-slot:label>
-              {{ options.cols[i].gre }}
-            </template> -->
+        <v-col xl="1" md="2" sm="3" xs="4" :key="i" v-for="col, i in heatMap.options.cols">
+          <v-card-title>{{ col.name }}</v-card-title>
+          <v-text-field v-model="heatMap.options.cols[i].gre" solo class="text-green" :prepend-inner-icon="!heatMap.options.cols[i].abs ? 'mdi-greater-than-or-equal' : 'mdi-less-than-or-equal'" dense required :rules="[(v) => !!v || 'required']">
+            <v-icon></v-icon>
           </v-text-field>
-          <v-text-field v-model="options.cols[i].yel" dense required :rules="[(v) => !!v || 'Title is required']">
-            <!-- <template v-slot:label>
-              {{ options.cols[i].yel }}
-            </template> -->
+          <v-text-field v-model="heatMap.options.cols[i].yel" solo class="text-yellow" :prepend-inner-icon="!heatMap.options.cols[i].abs ? 'mdi-greater-than-or-equal' : 'mdi-less-than-or-equal'" dense required :rules="[(v) => !!v || 'required']">
           </v-text-field>
-          <v-checkbox v-model="options.cols[i].abs"><template v-slot:label>
-              Use Absolute Value
-            </template></v-checkbox>
+          <v-text-field v-model="heatMap.options.cols[i].yel" solo class="text-red" :prepend-inner-icon="!heatMap.options.cols[i].abs ? 'mdi-less-than' : 'mdi-greater-than'" dense required :rules="[(v) => !!v || 'required']">
+          </v-text-field>
+          <v-checkbox v-model="heatMap.options.cols[i].abs" label="Use Absolute Value"></v-checkbox>
           </v-col>
       </v-row>
     </div>
@@ -135,7 +129,7 @@ export default {
       leadCol: '',
       items: [],
       options: {},
-      mapOptions: {
+      /* mapOptions: {
         cols: [
           {
             abs: false,
@@ -153,7 +147,7 @@ export default {
             gre: 2,
           }
         ]
-      }
+      } */
     };
   },
   mixins: [datasetMixin],
@@ -207,8 +201,8 @@ export default {
       if (this.formValid) {
         let data = {
           title: this.heatMap.title,
-          dataSetId: this.heatMap.dataSet,
-          options: JSON.stringify(this.mapOptions),
+          //dataSetId: this.heatMap.dataSet,
+          options: JSON.stringify(this.options),
           leadCol: this.leadCol,
           columns: JSON.stringify(this.selectedHeaders),
           channelId: this.currentChannels[0].channelId
@@ -216,9 +210,11 @@ export default {
         if (this.heatMap.id) {
           data.id = this.heatMap.id
           data.updatedBy = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`
+          data.dataSetId = this.heatMap.dataSet.id
           await this.updateHeatMapById(data)
         } else {
           data.createdBy = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`
+          data.dataSetId = this.heatMap.dataSet
           await this.addHeatMap(data)
         }
       }
@@ -240,30 +236,20 @@ export default {
       console.log(this.createMasterData(this.heatMap.dataSet.dataValues.items))
       this.uploadData(this.createMasterData(this.heatMap.dataSet.dataValues.items))
     }, */
-    uploadData(data) {
-      //console.log(data)
-      this.items = data;
-      //console.log(this.heatMap.options)
-      this.options = this.heatMap.options
-      //console.log(this.options)
-      //this.selected = data;
-      const keys = Object.keys(data[0])
-      this.headers = keys.map((item) => ({
-        text: item,
-        value: item,
-      }));
-    },
-    loadTable() {
-      this.uploadData(this.createMasterData(this.dataSet.dataValues.items))
-    },
+    
     onChangeSelected() {
       this.selectedHeaders.forEach((s, i) => {
         if (typeof s == "string") {
           this.selectedHeaders[i] = ({ text: s, value: s, })
         }
       })
+      /* if (this.dataHeaders != this.selectedHeaders) {
+        this.dataHeaders = this.selectedHeaders.shift()
+      } */
       this.leadColKeys = this.selectedHeaders.map(h => h.text || h)
+      this.onChangeAxis() 
       this.items = this.filterData(this.selectedHeaders, this.createMasterData(this.dataSet.dataValues.items))
+      //console.log(this.items)
     },
     onChangeAxis() {
       this.leadColKeys = this.selectedHeaders.map(h => h.text || h)
@@ -272,7 +258,10 @@ export default {
         text: x,
         value: x
       }))
+      //console.log(this.selectedHeaders)
+      //console.log(this.dataSet.dataValues.items)
       this.items = this.filterData(this.selectedHeaders, this.createMasterData(this.dataSet.dataValues.items))
+      this.changeLegend()
     },
     moveArrByKey(keys, selected) {
       keys.forEach((k, i) => {
@@ -281,6 +270,63 @@ export default {
         }
       })
     },
+    changeLegend() {
+      console.log(this.heatMap.options.cols)
+      if (this.selectedHeaders) {
+        let legendSelect = []
+        this.selectedHeaders.slice(1).forEach((h, i) => {
+          let attr ={}
+          if (this.heatMap.options.cols[i]) {
+            attr = {
+            name: h.text,
+            gre: this.heatMap.options.cols[i].gre,
+            yel: this.heatMap.options.cols[i].yel,
+            abs: this.heatMap.options.cols[i].abs,
+            }
+          } else {
+            attr = {
+            name: h.text,
+            gre: 0,
+            yel: 0,
+            abs: false,
+            }
+          }
+          
+          legendSelect.push(attr)
+        })
+        this.heatMap.options.cols = legendSelect
+      }
+    },
+    uploadData(data) {
+      this.items = data;
+      //console.log(this.heatMap.options)
+      this.options = this.heatMap.options
+      //this.selected = data;
+      const keys = Object.keys(data[0])
+      this.headers = keys.map((key) => ({
+        text: key,
+        value: key,
+      }));
+    },
+    loadTable() {
+      this.uploadData(this.createMasterData(this.dataSet.dataValues.items))
+    },
+    populateData() {
+      if (this.heatMap.id) {
+        if (this.heatMap.columns) {
+          this.selectedHeaders = this.heatMap.columns
+          this.onChangeSelected()
+        }
+        if (this.heatMap.leadCol) {
+          this.leadCol = this.heatMap.leadCol
+          this.onChangeAxis()
+        }
+        if (this.heatMap.options && this.heatMap.options.cols && this.heatMap.options.cols.length > 0) {
+          //console.log(this.heatMap.options)
+          this.options = this.heatMap.options
+        }
+      }
+    }
   },
   async mounted() {
     if (this.$route.path === `/${this.currentChannels[0].name}/gauges`) {
@@ -288,50 +334,40 @@ export default {
       this.isReadOnly = false
       this.clear()
     } else {
-      await this.fetchDataSets()
       await this.fetchHeatMap(this.$route.params.heatMapId)
+      await this.fetchDataSets()
       await this.fetchDataSet(this.heatMap.dataSetId)
       this.uploadData(this.createMasterData(this.dataSet.dataValues.items))
-      /* if (this.heatMap && this.heatMap.dataValues && this.heatMap.dataValues.items && this.heatMap.dataValues.items.length > 0) {
-        console.log(this.heatMap.dataValues)
-        const keys = Object.keys(this.createMasterData(this.heatMap.dataValues.items)[0])
-        //this.leadColKeys = keys
-        this.headers = keys.map((item) => ({
-        text: item,
-        value: item,
-        }));
-        //this.selectedHeaders = this.headers
-        this.uploadData(this.createMasterData(this.heatMap.dataValues.items))
-      }
-      this.isReadOnly = true
-    }
-    this.fetchChannels();
-    this.fetchHeatMaps() */
       if (!this.heatMap.user) {
         this.heatMap.user = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`
       }
-    }
+      this.populateData()
+  }
   },
   watch: {
     headers() {
-      if (this.selectedHeaders && !this.dataHeaders) {
-        this.dataHeaders = this.selectedHeaders.shift()
-      }
+      //console.log(this.options)
+      //console.log(this.selectedHeaders)
     },
-    heatMap() {
+    /* heatMap() {
       console.log(this.heatMap)
-      if (this.heatMap.id){ 
-        if (this.heatMap.leadCol) {
-        this.leadCol = this.heatMap.leadCol
-        }
+      if (this.heatMap.id){
         if (this.heatMap.columns) {
         this.selectedHeaders = this.heatMap.columns
         this.onChangeSelected()
+        
+      } 
+        if (this.heatMap.leadCol) {
+        this.leadCol = this.heatMap.leadCol
         this.onChangeAxis()
-      }
+        }
+      if (this.heatMap.options && this.heatMap.options.cols && this.heatMap.options.cols.length > 0) {
+        console.log(this.heatMap.options)
+        this.options = this.heatMap.options
+      }  
       }
       
-    },
+    }, */
     dataSet() {
       if (this.dataSet) {
         //console.log(this.dataSet)
@@ -353,6 +389,7 @@ export default {
 </script>
 
 <style scoped>
+
 .placeholder-text,
 .placeholder-icon {
   color: #1976d2;
