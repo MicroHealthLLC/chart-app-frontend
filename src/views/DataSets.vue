@@ -8,7 +8,7 @@
       </div>
 
       <v-dialog v-model="showAddDataSetForm" width="40%">
-        <v-card class="px-4 py-4 modal">
+        <v-card class="px-4 py-4">
           <!-- <v-form v-model="formValid" ref="form">
             <div class="grid">
               <div>
@@ -80,17 +80,18 @@
         </v-data-table>
       </v-card>
     </v-col>
-  </v-row>
+  </v-row>  
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
 import DataSetForm from "../components/DataSetForm.vue";
+// and use it in your component like
 
 export default {
   name: "DataSets",
   components: {
-    DataSetForm
+    DataSetForm,
   },
   data() {
     return {

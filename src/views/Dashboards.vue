@@ -29,23 +29,48 @@
       </div>  
       <v-divider class="mb-4"></v-divider>
       <v-row>
-        <v-col cols="12" sm="5" v-for="(report, i) in channelReports" :key="i">
+        <v-col cols="12" sm="5" v-for="(report, i) in channelReports" :key="i" @click.prevent="toReport(report.id)">
           <DashboardCard_test :report="report" />
         </v-col>
       </v-row>
+      <v-divider class="mb-4"></v-divider>
+
+      <v-row>
+        <v-col xl="2" lg="3" md="4" sm="6" v-for="(gauge) in channelGauges" :key="gauge.id">
+          <v-card width="250px" min-width="250px" @click.prevent="toGauge(gauge.id)" tile elevation="4">
+            <KPIGauge :gauge="gauge" :height="130" :width="200" :segmentStops="gauge.segmentStops.split(',').map(x => parseFloat(x))" :needleHeightRatio=".7" />
+            <v-divider class="my-2"></v-divider>
+            <v-card-title>{{ gauge.title }}</v-card-title>
+            <v-card-subtitle>By: {{ gauge.createdBy }}</v-card-subtitle>
+          </v-card>
+        </v-col>
+        <!-- <div class="d-flex justify-end btn-container">
+          <v-btn
+            v-if="reports.length >= 6"
+            to="/public-reports"
+            class="d-flex-end"
+            color="primary"
+            text
+            >View All</v-btn
+          >
+        </div> -->
+        </v-row>
       </div>
 </template>
 
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import DashboardCard_test from "../components/DashboardCard_test.vue";
+import KPIGauge from "../components/KPIGauge.vue";
 import datasetMixin from "../mixins/dataset-mixin";
 import reportMixin from "../mixins/report-mixin";
+import gaugeMixin from "../mixins/gauge-mixin";
 
 export default {
   name: "Dashboards",
   components: {
-      DashboardCard_test
+      DashboardCard_test,
+      KPIGauge
   },
   /* props: {
     report: Object  
@@ -74,7 +99,7 @@ export default {
       data: []
     };
   },
-  mixins: [datasetMixin, reportMixin],
+  mixins: [datasetMixin, reportMixin, gaugeMixin],
   methods: {
     ...mapActions([
       "fetchReport",
@@ -102,6 +127,11 @@ export default {
     resetAndGoBack(){
       this.$router.go(-1)
       this.$refs.form.reset();
+    },
+    toReport(reportId) {
+      this.$router.push(
+        `reports/${reportId}`
+      );
     },
     /*saveReport() {
       this.$refs.form.validate();
@@ -195,7 +225,7 @@ export default {
     ]),
     channelReports() {
       if (this.reports && this.reports.length > 0 && this.currentChannels && this.currentChannels[0]) {
-        console.log(this.currentChannels[0])
+        //console.log(this.currentChannels[0])
 
         return this.reports.filter(t => t.channelId == this.currentChannels[0].channelId)
       } else return []
@@ -252,16 +282,19 @@ export default {
     if(this.dataSets && this.dataSets.length < 1){
       await this.fetchDataSets();
     } 
-    
+    if (this.activeReport && this.activeReport.id) {
+      // await this.fetchReport(this.$route.params.reportId);
+      this.updateChartData();
+    }
   },
   async mounted() {
     // this.colorScheme = this.colors.find(
     //   (scheme) => scheme.id == this.activeReport.colorSchemeId
     // ).scheme;
-    if (this.activeReport && this.activeReport.id) {
+    /* if (this.activeReport && this.activeReport.id) {
       // await this.fetchReport(this.$route.params.reportId);
       this.updateChartData();
-    }
+    } */
     if (this.$route.name == "Report") {
       this.dataSetChoices = [...this.dataSets];
     } else {

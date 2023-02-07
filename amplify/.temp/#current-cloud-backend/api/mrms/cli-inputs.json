@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "serviceConfiguration": {
+    "apiName": "mrms",
+    "serviceName": "AppSync",
+    "defaultAuthType": {
+      "mode": "API_KEY",
+      "expirationTime": 365,
+      "apiKeyExpirationDate": "2023-12-01T14:02:48.304Z",
+      "keyDescription": "mrmsapikey"
+    },
+    "additionalAuthTypes": [],
+    "conflictResolution": {}
+  }
+}

@@ -1,0 +1,110 @@
+# This "input" configures a global authorization rule to enable public access to
+# all models in this schema. Learn more about authorization rules here: https://docs.amplify.aws/cli/graphql/authorization-rules
+
+type Report @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  title: String!
+  channel: Channel @belongsTo(fields: ["channelId"])
+  reportGroup: ReportGroup @belongsTo(fields: ["reportGroupId"])
+  description: String,
+  reportGroupId: ID @index(name: "byReportGroup")  
+  channelId: ID @index(name: "byChannel")
+  dashboard: Dashboard @belongsTo(fields: ["dashboardId"])
+  dashboardId: ID @index(name: "byDashboard")  
+  colorSchemeId: Int
+  chartType: String
+  dataSet: DataSet @hasOne
+  dataSetId: String
+  xAxis: String
+  columns: String
+  createdBy: String
+  updatedBy: String  
+}
+
+type ReportGroup @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  title: String!
+  reports:[Report] @hasMany(indexName: "byReportGroup", fields: ["id"])
+  reportIds: [String]
+  createdBy: String
+  updatedBy: String  
+  channelId: ID @index(name: "byChannel")  
+}
+
+type Gauge @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  title: String!
+  notes: String
+  value: Float!
+  segmentStops: String
+  chartType: String!
+  channel: Channel @belongsTo(fields: ["channelId"])
+  channelId: ID @index(name: "byChannel")
+  dashboard: Dashboard @belongsTo(fields: ["dashboardId"])
+  dashboardId: ID @index(name: "byDashboard")
+  createdBy: String
+  updatedBy: String
+}
+
+type HeatMap @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  title: String!
+  dataSet: DataSet @hasOne
+  options: AWSJSON
+  createdBy: String
+  updatedBy: String
+}
+
+type Dashboard @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  title: String!
+  description: String
+  reports: [Report] @hasMany(indexName: "byChannel", fields: ["id"])
+  gauges: [Gauge] @hasMany(indexName: "byChannel", fields: ["id"])
+  createdBy: String
+  updatedBy: String
+}
+
+type Channel @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  description: String,
+  reports: [Report] @hasMany(indexName: "byChannel", fields: ["id"])
+  dataSets: [DataSet] @hasMany(indexName: "byChannel", fields: ["id"])
+  gauges: [Gauge] @hasMany(indexName: "byChannel", fields: ["id"])
+  # type: ChannelType @belongsTo(fields: ["channelTypeId"])
+  type: String
+  title: String!
+  channelTypeId: ID @index(name: "byChannelType")
+}
+
+type DataSet @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  title: String!
+  description: String
+  channel: Channel @belongsTo(fields: ["channelId"])
+  channelId: ID @index(name: "byChannel")  
+  dataValues: [DataValue] @hasMany (indexName: "byDataSet", fields: ["id"])
+  heatMap: HeatMap @belongsTo
+  user: String
+}
+type DataValue @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  data: AWSJSON!
+  dataSetId: ID! @index(name: "byDataSet")
+  dataSet: DataSet @belongsTo(fields: ["dataSetId"])
+}
+
+type ChannelType @model @auth(rules: [{ allow: public }]) {
+  title: String!
+  channels: [Channel] @hasMany(indexName: "byChannelType",fields: ["id"])
+  id: ID!
+}
+type CurrentChannel @model @auth(rules: [{ allow: public }]) {
+  id: String!
+  name: String!
+  regName: String
+  channelId: String
+}
+
+# Create simple table for currentChannel
+

@@ -8,7 +8,9 @@ type Report @model @auth(rules: [{ allow: public }]) {
   reportGroup: ReportGroup @belongsTo(fields: ["reportGroupId"])
   description: String,
   reportGroupId: ID @index(name: "byReportGroup")  
-  channelId: ID @index(name: "byChannel")  
+  channelId: ID @index(name: "byChannel")
+  dashboard: Dashboard @belongsTo(fields: ["dashboardId"])
+  dashboardId: ID @index(name: "byDashboard")  
   colorSchemeId: Int
   chartType: String
   dataSet: DataSet @hasOne
@@ -29,11 +31,52 @@ type ReportGroup @model @auth(rules: [{ allow: public }]) {
   channelId: ID @index(name: "byChannel")  
 }
 
+type Gauge @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  title: String!
+  notes: String
+  value: Float!
+  segmentStops: String
+  chartType: String!
+  channel: Channel @belongsTo(fields: ["channelId"])
+  channelId: ID @index(name: "byChannel")
+  dashboard: Dashboard @belongsTo(fields: ["dashboardId"])
+  dashboardId: ID @index(name: "byDashboard")
+  createdBy: String
+  updatedBy: String
+}
+
+type HeatMap @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  title: String!
+  dataSet: DataSet @hasOne(fields: ["dataSetId"])
+  dataSetId: ID
+  options: AWSJSON
+  leadCol: String
+  columns: String
+  channel: Channel @belongsTo(fields: ["channelId"])
+  channelId: ID @index(name: "byChannel")
+  createdBy: String
+  updatedBy: String
+}
+
+type Dashboard @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  title: String!
+  description: String
+  reports: [Report] @hasMany(indexName: "byChannel", fields: ["id"])
+  gauges: [Gauge] @hasMany(indexName: "byChannel", fields: ["id"])
+  createdBy: String
+  updatedBy: String
+}
+
 type Channel @model @auth(rules: [{ allow: public }]) {
   id: ID!
   description: String,
   reports: [Report] @hasMany(indexName: "byChannel", fields: ["id"])
   dataSets: [DataSet] @hasMany(indexName: "byChannel", fields: ["id"])
+  gauges: [Gauge] @hasMany(indexName: "byChannel", fields: ["id"])
+  heatMaps: [HeatMap] @hasMany(indexName: "byChannel", fields: ["id"])
   # type: ChannelType @belongsTo(fields: ["channelTypeId"])
   type: String
   title: String!
@@ -47,7 +90,6 @@ type DataSet @model @auth(rules: [{ allow: public }]) {
   channel: Channel @belongsTo(fields: ["channelId"])
   channelId: ID @index(name: "byChannel")  
   dataValues: [DataValue] @hasMany (indexName: "byDataSet", fields: ["id"])
-  
   user: String
 }
 type DataValue @model @auth(rules: [{ allow: public }]) {

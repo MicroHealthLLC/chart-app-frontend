@@ -260,8 +260,8 @@ export default {
         for (var i = 0; i < this.channelReports.length; i++) { */
       await this.fetchDataSet(this.report.dataSetId)
       let ds = this.dataSet
-      //console.log(this.report)
       let headers = Object.keys(ds.dataValues.items[0].data[0])
+      console.log(headers)
       headers.forEach((k, j) => {
         if (k == this.report.xAxis) {
           /* console.log(k)
@@ -362,7 +362,7 @@ export default {
     this.fetchReports();
     this.fetchDataSets();
     this.updateChartData(); 
-    console.log(this.report)   
+    //console.log(this.report)   
   },
   watch: {
    dataSets() {

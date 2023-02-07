@@ -24,6 +24,9 @@ import Report from "../views/Report.vue";
 
 import AddDashboard from "../views/AddDashboard.vue";
 import Dashboards from "../views/Dashboards.vue";
+import Gauges from "../views/Gauges.vue";
+import Gauge from "../views/Gauge.vue";
+import HeatMap from "../views/HeatMap.vue"
 import Dashboard from "../views/Dashboard.vue";
 import ChannelDashboards from "../views/ChannelDashboards.vue";
 
@@ -172,6 +175,21 @@ const routes = [
     path: "/channels/:channelId/dashboards",
     name: "ChannelDashboards",
     component: ChannelDashboards,
+  },
+  {
+    path: "/:title/gauges",
+    name: "Gauges",
+    component: Gauges,
+  },
+  {
+    path: "/:title/gauges/:gaugeId",
+    name: "Gauge",
+    component: Gauge,
+  },
+  {
+    path: "/:title/heatMaps/:heatMapId",
+    name: "HeatMap",
+    component: HeatMap,
   },
   {
     path: "/forbidden",
