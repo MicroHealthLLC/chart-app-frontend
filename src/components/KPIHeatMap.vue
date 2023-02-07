@@ -9,7 +9,7 @@
         single-line
         hide-details
       ></v-text-field>
-      <v-data-table :headers="headers" :items="dataItems" class="elevation-4 ml-2" show-first-last-page="true" calculate-widths :loading="$store.getters.loading" loading-text="Loading... Please wait" :options="{itemsPerPage: 5}" :search="search">
+      <v-data-table :headers="headers" :items="dataItems" class="elevation-4 ml-2" show-first-last-page="true" calculate-widths :loading="$store.getters.loading" loading-text="Loading... Please wait" :options="{itemsPerPage: 5}" :search="search" :custom-sort="customSort">
         <template v-for="h, i in headers.slice(1)" v-slot:[`item.${h.text}`]="{ item }">
           <v-chip :color="getColor(item, item[`${h.text}`], i)" label :key="i">
             {{ item[`${h.text}`] }}
@@ -107,21 +107,48 @@ export default {
     log(e) {
       console.log(e)
     },
+    customSort(items, sortBy, isDesc) {
+      //console.log(items, sortBy)
+      if (this.options) {
+        let absCol = this.options.cols.filter(c => c.abs).map(a => a.name)
+        //console.log(absCol)
+        items.sort((a, b) => {
+          if (absCol.includes(sortBy[0])) {
+            if (isDesc[0]) {
+              return Math.abs(b[sortBy]) - Math.abs(a[sortBy]);
+            } else {
+              return Math.abs(a[sortBy]) - Math.abs(b[sortBy]);
+            }
+          } else if (!isNaN(a[sortBy])) {
+            if (!isDesc[0]) {
+              return (b[sortBy]) - (a[sortBy]);
+            } else {
+              return (a[sortBy]) - (b[sortBy]);
+            }
+          } else {
+            if(typeof a[sortBy] !== 'undefined'){
+            if (!isDesc[0]) {
+              return a[sortBy].toLowerCase().localeCompare(b[sortBy].toLowerCase());
+            }
+            else {
+              return b[sortBy].toLowerCase().localeCompare(a[sortBy].toLowerCase());
+            }
+          }
+          }
+        });
+      }
+      return items
+    },
     getKeyByValue(obj, val) {
       return Object.keys(obj).find(k => obj[k] === val)
     },
     getKeyNames(obj) {
-      //console.log(obj)
       return Object.keys(obj[0])
     },
     setHeaders(items) {
       if (items) {
-        //console.log(items)
         let names = this.getKeyNames(items)
-        //console.log(names)
         for (let n = 0; n < names.length; n++) {
-          console.log(this.headers[n])
-          console.log(names[n])
           this.headers[n].text = names[n]
           this.headers[n].value = names[n]
         }
