@@ -16,7 +16,8 @@
     </v-row>
     <v-row>
       <v-col cols="11">
-        <v-alert v-if="!formValid && submitAttempted" type="error" dense dismissible>Please fix highlighted fields below before submitting Heat Map</v-alert>
+        <v-alert v-if="!formValid && submitAttempted" type="error" dense dismissible>Please fix highlighted fields below
+          before submitting Heat Map</v-alert>
         <!-- Form Fields -->
         <v-form v-model="formValid" ref="form" class="mt-2">
           <div class="grid">
@@ -25,93 +26,73 @@
                 :rules="[(v) => !!v || 'Title is required']"></v-text-field>
             </div>
             <div>
-              <v-select v-model="heatMap.dataSet" :items="dataSetChoices" item-text="title" item-value="id" label="Data Set"
-                dense required :rules="[(v) => !!v || 'Data Set is required']" @change="loadTable"></v-select>
+              <v-select v-model="heatMap.dataSet" :items="dataSetChoices" item-text="title" item-value="id"
+                label="Data Set" dense required :rules="[(v) => !!v || 'Data Set is required']"
+                @change="loadTable"></v-select>
             </div>
             <div>
-              <v-select v-model="selectedHeaders" :items="headers" label="Target Columns" multiple small dense return-object
-                @change="onChangeSelected">
+              <v-select v-model="selectedHeaders" :items="headers" label="Target Columns" multiple small dense
+                return-object @change="onChangeSelected">
               </v-select>
             </div>
             <div>
-              <v-select v-model="leadCol" :items="leadColKeys" label="Lead Column" dense @change="onChangeAxis"></v-select>
+              <v-select v-model="leadCol" :items="leadColKeys" label="Lead Column" dense
+                @change="onChangeAxis"></v-select>
             </div>
           </div>
         </v-form>
       </v-col>
     </v-row>
-    <v-row>
-      <v-col v-if="heatMap.dataSet" class="mt-2 mb-4" cols="11">
-        <v-card>
-          <KPIHeatMap :heatMap="heatMap" :headers="selectedHeaders" :dataItems="items" :options="options" />
-        </v-card>
+    <v-row justify="start">
+      <v-col v-if="heatMap.dataSet" class="mt-2 mb-4" cols="5">
+        <KPIHeatMap :heatMap="heatMap" :headers="selectedHeaders" :dataItems="items" :options="options" />
+      </v-col>
+      <v-col v-if="heatMap.dataSet && heatMap.options && heatMap.options.cols" cols="5">
+        <v-row>
+          <v-col xl="3" md="4" sm="5" xs="6" :key="i" v-for="col, i in heatMap.options.cols" class="ml-2">
+            <v-card-subtitle>{{ col.name }}</v-card-subtitle>
+            <v-text-field v-model="heatMap.options.cols[i].gre" solo class="text-green" dense required
+              :rules="[(v) => !!v || 'required']">
+              <v-icon color="green lighten-1" slot="prepend-inner">
+                {{!heatMap.options.cols[i].abs ? 'mdi-greater-than-or-equal' : 'mdi-less-than-or-equal'}}
+              </v-icon>
+            </v-text-field>
+            <v-text-field v-model="heatMap.options.cols[i].yel" solo class="text-yellow"
+              :prepend-inner-icon="!heatMap.options.cols[i].abs ? 'mdi-greater-than-or-equal' : 'mdi-less-than-or-equal'"
+              dense required :rules="[(v) => !!v || 'required']">
+              <v-icon color="amber lighten-1" slot="prepend-inner">
+                {{!heatMap.options.cols[i].abs ? 'mdi-greater-than-or-equal' : 'mdi-less-than-or-equal'}}
+              </v-icon>
+            </v-text-field>
+            <v-text-field v-model="heatMap.options.cols[i].yel" solo class="text-red"
+              :prepend-inner-icon="!heatMap.options.cols[i].abs ? 'mdi-less-than' : 'mdi-greater-than'" dense required
+              :rules="[(v) => !!v || 'required']">
+              <v-icon color="red lighten-1" slot="prepend-inner">
+                {{ heatMap.options.cols[i].abs ? 'mdi-greater-than' : 'mdi-less-than' }}
+              </v-icon>
+            </v-text-field>
+            <v-checkbox v-model="heatMap.options.cols[i].abs" label="Use Absolute Value"></v-checkbox>
+          </v-col>
+        </v-row>
       </v-col>
     </v-row>
-    <div v-if="heatMap.dataSet">
-      <!-- <v-row v-for="header, j in headers" :key="j">
-        <v-col v-for="option, i in options.cols" :key="i" cols="3">
-          <v-text-field :v-model="options.cols[i]" :label="options.cols[i]" dense required :rules="[(v) => !!v || 'Title is required']">
-            <template v-slot:label>
-              {{ option }}
-            </template>
-          </v-text-field>
-        </v-col>
-      </v-row> -->
-      <v-row>
-        <v-col xl="1" md="2" sm="3" xs="4" :key="i" v-for="col, i in heatMap.options.cols">
-          <v-card-title>{{ col.name }}</v-card-title>
-          <v-text-field v-model="heatMap.options.cols[i].gre" solo class="text-green" dense required :rules="[(v) => !!v || 'required']">
-            <v-icon color="green lighten-1" slot="prepend-inner">
-              {{!heatMap.options.cols[i].abs ? 'mdi-greater-than-or-equal' : 'mdi-less-than-or-equal'}}
-            </v-icon>
-          </v-text-field>
-          <v-text-field v-model="heatMap.options.cols[i].yel" solo class="text-yellow" :prepend-inner-icon="!heatMap.options.cols[i].abs ? 'mdi-greater-than-or-equal' : 'mdi-less-than-or-equal'" dense required :rules="[(v) => !!v || 'required']">
-            <v-icon color="amber lighten-1" slot="prepend-inner">
-              {{!heatMap.options.cols[i].abs ? 'mdi-greater-than-or-equal' : 'mdi-less-than-or-equal'}}
-            </v-icon>
-          </v-text-field>
-          <v-text-field v-model="heatMap.options.cols[i].yel" solo class="text-red" :prepend-inner-icon="!heatMap.options.cols[i].abs ? 'mdi-less-than' : 'mdi-greater-than'" dense required :rules="[(v) => !!v || 'required']">
-            <v-icon color="red lighten-1" slot="prepend-inner">
-              {{heatMap.options.cols[i].abs ? 'mdi-greater-than' : 'mdi-less-than'}}
-            </v-icon>
-          </v-text-field>
-          <v-checkbox v-model="heatMap.options.cols[i].abs" label="Use Absolute Value"></v-checkbox>
-          </v-col>
-      </v-row>
-    </div>
+
     <!-- Delete Button -->
     <div v-if="heatMap && heatMap.id" class="d-flex justify-end mt-4">
-        <v-btn
-          @click="deleteDialog = true"
-          small
-          color="error"
-          depressed
-          outlined
-          >Delete Heat Map</v-btn
-        >
-      </div>
-      <!-- Delete Prompt -->
-      <v-dialog v-model="deleteDialog" max-width="400">
-        <v-card>
-          <v-card-title>Delete this Heat Map?</v-card-title>
-          <v-divider class="mx-4 mb-2"></v-divider>
-          <v-card-text
-            >Are you sure you would like to delete this heat map?</v-card-text
-          >
-          <v-card-actions class="d-flex justify-end">
-            <v-btn
-              @click="deleteDialog = false"
-              small
-              outlined
-              color="secondary"
-              >Cancel</v-btn
-            >
-            <v-btn @click="deleteHeatMap" small depressed color="error"
-              >Delete</v-btn
-            >
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
+      <v-btn @click="deleteDialog = true" small color="error" depressed outlined>Delete Heat Map</v-btn>
+    </div>
+    <!-- Delete Prompt -->
+    <v-dialog v-model="deleteDialog" max-width="400">
+      <v-card>
+        <v-card-title>Delete this Heat Map?</v-card-title>
+        <v-divider class="mx-4 mb-2"></v-divider>
+        <v-card-text>Are you sure you would like to delete this heat map?</v-card-text>
+        <v-card-actions class="d-flex justify-end">
+          <v-btn @click="deleteDialog = false" small outlined color="secondary">Cancel</v-btn>
+          <v-btn @click="deleteHeatMap" small depressed color="error">Delete</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -244,7 +225,7 @@ export default {
       console.log(this.createMasterData(this.heatMap.dataSet.dataValues.items))
       this.uploadData(this.createMasterData(this.heatMap.dataSet.dataValues.items))
     }, */
-    
+
     onChangeSelected() {
       this.selectedHeaders.forEach((s, i) => {
         if (typeof s == "string") {
@@ -255,7 +236,9 @@ export default {
         this.dataHeaders = this.selectedHeaders.shift()
       } */
       this.leadColKeys = this.selectedHeaders.map(h => h.text || h)
-      this.onChangeAxis() 
+      if (this.leadCol) {
+        this.onChangeAxis()
+      }
       this.items = this.filterData(this.selectedHeaders, this.createMasterData(this.dataSet.dataValues.items))
       //console.log(this.items)
     },
@@ -283,23 +266,23 @@ export default {
       if (this.selectedHeaders) {
         let legendSelect = []
         this.selectedHeaders.slice(1).forEach((h, i) => {
-          let attr ={}
+          let attr = {}
           if (this.heatMap.options.cols[i]) {
             attr = {
-            name: h.text,
-            gre: this.heatMap.options.cols[i].gre,
-            yel: this.heatMap.options.cols[i].yel,
-            abs: this.heatMap.options.cols[i].abs,
+              name: h.text,
+              gre: this.heatMap.options.cols[i].gre,
+              yel: this.heatMap.options.cols[i].yel,
+              abs: this.heatMap.options.cols[i].abs,
             }
           } else {
             attr = {
-            name: h.text,
-            gre: 0,
-            yel: 0,
-            abs: false,
+              name: h.text,
+              gre: 0,
+              yel: 0,
+              abs: false,
             }
           }
-          
+
           legendSelect.push(attr)
         })
         this.heatMap.options.cols = legendSelect
@@ -317,7 +300,9 @@ export default {
       }));
     },
     loadTable() {
-      this.uploadData(this.createMasterData(this.dataSet.dataValues.items))
+      this.fetchDataSet(this.heatMap.dataSet).then(() => {
+        this.uploadData(this.createMasterData(this.dataSet.dataValues.items))
+      })
     },
     populateData() {
       if (this.heatMap.id) {
@@ -350,7 +335,7 @@ export default {
         this.heatMap.user = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`
       }
       this.populateData()
-  }
+    }
   },
   watch: {
     headers() {
@@ -376,9 +361,9 @@ export default {
       }
       
     }, */
-    dataSet() {
-      if (this.dataSet) {
-        //console.log(this.dataSet)
+    heatMap() {
+      if (this.heatMap.dataSet) {
+        console.log(this.heatMap.dataSet)
       }
     },
     selected() {

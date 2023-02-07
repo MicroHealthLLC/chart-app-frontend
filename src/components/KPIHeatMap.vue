@@ -1,7 +1,15 @@
 <template>
-  <v-row justify="space-between">
-    <v-col cols="7">
-      <v-data-table :headers="headers" :items="dataItems" class="elevation-4 ml-2" :hide-default-footer="dataItems.length <= 12" :disable-pagination="dataItems.length <= 12" calculate-widths :loading="$store.getters.loading" loading-text="Loading... Please wait">
+  <v-row justify="center">
+    <v-col cols="11">
+      <v-text-field
+      class="mx-3 mb-3"
+        v-model="search"
+        append-icon="mdi-magnify"
+        label="Search"
+        single-line
+        hide-details
+      ></v-text-field>
+      <v-data-table :headers="headers" :items="dataItems" class="elevation-4 ml-2" show-first-last-page="true" calculate-widths :loading="$store.getters.loading" loading-text="Loading... Please wait" :options="{itemsPerPage: 5}" :search="search">
         <template v-for="h, i in headers.slice(1)" v-slot:[`item.${h.text}`]="{ item }">
           <v-chip :color="getColor(item, item[`${h.text}`], i)" label :key="i">
             {{ item[`${h.text}`] }}
@@ -74,6 +82,7 @@ export default {
   data() {
     return {
       show: false,
+      search: '',
       footers: {
         showFirstLastPage: true,
         disableItemsPerPage: true,
