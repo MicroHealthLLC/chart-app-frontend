@@ -109,7 +109,7 @@ export default {
     },
     customSort(items, sortBy, isDesc) {
       //console.log(items, sortBy)
-      if (this.options) {
+      if (this.options && this.options.cols && this.options.cols.length > 0) {
         let absCol = this.options.cols.filter(c => c.abs).map(a => a.name)
         //console.log(absCol)
         items.sort((a, b) => {

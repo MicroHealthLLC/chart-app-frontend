@@ -410,7 +410,7 @@ export default {
             let id = lastAdded[0].id
             /* this.$router.push(`/data-sets/${id}`) */
             this.$router.push(`/:title/data-sets/${id}`)
-            console.log(this.selected)
+            //console.log(this.selected)
             /* console.log(this.selected)
             this.fetchDataSetThenAddDataValue(id, this.selected) */
 
@@ -440,12 +440,12 @@ export default {
     },
     async showDataChart() {
       await this.fetchDataSet(this.$route.params.dataSetId)
-      console.log(this.dataSet)
+      //console.log(this.dataSet)
       //this.createMasterData(this.dataSet.dataValues.items)
       this.uploadData(this.createMasterData(this.dataSet.dataValues.items))
     },
     uploadData(data) {
-      console.log(data)
+      //console.log(data)
       this.items = data;
       this.selected = data;
       const keys = Object.keys(data[0])
@@ -525,7 +525,7 @@ export default {
     } else {
       await this.fetchDataSet(this.$route.params.dataSetId)
       if (this.dataSet && this.dataSet.dataValues && this.dataSet.dataValues.items && this.dataSet.dataValues.items.length > 0) {
-        console.log(this.dataSet.dataValues)
+        //console.log(this.dataSet.dataValues)
         const keys = Object.keys(this.createMasterData(this.dataSet.dataValues.items)[0])
         //this.xAxisKeys = keys
         this.headers = keys.map((item) => ({
@@ -563,7 +563,7 @@ export default {
         this.isReadOnly = true
                
         if (this.dataSet.id !== this.$route.params.dataSetId){
-          console.log(this.dataSet)
+          //console.log(this.dataSet)
         this.clear()
         }
       } else this.isReadOnly = false

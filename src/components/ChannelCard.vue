@@ -87,7 +87,7 @@
       //   console.log(e)
       //  },
       toChannel() {
-        console.log(this.channel.title.toLowerCase().replace(/\s/g, '_'))
+        //console.log(this.channel.title.toLowerCase().replace(/\s/g, '_'))
         this.SET_CURRENT_CHANNEL({
           id: this.channel.id,
           name: this.channel.title.toLowerCase().replace(/\s/g, '_'),
@@ -100,7 +100,7 @@
           regName: this.channel.title
         };
         this.setCurrentChannel(data)
-        console.log(data)
+        //console.log(data)
         this.$router.push(
           `/${this.channel.title.toLowerCase().replace(/\s/g, '_')}/dashboards`
         );

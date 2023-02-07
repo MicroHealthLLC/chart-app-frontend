@@ -510,7 +510,7 @@ export default {
           value: item,
         }));
       }
-      console.log(newHeaders)
+      //console.log(newHeaders)
       this.data = this.createMasterData(this.dataSet.dataValues.items)
       this.selectedHeaders = newHeaders
       this.data = this.filterData(this.selectedHeaders, this.data)
@@ -549,7 +549,7 @@ export default {
       this.$router.push(`/channels/${this.$route.params.channelId}/reports`);
     },
     fullscreenReport() {
-      console.log(this.$refs.fullscreenchart)
+      //console.log(this.$refs.fullscreenchart)
       this.fullscreen = true;
       setTimeout(() => {
         this.$refs.fullscreenchart.loadChart();
@@ -570,7 +570,7 @@ export default {
   },
   async mounted() {
     await this.fetchDataSets();
-    console.log(this.data)
+    //console.log(this.data)
     /* if (this.$route.name == "Report") {
       this.dataSetChoices = [...this.dataSets];
     } else { */
@@ -614,7 +614,7 @@ export default {
       }
     }, */
     data() {
-      console.log(this.data)
+      //console.log(this.data)
     }
   },
 };

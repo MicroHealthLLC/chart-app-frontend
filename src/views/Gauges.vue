@@ -49,19 +49,17 @@
       <v-container class="pl-5">
         <h4 class="mb-5">HEAT MAPS</h4>
         <v-row>
-        <v-col v-for="(heatMap) in channelHeatMaps" :key="heatMap.id" xl="2" lg="3" md="4" sm="6">
-          <v-card @click.prevent="toHeatMap(heatMap.id)" width="250px" min-width="250px" height="200px" tile elevation="4">
-            
-            <!-- <KPIHeatMap :heatMap="heatMap" /> -->
-            <!-- <v-divider class="my-2"></v-divider> -->
-            <v-row justify="center" align="center">
-              <v-icon cols="6" x-large>mdi-table-large</v-icon>
-              <v-col cols="6">
-                <v-card-title>{{ heatMap.title }}</v-card-title>
-                <v-card-subtitle v-if="heatMap.createdBy">By: {{ heatMap.createdBy }}</v-card-subtitle>
-                <v-card-subtitle v-else>By: John Smith</v-card-subtitle>
-              </v-col>
+        <v-col v-for="(heatMap) in channelHeatMaps" :key="heatMap.id" xl="2" lg="3" md="4" sm="6" xs="12">
+          <v-card @click.prevent="toHeatMap(heatMap.id)" width="250px" min-width="250px" height="250px" tile elevation="4">
+            <v-row justify="center">
+              <v-col cols="4">
+              <v-icon x-large>mdi-table-large</v-icon></v-col>
             </v-row>
+            <v-divider class="mb-4"></v-divider>
+                <v-card-title>{{ heatMap.title }}</v-card-title>
+                <v-card-text v-if="heatMap.createdBy">By: {{ heatMap.createdBy }}</v-card-text>
+                <v-card-text v-else>By: John Smith</v-card-text>
+                <v-card-text v-if="heatMap.dataSet">Dataset: {{ heatMap.dataSet.title }}</v-card-text>
           </v-card>
         </v-col>
         </v-row>
@@ -165,7 +163,7 @@ export default {
 }
 
 .mdi-table-large {
-  background: linear-gradient(to right, #EF5350, #EF5350 33.33%, #FFCA28 33.33%, #FFCA28 66.66%, #66BB6A 66.66%);
+  background: linear-gradient(to right, #EF5350, #EF5350 38.4%, #FFCA28 38.4%, #FFCA28 63.5%, #66BB6A 63.5%);
   background-clip: text;
   color: rgba(0, 0, 0, 0.2) !important;
   font-size: 80px !important;

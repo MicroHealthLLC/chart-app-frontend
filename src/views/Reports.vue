@@ -170,7 +170,7 @@ export default {
         title: this.reportGroup.title,
         channelId: this.currentChannels[0].channelId,
       }
-      console.log(data)
+      //console.log(data)
       await this.addReportGroup(data);
       this.reportGroup.title = ""
       this.reportGroup.reports = null
@@ -183,17 +183,17 @@ export default {
   },
   mounted() {
     this.fetchReports();
-    this.fetchReportGroups();
+    this.fetchReportGroups()
     this.fetchDataSets();
     //  console.log(this.user)
   },
   watch: {
     reports() {
-      console.log(this.channelReports)
-      console.log(this.reportGroups)
+      //console.log(this.channelReports)
+      //console.log(this.reportGroups)
     },
     reportGroup() {
-      console.log(this.reportGroup.title)
+      //console.log(this.reportGroup.title)
     }
   }
 
