@@ -62,7 +62,7 @@
       console.log(e)
       },
        myFirstClick(){
-        alert("this does not work yet")
+        alert("this doesn't work yet")
        },
      
    
