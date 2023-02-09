@@ -44,30 +44,28 @@
       </v-col>
     </v-row>
     <v-row justify="start">
-      <v-col v-if="heatMap.dataSet" class="mt-2 mb-4" cols="5">
-        <KPIHeatMap :heatMap="heatMap" :headers="selectedHeaders" :dataItems="items" :options="options" />
+      <v-col v-if="heatMap.dataSet && heatMap.options && heatMap.options.cols" class="mt-2 mb-4" cols="5">
+        <KPIHeatMap :heatMap="heatMap" :headers="selectedHeaders" :dataItems="items"  />
+        <!-- :options="options" -->
       </v-col>
       <v-col v-if="heatMap.dataSet && heatMap.options && heatMap.options.cols" cols="5">
         <v-row>
           <v-col xl="3" md="4" sm="5" xs="6" :key="i" v-for="col, i in heatMap.options.cols" class="ml-2">
             <v-card-subtitle>{{ col.name }}</v-card-subtitle>
-            <v-text-field v-model="heatMap.options.cols[i].gre" solo class="text-green" dense required
-              :rules="[(v) => !!v || 'required']">
-              <v-icon color="green lighten-1" slot="prepend-inner">
+            <v-text-field v-model="heatMap.options.cols[i].gre" solo class="text-green" dense required type="number" :rules="[(v) => !!v || 'required']">
+              <v-icon color="green lighten-1" slot="prepend-inner" class="mr-1">
                 {{!heatMap.options.cols[i].abs ? 'mdi-greater-than-or-equal' : 'mdi-less-than-or-equal'}}
               </v-icon>
             </v-text-field>
             <v-text-field v-model="heatMap.options.cols[i].yel" solo class="text-yellow"
-              :prepend-inner-icon="!heatMap.options.cols[i].abs ? 'mdi-greater-than-or-equal' : 'mdi-less-than-or-equal'"
-              dense required :rules="[(v) => !!v || 'required']">
-              <v-icon color="amber lighten-1" slot="prepend-inner">
+              :prepend-inner-icon="!heatMap.options.cols[i].abs ? 'mdi-greater-than-or-equal' : 'mdi-less-than-or-equal'" type="number" dense required :rules="[(v) => !!v || 'required']">
+              <v-icon color="amber lighten-1" slot="prepend-inner" class="mr-1">
                 {{!heatMap.options.cols[i].abs ? 'mdi-greater-than-or-equal' : 'mdi-less-than-or-equal'}}
               </v-icon>
             </v-text-field>
             <v-text-field v-model="heatMap.options.cols[i].yel" solo class="text-red"
-              :prepend-inner-icon="!heatMap.options.cols[i].abs ? 'mdi-less-than' : 'mdi-greater-than'" dense required
-              :rules="[(v) => !!v || 'required']">
-              <v-icon color="red lighten-1" slot="prepend-inner">
+              :prepend-inner-icon="!heatMap.options.cols[i].abs ? 'mdi-less-than' : 'mdi-greater-than'" dense required type="number" :rules="[(v) => !!v || 'required']">
+              <v-icon color="red lighten-1" slot="prepend-inner" class="mr-1">
                 {{ heatMap.options.cols[i].abs ? 'mdi-greater-than' : 'mdi-less-than' }}
               </v-icon>
             </v-text-field>
@@ -117,7 +115,7 @@ export default {
       leadColKeys: [],
       leadCol: '',
       items: [],
-      options: {},
+      //options: {},
       /* mapOptions: {
         cols: [
           {
@@ -158,7 +156,7 @@ export default {
   },
   methods: {
     ...mapActions(["fetchDataSets", "fetchDataSet", "fetchHeatMaps", "fetchHeatMap", "addHeatMap", "updateHeatMapById", "removeHeatMap"]),
-    ...mapMutations([]),
+    ...mapMutations(["SET_DATA_SET", "SET_HEAT_MAP"]),
     log(e) {
       console.log(e)
     },
@@ -177,12 +175,11 @@ export default {
     },
     clear() {
       this.$refs.form.reset();
-      /* this.file = null;
-      this.data = [];
-      this.selected = [];
-      this.headers = [];
-      this.items = []; */
-
+      this.headers = []
+      this.items = []
+      this.SET_DATA_SET({})
+      //this.options.cols = []
+      this.SET_HEAT_MAP({})
     },
     async saveHeatMap() {
       this.submitAttempted = true
@@ -191,7 +188,7 @@ export default {
         let data = {
           title: this.heatMap.title,
           //dataSetId: this.heatMap.dataSet,
-          options: JSON.stringify(this.options),
+          options: JSON.stringify(this.heatMap.options),
           leadCol: this.leadCol,
           columns: JSON.stringify(this.selectedHeaders),
           channelId: this.currentChannels[0].channelId
@@ -262,12 +259,19 @@ export default {
       })
     },
     changeLegend() {
-      console.log(this.heatMap.options.cols)
       if (this.selectedHeaders) {
         let legendSelect = []
+        if (this.heatMap && !this.heatMap.options) {
+          let newHM = this.heatMap
+          newHM.options = {
+            cols: []
+          }
+          this.SET_HEAT_MAP(newHM)
+        }
+        console.log(this.heatMap.options)
         this.selectedHeaders.slice(1).forEach((h, i) => {
           let attr = {}
-          if (this.heatMap.options.cols[i]) {
+          if (this.heatMap.options && this.heatMap.options.cols[i]) {
             attr = {
               name: h.text,
               gre: this.heatMap.options.cols[i].gre,
@@ -282,7 +286,6 @@ export default {
               abs: false,
             }
           }
-
           legendSelect.push(attr)
         })
         this.heatMap.options.cols = legendSelect
@@ -291,7 +294,8 @@ export default {
     uploadData(data) {
       this.items = data;
       //console.log(this.heatMap.options)
-      this.options = this.heatMap.options
+
+      //this.options = this.heatMap.options
       //this.selected = data;
       const keys = Object.keys(data[0])
       this.headers = keys.map((key) => ({
@@ -303,6 +307,7 @@ export default {
       this.fetchDataSet(this.heatMap.dataSet).then(() => {
         this.uploadData(this.createMasterData(this.dataSet.dataValues.items))
       })
+      console.log(this)
     },
     populateData() {
       if (this.heatMap.id) {
@@ -314,18 +319,17 @@ export default {
           this.leadCol = this.heatMap.leadCol
           this.onChangeAxis()
         }
-        if (this.heatMap.options && this.heatMap.options.cols && this.heatMap.options.cols.length > 0) {
-          //console.log(this.heatMap.options)
+        /* if (this.heatMap.options && this.heatMap.options.cols && this.heatMap.options.cols.length > 0) {
+          console.log(this.heatMap.options)
           this.options = this.heatMap.options
-        }
+        } */
       }
     }
   },
   async mounted() {
     if (this.$route.path === `/${this.currentChannels[0].name}/gauges`) {
       this.heatMap.id = ""
-      this.isReadOnly = false
-      this.clear()
+      //this.clear()
     } else {
       await this.fetchHeatMap(this.$route.params.heatMapId)
       await this.fetchDataSets()
