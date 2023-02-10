@@ -1,7 +1,7 @@
 <template>
   <v-row justify="center">
     <v-col cols="11">
-      <div v-if="$route.path != '/it_apps/gauges'" class="d-flex">
+      <div v-if="$route.path != `/${this.currentChannels[0].name}/gauges`" class="d-flex">
         <v-text-field class="mx-3 mb-3" v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
         <v-btn class="mt-4" @click="toggleFilter" icon :color="filter ? 'blue darken-2' : 'grey'">
           <v-icon>mdi-filter</v-icon>
@@ -99,6 +99,7 @@
 </template>
     
 <script>
+import { mapGetters } from 'vuex';
 
 export default {
   name: "KPIHeatMap",
@@ -123,7 +124,7 @@ export default {
     }
   },
   computed: {
-
+    ...mapGetters(["currentChannels",])
   },
   methods: {
     log(e) {

@@ -2,8 +2,7 @@
   <v-row>
     <v-col>
       <div class="d-flex justify-space-between">
-        <h3 v-if="activeReport && activeReport.title" :load="log( reportGroups.filter(group => group.id == activeReport.reportGroupId)
-        )">{{ activeReport.title }}</h3>
+        <h3 v-if="activeReport && activeReport.title">{{ activeReport.title }}</h3>
         <h3 v-else class="placeholder-title">(Report Title)</h3>
         <div>
           <v-btn
@@ -425,9 +424,9 @@ export default {
         (this.$refs.chart.index + 1) %
         (Object.keys(this.$refs.chart.chartData[0]).length - 1);
     },
-    log(e){
+    /* log(e){
     console.log(e)
-    }, 
+    },  */
     changeFSChartData() {
       this.$refs.fullscreenchart.index =
         (this.$refs.fullscreenchart.index + 1) %
