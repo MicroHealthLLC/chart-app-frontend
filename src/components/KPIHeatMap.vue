@@ -136,6 +136,7 @@ export default {
         let absCol = this.heatMap.options.cols.filter(c => c.abs).map(a => a.name)
         //console.log(absCol)
         items.sort((a, b) => {
+          console.log(a[sortBy])
           if (absCol.includes(sortBy[0])) {
             if (isDesc[0]) {
               return Math.abs(b[sortBy]) - Math.abs(a[sortBy]);
@@ -147,6 +148,12 @@ export default {
               return (b[sortBy]) - (a[sortBy]);
             } else {
               return (a[sortBy]) - (b[sortBy]);
+            }
+          } else if (this.isDate(a[sortBy])) {
+            if (!isDesc[0]) {
+              return new Date(b[sortBy]) - new Date(a[sortBy]);
+            } else {
+              return new Date(a[sortBy]) - new Date(b[sortBy]);
             }
           } else {
             if (typeof a[sortBy] !== 'undefined') {
@@ -161,6 +168,9 @@ export default {
         });
       }
       return items
+    },
+    isDate(str) {
+      return (new Date(str) !== "Invalid Date") && !isNaN(new Date(str))
     },
     getKeyByValue(obj, val) {
       return Object.keys(obj).find(k => obj[k] === val)
@@ -181,7 +191,7 @@ export default {
       }
     }, */
     getColor(item, val, num) {
-      console.log(this.heatMap.options)
+      //console.log(this.heatMap.options)
       let options = this.heatMap.options
       
       if (!options.cols[num].abs) {
