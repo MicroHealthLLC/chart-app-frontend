@@ -167,16 +167,18 @@ export default {
     getKeyNames(obj) {
       return Object.keys(obj[0])
     },
-    setHeaders(items) {
+    /* setHeaders(items) {
       if (items) {
         let names = this.getKeyNames(items)
+        console.log(this.headers)
+        console.log(names)
         for (let n = 0; n < names.length; n++) {
           this.headers[n].text = names[n]
           this.headers[n].value = names[n]
           this.headers[n].filter = ''
         }
       }
-    },
+    }, */
     getColor(item, val, num) {
       console.log(this.heatMap.options)
       let options = this.heatMap.options
@@ -230,7 +232,8 @@ export default {
     dataItems() {
       if (this.dataItems) {
         console.log(this.dataItems)
-        this.setHeaders(this.dataItems)
+        console.log(this.headers)
+        //this.setHeaders(this.dataItems)
       }
     },
     headers() {

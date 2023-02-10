@@ -52,24 +52,24 @@
         <v-row>
           <v-col xl="3" md="4" sm="5" xs="6" :key="i" v-for="col, i in heatMap.options.cols" class="ml-2">
             <v-card-subtitle>{{ col.name }}</v-card-subtitle>
-            <v-text-field v-model="heatMap.options.cols[i].gre" solo class="text-green" dense required type="number" :rules="[(v) => !!v || 'required']">
+            <v-text-field v-model="heatMap.options.cols[i].gre" solo class="text-green" dense required type="number" :rules="[(v) => !!v || 'required']" @change="updateTableColors">
               <v-icon color="green lighten-1" slot="prepend-inner" class="mr-1">
                 {{!heatMap.options.cols[i].abs ? 'mdi-greater-than-or-equal' : 'mdi-less-than-or-equal'}}
               </v-icon>
             </v-text-field>
             <v-text-field v-model="heatMap.options.cols[i].yel" solo class="text-yellow"
-              :prepend-inner-icon="!heatMap.options.cols[i].abs ? 'mdi-greater-than-or-equal' : 'mdi-less-than-or-equal'" type="number" dense required :rules="[(v) => !!v || 'required']">
+              :prepend-inner-icon="!heatMap.options.cols[i].abs ? 'mdi-greater-than-or-equal' : 'mdi-less-than-or-equal'" type="number" dense required :rules="[(v) => !!v || 'required']" @change="updateTableColors">
               <v-icon color="amber lighten-1" slot="prepend-inner" class="mr-1">
                 {{!heatMap.options.cols[i].abs ? 'mdi-greater-than-or-equal' : 'mdi-less-than-or-equal'}}
               </v-icon>
             </v-text-field>
             <v-text-field v-model="heatMap.options.cols[i].yel" solo class="text-red"
-              :prepend-inner-icon="!heatMap.options.cols[i].abs ? 'mdi-less-than' : 'mdi-greater-than'" dense required type="number" :rules="[(v) => !!v || 'required']">
+              :prepend-inner-icon="!heatMap.options.cols[i].abs ? 'mdi-less-than' : 'mdi-greater-than'" dense required type="number" :rules="[(v) => !!v || 'required']" @change="updateTableColors">
               <v-icon color="red lighten-1" slot="prepend-inner" class="mr-1">
                 {{ heatMap.options.cols[i].abs ? 'mdi-greater-than' : 'mdi-less-than' }}
               </v-icon>
             </v-text-field>
-            <v-checkbox v-model="heatMap.options.cols[i].abs" label="Use Absolute Value"></v-checkbox>
+            <v-checkbox v-model="heatMap.options.cols[i].abs" label="Use Absolute Value" @change="updateTableColors"></v-checkbox>
           </v-col>
         </v-row>
       </v-col>
@@ -249,7 +249,7 @@ export default {
       //console.log(this.selectedHeaders)
       //console.log(this.dataSet.dataValues.items)
       this.items = this.filterData(this.selectedHeaders, this.createMasterData(this.dataSet.dataValues.items))
-      this.changeLegend()
+      this.setLegend()
     },
     moveArrByKey(keys, selected) {
       keys.forEach((k, i) => {
@@ -258,7 +258,7 @@ export default {
         }
       })
     },
-    changeLegend() {
+    setLegend() {
       if (this.selectedHeaders) {
         let legendSelect = []
         if (this.heatMap && !this.heatMap.options) {
@@ -308,6 +308,11 @@ export default {
         this.uploadData(this.createMasterData(this.dataSet.dataValues.items))
       })
       console.log(this)
+    },
+    updateTableColors() {
+      console.log(this.headers)
+      this.items = (this.createMasterData(this.dataSet.dataValues.items))
+
     },
     populateData() {
       if (this.heatMap.id) {
