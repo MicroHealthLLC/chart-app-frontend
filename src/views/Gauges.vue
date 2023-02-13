@@ -45,7 +45,7 @@
         </div> -->
         </v-row>
        </v-container>
-      <v-divider class="mb-4"></v-divider>
+      <v-divider v-if="channelGauges.length > 0" class="mb-4"></v-divider>
       <v-container class="pl-5">
         <h4 class="mb-5">HEAT MAPS</h4>
         <v-row>

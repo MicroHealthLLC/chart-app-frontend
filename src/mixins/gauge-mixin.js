@@ -63,6 +63,7 @@ export default {
     },
     channelHeatMaps(){
       if (this.heatMaps && this.heatMaps.length > 0 && this.currentChannels && this.currentChannels[0].channelId){
+        console.log(this.heatMaps.filter(t => t.channelId == this.currentChannels[0].channelId))
         return this.heatMaps.filter(t => t.channelId == this.currentChannels[0].channelId)
       } else return []
     },

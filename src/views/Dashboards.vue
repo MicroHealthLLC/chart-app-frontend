@@ -10,7 +10,29 @@
           chips
           :items="channelReports"
           :disabled="!channelReports.length > 1"
-          label="Select dashboard content"
+          label="Select Reports"
+          outlined
+        ></v-select>
+        <v-select
+          v-model="selectedGauges"       
+          item-text="title"
+          item-value="value"
+          multiple        
+          chips
+          :items="channelGauges"
+          :disabled="!channelGauges.length > 1"
+          label="Select Gauges"
+          outlined
+        ></v-select>
+        <v-select
+          v-model="selectedHeatMaps"       
+          item-text="title"
+          item-value="value"
+          multiple        
+          chips
+          :items="channelHeatMaps"
+          :disabled="!channelHeatMaps.length > 1"
+          label="Select Heat Maps"
           outlined
         ></v-select>
         <v-btn color="primary" large class="d-block margin-auto" >Add To Dashboard<v-icon
@@ -24,19 +46,28 @@
 
     <div class="d-flex justify-space-between">
         <h3><v-icon class="mr-2 pb-2" color="cyan">mdi-monitor-dashboard</v-icon>Dashboard</h3>
+        <v-switch
+          v-model="switch1"
+          label="Show My Dashboard"
+        ></v-switch>
         <v-btn class="mb-2" color="primary" small @click="addDashboard">Add to Dashboard <v-icon
           small>mdi-plus</v-icon></v-btn>
       </div>  
       <v-divider class="mb-4"></v-divider>
-      <v-row>
+      <v-row v-if="switch1">
+        <v-col cols="12" sm="5" v-for="(report, i) in channelReports.filter(r => r.createdBy == `${user.attributes.given_name} ${user.attributes.family_name}`)" :key="i" @click.prevent="toReport(report.id)">
+          <DashboardCard_test :report="report" />
+        </v-col>
+      </v-row>
+      <v-row v-else>
         <v-col cols="12" sm="5" v-for="(report, i) in channelReports" :key="i" @click.prevent="toReport(report.id)">
           <DashboardCard_test :report="report" />
         </v-col>
       </v-row>
       <v-divider class="mb-4"></v-divider>
 
-      <v-row>
-        <v-col xl="2" lg="3" md="4" sm="6" v-for="(gauge) in channelGauges" :key="gauge.id">
+      <v-row class="mb-2" v-if="switch1">
+        <v-col xl="2" lg="3" md="4" sm="6" v-for="(gauge) in channelGauges.filter(r => r.createdBy == `${user.attributes.given_name} ${user.attributes.family_name}`)" :key="gauge.id">
           <v-card width="250px" min-width="250px" @click.prevent="toGauge(gauge.id)" tile elevation="4">
             <KPIGauge :gauge="gauge" :height="130" :width="200" :segmentStops="gauge.segmentStops.split(',').map(x => parseFloat(x))" :needleHeightRatio=".7" />
             <v-divider class="my-2"></v-divider>
@@ -55,20 +86,32 @@
           >
         </div> -->
         </v-row>
+        <v-row class="mb-2" v-else>
+        <v-col xl="2" lg="3" md="4" sm="6" v-for="(gauge) in channelGauges" :key="gauge.id">
+          <v-card width="250px" min-width="250px" @click.prevent="toGauge(gauge.id)" tile elevation="4">
+            <KPIGauge :gauge="gauge" :height="130" :width="200" :segmentStops="gauge.segmentStops.split(',').map(x => parseFloat(x))" :needleHeightRatio=".7" />
+            <v-divider class="my-2"></v-divider>
+            <v-card-title>{{ gauge.title }}</v-card-title>
+            <v-card-subtitle>By: {{ gauge.createdBy }}</v-card-subtitle>
+          </v-card>
+        </v-col>
+        </v-row>
         <v-divider class="mb-4"></v-divider>
 
-      <v-row>
+      <v-row class="mt-2">
         <v-col v-for="(heatMap) in channelHeatMaps" :key="heatMap.id" xl="2" lg="3" md="4" sm="6" xs="12">
-          <v-card @click.prevent="toHeatMap(heatMap.id)" width="250px" min-width="250px" height="250px" tile elevation="4">
-            <v-row justify="center">
-              <v-col cols="4">
-              <v-icon x-large>mdi-table-large</v-icon></v-col>
+          <v-card tile elevation="4" >
+            <v-row justify="center" class="mb-3">
+              <v-col>
+                <DashboardCardHeatMap :heatMap="heatMap" />
+              <!-- <v-icon x-large>mdi-table-large</v-icon> -->
+            </v-col>
             </v-row>
-            <v-divider class="mb-4"></v-divider>
+            <v-divider class="mb-2"></v-divider>
+            <div  @click.prevent="toHeatMap(heatMap.id)">
                 <v-card-title>{{ heatMap.title }}</v-card-title>
                 <v-card-text v-if="heatMap.createdBy">By: {{ heatMap.createdBy }}</v-card-text>
-                <v-card-text v-else>By: John Smith</v-card-text>
-                <v-card-text v-if="heatMap.dataSet">Dataset: {{ heatMap.dataSet.title }}</v-card-text>
+                <v-card-text class="pt-0" v-if="heatMap.dataSet">Dataset: {{ heatMap.dataSet.title }}</v-card-text></div>
           </v-card>
         </v-col>
         </v-row>
@@ -79,16 +122,20 @@
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import DashboardCard_test from "../components/DashboardCard_test.vue";
 import KPIGauge from "../components/KPIGauge.vue";
+//import KPIHeatMap from "../components/KPIHeatMap.vue";
 import datasetMixin from "../mixins/dataset-mixin";
 import reportMixin from "../mixins/report-mixin";
 import gaugeMixin from "../mixins/gauge-mixin";
+import DashboardCardHeatMap from "../components/DashboardCardHeatMap.vue";
 
 export default {
   name: "Dashboards",
   components: {
-      DashboardCard_test,
-      KPIGauge
-  },
+    DashboardCard_test,
+    KPIGauge,
+    //KPIHeatMap,
+    DashboardCardHeatMap
+},
   /* props: {
     report: Object  
   }, */
@@ -96,7 +143,8 @@ export default {
     return {
       formValid: true,
       hhh: [], //replace once backend value is added
-      showForm: false, 
+      showForm: false,
+      switch1: true, 
       submitAttempted: false,
       deleteDialog: false,
       fullscreen: false,
@@ -123,6 +171,8 @@ export default {
       "fetchReports",
       "fetchDataSets",
       "fetchDataSet",
+      "fetchGauges",
+      "fetchHeatMaps",
       "fetchTags",
       "addReport",
       "updateReportById",
@@ -242,9 +292,11 @@ export default {
     ]),
     channelReports() {
       if (this.reports && this.reports.length > 0 && this.currentChannels && this.currentChannels[0]) {
-        //console.log(this.currentChannels[0])
-
-        return this.reports.filter(t => t.channelId == this.currentChannels[0].channelId)
+        let reports = this.reports.filter(t => t.channelId == this.currentChannels[0].channelId)
+        if (this.switch1) {
+          reports.filter(r => r.createdBy == `${this.user.given_name} ${this.user.family_name}`)
+        }
+        return reports
       } else return []
     },
     screenHeight() {
@@ -303,6 +355,8 @@ export default {
       // await this.fetchReport(this.$route.params.reportId);
       this.updateChartData();
     }
+    this.fetchGauges()
+    this.fetchHeatMaps()
   },
   async mounted() {
     // this.colorScheme = this.colors.find(
