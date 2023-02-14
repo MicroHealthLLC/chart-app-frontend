@@ -56,6 +56,8 @@ type HeatMap @model @auth(rules: [{ allow: public }]) {
   columns: String
   channel: Channel @belongsTo(fields: ["channelId"])
   channelId: ID @index(name: "byChannel")
+  dashboard: Dashboard @belongsTo(fields: ["dashboardId"])
+  dashboardId: ID @index(name: "byDashboard")
   createdBy: String
   updatedBy: String
 }
@@ -64,8 +66,9 @@ type Dashboard @model @auth(rules: [{ allow: public }]) {
   id: ID!
   title: String!
   description: String
-  reports: [Report] @hasMany(indexName: "byChannel", fields: ["id"])
-  gauges: [Gauge] @hasMany(indexName: "byChannel", fields: ["id"])
+  reports: [Report] @hasMany(indexName: "byDashboard", fields: ["id"])
+  gauges: [Gauge] @hasMany(indexName: "byDashboard", fields: ["id"])
+  heatmaps: [HeatMap] @hasMany(indexName: "byDashboard", fields: ["id"])
   createdBy: String
   updatedBy: String
 }

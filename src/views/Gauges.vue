@@ -55,11 +55,11 @@
               <v-col cols="4">
               <v-icon x-large>mdi-table-large</v-icon></v-col>
             </v-row>
-            <v-divider class="mb-4"></v-divider>
+            <v-divider class="mb-2"></v-divider>
                 <v-card-title>{{ heatMap.title }}</v-card-title>
                 <v-card-text v-if="heatMap.createdBy">By: {{ heatMap.createdBy }}</v-card-text>
                 <v-card-text v-else>By: John Smith</v-card-text>
-                <v-card-text v-if="heatMap.dataSet">Dataset: {{ heatMap.dataSet.title }}</v-card-text>
+                <v-card-text class="py-0" v-if="heatMap.dataSet">Dataset: {{ heatMap.dataSet.title }}</v-card-text>
           </v-card>
         </v-col>
         </v-row>
