@@ -27,15 +27,6 @@
       <span class="pill px-2"> {{this.reports.filter(t => t.channelId == channel.id).length}}</span>
         </v-list-item-subtitle>
       </v-list-item>
-      <v-list-item    
-      >
-        <v-list-item-title>
-          <v-icon color="cyan">mdi-monitor-dashboard</v-icon>
-          Dashboard Items: </v-list-item-title>
-        <v-list-item-subtitle class="text-right text-h6 text--primary">
-          <span class="pill px-2"> {{/*temporary*/this.reports.filter(t => t.channelId == channel.id).length}}</span>
-        </v-list-item-subtitle>
-      </v-list-item>
       <v-list-item>
       <v-list-item-title>
           <v-icon color="red darken-2">mdi-gauge</v-icon>
@@ -44,7 +35,15 @@
           <span class="pill px-2"> {{ this.gauges.filter(t => t.channelId == channel.id).length + this.heatMaps.filter(t => t.channelId == channel.id).length }}</span>
         </v-list-item-subtitle>
       </v-list-item>
-     
+      <v-list-item    
+      >
+        <v-list-item-title>
+          <v-icon color="cyan">mdi-monitor-dashboard</v-icon>
+          Dashboard Items: </v-list-item-title>
+        <v-list-item-subtitle class="text-right text-h6 text--primary">
+          <span class="pill px-2"> {{/*temporary*/this.dashboards.filter(t => t.channelId == channel.id).length}}</span>
+        </v-list-item-subtitle>
+      </v-list-item>     
     </v-list>
     </v-card>
   </template>
@@ -63,7 +62,8 @@
          "dataSets",
          "reports",
          "gauges",
-         "heatMaps"
+         "heatMaps",
+         "dashboards"
        ]),
    
     },

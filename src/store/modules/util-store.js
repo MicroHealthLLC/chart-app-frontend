@@ -3,6 +3,14 @@ export default {
     colors: [
       {
         id: 1,
+        title: "MicroHealth",
+        scheme: [
+          ["rgba(158, 198, 76, .75)", "rgba(221, 144, 54, .75)", "rgba(29, 51, 111, .75)"],
+          ["rgba(158, 198, 76, .5)", "rgba(221, 144, 54, .5)", "rgba(29, 51, 111, .5)"],
+        ],
+      },
+      {
+        id: 2,
         title: "Multiple",
         scheme: [
           [
@@ -70,7 +78,7 @@ export default {
         ],
       },
       {
-        id: 2,
+        id: 3,
         title: "Blue",
         scheme: [
           [
@@ -150,7 +158,7 @@ export default {
         ],
       },
       {
-        id: 3,
+        id: 4,
         title: "Red",
         scheme: [
           [
@@ -186,7 +194,7 @@ export default {
         ],
       },
       {
-        id: 4,
+        id: 5,
         title: "Yellow",
         scheme: [
           [
@@ -248,7 +256,7 @@ export default {
         ],
       },
       {
-        id: 5,
+        id: 6,
         title: "Green",
         scheme: [
           [
@@ -320,7 +328,7 @@ export default {
         ],
       },
       {
-        id: 6,
+        id: 7,
         title: "Green/Red",
         scheme: [
           ["rgba(0, 128, 0, 0.75)", "rgba(255, 0, 0, 0.75)"],
@@ -328,19 +336,11 @@ export default {
         ],
       },
       {
-        id: 7,
-        title: "Red/Green",
-        scheme: [
-          ["rgba(255, 0, 0, 0.75)", "rgba(0, 128, 0, 0.75)"],
-          ["rgba(255, 0, 0, 0.5)", "rgba(0, 128, 0, 0.5)"],
-        ],
-      },
-      {
         id: 8,
-        title: "MH",
+        title: "Olive/Navy",
         scheme: [
-          ["rgba(158, 198, 76, .75)", "rgba(221, 144, 54, .75)", "rgba(29, 51, 111, .75)"],
-          ["rgba(158, 198, 76, .5)", "rgba(221, 144, 54, .5)", "rgba(29, 51, 111, .5)"],
+          ["rgba(181, 202, 141, .75)", "rgba(42, 72, 73, .75)", "rgba(66, 107, 105, .75)", "rgba(34, 46, 80, .75)", "rgba(139, 177, 116, .75)"],
+          ["rgba(181, 202, 141, .5)", "rgba(42, 72, 73, .5)", "rgba(66, 107, 105, .5)", "rgba(34, 46, 80, .5)", "rgba(139, 177, 116, .5)"],
         ],
       },
     ],

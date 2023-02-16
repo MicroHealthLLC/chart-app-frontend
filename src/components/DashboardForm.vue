@@ -37,7 +37,8 @@
         <v-text-field outlined label="Title" dense v-model="dashboard.title">
         </v-text-field>
         <!-- <v-textarea name="dbDesc" outlined label="Description" dense two-line v-model="dashboard.description"></v-textarea> -->
-        <v-select
+       <!-- <v-select
+          v-if="dashboard.id"
           v-model="dashboard.reports"       
           item-text="title"
           item-value="id"
@@ -49,6 +50,7 @@
           outlined
         ></v-select>
         <v-select
+          v-if="dashboard.id"
           v-model="dashboard.gauges"       
           item-text="title"
           item-value="id"
@@ -60,6 +62,7 @@
           outlined
         ></v-select>
         <v-select
+          v-if="dashboard.id"
           v-model="dashboard.heatMaps"       
           item-text="title"
           item-value="id"
@@ -69,7 +72,7 @@
           :disabled="!channelHeatMaps.length > 1"
           label="Select Heat Maps"
           outlined
-        ></v-select>
+        ></v-select> -->
       </v-form>
 
       <!-- Delete Button -->
@@ -163,7 +166,7 @@ export default {
   },
   methods: {
     ...mapActions([
-      "addDashboard", "fetchDashboards", "addDashboardReports", "addDashboardGauges"
+      "addDashboard", "fetchDashboards",
     ]),
     ...mapMutations(["SET_DASHBOARD"]),
     async saveDashboard() {
@@ -174,39 +177,14 @@ export default {
         let data = {
           title: this.dashboard.title,
           description: this.dashboard.description,
-          //channelId: this.currentChannels[0].channelId
+          channelId: this.currentChannels[0].channelId,
           /* reports: this.dashboard.reports,
           gauges: this.dashboard.gauges,
           heatMaps: this.dashboard.heatMaps */
-        };
+        };        
 
         /* await this.fetchDashboards()
           let oldDashboardIds = this.dashboards.filter(d => this.currentChannels[0].channelId == d.channelId).map(f => f.id) */
-
-        /* if (this.dashboard.reports) {
-          this.dashboard.reports.forEach(r => {
-            this.updateReportById({
-              id: r.id,
-              dashboardId: this.dashboard.id
-            })
-          })
-        }
-        if (this.dashboard.gauges) {
-          this.dashboard.gauges.forEach(g => {
-            this.updateGaugeById({
-              id: g.id,
-              dashboardId: this.dashboard.id
-            })
-          })
-        }
-        if (this.dashboard.heatMaps) {
-          this.dashboard.heatMaps.forEach(h => {
-            this.updateHeatMapById({
-              id: h.id,
-              dashboardId: this.dashboard.id
-            })
-          })
-        } */
 
         if (this.dashboard.id) {
           //data.id = this.dashboard.id;
@@ -244,13 +222,13 @@ export default {
 /*     if (this.$route.params.dashboardId != "new") {
       this.fetchDashboard(this.$route.params.dashboardId);
     } else { */
-      this.SET_DASHBOARD({
+      /* this.SET_DASHBOARD({
         title: "",
         description: "",
         reports: [],
         gauges: [],
         heatMaps: [],
-      });
+      }); */
     /* } */
   },
   watch: {

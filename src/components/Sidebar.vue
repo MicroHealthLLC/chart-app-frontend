@@ -30,14 +30,6 @@
             <v-list-item-content>
               <v-list-item-title>Reports</v-list-item-title>
             </v-list-item-content>
-          </v-list-item>  
-          <v-list-item :disabled="tru"  :to="`/${pathName}/dashboards`" link>
-            <v-list-item-icon >
-              <v-icon :class="mini == true ? 'whitesmok' : 'cya'">mdi-monitor-dashboard</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>Dashboards</v-list-item-title>
-            </v-list-item-content>
           </v-list-item>
           <v-list-item :disabled="tru"  :to="`/${pathName}/gauges`" link>
             <v-list-item-icon >
@@ -45,6 +37,14 @@
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>KPIs</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>  
+          <v-list-item :disabled="tru"  :to="`/${pathName}/dashboards`" link>
+            <v-list-item-icon >
+              <v-icon :class="mini == true ? 'whitesmok' : 'cya'">mdi-monitor-dashboard</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Dashboards</v-list-item-title>
             </v-list-item-content>
           </v-list-item>         
         </v-list>
