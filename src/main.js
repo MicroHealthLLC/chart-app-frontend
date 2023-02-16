@@ -9,13 +9,13 @@ import locale from 'element-ui/lib/locale/lang/en'
 Vue.use(ElementUI, { locale })
 
 // import sso_config from "./sso-exports"
-import sso_config from "./aws-exports"
+import aws_config from "./aws-exports"
 import { Amplify } from "aws-amplify";
 
 // amplify pull
 // amplify add api (for graphQL schema)
 // ampllify add auth (to set up cognito resources)
-Amplify.configure(sso_config);
+Amplify.configure(aws_config);
 Vue.config.productionTip = false;
 
 new Vue({

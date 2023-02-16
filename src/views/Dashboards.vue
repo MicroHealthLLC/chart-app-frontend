@@ -2,7 +2,8 @@
   <div>
       <v-dialog v-model="showForm" width="30%" >
       <v-card class="px-4 py-4 modal">
-        <v-text-field outlined label="Enter title" v-model="dashboard.title">
+        <DashboardForm />
+        <!-- <v-text-field outlined label="Enter title" v-model="dashboard.title">
           
         </v-text-field>
         <v-select
@@ -39,7 +40,7 @@
           outlined
         ></v-select>
         <v-btn color="primary" large class="d-block margin-auto" >Add New Dashboard<v-icon
-          small>mdi-plus</v-icon></v-btn>
+          small>mdi-plus</v-icon></v-btn> -->
       </v-card> 
       <!-- <span v-else>NO DATA</span> -->
 
@@ -48,12 +49,33 @@
     
 
     <div class="d-flex justify-space-between">
-      <h3><v-icon class="mr-2 pb-2" color="cyan">mdi-monitor-dashboard</v-icon>Dashboard</h3>
-      <v-switch v-model="switch1" label="Show My Dashboard"></v-switch>
-      <v-btn class="mb-2" color="primary" small @click="addDashboard">Add to Dashboard <v-icon
+      <h3><v-icon class="mr-2 pb-2" color="cyan">mdi-monitor-dashboard</v-icon>Dashboards</h3>
+      <!-- <v-switch v-model="switch1" label="Show My Dashboard"></v-switch> -->
+      <v-btn class="mb-2" color="primary" small @click="showAddDashboardForm">Add Dashboard <v-icon
           small>mdi-plus</v-icon></v-btn>
     </div>
     <v-divider class="mb-4"></v-divider>
+
+    <v-container v-if="dashboards.length > 0" class="pl-5">
+        <v-row>
+        <v-col xl="2" lg="3" md="4" sm="6" v-for="(dashboard) in dashboards" :key="dashboard.id">
+          <v-card width="250px" min-width="250px" @click.prevent="toDashboard(dashboard.id)" tile elevation="4">
+            <v-card-title>{{ dashboard.title }}</v-card-title>
+            <v-card-subtitle>By: {{ dashboard.createdBy }}</v-card-subtitle>
+          </v-card>
+        </v-col>
+        <!-- <div class="d-flex justify-end btn-container">
+          <v-btn
+            v-if="reports.length >= 6"
+            to="/public-reports"
+            class="d-flex-end"
+            color="primary"
+            text
+            >View All</v-btn
+          >
+        </div> -->
+        </v-row>
+       </v-container>
     <!-- <v-row v-if="switch1">
       <v-col cols="12" sm="5"
         v-for="(report, i) in channelReports.filter(r => r.createdBy == `${user.attributes.given_name} ${user.attributes.family_name}`)"
@@ -132,11 +154,13 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
 import datasetMixin from "../mixins/dataset-mixin";
 import reportMixin from "../mixins/report-mixin";
 import gaugeMixin from "../mixins/gauge-mixin";
+import DashboardForm from "../components/DashboardForm.vue";
 //import DashboardCardHeatMap from "../components/DashboardCardHeatMap.vue";
 
 export default {
   name: "Dashboards",
   components: {
+    DashboardForm,
     //DashboardCard_test,
     //KPIGauge,
     //KPIHeatMap,
@@ -149,7 +173,7 @@ export default {
     return {
       formValid: true,
       showForm: false,
-      switch1: true, 
+      //switch1: true, 
       submitAttempted: false,
       deleteDialog: false,
       fullscreen: false,
@@ -178,13 +202,13 @@ export default {
       "fetchHeatMaps",
       "fetchDashboards"
     ]),
-    ...mapMutations(["SET_REPORT_DATASET", "SET_STATUS_CODE", "SET_REPORT"]),
+    ...mapMutations([]),
     changeChartData() {
       this.$refs.chart.index =
         (this.$refs.chart.index + 1) %
         (Object.keys(this.$refs.chart.chartData[0]).length - 1);
     },
-    addDashboard(){
+    showAddDashboardForm(){
       this.showForm = true
     },
     log(e){
@@ -194,9 +218,10 @@ export default {
       this.$router.go(-1)
       this.$refs.form.reset();
     },
-    toReport(reportId) {
+    toDashboard(dashboardId) {
+      this.fetchDashboards(dashboardId)
       this.$router.push(
-        `reports/${reportId}`
+        `dashboards/${dashboardId}`
       );
     },
   },
@@ -206,22 +231,18 @@ export default {
       "activeReport",
       "channels",
       "currentChannels",
-      "channelReports",
       "currentChannel",
       "colors",
       "reports",
       "channelDataSets",
       "dataSets",
       "dataSet",
-      "reportLoaded",
-      "tags",
-      "statusCode",
       "user",
       "reports",
       "dashboards",
       "dashboard"
     ]),
-    channelReports() {
+    /* channelReports() {
       if (this.reports && this.reports.length > 0 && this.currentChannels && this.currentChannels[0]) {
         let reports = this.reports.filter(t => t.channelId == this.currentChannels[0].channelId)
         if (this.switch1) {
@@ -229,7 +250,7 @@ export default {
         }
         return reports
       } else return []
-    },
+    }, */
     screenHeight() {
       return window.innerHeight - 200;
     },
@@ -279,6 +300,7 @@ export default {
     }, */
   },
   async beforeMount() {
+    await this.fetchDashboards()
     if(this.dataSets && this.dataSets.length < 1){
       await this.fetchDataSets();
     } 
