@@ -8,7 +8,6 @@ type Report @model @auth(rules: [{ allow: public }]) {
   description: String,
   reportGroupId: ID @index(name: "byReportGroup")  
   channelId: ID @index(name: "byChannel")
-  dashboards: [Dashboard] @manyToMany(relationName: "DashboardReports")  
   colorSchemeId: Int
   chartType: String
   dataSet: DataSet @hasOne
@@ -36,7 +35,6 @@ type Gauge @model @auth(rules: [{ allow: public }]) {
   segmentStops: String
   chartType: String!
   channelId: ID @index(name: "byChannel")
-  dashboards: [Dashboard] @manyToMany(relationName: "DashboardGauges")
   createdBy: String
   updatedBy: String
 }
@@ -49,7 +47,6 @@ type HeatMap @model @auth(rules: [{ allow: public }]) {
   options: AWSJSON
   leadCol: String
   columns: String
-  dashboards: [Dashboard] @manyToMany(relationName: "DashboardHeatMaps")
   channelId: ID @index(name: "byChannel")
   createdBy: String
   updatedBy: String
@@ -59,9 +56,7 @@ type Dashboard @model @auth(rules: [{ allow: public }]) {
   id: ID!
   title: String!
   description: String
-  reports: [Report] @manyToMany(relationName: "DashboardReports")
-  gauges: [Gauge] @manyToMany(relationName: "DashboardGauges")
-  heatMaps: [HeatMap] @manyToMany(relationName: "DashboardHeatMaps")
+  cards: AWSJSON
   channelId: ID @index(name: "byChannel")
   createdBy: String
   updatedBy: String
@@ -69,7 +64,7 @@ type Dashboard @model @auth(rules: [{ allow: public }]) {
 
 type Channel @model @auth(rules: [{ allow: public }]) {
   id: ID!
-  description: String,
+  description: String
   reports: [Report] @hasMany(indexName: "byChannel", fields: ["id"])
   dataSets: [DataSet] @hasMany(indexName: "byChannel", fields: ["id"])
   gauges: [Gauge] @hasMany(indexName: "byChannel", fields: ["id"])

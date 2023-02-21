@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import { Auth } from "@aws-amplify/auth";
+import { Auth } from "aws-amplify";
 // import userStore from "../store/modules/user-store";
 
 // import Home from "../views/Home.vue";
@@ -171,6 +171,11 @@ const routes = [
     name: "Dashboard",
     component: Dashboard,
   },
+  /* {
+    path: "/:title/dashboards/dashboard",
+    name: "Dashboard",
+    component: Dashboard,
+  }, */
   {
     path: "/channels/:channelId/dashboards",
     name: "ChannelDashboards",

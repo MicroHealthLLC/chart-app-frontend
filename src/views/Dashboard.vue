@@ -9,7 +9,7 @@
           <div>
             <v-btn v-if="!isReadOnly" @click="saveDashboard" class="px-5 mr-2 mb-2" color="primary" depressed
               small>Save</v-btn>
-            <v-btn v-else @click="editForm" class="px-5 mr-2 mb-2" color="primary" depressed small>Edit</v-btn>
+            <v-btn v-else @click="editForm" class="px-5 mr-2 mb-2" color="primary" depressed small>{{ !dashboard.cards ? 'Add' : 'Edit' }}</v-btn>
             <v-btn v-if="isReadOnly" class="mb-2" @click="resetAndGoBack" small outlined>Close</v-btn>
             <v-btn v-if="!isReadOnly" class="mb-2" @click="cancelForm" small outlined>Cancel</v-btn>
           </div>
@@ -20,7 +20,7 @@
     <v-row>
 
       <!-- DASHBOARD CARDS -->
-      <v-col cols="10">
+      <v-col :cols="isReadOnly ? 12 : 10">
         <draggable :list="staged" group="universalGroup" class="drag-area row">
           <v-col :cols="dashboardCols(staged, index)" v-for="(item, index) in staged" :key="index" >
             <v-card :height="dashboardCardHeight(staged)">
@@ -32,7 +32,7 @@
       </v-col>
 
       <!-- DASHBOARD SELECT AREA -->
-      <v-col cols="2">
+      <v-col cols="2" v-if="!isReadOnly">
         <v-card height="85vh">
           <v-list>
             <v-subheader>Reports</v-subheader>
@@ -102,7 +102,6 @@ export default {
     return {
       isReadOnly: true,
       staged: [],
-      sourceList: ["a", "b", "c"],
       draggedItem: null
     }
   },
@@ -113,16 +112,25 @@ export default {
       "fetchDataSets",
       "fetchGauges",
       "fetchHeatMaps",
-      "fetchDashboards"
+      "fetchDashboards",
+      "fetchDashboard",
+      "updateDashboardById"
     ]),
     saveDashboard() {
-
+      this.isReadOnly = true
+      console.log(this.dashboard)
+      console.log(this.staged)
+      let data = {
+        id: this.dashboard.id,
+        cards: JSON.stringify(this.staged)
+      }
+      this.updateDashboardById(data)
     },
     cancelForm() {
       this.isReadOnly = true
     },
     resetAndGoBack() {
-
+      this.$router.go(-1)
     },
     editForm() {
       this.isReadOnly = false
@@ -185,11 +193,16 @@ export default {
       } else return []
     },
   },
-  mounted() {
+  async mounted() {
     this.fetchReports()
     this.fetchDataSets()
     this.fetchGauges()
     this.fetchHeatMaps()
+    if (this.$route.params.dashboardId) {
+      await this.fetchDashboard(this.$route.params.dashboardId)
+      this.staged = this.dashboard.cards
+    }
+    
   }
 };
 </script>

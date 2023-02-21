@@ -200,7 +200,8 @@ export default {
       "fetchDataSets",
       "fetchGauges",
       "fetchHeatMaps",
-      "fetchDashboards"
+      "fetchDashboards",
+      "fetchDashboard"
     ]),
     ...mapMutations([]),
     changeChartData() {
@@ -219,7 +220,7 @@ export default {
       this.$refs.form.reset();
     },
     toDashboard(dashboardId) {
-      this.fetchDashboards(dashboardId)
+      this.fetchDashboard(dashboardId)
       this.$router.push(
         `dashboards/${dashboardId}`
       );
