@@ -1,5 +1,5 @@
 <template>
-<KPIHeatMap :heatMap="heatMap" :headers="cols" :dataItems="data" />
+<KPIHeatMap :heatMap="heatMap" :headers="cols" :dataItems="data"/>
 </template>
 
 <script>
@@ -8,7 +8,7 @@ import datasetMixin from '../mixins/dataset-mixin';
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
-    name: "DashboardCard_test",
+    name: "DashboardCardHeatMap",
     props: {
         heatMap: Object
     },

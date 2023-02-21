@@ -18,64 +18,61 @@
       </v-col>
     </v-row>
     <v-row>
+
+      <!-- DASHBOARD CARDS -->
       <v-col cols="10">
-        <draggable :list="staged" group="universalGroup">
-          <v-chip v-for="(item, index) in staged" :key="index" class="mr-2" close @click:close="removeAt(index)">{{ item.title }}</v-chip>
+        <draggable :list="staged" group="universalGroup" class="drag-area row">
+          <v-col :cols="dashboardCols(staged, index)" v-for="(item, index) in staged" :key="index" >
+            <v-card :height="dashboardCardHeight(staged)">
+              <DashboardCardHeatMap :heatMap="item" v-if="checkChartType(item) == 'heatMap'"/>
+              <DashboardCardGauge :gauge="item" v-if="checkChartType(item) == 'gauge'" />
+            </v-card>
+          </v-col>
         </draggable>
-        <div v-for="(i, idx) in staged" :key="idx">
-          <v-card class="pa-2 ma-2">
-          <p>{{ i.title }} {{ idx }}</p>
-        </v-card>
-        </div>
       </v-col>
+
+      <!-- DASHBOARD SELECT AREA -->
       <v-col cols="2">
         <v-card height="85vh">
           <v-list>
-          <v-subheader>Reports</v-subheader>
-          <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title>
-                <draggable :list="channelReports" :group="{ name: 'universalGroup', pull: 'clone', put: false }">
-                  <v-chip v-for="(item, index) in channelReports" :key="index" color="orange lighten-1">{{ item.title }}</v-chip>
-                </draggable>
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
-        <v-list>
-          <v-subheader>Gauges</v-subheader>
-          <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title>
-                <draggable :list="channelGauges" :group="{ name: 'universalGroup', pull: 'clone', put: false }">
-                  <v-chip v-for="(item, index) in channelGauges" :key="index" color="red lighten-1">{{ item.title }}</v-chip>
-                </draggable>
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
-        <v-list>
-        <!-- <v-list>
-          <v-subheader>Gauges</v-subheader>
-          <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title><v-chip v-for="(item, index) in sourceList" :key="index" :data-item="item" @dragStart="handleDragStart" @dragEnd="handleDragEnd" draggable color="red lighten-1">{{ item }}</v-chip></v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
-        <v-list> -->
-          <v-subheader>Heat Maps</v-subheader>
-          <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title>
-                <draggable :list="channelHeatMaps" :group="{ name: 'universalGroup', pull: 'clone', put: false }">
-                  <v-chip v-for="(item, index) in channelHeatMaps" :key="index" color="green 
-                  lighten-1">{{ item.title }}</v-chip>
-                </draggable>
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
+            <v-subheader>Reports</v-subheader>
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title>
+                  <draggable :list="channelReports" :group="{ name: 'universalGroup', pull: 'clone', put: false }" class="d-flex flex-wrap">
+                    <v-chip v-for="(item, index) in channelReports" :key="index" class="mr-2 mt-2" color="orange lighten-1" text-color="grey lighten-4">{{ item.title
+                    }}</v-chip>
+                  </draggable>
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+          <v-list>
+            <v-subheader>Gauges</v-subheader>
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title>
+                  <draggable :list="channelGauges" :group="{ name: 'universalGroup', pull: 'clone', put: false }" class="d-flex flex-wrap">
+                    <v-chip v-for="(item, index) in channelGauges" :key="index" class="mr-2 mt-2" color="red lighten-1" text-color="grey lighten-4">{{ item.title
+                    }}</v-chip>
+                  </draggable>
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+          <v-list>
+            <v-subheader>Heat Maps</v-subheader>
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title>
+                  <draggable :list="channelHeatMaps" :group="{ name: 'universalGroup', pull: 'clone', put: false }" class="d-flex flex-wrap">
+                    <v-chip v-for="(item, index) in channelHeatMaps" :key="index" class="mr-2 mt-2" color="green 
+                    lighten-1" text-color="grey lighten-4">{{ item.title }}</v-chip>
+                  </draggable>
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
         </v-card>
       </v-col>
     </v-row>
@@ -84,7 +81,12 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+
 import draggable from "vuedraggable"
+
+import DashboardCardHeatMap from "../components/DashboardCardHeatMap.vue"
+import DashboardCardGauge from '../components/DashboardCardGauge.vue';
+
 import datasetMixin from "../mixins/dataset-mixin";
 import reportMixin from "../mixins/report-mixin";
 import gaugeMixin from "../mixins/gauge-mixin";
@@ -92,7 +94,9 @@ import gaugeMixin from "../mixins/gauge-mixin";
 export default {
   name: "Dashboard",
   components: {
-    draggable
+    draggable,
+    DashboardCardHeatMap,
+    DashboardCardGauge
   },
   data() {
     return {
@@ -126,6 +130,30 @@ export default {
     removeAt(idx) {
       this.staged.splice(idx, 1);
     },
+    dashboardCardHeight(staged) {
+      if (staged && staged.length > 0) {
+        return staged.length > 4 ? '25vh' :
+          staged.length > 2 ? '40vh' : '80vh'
+      }
+    },
+    dashboardCols(staged, index) {
+      if (staged && staged.length > 0) {
+        if (staged.length % 2 == 0) {
+          return 6
+        }
+        else {
+          return index == 0 ? 12 : 6
+        }
+      }
+    },
+    checkChartType(item) {
+      let objs = Object.keys(item)
+      if (objs.includes('reportGroup')) {
+        return "report"
+      } else if (objs.includes('segmentStops')) {
+        return "gauge"
+      } else return "heatMap"
+    }
     /* handleDragStart(event) {
       console.log(event)
       this.draggedItem = event.target
@@ -167,5 +195,7 @@ export default {
 </script>
 
 <style scoped>
-
+.drag-area{
+  height: 80vh !important;
+}
 </style>
