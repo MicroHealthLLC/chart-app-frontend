@@ -27,10 +27,9 @@
         <v-row>
         <v-col xl="2" lg="3" md="4" sm="6" v-for="(gauge) in channelGauges" :key="gauge.id">
           <v-card width="250px" min-width="250px" @click.prevent="toGauge(gauge.id)" tile elevation="4">
-            <KPIGauge :gauge="gauge" :height="130" :width="200" :segmentStops="gauge.segmentStops.split(',').map(x => parseFloat(x))" :needleHeightRatio=".7" />
-            <v-divider class="my-2"></v-divider>
             <v-card-title>{{ gauge.title }}</v-card-title>
             <v-card-subtitle>By: {{ gauge.createdBy }}</v-card-subtitle>
+            <KPIGauge :gauge="gauge" :height="130" :width="200" :segmentStops="gauge.segmentStops.split(',').map(x => parseFloat(x))" :needleHeightRatio=".7" />
           </v-card>
         </v-col>
         <!-- <div class="d-flex justify-end btn-container">
@@ -51,16 +50,15 @@
         <v-row>
         <v-col v-for="(heatMap) in channelHeatMaps" :key="heatMap.id" xl="2" lg="3" md="4" sm="6" xs="12">
           <v-card @click.prevent="toHeatMap(heatMap.id)" width="250px" min-width="250px" height="250px" tile elevation="4">
-            <v-row justify="center">
-              <v-col cols="4">
-              <v-icon x-large>mdi-table-large</v-icon></v-col>
-            </v-row>
-            <v-divider class="mb-2"></v-divider>
-                <v-card-title>{{ heatMap.title }}</v-card-title>
-                <v-card-text v-if="heatMap.createdBy">By: {{ heatMap.createdBy }}</v-card-text>
-                <v-card-text v-else>By: John Smith</v-card-text>
-                <v-card-text class="py-0" v-if="heatMap.dataSet">Dataset: {{ heatMap.dataSet.title }}</v-card-text>
-          </v-card>
+              <v-card-title class="pb-0">{{ heatMap.title }}</v-card-title>
+              <v-card-text class="pb-0" v-if="heatMap.createdBy">By: {{ heatMap.createdBy }}</v-card-text>
+              <v-card-text v-else>By: John Smith</v-card-text>
+              <v-card-text class="py-0" v-if="heatMap.dataSet">Dataset: {{ heatMap.dataSet.title }}
+              </v-card-text>
+              <v-row justify="center">
+                  <v-icon class="pt-4" x-large>mdi-table-large</v-icon>
+              </v-row>
+            </v-card>
         </v-col>
         </v-row>
       </v-container>
@@ -166,6 +164,6 @@ export default {
   background: linear-gradient(to right, #EF5350, #EF5350 38.4%, #FFCA28 38.4%, #FFCA28 63.5%, #66BB6A 63.5%);
   background-clip: text;
   color: rgba(0, 0, 0, 0.2) !important;
-  font-size: 80px !important;
+  font-size: 120px !important;
 }
 </style>

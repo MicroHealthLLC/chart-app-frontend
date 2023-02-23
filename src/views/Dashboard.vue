@@ -18,14 +18,19 @@
       </v-col>
     </v-row>
     <v-row>
-
+      <v-col v-if="staged.length == 0">
+        <h3>Drag and drop a chip from the right panel to add components</h3>
+      </v-col>
+    </v-row>
+    <v-row>
       <!-- DASHBOARD CARDS -->
       <v-col :cols="isReadOnly ? 12 : 10">
-        <draggable :list="staged" group="universalGroup" class="drag-area row">
-          <v-col :cols="dashboardCols(staged, index)" v-for="(item, index) in staged" :key="index" >
-            <v-card :height="dashboardCardHeight(staged)">
+        <draggable :list="staged" group="universalGroup" :disabled="isReadOnly" class="drag-area row">
+          <v-col :cols="dashboardCols(staged, index)" v-for="(item, index) in staged" :key="index" ><!--  :height="dashboardCardHeight(staged)" -->
+            <v-card :ref="`card${index}`">
               <DashboardCardHeatMap :heatMap="item" v-if="checkChartType(item) == 'heatMap'"/>
-              <DashboardCardGauge :gauge="item" v-if="checkChartType(item) == 'gauge'" />
+              <DashboardCardGauge :gauge="item" v-if="checkChartType(item) == 'gauge'" :staged="staged" />
+              <DashboardCard_test :report="item" v-if="checkChartType(item) == 'report'" />
             </v-card>
           </v-col>
         </draggable>
@@ -33,7 +38,8 @@
 
       <!-- DASHBOARD SELECT AREA -->
       <v-col cols="2" v-if="!isReadOnly">
-        <v-card height="85vh">
+        <v-card height="max-content">
+          <h4 class="pt-4 pl-2">Available Modules</h4>
           <v-list>
             <v-subheader>Reports</v-subheader>
             <v-list-item>
@@ -47,6 +53,7 @@
               </v-list-item-content>
             </v-list-item>
           </v-list>
+          <v-divider class="mx-4"></v-divider>
           <v-list>
             <v-subheader>Gauges</v-subheader>
             <v-list-item>
@@ -60,6 +67,7 @@
               </v-list-item-content>
             </v-list-item>
           </v-list>
+          <v-divider class="mx-4"></v-divider>
           <v-list>
             <v-subheader>Heat Maps</v-subheader>
             <v-list-item>
@@ -86,6 +94,7 @@ import draggable from "vuedraggable"
 
 import DashboardCardHeatMap from "../components/DashboardCardHeatMap.vue"
 import DashboardCardGauge from '../components/DashboardCardGauge.vue';
+import DashboardCard_test from "../components/DashboardCard_test.vue"
 
 import datasetMixin from "../mixins/dataset-mixin";
 import reportMixin from "../mixins/report-mixin";
@@ -96,7 +105,8 @@ export default {
   components: {
     draggable,
     DashboardCardHeatMap,
-    DashboardCardGauge
+    DashboardCardGauge,
+    DashboardCard_test
   },
   data() {
     return {
@@ -146,7 +156,10 @@ export default {
     },
     dashboardCols(staged, index) {
       if (staged && staged.length > 0) {
-        if (staged.length % 2 == 0) {
+        if(staged.length == 2) {
+          return 12
+        }
+        else if (staged.length % 2 == 0) {
           return 6
         }
         else {
@@ -162,24 +175,6 @@ export default {
         return "gauge"
       } else return "heatMap"
     }
-    /* handleDragStart(event) {
-      console.log(event)
-      this.draggedItem = event.target
-      event.dataTransfer.setData('text', this.draggedItem.dataset.item)
-      event.dataTransfer.effectAllowed = 'move'
-    },
-    handleDragEnd() {
-      this.draggedItem = null
-    },
-    handleDrop(event) {
-      event.preventDefault()
-      const data = event.dataTransfer.getData('text')
-      const index = this.sourceList.indexOf(data)
-      if (index !== -1) {
-        this.sourceList.splice(index, 1)
-        this.staged.push(data)
-      }
-    } */
   },
   computed: {
     ...mapGetters(["dashboard", "dashboards", "reports", "dataSets", "heatMaps", "currentChannels"]),
@@ -200,9 +195,20 @@ export default {
     this.fetchHeatMaps()
     if (this.$route.params.dashboardId) {
       await this.fetchDashboard(this.$route.params.dashboardId)
-      this.staged = this.dashboard.cards
+      this.staged = this.dashboard.cards ? this.dashboard.cards : []
     }
-    
+    if (this.staged.length == 0) {
+      this.isReadOnly = false
+    }
+    console.log(this.$refs.card0)
+  },
+  afterMount() {
+    console.log(this.$refs.card0)
+  },
+  watch: {
+    staged() {
+      console.log(this.staged)
+    }
   }
 };
 </script>

@@ -1,5 +1,8 @@
 <template>
-<KPIHeatMap :heatMap="heatMap" :headers="cols" :dataItems="data"/>
+    <div>
+        <h4 class="pa-4">{{ heatMap.title }}</h4>
+        <KPIHeatMap :heatMap="heatMap" :headers="cols" :dataItems="data"/>
+    </div>
 </template>
 
 <script>

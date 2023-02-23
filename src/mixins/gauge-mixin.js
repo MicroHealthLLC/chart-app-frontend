@@ -47,6 +47,7 @@ export default {
         case 'xl': return 430
       }
     },
+    
     ringWidth () {
       switch (this.$vuetify.breakpoint.name) {
         case 'xs': return 40

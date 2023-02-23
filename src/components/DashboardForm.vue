@@ -12,7 +12,7 @@
             small
             >Save</v-btn
           >
-          <v-btn class="mb-2" small outlined
+          <v-btn class="mb-2" small outlined @click="resetAndGoBack"
             >Close</v-btn
           >
         </div>
@@ -36,43 +36,6 @@
       <v-form v-model="formValid" ref="form">
         <v-text-field outlined label="Title" dense v-model="dashboard.title">
         </v-text-field>
-        <!-- <v-textarea name="dbDesc" outlined label="Description" dense two-line v-model="dashboard.description"></v-textarea> -->
-       <!-- <v-select
-          v-if="dashboard.id"
-          v-model="dashboard.reports"       
-          item-text="title"
-          item-value="id"
-          multiple        
-          chips
-          :items="channelReports"
-          :disabled="!channelReports.length > 1"
-          label="Select Reports"
-          outlined
-        ></v-select>
-        <v-select
-          v-if="dashboard.id"
-          v-model="dashboard.gauges"       
-          item-text="title"
-          item-value="id"
-          multiple        
-          chips
-          :items="channelGauges"
-          :disabled="!channelGauges.length > 1"
-          label="Select Gauges"
-          outlined
-        ></v-select>
-        <v-select
-          v-if="dashboard.id"
-          v-model="dashboard.heatMaps"       
-          item-text="title"
-          item-value="id"
-          multiple        
-          chips
-          :items="channelHeatMaps"
-          :disabled="!channelHeatMaps.length > 1"
-          label="Select Heat Maps"
-          outlined
-        ></v-select> -->
       </v-form>
 
       <!-- Delete Button -->
@@ -139,30 +102,9 @@ export default {
     channelReports() {
       if (this.reports && this.reports.length > 0 && this.currentChannels && this.currentChannels[0]) {
         let reports = this.reports.filter(t => t.channelId == this.currentChannels[0].channelId)
-        /* if (this.switch1) {
-          reports.filter(r => r.createdBy == `${this.user.given_name} ${this.user.family_name}`)
-        } */
         return reports
       } else return []
     },
-    /* createdBy() {
-      if (this.dashboard.id) {
-        return `${this.dashboard.user.first_name} ${
-          this.dashboard.user.last_name
-        } on ${new Date(this.dashboard.created_at).toLocaleString()}`;
-      } else {
-        return `${this.dashboard.user.first_name} ${this.dashboard.user.last_name}`;
-      }
-    },
-    updatedBy() {
-      if (this.dashboard.id) {
-        return `${this.dashboard.last_updated_by} on ${new Date(
-          this.dashboard.updated_at
-        ).toLocaleString()}`;
-      } else {
-        return `${this.dashboard.user.first_name} ${this.dashboard.user.last_name}`;
-      }
-    }, */
   },
   methods: {
     ...mapActions([
@@ -178,58 +120,43 @@ export default {
           title: this.dashboard.title,
           description: this.dashboard.description,
           channelId: this.currentChannels[0].channelId,
-          /* reports: this.dashboard.reports,
-          gauges: this.dashboard.gauges,
-          heatMaps: this.dashboard.heatMaps */
         };        
-
-        /* await this.fetchDashboards()
-          let oldDashboardIds = this.dashboards.filter(d => this.currentChannels[0].channelId == d.channelId).map(f => f.id) */
-
         if (this.dashboard.id) {
-          //data.id = this.dashboard.id;
-          //this.updateDashboard(data);
+          //Update dashboard
         } else {
-          console.log("here")
-          
           data.createdBy = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`
           await this.addDashboard(data);
-          /* this.fetchDashboards().then(() => {
-            let lastAdded = this.dashboards.filter(d => this.currentChannels[0].channelId == d.channelId).filter(d => !oldDashboardIds.includes(d.id))
-            console.log(lastAdded)
-            let id = lastAdded[0].id */
-            /* this.$router.push(`/data-sets/${id}`) */
-            //this.$router.push(`/${this.currentChannels[0].channelId}/dashboards/${id}`)
-            //console.log(this.selected)
-            /* console.log(this.selected)
-            this.fetchDashboardThenAddDataValue(id, this.selected) */
-
-            //this.dashboard.id = id
-          //})
         }
-        
+      }
+      this.$refs.form.reset();
+    },
+    resetAndGoBack() {
+      this.$refs.form.reset();
+      if (this.$route.path === `/${this.currentChannels[0].name}/dashboards`) {
+        this.$emit("closeDashboardForm")
+      } else {
+        this.$router.go(-1)
+        //this.$router.push(`/${this.currentChannels[0].name}/gauges`)
       }
     },
-    /* removeDashboard() {
-      this.deleteDashboard(this.dashboard.id);
-      this.$router.push(`/channels/${this.$route.params.channelId}/dashboards`);
-    }, */
   },
   mounted() {
-    console.log(this.currentChannels[0].channelId)
+    //console.log(this.currentChannels[0].channelId)
   },
   beforeMount() {
-/*     if (this.$route.params.dashboardId != "new") {
-      this.fetchDashboard(this.$route.params.dashboardId);
-    } else { */
-      /* this.SET_DASHBOARD({
+    this.SET_DASHBOARD({
+        id: '',
         title: "",
         description: "",
-        reports: [],
-        gauges: [],
-        heatMaps: [],
-      }); */
-    /* } */
+      });
+    /* if (this.$route.params.dashboardId != "new") {
+      this.fetchDashboard(this.$route.params.dashboardId);
+    } else {
+      this.SET_DASHBOARD({
+        title: "",
+        description: "",
+      });
+    } */
   },
   watch: {
   },

@@ -2,51 +2,9 @@
   <div>
       <v-dialog v-model="showForm" width="30%" >
       <v-card class="px-4 py-4 modal">
-        <DashboardForm />
-        <!-- <v-text-field outlined label="Enter title" v-model="dashboard.title">
-          
-        </v-text-field>
-        <v-select
-          v-model="dashboard.reports"       
-          item-text="title"
-          item-value="value"
-          multiple        
-          chips
-          :items="channelReports"
-          :disabled="!channelReports.length > 1"
-          label="Select Reports"
-          outlined
-        ></v-select>
-        <v-select
-          v-model="dashboard.gauges"       
-          item-text="title"
-          item-value="value"
-          multiple        
-          chips
-          :items="channelGauges"
-          :disabled="!channelGauges.length > 1"
-          label="Select Gauges"
-          outlined
-        ></v-select>
-        <v-select
-          v-model="dashboard.heatMaps"       
-          item-text="title"
-          item-value="value"
-          multiple        
-          chips
-          :items="channelHeatMaps"
-          :disabled="!channelHeatMaps.length > 1"
-          label="Select Heat Maps"
-          outlined
-        ></v-select>
-        <v-btn color="primary" large class="d-block margin-auto" >Add New Dashboard<v-icon
-          small>mdi-plus</v-icon></v-btn> -->
+        <DashboardForm @closeDashboardForm="closeDashboardForm" />
       </v-card> 
-      <!-- <span v-else>NO DATA</span> -->
-
     </v-dialog>
-
-    
 
     <div class="d-flex justify-space-between">
       <h3><v-icon class="mr-2 pb-2" color="cyan">mdi-monitor-dashboard</v-icon>Dashboards</h3>
@@ -59,10 +17,13 @@
     <v-container v-if="dashboards.length > 0" class="pl-5">
         <v-row>
         <v-col xl="2" lg="3" md="4" sm="6" v-for="(dashboard) in dashboards" :key="dashboard.id">
-          <v-card width="250px" min-width="250px" @click.prevent="toDashboard(dashboard.id)" tile elevation="4">
-            <v-card-title>{{ dashboard.title }}</v-card-title>
-            <v-card-subtitle>By: {{ dashboard.createdBy }}</v-card-subtitle>
-          </v-card>
+          <v-card @click.prevent="toDashboard(dashboard.id)" width="250px" min-width="250px" height="250px" tile elevation="4">
+              <v-card-title class="pb-0">{{ dashboard.title }}</v-card-title>
+              <v-card-text v-if="dashboard.createdBy">By: {{ dashboard.createdBy }}</v-card-text>
+              <v-row justify="center">
+                  <v-icon class="pt-4 dashboard-icon" x-large >mdi-monitor-dashboard</v-icon>
+              </v-row>
+            </v-card>
         </v-col>
         <!-- <div class="d-flex justify-end btn-container">
           <v-btn
@@ -148,27 +109,17 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
-//import DashboardCard_test from "../components/DashboardCard_test.vue";
-//import KPIGauge from "../components/KPIGauge.vue";
-//import KPIHeatMap from "../components/KPIHeatMap.vue";
 import datasetMixin from "../mixins/dataset-mixin";
 import reportMixin from "../mixins/report-mixin";
 import gaugeMixin from "../mixins/gauge-mixin";
 import DashboardForm from "../components/DashboardForm.vue";
-//import DashboardCardHeatMap from "../components/DashboardCardHeatMap.vue";
 
 export default {
   name: "Dashboards",
   components: {
     DashboardForm,
-    //DashboardCard_test,
-    //KPIGauge,
-    //KPIHeatMap,
-    //DashboardCardHeatMap
 },
-  /* props: {
-    report: Object  
-  }, */
+
   data() {
     return {
       formValid: true,
@@ -177,17 +128,6 @@ export default {
       submitAttempted: false,
       deleteDialog: false,
       fullscreen: false,
-      chartTypes: [
-        { text: "Line", value: "line" },
-        { text: "Curve", value: "curve" },
-        { text: "Area", value: "area" },
-        { text: "Bar", value: "bar" },
-        { text: "Radar", value: "radar" },
-        { text: "Donut", value: "donut" },
-        { text: "Pie", value: "pie" },
-        { text: "Polar Area", value: "polar-area" },
-        { text: "Table", value: "table" },
-      ],
       colorScheme: [],
       dataSetChoices: [],
       data: [],
@@ -211,6 +151,9 @@ export default {
     },
     showAddDashboardForm(){
       this.showForm = true
+    },
+    closeDashboardForm() {
+      this.showForm = false
     },
     log(e){
     console.log(e)
@@ -243,62 +186,10 @@ export default {
       "dashboards",
       "dashboard"
     ]),
-    /* channelReports() {
-      if (this.reports && this.reports.length > 0 && this.currentChannels && this.currentChannels[0]) {
-        let reports = this.reports.filter(t => t.channelId == this.currentChannels[0].channelId)
-        if (this.switch1) {
-          reports.filter(r => r.createdBy == `${this.user.given_name} ${this.user.family_name}`)
-        }
-        return reports
-      } else return []
-    }, */
     screenHeight() {
       return window.innerHeight - 200;
     },
-    /* graphType() {
-      if (this.activeReport.chartType === "line") {
-        return this.LineChart;
-      } else if (this.activeReport.chartType === "bar") {
-        return this.BarChart;
-      } else if (this.activeReport.chartType === "radar") {
-        return this.RadarChart;
-      } else if (this.activeReport.chartType === "donut") {
-        return this.DoughnutChart;
-      } else if (this.activeReport.chartType === "pie") {
-        return this.PieChart;
-      } else if (this.activeReport.chartType === "polar-area") {
-        return this.PolarAreaChart;
-      } else if (this.activeReport.chartType === "table") {
-        return this.Table;
-      } else {
-        return this.LineChart;
-      }
-    },
-    circleChart() {
-      return (
-        this.activeReport.chartType == "donut" ||
-        this.activeReport.chartType == "pie" ||
-        this.activeReport.chartType == "polar-area"
-      );
-    },
-    newChannelReport() {
-      return this.$route.params.reportId == "new";
-    }, */
     
-    /* createdBy() {
-      if (this.activeReport && this.activeReport.id && this.user && this.user.attributes) {
-        return `${this.user.attributes.given_name} ${this.user.attributes.family_name} on ${new Date(this.activeReport.createdAt).toLocaleString()}`;
-      } else {
-        return `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
-      }
-    },
-    updatedBy() {
-      if (this.activeReport && this.activeReport.id) {
-        return `${this.user.attributes.given_name}  ${this.user.attributes.family_name} on ${new Date(this.activeReport.updatedAt).toLocaleString()}`;
-      } else {
-        return `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
-      }
-    }, */
   },
   async beforeMount() {
     await this.fetchDashboards()
@@ -313,13 +204,6 @@ export default {
     this.fetchHeatMaps()
   },
   async mounted() {
-    // this.colorScheme = this.colors.find(
-    //   (scheme) => scheme.id == this.activeReport.colorSchemeId
-    // ).scheme;
-    /* if (this.activeReport && this.activeReport.id) {
-      // await this.fetchReport(this.$route.params.reportId);
-      this.updateChartData();
-    } */
     if (this.$route.name == "Report") {
       this.dataSetChoices = [...this.dataSets];
     } else {
@@ -364,10 +248,10 @@ export default {
   top: 10px;
   right: 10px;
 }
-.mdi-table-large {
-  background: linear-gradient(to right, #EF5350, #EF5350 38.4%, #FFCA28 38.4%, #FFCA28 63.5%, #66BB6A 63.5%);
-  background-clip: text;
-  color: rgba(0, 0, 0, 0.2) !important;
-  font-size: 80px !important;
+
+.dashboard-icon {
+  font-size: 120px !important;
+  color: #00bcd4 !important;
 }
+
 </style>

@@ -1,5 +1,8 @@
 <template>
-  <KPIGauge :gauge="gauge" :fluidWidth="true" :height="gaugeHeight" :segmentStops="activeSteps" :ringWidth="ringWidth" />
+  <div>
+    <h4 class="pa-4">{{ gauge.title }}</h4>
+    <KPIGauge :gauge="gauge" :width="parentWidth - 100" :height="parentWidth / 2" :segmentStops="activeSteps" :ringWidth="60" class="pb-4" />
+  </div>
 </template>
     
 <script>
@@ -10,14 +13,17 @@ import { mapGetters, mapActions } from 'vuex';
 export default {
   name: "DashboardCardGauge",
   props: {
-    gauge: Object
+    gauge: Object,
+    staged: Array,
   },
   components: {
     KPIGauge
   },
   data() {
     return {
-      activeSteps: []
+      activeSteps: [],
+      parentHeight: 0,
+      parentWidth: 0
     };
   },
   mixins: [gaugeMixin],
@@ -26,6 +32,26 @@ export default {
       "currentChannels",
       "user",
     ]),
+    dashboardGaugeHeight() {
+      switch (this.$vuetify.breakpoint.name) {
+        case 'xs': return 130
+        case 'sm': return 155
+        case 'md': return 180
+        case 'lg': return 280
+        case 'xl': return 430
+      }
+      return 150
+    },
+    dashboardGaugeWidth () {
+      switch (this.$vuetify.breakpoint.name) {
+        case 'xs': return 200
+        case 'sm': return 250
+        case 'md': return 300
+        case 'lg': return 500
+        case 'xl': return 800
+      }
+      return 300
+    },
   },
   methods: {
     ...mapActions([
@@ -59,15 +85,38 @@ export default {
           // code block
         }
       }
-    }
+    },
   },
+  /* afterMount() {
+    if (this.$parent.$el.clientHeight) { 
+      this.parentHeight = this.$parent.$el.clientHeight
+    }
+    if (this.$parent.$el.clientWidth) {
+      this.parentWidth = this.$parent.$el.clientWidth
+    }
+  }, */
   async mounted() {
     if (this.gauge) {
       this.setChartType()
     }
+    if (this.$parent.$el.clientHeight) { 
+          this.parentHeight = this.$parent.$el.clientHeight
+        }
+        if (this.$parent.$el.clientWidth) {
+          this.parentWidth = this.$parent.$el.clientWidth
+        }
   },
   watch: {
-
+    staged() {
+      if (this.staged && this.staged.length > 0) {
+        if (this.$parent.$el.clientHeight) { 
+          this.parentHeight = this.$parent.$el.clientHeight
+        }
+        if (this.$parent.$el.clientWidth) {
+          this.parentWidth = this.$parent.$el.clientWidth
+        }
+      }
+    }
   }
 }
 </script>
