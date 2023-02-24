@@ -123,9 +123,9 @@
           </div>
           <div>
             <v-text-field
-              v-if="activeReport.createdAt"
-              :value="activeReport.createdBy ? `${activeReport.createdBy} on ${new Date(this.activeReport.createdAt).toLocaleString()}` : `${new Date(this.activeReport.createdAt).toLocaleString()}`"
-              :label="activeReport.createdBy ? 'Created By' : 'Created On'"
+              v-if="activeReport.createdBy"
+              :value="activeReport.createdBy"
+              label="Created By"
               dense
               readonly
             ></v-text-field>
@@ -145,8 +145,8 @@
           </div> -->
           <div>
             <v-text-field
-              v-if="activeReport.updatedAt"
-              :value="`${activeReport.updatedBy} on ${new Date(this.activeReport.updatedAt).toLocaleString()}`"
+              v-if="activeReport.updatedBy"
+              :value="activeReport.updatedBy"
               label="Last Updated By"
               dense
               readonly
@@ -475,6 +475,8 @@ export default {
            this.addReport(data);
         }
 
+        this.resetAndGoBack()
+
           
     // if (this.activeReport.id) {
     //   let ids = this.channelReports.filter( r => r.reportGroupId == this.activeReport.reportGroupId).map(t => t.id)
@@ -545,7 +547,7 @@ export default {
     },
     deleteReport() {
       this.removeReport({ id: this.activeReport.id });
-      this.$router.push(`/channels/${this.$route.params.channelId}/reports`);
+      this.$router.push(`/${this.$route.params.channelId}/reports`);
     },
     fullscreenReport() {
       //console.log(this.$refs.fullscreenchart)

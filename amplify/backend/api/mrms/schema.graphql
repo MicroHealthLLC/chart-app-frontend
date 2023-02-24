@@ -23,6 +23,7 @@ type ReportGroup @model @auth(rules: [{ allow: public }]) {
   title: String!
   reports:[Report] @hasMany(indexName: "byReportGroup", fields: ["id"])
   reportIds: [String]
+  channelId: ID @index(name: "byChannel")
   createdBy: String
   updatedBy: String   
 }
@@ -66,6 +67,7 @@ type Channel @model @auth(rules: [{ allow: public }]) {
   id: ID!
   description: String
   reports: [Report] @hasMany(indexName: "byChannel", fields: ["id"])
+  reportGroups: [ReportGroup] @hasMany(indexName: "byChannel", fields: ["id"])
   dataSets: [DataSet] @hasMany(indexName: "byChannel", fields: ["id"])
   gauges: [Gauge] @hasMany(indexName: "byChannel", fields: ["id"])
   heatMaps: [HeatMap] @hasMany(indexName: "byChannel", fields: ["id"])

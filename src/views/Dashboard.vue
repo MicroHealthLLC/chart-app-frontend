@@ -9,7 +9,7 @@
           <div>
             <v-btn v-if="!isReadOnly" @click="saveDashboard" class="px-5 mr-2 mb-2" color="primary" depressed
               small>Save</v-btn>
-            <v-btn v-else @click="editForm" class="px-5 mr-2 mb-2" color="primary" depressed small>{{ !dashboard.cards ? 'Add' : 'Edit' }}</v-btn>
+            <v-btn v-else @click="editForm" class="px-5 mr-2 mb-2" color="primary" depressed small>{{ !dashboard.cards && staged.length == 0 ? 'Add' : 'Edit' }}</v-btn>
             <v-btn v-if="isReadOnly" class="mb-2" @click="resetAndGoBack" small outlined>Close</v-btn>
             <v-btn v-if="!isReadOnly" class="mb-2" @click="cancelForm" small outlined>Cancel</v-btn>
           </div>
@@ -81,8 +81,40 @@
               </v-list-item-content>
             </v-list-item>
           </v-list>
+          <v-divider class="mx-4 mb-4"></v-divider>
+          <v-btn
+          @click="deleteDialog = true"
+          small
+          color="error"
+          depressed
+          outlined
+          class="ml-3 mb-3"
+          >Delete Dashboard</v-btn
+        >
         </v-card>
       </v-col>
+      <!-- Delete Prompt -->
+      <v-dialog v-model="deleteDialog" max-width="400">
+        <v-card>
+          <v-card-title>Delete this dashboard?</v-card-title>
+          <v-divider class="mx-4 mb-2"></v-divider>
+          <v-card-text
+            >Are you sure you would like to delete this dashboard?</v-card-text
+          >
+          <v-card-actions class="d-flex justify-end">
+            <v-btn
+              @click="deleteDialog = false"
+              small
+              outlined
+              color="secondary"
+              >Cancel</v-btn
+            >
+            <v-btn @click="deleteDashboard" small depressed color="error"
+              >Delete</v-btn
+            >
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-row>
   </v-container>
 </template>
@@ -112,7 +144,8 @@ export default {
     return {
       isReadOnly: true,
       staged: [],
-      draggedItem: null
+      draggedItem: null,
+      deleteDialog: false,
     }
   },
   mixins: [datasetMixin, reportMixin, gaugeMixin],
@@ -124,7 +157,8 @@ export default {
       "fetchHeatMaps",
       "fetchDashboards",
       "fetchDashboard",
-      "updateDashboardById"
+      "updateDashboardById",
+      "removeDashboard"
     ]),
     saveDashboard() {
       this.isReadOnly = true
@@ -135,6 +169,10 @@ export default {
         cards: JSON.stringify(this.staged)
       }
       this.updateDashboardById(data)
+    },
+    deleteDashboard() {
+      this.removeDashboard({ id: this.dashboard.id });
+      this.$router.push(`/${this.$route.params.channelId}/dashboards`);
     },
     cancelForm() {
       this.isReadOnly = true

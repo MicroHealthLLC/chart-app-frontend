@@ -1,7 +1,7 @@
 <template>
   <div>
     <h4 class="pa-4">{{ gauge.title }}</h4>
-    <KPIGauge :gauge="gauge" :width="parentWidth - 100" :height="parentWidth / 2" :segmentStops="activeSteps" :ringWidth="60" class="pb-4" />
+    <KPIGauge :gauge="gauge" :width="parentWidth - 100" :height="parentWidth / 2" :segmentStops="activeSteps" :ringWidth="ringWidth" class="pb-4" />
   </div>
 </template>
     
@@ -86,6 +86,14 @@ export default {
         }
       }
     },
+    setParentDims() {
+      if (this.$parent.$el.clientHeight) {
+        this.parentHeight = this.$parent.$el.clientHeight
+      }
+      if (this.$parent.$el.clientWidth) {
+        this.parentWidth = this.$parent.$el.clientWidth
+      }
+    }
   },
   /* afterMount() {
     if (this.$parent.$el.clientHeight) { 
@@ -99,22 +107,18 @@ export default {
     if (this.gauge) {
       this.setChartType()
     }
-    if (this.$parent.$el.clientHeight) { 
-          this.parentHeight = this.$parent.$el.clientHeight
-        }
-        if (this.$parent.$el.clientWidth) {
-          this.parentWidth = this.$parent.$el.clientWidth
-        }
+    this.setParentDims()
+  },
+  created() {
+    window.addEventListener("resize", this.setParentDims);
+  },
+  destroyed() {
+    window.removeEventListener("resize", this.setParentDims);
   },
   watch: {
     staged() {
       if (this.staged && this.staged.length > 0) {
-        if (this.$parent.$el.clientHeight) { 
-          this.parentHeight = this.$parent.$el.clientHeight
-        }
-        if (this.$parent.$el.clientWidth) {
-          this.parentWidth = this.$parent.$el.clientWidth
-        }
+        this.setParentDims()
       }
     }
   }
