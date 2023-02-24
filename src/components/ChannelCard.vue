@@ -68,6 +68,7 @@
    
     },
     async beforeMount() {
+      this.fetchDashboards()
       this.fetchReports();
       this.fetchGauges();
       this.fetchHeatMaps()
@@ -77,6 +78,7 @@
     },
     methods: {
       ...mapActions([
+        "fetchDashboards",
          "fetchDataSets",
          "fetchGauges",
          "fetchReports",

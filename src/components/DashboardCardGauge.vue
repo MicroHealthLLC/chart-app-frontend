@@ -1,7 +1,25 @@
 <template>
   <div>
-    <h4 class="pa-4">{{ gauge.title }}</h4>
-    <KPIGauge :gauge="gauge" :width="parentWidth - 100" :height="parentWidth / 2" :segmentStops="activeSteps" :ringWidth="ringWidth" class="pb-4" />
+    <span class="d-flex">
+      <h4 class="pa-4">{{ gauge.title }}</h4>
+      <v-btn class="ml-0 mt-2" icon @click.prevent="toGauge(gauge.id)"><v-icon small>fa-solid
+          fa-up-right-from-square</v-icon></v-btn>
+    </span>
+    <v-btn @click="fullscreenGauge" class="chart-menu" icon>
+      <v-icon>mdi-fullscreen</v-icon>
+    </v-btn>
+    <KPIGauge :gauge="gauge" :width="parentWidth - 100" :height="parentWidth / 2" :segmentStops="activeSteps"
+      :ringWidth="ringWidth" class="pb-4" />
+    <v-dialog v-model="fullscreen" fullscreen eager>
+      <v-card>
+        <v-toolbar class="px-5" color="info" dark>
+          <h3>{{ gauge.title }}</h3>
+          <v-spacer></v-spacer>
+          <v-btn @click="fullscreen = false" icon><v-icon>mdi-close-thick</v-icon></v-btn>
+        </v-toolbar>
+        <KPIGauge :gauge="gauge" :width="dashboardGaugeWidth" :height="dashboardGaugeHeight" :segmentStops="activeSteps" :ringWidth="ringWidth" class="pb-4" />
+      </v-card>
+    </v-dialog>
   </div>
 </template>
     
@@ -23,7 +41,8 @@ export default {
     return {
       activeSteps: [],
       parentHeight: 0,
-      parentWidth: 0
+      parentWidth: 0,
+      fullscreen: false,
     };
   },
   mixins: [gaugeMixin],
@@ -42,7 +61,7 @@ export default {
       }
       return 150
     },
-    dashboardGaugeWidth () {
+    dashboardGaugeWidth() {
       switch (this.$vuetify.breakpoint.name) {
         case 'xs': return 200
         case 'sm': return 250
@@ -93,7 +112,13 @@ export default {
       if (this.$parent.$el.clientWidth) {
         this.parentWidth = this.$parent.$el.clientWidth
       }
-    }
+    },
+    toGauge(id) {
+      this.$router.replace(`/${this.currentChannels[0].name}/gauges/${id}`)
+    },
+    fullscreenGauge() {
+      this.fullscreen = true;
+    },
   },
   /* afterMount() {
     if (this.$parent.$el.clientHeight) { 
@@ -125,4 +150,10 @@ export default {
 }
 </script>
     
-<style></style>
+<style>
+.chart-menu {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+}
+</style>

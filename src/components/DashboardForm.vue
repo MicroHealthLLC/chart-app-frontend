@@ -34,7 +34,7 @@
       <!-- <h3>Dashboard Details</h3>
       <v-divider class="mb-4"></v-divider> -->
       <v-form v-model="formValid" ref="form">
-        <v-text-field outlined label="Title" dense v-model="dashboard.title">
+        <v-text-field outlined label="Title" dense v-model="dashboard.title" :rules="[v => !!v || 'Title is required']">
         </v-text-field>
       </v-form>
 
@@ -127,16 +127,15 @@ export default {
           data.createdBy = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`
           await this.addDashboard(data);
         }
+        this.resetAndGoBack()
       }
-      this.$refs.form.reset();
     },
     resetAndGoBack() {
       this.$refs.form.reset();
       if (this.$route.path === `/${this.currentChannels[0].name}/dashboards`) {
         this.$emit("closeDashboardForm")
       } else {
-        this.$router.go(-1)
-        //this.$router.push(`/${this.currentChannels[0].name}/gauges`)
+        this.$router.push(`/${this.currentChannels[0].name}/dashboards`)
       }
     },
   },

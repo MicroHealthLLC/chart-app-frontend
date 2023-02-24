@@ -8,6 +8,16 @@
       type="card, article"
     ></v-skeleton-loader>    
       <v-card class="pa-4 mb-4" v-if="data && data.length > 0">
+        <span class="d-flex align-center">
+        <h4>{{ report.title }}</h4>
+        <v-tooltip right>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn class="ml-4" icon @click.prevent="toReport(report.id)" v-bind="attrs" 
+          v-on="on"><v-icon small>fa-solid fa-up-right-from-square</v-icon></v-btn>
+          </template>
+          <span>Go to Report</span>
+        </v-tooltip>  
+      </span>
                  
         <v-btn @click="fullscreenReport" class="chart-menu" icon >
           <v-icon>mdi-fullscreen</v-icon>    
@@ -19,7 +29,6 @@
           :chartColors="colors.find((scheme) => scheme.id == report.colorSchemeId).scheme"
           :graphType="report.chartType"
           :height="350"
-          :title="report.title"
           class="mb-4"
         >
         </Component> 
@@ -186,6 +195,9 @@ export default {
         (this.$refs.chart.index + 1) %
         (Object.keys(this.$refs.chart.chartData[0]).length - 1);
     },
+    toReport(id) {
+            this.$router.replace(`/${this.currentChannels[0].name}/reports/${id}`)
+        },
     addDashboard(){
       this.showForm = true
     },

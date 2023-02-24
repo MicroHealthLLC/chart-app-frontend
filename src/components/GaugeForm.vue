@@ -165,6 +165,7 @@ export default {
           data.createdBy = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`
           await this.addGauge(data)
         }
+        this.resetAndGoBack()
       }
     },
     deleteGauge() {
