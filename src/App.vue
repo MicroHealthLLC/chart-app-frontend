@@ -61,6 +61,6 @@ export default {
 }
 .main-container {
   width: 100%;
-  max-width: 1400px;
+  max-width: 1800px;
 }
 </style>

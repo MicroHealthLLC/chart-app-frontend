@@ -261,7 +261,7 @@ export default {
       await this.fetchDataSet(this.report.dataSetId)
       let ds = this.dataSet
       let headers = Object.keys(ds.dataValues.items[0].data[0])
-      console.log(headers)
+      //console.log(headers)
       headers.forEach((k, j) => {
         if (k == this.report.xAxis) {
           /* console.log(k)

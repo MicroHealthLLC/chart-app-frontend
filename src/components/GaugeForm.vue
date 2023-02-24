@@ -156,7 +156,7 @@ export default {
           chartType: this.gauge.chartType,
           channelId: this.currentChannels[0].channelId
         }
-        console.log(data)
+        //console.log(data)
         if (this.gauge.id) {
           data.id = this.gauge.id
           data.updatedBy = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`
@@ -194,7 +194,7 @@ export default {
             } else {
               this.activeSteps = this.gauge.segmentStops.split(',').map(x => parseFloat(x))
             }
-            console.log(this.activeSteps)
+            //console.log(this.activeSteps)
             break;
           default:
           // code block
@@ -204,7 +204,7 @@ export default {
   },
   async mounted() {
     if (this.$route.path === `/${this.currentChannels[0].name}/gauges` && this.showAddGaugeForm) {
-      console.log("mount")
+      //console.log("mount")
       await this.clear()
       this.SET_GAUGE(this.newGauge)
       this.setChartType()
@@ -212,7 +212,7 @@ export default {
     if (this.$route.params.gaugeId) {
       await this.fetchGauge(this.$route.params.gaugeId)
     }
-    console.log(this.gauge)
+    //console.log(this.gauge)
   },
   watch: {
     gauge() {

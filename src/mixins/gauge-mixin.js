@@ -47,6 +47,7 @@ export default {
         case 'xl': return 430
       }
     },
+    
     ringWidth () {
       switch (this.$vuetify.breakpoint.name) {
         case 'xs': return 40
@@ -63,6 +64,7 @@ export default {
     },
     channelHeatMaps(){
       if (this.heatMaps && this.heatMaps.length > 0 && this.currentChannels && this.currentChannels[0].channelId){
+        console.log(this.heatMaps.filter(t => t.channelId == this.currentChannels[0].channelId))
         return this.heatMaps.filter(t => t.channelId == this.currentChannels[0].channelId)
       } else return []
     },

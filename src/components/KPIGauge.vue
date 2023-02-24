@@ -22,7 +22,7 @@ export default {
     gauge: Object,
     segmentStops: Array,
     ringWidth: Number,
-    needleHeightRatio: Number
+    needleHeightRatio: Number,
   },
   data() {
     return {

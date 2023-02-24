@@ -33,8 +33,8 @@
         v-else
         class="placeholder d-flex flex-column justify-center align-center"
       >
-        <p class="font-weight-light">No Public Reports to show...</p>
-        <v-btn text small color="primary" to="/add-report">Add a Report</v-btn>
+        <p class="font-weight-light">No Channels to show...</p>
+        <!-- <v-btn text small color="primary" to="/add-report">Add a Channel</v-btn> -->
       </div>
     </v-col>
   </v-row>

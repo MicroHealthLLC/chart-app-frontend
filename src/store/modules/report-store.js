@@ -15,7 +15,7 @@ import { listReportGroups } from "@/graphql/queries";
 export default {
   state: {
     reports: [],
-    report_group: [],
+    report_group: {},
     report_groups: [],
     active_report: {},
   },
