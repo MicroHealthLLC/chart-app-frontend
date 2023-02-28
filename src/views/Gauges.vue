@@ -44,9 +44,9 @@
         </div> -->
         </v-row>
        </v-container>
-      <v-divider v-if="channelHeatMaps.length > 0" class="mb-4"></v-divider>
+      <v-divider v-if="channelHeatMaps.length > 0" class="my-4"></v-divider>
       <v-container v-if="channelHeatMaps.length > 0" class="pl-5">
-        <h4 class="mb-5">HEAT MAPS</h4>
+        <h4 class="mb-2">HEAT MAPS</h4>
         <v-row>
         <v-col v-for="(heatMap) in channelHeatMaps" :key="heatMap.id" xl="2" lg="3" md="4" sm="6" xs="12">
           <v-card @click.prevent="toHeatMap(heatMap.id)" width="250px" min-width="250px" height="250px" tile elevation="4">

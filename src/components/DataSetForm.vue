@@ -17,34 +17,25 @@
       <v-divider></v-divider>
     </v-col>
     <v-col>
-      <v-alert v-if="!formValid && submitAttempted" type="error" dense dismissible>Please fix highlighted fields below
-        before sumbitting Report</v-alert>
+      <v-alert v-if="!formValid && submitAttempted" type="error" dense dismissible>Please fix highlighted fields below before sumbitting Report</v-alert>
       <!-- Form Fields -->
       <v-form v-model="formValid" ref="form">
-        <div class="grid">
-          <div>
-            <v-text-field v-model="dataSet.title" label="Title" dense required :readonly="isReadOnly"
-              :rules="[(v) => !!v || 'Title is required']"></v-text-field>
-          </div>
-          <!-- <div>
-            <v-text-field :readonly="isReadOnly" v-model="dataSet.user" label="Created By" dense>
-            </v-text-field>
-          </div> -->
-          <div :class="{ description: dataSet.id }">
-            <v-text-field v-model="dataSet.description" label="Description" dense :readonly="isReadOnly"></v-text-field>
-          </div>
-          <div>
-            <v-file-input v-show="dataSet.id != ''" placeholder="Please choose a file..." type="file"
-              @change.native="onChange" @click:clear="clearInput('file')" dense />
-            <xlsx-read :options="readOptions" :file="file">
-              <xlsx-json :options="readOptions" @parsed="uploadData"></xlsx-json>
-            </xlsx-read>
-            <div>
-              <v-btn v-if="dataSet.id" :disabled="(!file)" class="mb-1" elevation="4" small
-                @click="addNewDataValue"><v-icon>mdi-plus-circle-outline</v-icon> Add New Data</v-btn>
+        <v-row>
+          <v-col cols="6">
+            <v-text-field v-model="dataSet.title" label="Title" dense required :readonly="isReadOnly" :rules="[(v) => !!v || 'Title is required']"></v-text-field>
+              <div class="d-flex">
+                <v-file-input v-show="dataSet.id != ''" placeholder="Please choose a file..." type="file" @change.native="onChange" @click:clear="clearInput('file')" dense mulitple />
+                <xlsx-read :options="readOptions" :file="file">
+                  <xlsx-json :options="readOptions" @parsed="uploadData"></xlsx-json>
+                </xlsx-read>
+                <v-btn v-if="dataSet.id" :disabled="(!file)" class="mb-1 ml-2" elevation="4" small @click="addNewDataValue"><v-icon>mdi-plus-circle-outline</v-icon>Add to Dataset</v-btn>
             </div>
-          </div>
-        </div>
+          </v-col>
+          <v-col cols="6">
+            <v-text-field v-model="dataSet.description" label="Description" dense :readonly="isReadOnly"></v-text-field>
+            
+          </v-col>
+        </v-row>
       </v-form>
     </v-col>
 

@@ -71,10 +71,13 @@ export default {
 		this.data = this.createMasterData(this.dataSet.dataValues.items)
 		if (this.heatMap.columns && typeof this.heatMap.columns == "string") {
 			this.cols = JSON.parse(this.heatMap.columns)
+			this.heatMap.columns = JSON.parse(this.heatMap.columns)
+		}
+		if (this.heatMap.options && typeof this.heatMap.options == 'string') {
+			this.heatMap.options = JSON.parse(this.heatMap.options)
 		}
 	},
 	watch: {
-
 	}
 }
 </script>

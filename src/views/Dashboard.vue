@@ -3,7 +3,8 @@
     <v-row>
       <v-col>
         <div class="d-flex justify-space-between">
-          <h3 v-if="(!isReadOnly && dashboard.id)">Update {{ dashboard.title }}</h3>
+          <h3 v-if="(!isReadOnly && dashboard.id)" class="d-flex align-center">Update <v-text-field class="ml-2" v-model="dashboard.title">{{ dashboard.title }}</v-text-field>
+          </h3>
           <h3 v-else-if="dashboard.id">View {{ dashboard.title }}</h3>
           <h3 v-else>"Dashboard Title"</h3>
           <div>
@@ -25,12 +26,12 @@
     <v-row>
       <!-- DASHBOARD CARDS -->
       <v-col :cols="isReadOnly ? 12 : 10">
-        <draggable :list="staged" group="universalGroup" :disabled="isReadOnly" class="drag-area row">
-          <v-col :cols="dashboardCols(staged, index)" v-for="(item, index) in staged" :key="index" ><!--  :height="dashboardCardHeight(staged)" -->
+        <draggable :list="staged" group="universalGroup" :removeOnSpill="true" :onSpill="deleteItem" :disabled="isReadOnly" class="drag-area row">
+          <v-col :cols="dashboardCols(staged, index)" v-for="(item, index) in staged" :key="index" >
             <v-card :ref="`card${index}`">
-              <DashboardCardHeatMap :heatMap="item" v-if="checkChartType(item) == 'heatMap'"/>
-              <DashboardCardGauge :gauge="item" v-if="checkChartType(item) == 'gauge'" :staged="staged" />
-              <DashboardCard_test :report="item" v-if="checkChartType(item) == 'report'" />
+              <DashboardCardHeatMap :heatMap="item" v-if="checkChartType(item) == 'heatMap'" @deleteItem="deleteItem" />
+              <DashboardCardGauge :gauge="item" v-if="checkChartType(item) == 'gauge'" :staged="staged" @deleteItem="deleteItem" />
+              <DashboardCard_test :report="item" v-if="checkChartType(item) == 'report'" @deleteItem="deleteItem" />
             </v-card>
           </v-col>
         </draggable>
@@ -166,6 +167,7 @@ export default {
       console.log(this.staged)
       let data = {
         id: this.dashboard.id,
+        title: this.dashboard.title,
         cards: JSON.stringify(this.staged)
       }
       this.updateDashboardById(data)
@@ -174,17 +176,21 @@ export default {
       this.removeDashboard({ id: this.dashboard.id });
       this.$router.push(`/${this.$route.params.channelId}/dashboards`);
     },
-    cancelForm() {
+    deleteItem(index) {
+      this.staged.splice(index, 1)
+    },
+    async cancelForm() {
       this.isReadOnly = true
+      if (this.$route.params.dashboardId) {
+      await this.fetchDashboard(this.$route.params.dashboardId)
+      this.staged = this.dashboard.cards ? this.dashboard.cards : []
+    }
     },
     resetAndGoBack() {
       this.$router.go(-1)
     },
     editForm() {
       this.isReadOnly = false
-    },
-    removeAt(idx) {
-      this.staged.splice(idx, 1);
     },
     dashboardCardHeight(staged) {
       if (staged && staged.length > 0) {
