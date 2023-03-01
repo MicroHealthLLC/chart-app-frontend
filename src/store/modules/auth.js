@@ -2,7 +2,7 @@ import { Auth } from "aws-amplify";
 
 export default {
   state: {
-    user: null
+    user: null,
   },
   actions: {
     async login({ commit, dispatch }, { username, password }) {
@@ -98,7 +98,7 @@ export default {
         // const isEditor = groups.includes("Editors");
 
         commit("SET_USER", { ...userInfo });
-        console.log(...userInfo)
+        console.log(...userInfo);
       } catch (error) {
         console.log(error);
       }
@@ -118,10 +118,10 @@ export default {
         console.log(error);
         if (error.toString().includes("Invalid phone number format")) {
           commit("SET_SNACKBAR", {
-          show: true,
-          message: "Invalid Phone Number Provided!",
-          color: "red",
-        });
+            show: true,
+            message: "Invalid Phone Number Provided!",
+            color: "red",
+          });
         }
       }
       commit("TOGGLE_SAVING", false);
@@ -152,4 +152,4 @@ export default {
     user: (state) => state.user,
     // isEditor: (state) => state.user.isEditor || false,
   },
-}
+};

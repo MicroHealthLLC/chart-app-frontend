@@ -2,8 +2,12 @@
   <v-row>
     <v-dialog v-model="showReportGroupForm" width="30%">
       <v-card class="px-4 py-4">
-        <v-text-field label="Folder Name" v-model="reportGroup.title" placeholder="Enter Folder Name"
-          outlined></v-text-field>
+        <v-text-field
+          label="Folder Name"
+          v-model="reportGroup.title"
+          placeholder="Enter Folder Name"
+          outlined
+        ></v-text-field>
         <!-- <span  v-if="channelReports.filter(t => !t.reportGroupId).length > 0">
      <v-divider></v-divider>  
      <v-select        
@@ -20,10 +24,15 @@
      </span>        -->
 
         <!-- <span v-else>No Reports to save</span> -->
-        <v-btn color="primary" large class="d-block margin-auto" @click.prevent="saveReportGroup">Save Folder</v-btn>
+        <v-btn
+          color="primary"
+          large
+          class="d-block margin-auto"
+          @click.prevent="saveReportGroup"
+          >Save Folder</v-btn
+        >
       </v-card>
       <!-- <span v-else>NO DATA</span> -->
-
     </v-dialog>
     <v-dialog v-model="showAddReportForm" width="50%">
       <v-card class="px-4 py-4">
@@ -32,36 +41,86 @@
     </v-dialog>
     <v-col class="col-11">
       <div class="d-flex justify-space-between">
-        <h3><v-icon class="mr-2 pb-2" color="orange darken-2">mdi-chart-box-outline</v-icon>Reports</h3>
+        <h3>
+          <v-icon class="mr-2 pb-2" color="orange darken-2"
+            >mdi-chart-box-outline</v-icon
+          >Reports
+        </h3>
         <span>
-          <v-btn class="mb-2 mr-1" color="primary" small @click.prevent="toNewReport">Add Report <v-icon small>mdi-plus</v-icon></v-btn>
-          <v-btn class="mb-2" color="success" small @click.prevent="createReportGroup">Create Folder <v-icon small class="pl-1">mdi-folder-multiple</v-icon></v-btn>
+          <v-btn
+            class="mb-2 mr-1"
+            color="primary"
+            small
+            @click.prevent="toNewReport"
+            >Add Report <v-icon small>mdi-plus</v-icon></v-btn
+          >
+          <v-btn
+            class="mb-2"
+            color="success"
+            small
+            @click.prevent="createReportGroup"
+            >Create Folder
+            <v-icon small class="pl-1">mdi-folder-multiple</v-icon></v-btn
+          >
         </span>
       </div>
       <v-divider class="mb-4"></v-divider>
       <h4>Folders</h4>
-      <div v-if="channelReportGroups && channelReportGroups.length > 0" class="grid">
-        <span v-for="item in channelReportGroups" :key="item.id" :load="log(channelReportGroups)">
-
+      <div
+        v-if="channelReportGroups && channelReportGroups.length > 0"
+        class="grid"
+      >
+        <span
+          v-for="item in channelReportGroups"
+          :key="item.id"
+          :load="log(channelReportGroups)"
+        >
           <v-list-group :value="false" no-action sub-group>
             <template v-slot:activator>
               <v-list-item-content>
                 <v-list-item-title>
-                  <span v-if="channelReports.filter(t => t.reportGroupId == item.id).length > 0">
-                    <v-icon x-large class="pr-1 file-icon" color="yellow darken-2">mdi-folder-open-outline</v-icon>
+                  <span
+                    v-if="
+                      channelReports.filter((t) => t.reportGroupId == item.id)
+                        .length > 0
+                    "
+                  >
+                    <v-icon
+                      x-large
+                      class="pr-1 file-icon"
+                      color="yellow darken-2"
+                      >mdi-folder-open-outline</v-icon
+                    >
                   </span>
                   <span v-else>
-                    <v-icon x-large class="pr-1 file-icon" color="yellow darken-2">mdi-folder-outline</v-icon>
+                    <v-icon
+                      x-large
+                      class="pr-1 file-icon"
+                      color="yellow darken-2"
+                      >mdi-folder-outline</v-icon
+                    >
                   </span>
-                  {{ item.title }} ({{ channelReports.filter(t => t.reportGroupId == item.id).length }})
+                  {{ item.title }} ({{
+                    channelReports.filter((t) => t.reportGroupId == item.id)
+                      .length
+                  }})
                 </v-list-item-title>
               </v-list-item-content>
             </template>
-            <v-list-item v-for="report in channelReports.filter(t => t.reportGroupId == item.id)" :key="report.id" link>
+            <v-list-item
+              v-for="report in channelReports.filter(
+                (t) => t.reportGroupId == item.id
+              )"
+              :key="report.id"
+              link
+            >
               <v-list-item-icon>
                 <v-icon color="orange darken-2">mdi-file-chart-outline</v-icon>
               </v-list-item-icon>
-              <v-list-item-title v-text="report.title" @click.prevent="toReport(report.id)">
+              <v-list-item-title
+                v-text="report.title"
+                @click.prevent="toReport(report.id)"
+              >
               </v-list-item-title>
             </v-list-item>
           </v-list-group>
@@ -71,13 +130,20 @@
       <v-divider class="mb-4 mt-4"></v-divider>
       <h4 class="mb-3">Reports</h4>
       <div v-if="channelReports.length > 0" class="singleReportGrid pl-5">
-        <span v-for="(report) in channelReports.filter(t => t && !t.reportGroupId)" :key="report.id">
+        <span
+          v-for="report in channelReports.filter((t) => t && !t.reportGroupId)"
+          :key="report.id"
+        >
           <span class="click" @click.prevent="toSingleReport(report.id)">
-            <v-icon x-large class="pl-2 file-icon" color="orange darken-2">mdi-file-chart-outline</v-icon>
+            <v-icon x-large class="pl-2 file-icon" color="orange darken-2"
+              >mdi-file-chart-outline</v-icon
+            >
             {{ report.title }}
-            <small class="d-inline blu" v-if="report.reportGroup && report.reportGroup.title">({{
-              report.reportGroup.title
-            }})</small>
+            <small
+              class="d-inline blu"
+              v-if="report.reportGroup && report.reportGroup.title"
+              >({{ report.reportGroup.title }})</small
+            >
           </span>
         </span>
         <!-- <div class="d-flex justify-end btn-container">
@@ -91,9 +157,14 @@
           >
         </div> -->
       </div>
-      <div v-else class="placeholder d-flex flex-column justify-center align-center">
+      <div
+        v-else
+        class="placeholder d-flex flex-column justify-center align-center"
+      >
         <p class="font-weight-light">No Reports on this Channel yet...</p>
-        <v-btn text small color="primary" :to="`reports/add-report`">Add a Report</v-btn>
+        <v-btn text small color="primary" :to="`reports/add-report`"
+          >Add a Report</v-btn
+        >
       </div>
     </v-col>
     <span class="views">
@@ -114,76 +185,93 @@ export default {
   name: "Home",
   components: {
     ReportForm,
-},
+  },
   data() {
     return {
       showReportGroupForm: false,
       showAddReportForm: false,
-      viewAllReports: true
+      viewAllReports: true,
     };
   },
   computed: {
-    ...mapGetters(["channels", "news", "reports", "user", "dataSets", "currentChannel", "currentChannels", "reportGroups", "reportGroup"]),
+    ...mapGetters([
+      "channels",
+      "news",
+      "reports",
+      "user",
+      "dataSets",
+      "currentChannel",
+      "currentChannels",
+      "reportGroups",
+      "reportGroup",
+    ]),
     reportCount() {
-      return (
-        this.reports.length
-      );
+      return this.reports.length;
     },
     channelReportGroups() {
       if (this.reportGroups && this.reportGroups.length > 0) {
-        return this.reportGroups.filter(t => t.channelId == this.currentChannels[0].channelId)
-      } else return []
+        return this.reportGroups.filter(
+          (t) => t.channelId == this.currentChannels[0].channelId
+        );
+      } else return [];
     },
     channelReports() {
       if (this.reports && this.reports.length > 0 && this.viewAllReports) {
-        return this.reports.filter(t => t.channelId == this.currentChannels[0].channelId)
-      } else return this.reports.filter(t => t.channelId == this.currentChannels[0].channelId && !t.reportGroupId)
+        return this.reports.filter(
+          (t) => t.channelId == this.currentChannels[0].channelId
+        );
+      } else
+        return this.reports.filter(
+          (t) =>
+            t.channelId == this.currentChannels[0].channelId && !t.reportGroupId
+        );
     },
   },
   methods: {
-    ...mapActions(["fetchNews", "fetchReports", "fetchCurrentUser", "fetchDataSets", "fetchReportGroups", "addReportGroup"]),
+    ...mapActions([
+      "fetchNews",
+      "fetchReports",
+      "fetchCurrentUser",
+      "fetchDataSets",
+      "fetchReportGroups",
+      "addReportGroup",
+    ]),
     ...mapMutations(["SET_REPORT"]),
     toNewReport() {
-      this.showAddReportForm = true
+      this.showAddReportForm = true;
       //this.$router.push("reports/add-report");
     },
     closeAddReportForm() {
-      this.showAddReportForm = false
+      this.showAddReportForm = false;
     },
     log(e) {
       //console.log("Report Folders:")
-      console.log(e)
+      console.log(e);
     },
     toReport(reportId) {
-      this.$router.push(
-        `reports/${reportId}`
-      );
+      this.$router.push(`reports/${reportId}`);
     },
     toSingleReport(reportId) {
-      this.$router.push(
-        `reports/${reportId}`
-      );
-
+      this.$router.push(`reports/${reportId}`);
     },
     async saveReportGroup() {
       let data = {
         title: this.reportGroup.title,
         channelId: this.currentChannels[0].channelId,
-      }
+      };
       //console.log(data)
       await this.addReportGroup(data);
-      this.reportGroup.title = ""
-      this.reportGroup.reports = null
-      this.showReportGroupForm = false
-
+      this.reportGroup.title = "";
+      this.reportGroup.reports = null;
+      this.showReportGroupForm = false;
     },
     createReportGroup() {
-      this.showReportGroupForm = true
+      this.showReportGroupForm = true;
     },
   },
   mounted() {
     this.fetchReports();
-    this.fetchReportGroups()
+    this.fetchReportGroups();
     this.fetchDataSets();
     //  console.log(this.user)
   },
@@ -194,9 +282,8 @@ export default {
     },
     reportGroup() {
       //console.log(this.reportGroup.title)
-    }
-  }
-
+    },
+  },
 };
 </script>
 
@@ -204,7 +291,7 @@ export default {
 .blu {
   color: #1976d2;
 }
-.file-icon{
+.file-icon {
   font-size: 100px !important;
 }
 
@@ -236,7 +323,7 @@ export default {
 }
 
 .warn {
-  color: #E4A11B !important;
+  color: #e4a11b !important;
 }
 
 .grid {

@@ -2,10 +2,10 @@
   <v-row>
     <v-col class="col-12"
       ><h3>{{ activeDashboard.title }}</h3>
-      <v-divider></v-divider></v-col
-    >
+      <v-divider></v-divider
+    ></v-col>
     <v-col
-      :class="[{'col-md-12': (index === 0)}, 'col-md-6']"
+      :class="[{ 'col-md-12': index === 0 }, 'col-md-6']"
       v-for="(report, index) in activeDashboard.reports"
       :key="index"
     >

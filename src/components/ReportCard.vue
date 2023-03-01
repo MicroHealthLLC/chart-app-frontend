@@ -8,8 +8,9 @@
     </v-card-title>
     <v-card-text>
       <ul class="mb-4 text-caption">
-        <li v-if="(report && report.dataSetId)">
-          <strong>Data Set:</strong><span class="blueFont"> {{ dataSetTitle }}</span>
+        <li v-if="report && report.dataSetId">
+          <strong>Data Set:</strong
+          ><span class="blueFont"> {{ dataSetTitle }}</span>
         </li>
         <li v-else><strong>Data Set:</strong> None</li>
         <li><strong>Channel:</strong> {{ report.channel.title }}</li>
@@ -36,9 +37,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters([
-       "dataSets",
-     ]),
+    ...mapGetters(["dataSets"]),
     chartIcon() {
       return this.report.chartType === "line"
         ? "mdi-chart-line"
@@ -60,31 +59,28 @@ export default {
     },
     dataSetTitle() {
       //console.log(this.report)
-      if ((this.report.dataSetId)) {
-        let title = this.dataSets.filter(d => d && d.id == this.report.dataSetId)
+      if (this.report.dataSetId) {
+        let title = this.dataSets.filter(
+          (d) => d && d.id == this.report.dataSetId
+        );
         if (title.length == 0) {
-          return ""
-        } else return title[0].title
-      } else return ""
-      
-    }
+          return "";
+        } else return title[0].title;
+      } else return "";
+    },
   },
   async beforeMount() {
-    if(this.dataSets && this.dataSets.length < 1){
+    if (this.dataSets && this.dataSets.length < 1) {
       await this.fetchDataSets();
     }
   },
   methods: {
-    ...mapActions([
-       "fetchDataSets",
-     ]),
-     /* log(e){
+    ...mapActions(["fetchDataSets"]),
+    /* log(e){
       console.log(e)
      }, */
     toReport() {
-      this.$router.push(
-        `reports/${this.report.id}`
-      );
+      this.$router.push(`reports/${this.report.id}`);
     },
   },
   watch: {

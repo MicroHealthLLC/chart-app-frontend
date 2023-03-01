@@ -13,7 +13,7 @@ export default {
       description: "",
       reports: [],
       gauges: [],
-      heatMaps: []
+      heatMaps: [],
     },
     /* dashboardReports: [],
     dashboardReport: {},
@@ -22,10 +22,12 @@ export default {
   },
   actions: {
     async addDashboard({ commit, dispatch }, dashboard) {
-      console.log(dashboard)
+      console.log(dashboard);
       commit("TOGGLE_SAVING", true);
       try {
-        await API.graphql(graphqlOperation(createDashboard, { input: dashboard }));
+        await API.graphql(
+          graphqlOperation(createDashboard, { input: dashboard })
+        );
         dispatch("fetchDashboards");
         commit("SET_SNACKBAR", {
           show: true,
@@ -37,11 +39,13 @@ export default {
       }
       commit("TOGGLE_SAVING", false);
     },
-    async updateDashboardById({ commit, dispatch }, dashboard ) {
-      console.log(dashboard)
+    async updateDashboardById({ commit, dispatch }, dashboard) {
+      console.log(dashboard);
       commit("TOGGLE_SAVING", true);
       try {
-        await API.graphql(graphqlOperation(updateDashboard, { input: dashboard }));
+        await API.graphql(
+          graphqlOperation(updateDashboard, { input: dashboard })
+        );
         dispatch("fetchDashboards");
         commit("SET_SNACKBAR", {
           show: true,
@@ -67,21 +71,26 @@ export default {
       }
     },
     async fetchDashboards({ commit }) {
-      try {     
-       const res = await API.graphql(graphqlOperation(listDashboards));
-       console.log(res.data.listDashboards)
+      try {
+        const res = await API.graphql(graphqlOperation(listDashboards));
+        console.log(res.data.listDashboards);
         commit("SET_DASHBOARDS", res.data.listDashboards.items);
       } catch (error) {
         console.log(error);
       }
     },
-    async fetchDashboard({ commit } , id) {
+    async fetchDashboard({ commit }, id) {
       commit("TOGGLE_LOADING", true);
-      try {     
-       const res = await API.graphql(graphqlOperation(getDashboard, { id: id })); 
-       if (res.data.getDashboard.cards && typeof res.data.getDashboard.cards == 'string') {
-        res.data.getDashboard.cards = JSON.parse(res.data.getDashboard.cards)
-       }   
+      try {
+        const res = await API.graphql(
+          graphqlOperation(getDashboard, { id: id })
+        );
+        if (
+          res.data.getDashboard.cards &&
+          typeof res.data.getDashboard.cards == "string"
+        ) {
+          res.data.getDashboard.cards = JSON.parse(res.data.getDashboard.cards);
+        }
         commit("SET_DASHBOARD", res.data.getDashboard);
       } catch (error) {
         console.log(error);
@@ -225,8 +234,7 @@ export default {
   },
   mutations: {
     SET_DASHBOARDS: (state, dashboards) => (state.dashboards = dashboards),
-    SET_DASHBOARD: (state, dashboard) =>
-      (state.dashboard = dashboard),
+    SET_DASHBOARD: (state, dashboard) => (state.dashboard = dashboard),
     /* SET_DASHBOARD_REPORTS: (state, dashboardReports) => (state.dashboardReports = dashboardReports),
     SET_DASHBOARD_REPORT: (state, dashboardReport) =>
       (state.dashboardReport = dashboardReport),

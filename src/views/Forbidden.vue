@@ -12,10 +12,8 @@
 
 <script>
 export default {
-  name: "Forbidden"
-}
+  name: "Forbidden",
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

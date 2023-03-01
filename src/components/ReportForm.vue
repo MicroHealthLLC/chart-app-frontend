@@ -2,7 +2,9 @@
   <v-row>
     <v-col>
       <div class="d-flex justify-space-between">
-        <h3 v-if="activeReport && activeReport.title">{{ activeReport.title }}</h3>
+        <h3 v-if="activeReport && activeReport.title">
+          {{ activeReport.title }}
+        </h3>
         <h3 v-else class="placeholder-title">(Report Title)</h3>
         <div>
           <v-btn
@@ -28,9 +30,16 @@
         dismissible
         >Please fix highlighted fields below before sumbitting Report</v-alert
       >
-      
 
-      <v-card v-if="(data && data.length > 0) && activeReport.colorSchemeId && activeReport.chartType" class="pa-4 mb-4">
+      <v-card
+        v-if="
+          data &&
+          data.length > 0 &&
+          activeReport.colorSchemeId &&
+          activeReport.chartType
+        "
+        class="pa-4 mb-4"
+      >
         <v-btn @click="fullscreenReport" class="chart-menu" icon>
           <v-icon>mdi-fullscreen</v-icon>
         </v-btn>
@@ -59,11 +68,7 @@
         </div> -->
         <!-- Category Toggle Button -->
         <div class="d-flex justify-end mb-4">
-          <v-btn
-            v-if="circleChart"
-            @click="changeChartData"
-            outlined
-            small
+          <v-btn v-if="circleChart" @click="changeChartData" outlined small
             >Next Category <v-icon small>mdi-arrow-right</v-icon></v-btn
           >
           <!-- <v-btn
@@ -107,11 +112,10 @@
               label="Folder"
               :items="reportGroups"
               item-text="title"
-              item-value="id"         
+              item-value="id"
             ></v-select>
-
           </div>
-           
+
           <div class="description">
             <v-textarea
               v-model="activeReport.description"
@@ -189,9 +193,15 @@
             </v-select>
           </div>
           <div>
-            <v-select v-model="xAxisValue" :items="xAxisKeys" label="X-Axis" dense @change="onChangeAxis"></v-select>
+            <v-select
+              v-model="xAxisValue"
+              :items="xAxisKeys"
+              label="X-Axis"
+              dense
+              @change="onChangeAxis"
+            ></v-select>
           </div>
-          
+
           <!-- <div class="tags">
             <v-select
               v-model="activeReport.tags"
@@ -222,7 +232,10 @@
         </div>
       </v-form>
       <!-- Delete Button -->
-      <div v-if="activeReport && activeReport.id" class="d-flex justify-end mt-4">
+      <div
+        v-if="activeReport && activeReport.id"
+        class="d-flex justify-end mt-4"
+      >
         <v-btn
           @click="deleteDialog = true"
           small
@@ -278,11 +291,7 @@
           </Component>
           <!-- Category Toggle Button -->
           <div class="d-flex justify-end pr-6">
-            <v-btn
-              v-if="circleChart"
-              @click="changeFSChartData"
-              outlined
-              small
+            <v-btn v-if="circleChart" @click="changeFSChartData" outlined small
               >Next Category <v-icon small>mdi-arrow-right</v-icon></v-btn
             >
           </div>
@@ -312,7 +321,7 @@ export default {
       submitAttempted: false,
       deleteDialog: false,
       fullscreen: false,
-      reportGroupIds:[],
+      reportGroupIds: [],
       chartTypes: [
         { text: "Line", value: "line" },
         { text: "Curve", value: "curve" },
@@ -334,7 +343,7 @@ export default {
     };
   },
   mixins: [datasetMixin, reportMixin],
- 
+
   computed: {
     ...mapGetters([
       "activeDataSet",
@@ -354,11 +363,17 @@ export default {
       "reportGroups",
       "user",
     ]),
-    channelReports(){
-        if (this.reports && this.reports.length > 0){
-          return this.reports.filter(t => t.channelId == this.currentChannels[0].channelId)
-        } else return  this.reports.filter(t => t.channelId == this.currentChannels[0].channelId && !t.reportGroupId)
-      },
+    channelReports() {
+      if (this.reports && this.reports.length > 0) {
+        return this.reports.filter(
+          (t) => t.channelId == this.currentChannels[0].channelId
+        );
+      } else
+        return this.reports.filter(
+          (t) =>
+            t.channelId == this.currentChannels[0].channelId && !t.reportGroupId
+        );
+    },
     graphType() {
       if (this.activeReport.chartType === "line") {
         return LineChart;
@@ -416,7 +431,7 @@ export default {
       "updateReportById",
       "updateReportGroupById",
       "removeReport",
-      "updateChannelById"
+      "updateChannelById",
     ]),
     ...mapMutations(["SET_REPORT_DATASET", "SET_STATUS_CODE", "SET_REPORT"]),
     changeChartData() {
@@ -432,13 +447,13 @@ export default {
         (this.$refs.fullscreenchart.index + 1) %
         (Object.keys(this.$refs.fullscreenchart.chartData[0]).length - 1);
     },
-    resetAndGoBack(){
+    resetAndGoBack() {
       //this.$router.go(-1)
       this.$refs.form.reset();
-      if (this.$route.path === `/${this.currentChannels[0].name}/reports`){
-        this.$emit("closeAddReportForm")
+      if (this.$route.path === `/${this.currentChannels[0].name}/reports`) {
+        this.$emit("closeAddReportForm");
       } else {
-        this.$router.go(-1)
+        this.$router.go(-1);
         //this.$router.push(`/${this.currentChannels[0].name}/reports`)
       }
     },
@@ -464,47 +479,42 @@ export default {
 
         if (this.activeReport.id) {
           data.id = this.activeReport.id;
-          data.reportGroupId = this.activeReport.reportGroupId
-          data.updatedBy = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`
+          data.reportGroupId = this.activeReport.reportGroupId;
+          data.updatedBy = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
           this.updateReportById(data);
-
         } else {
-          console.log(data)
-          data.createdBy = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`
+          console.log(data);
+          data.createdBy = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
           // data.user_id = this.user.id;
-           this.addReport(data);
+          this.addReport(data);
         }
 
-        this.resetAndGoBack()
+        this.resetAndGoBack();
 
-          
-    // if (this.activeReport.id) {
-    //   let ids = this.channelReports.filter( r => r.reportGroupId == this.activeReport.reportGroupId).map(t => t.id)
-    //   ids.push(this.activeReport.id) 
+        // if (this.activeReport.id) {
+        //   let ids = this.channelReports.filter( r => r.reportGroupId == this.activeReport.reportGroupId).map(t => t.id)
+        //   ids.push(this.activeReport.id)
 
-    //   this.updateReportGroupById({ 
-    //     id: this.activeReport.reportGroupId,
-    //     reportIds:  ids
-    //   })          
-    // }   
-
-      
-     
+        //   this.updateReportGroupById({
+        //     id: this.activeReport.reportGroupId,
+        //     reportIds:  ids
+        //   })
+        // }
       }
     },
     async updateChartData() {
-      await this.fetchDataSet(this.activeReport.dataSetId)
-      let headers = Object.keys(this.dataSet.dataValues.items[0].data[0])
+      await this.fetchDataSet(this.activeReport.dataSetId);
+      let headers = Object.keys(this.dataSet.dataValues.items[0].data[0]);
 
       headers.forEach((k, i) => {
         if (k == this.xAxisValue) {
-          this.arrayMove(headers, i, 0)
+          this.arrayMove(headers, i, 0);
         }
-      })
-      this.headers = headers
-      let newHeaders = []
+      });
+      this.headers = headers;
+      let newHeaders = [];
       if (this.activeReport.columns && this.activeReport.columns.length > 0) {
-        newHeaders = this.activeReport.columns
+        newHeaders = this.activeReport.columns;
       } else {
         newHeaders = headers.map((item) => ({
           text: item,
@@ -512,38 +522,44 @@ export default {
         }));
       }
       //console.log(newHeaders)
-      this.data = this.createMasterData(this.dataSet.dataValues.items)
-      this.selectedHeaders = newHeaders
-      this.data = this.filterData(this.selectedHeaders, this.data)
-      this.updateColors(this.activeReport.colorSchemeId)
+      this.data = this.createMasterData(this.dataSet.dataValues.items);
+      this.selectedHeaders = newHeaders;
+      this.data = this.filterData(this.selectedHeaders, this.data);
+      this.updateColors(this.activeReport.colorSchemeId);
       this.SET_REPORT_DATASET(this.dataSet);
     },
     onChangeSelected() {
       this.selectedHeaders.forEach((s, i) => {
         if (typeof s == "string") {
-          this.selectedHeaders[i] = ({ text: s, value: s, })
+          this.selectedHeaders[i] = { text: s, value: s };
         }
-      })
-      this.xAxisKeys = this.selectedHeaders.map(h => h.text || h)
+      });
+      this.xAxisKeys = this.selectedHeaders.map((h) => h.text || h);
       /* if (this.dataSet && this.dataSet.dataValues && this.dataSet.dataValues.items && this.dataSet.dataValues.items.length > 0) { */
-        this.data = this.filterData(this.selectedHeaders, this.createMasterData(this.dataSet.dataValues.items))
+      this.data = this.filterData(
+        this.selectedHeaders,
+        this.createMasterData(this.dataSet.dataValues.items)
+      );
       /* } */
     },
     onChangeAxis() {
-      this.xAxisKeys = this.selectedHeaders.map(h => h.text || h)     
-      this.moveArrByKey(this.xAxisKeys, this.xAxisValue)
-      this.selectedHeaders = this.xAxisKeys.map(x => ({
+      this.xAxisKeys = this.selectedHeaders.map((h) => h.text || h);
+      this.moveArrByKey(this.xAxisKeys, this.xAxisValue);
+      this.selectedHeaders = this.xAxisKeys.map((x) => ({
         text: x,
-        value: x
-      }))
-      this.data = this.filterData(this.selectedHeaders, this.createMasterData(this.dataSet.dataValues.items))
+        value: x,
+      }));
+      this.data = this.filterData(
+        this.selectedHeaders,
+        this.createMasterData(this.dataSet.dataValues.items)
+      );
     },
     moveArrByKey(keys, selected = "Date") {
       keys.forEach((k, i) => {
         if (k == selected) {
-          this.arrayMove(keys, i, 0)
+          this.arrayMove(keys, i, 0);
         }
-      })
+      });
     },
     deleteReport() {
       this.removeReport({ id: this.activeReport.id });
@@ -561,13 +577,11 @@ export default {
         (color) => selectedSchemeId == color.id
       ).scheme;
     },
-    
   },
   async beforeMount() {
-    if(this.dataSets && this.dataSets.length < 1){
+    if (this.dataSets && this.dataSets.length < 1) {
       await this.fetchDataSets();
-    } 
-    
+    }
   },
   async mounted() {
     await this.fetchDataSets();
@@ -575,35 +589,41 @@ export default {
     /* if (this.$route.name == "Report") {
       this.dataSetChoices = [...this.dataSets];
     } else { */
-      this.dataSetChoices = [...this.dataSets.filter(d => d.channelId == this.currentChannels[0].channelId)]; // was ...this.channelDataSets
+    this.dataSetChoices = [
+      ...this.dataSets.filter(
+        (d) => d.channelId == this.currentChannels[0].channelId
+      ),
+    ]; // was ...this.channelDataSets
     /* } */
-    
-      if (this.$route.params.reportId == "add-report") {
-        this.activeReport.id = ""
-        this.dataSet.id = ""
-      }  
+
+    if (this.$route.params.reportId == "add-report") {
+      this.activeReport.id = "";
+      this.dataSet.id = "";
+    }
   },
   watch: {
     activeReport() {
-      if (this.$route.params.reportId != "add-report" && this.activeReport.id){ 
-        this.colorScheme = this.colors.find((scheme) => scheme.id == this.activeReport.colorSchemeId).scheme
+      if (this.$route.params.reportId != "add-report" && this.activeReport.id) {
+        this.colorScheme = this.colors.find(
+          (scheme) => scheme.id == this.activeReport.colorSchemeId
+        ).scheme;
         if (this.activeReport.xAxis) {
-        this.xAxisValue = this.activeReport.xAxis
-      }
-      if (this.activeReport.columns) {
-        this.selectedHeaders = this.activeReport.columns
-      }
+          this.xAxisValue = this.activeReport.xAxis;
+        }
+        if (this.activeReport.columns) {
+          this.selectedHeaders = this.activeReport.columns;
+        }
         this.updateChartData();
-        this.onChangeSelected()
+        this.onChangeSelected();
       }
       if (!this.activeReport) {
-        this.SET_REPORT(this.newReport)
-        console.log("No Active Report")
+        this.SET_REPORT(this.newReport);
+        console.log("No Active Report");
       }
     },
     selectedHeaders() {
       if (this.selectedHeaders.length != 0) {
-        this.onChangeSelected()
+        this.onChangeSelected();
       }
     },
     dataSets() {
@@ -616,7 +636,7 @@ export default {
     }, */
     data() {
       //console.log(this.data)
-    }
+    },
   },
 };
 </script>

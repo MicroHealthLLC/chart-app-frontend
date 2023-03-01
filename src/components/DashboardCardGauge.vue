@@ -1,12 +1,16 @@
 <template>
   <div>
-
     <span class="d-flex">
       <h4 class="pa-4">{{ gauge.title }}</h4>
       <v-tooltip top>
         <template v-slot:activator="{ on, attrs }">
-          <v-btn class="ml-0 mt-2" icon @click.prevent="toGauge(gauge.id)" v-bind="attrs" v-on="on"><v-icon small>fa-solid
-              fa-up-right-from-square</v-icon>
+          <v-btn
+            class="ml-0 mt-2"
+            icon
+            @click.prevent="toGauge(gauge.id)"
+            v-bind="attrs"
+            v-on="on"
+            ><v-icon small>fa-solid fa-up-right-from-square</v-icon>
           </v-btn>
         </template>
         <span>Go to KPI Gauge</span>
@@ -24,11 +28,16 @@
     </v-btn>
 
     <div class="d-flex">
-      <KPIGauge :gauge="gauge" :width="parentWidth - 220" :height="parentWidth / 2" :segmentStops="activeSteps"
-        :ringWidth="dashboardRingWidth" class="pb-4 mr-2" />
-      <v-card class="mr-2" style="height: 100%;">
-        <v-card-text class="pb-0" v-html="gauge.notes">
-        </v-card-text>
+      <KPIGauge
+        :gauge="gauge"
+        :width="parentWidth - 220"
+        :height="parentWidth / 2"
+        :segmentStops="activeSteps"
+        :ringWidth="dashboardRingWidth"
+        class="pb-4 mr-2"
+      />
+      <v-card class="mr-2" style="height: 100%">
+        <v-card-text class="pb-0" v-html="gauge.notes"> </v-card-text>
       </v-card>
     </div>
     <!-- <KPIGauge :gauge="gauge" :width="parentWidth - 100" :height="parentWidth / 2" :segmentStops="activeSteps" :ringWidth="ringWidth" class="pb-4" /> -->
@@ -37,16 +46,23 @@
         <v-toolbar class="px-5" color="info" dark>
           <h3>{{ gauge.title }}</h3>
           <v-spacer></v-spacer>
-          <v-btn @click="fullscreen = false" icon><v-icon>mdi-close-thick</v-icon></v-btn>
+          <v-btn @click="fullscreen = false" icon
+            ><v-icon>mdi-close-thick</v-icon></v-btn
+          >
         </v-toolbar>
         <div class="d-flex justify-space-around">
-        <KPIGauge :gauge="gauge" :width="dashboardGaugeWidth" :height="dashboardGaugeWidth / 2" :segmentStops="activeSteps"
-          :ringWidth="ringWidth" class="pb-4" />
-          <v-card class="mr-15 mt-10" style="height: 100%;">
-        <v-card-text class="pb-0" v-html="gauge.notes">
-        </v-card-text>
-      </v-card>
-    </div>
+          <KPIGauge
+            :gauge="gauge"
+            :width="dashboardGaugeWidth"
+            :height="dashboardGaugeWidth / 2"
+            :segmentStops="activeSteps"
+            :ringWidth="ringWidth"
+            class="pb-4"
+          />
+          <v-card class="mr-15 mt-10" style="height: 100%">
+            <v-card-text class="pb-0" v-html="gauge.notes"> </v-card-text>
+          </v-card>
+        </div>
       </v-card>
     </v-dialog>
     <!-- <v-card v-if="reveal" class="transition-fast-in-fast-out v-card--reveal" style="height: 100%;">
@@ -64,11 +80,11 @@
     </v-card> -->
   </div>
 </template>
-    
+
 <script>
-import KPIGauge from './KPIGauge.vue';
-import gaugeMixin from '../mixins/gauge-mixin';
-import { mapGetters, mapActions } from 'vuex';
+import KPIGauge from "./KPIGauge.vue";
+import gaugeMixin from "../mixins/gauge-mixin";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "DashboardCardGauge",
@@ -77,7 +93,7 @@ export default {
     staged: Array,
   },
   components: {
-    KPIGauge
+    KPIGauge,
   },
   data() {
     return {
@@ -90,38 +106,45 @@ export default {
   },
   mixins: [gaugeMixin],
   computed: {
-    ...mapGetters([
-      "currentChannels",
-      "user",
-    ]),
+    ...mapGetters(["currentChannels", "user"]),
     dashboardGaugeHeight() {
       switch (this.$vuetify.breakpoint.name) {
-        case 'xs': return 130
-        case 'sm': return 155
-        case 'md': return 180
-        case 'lg': return 280
-        case 'xl': return 430
+        case "xs":
+          return 130;
+        case "sm":
+          return 155;
+        case "md":
+          return 180;
+        case "lg":
+          return 280;
+        case "xl":
+          return 430;
       }
-      return 150
+      return 150;
     },
     dashboardGaugeWidth() {
       switch (this.$vuetify.breakpoint.name) {
-        case 'xs': return 50
-        case 'sm': return 100
-        case 'md': return 200
-        case 'lg': return 350
-        case 'xl': return 600
+        case "xs":
+          return 50;
+        case "sm":
+          return 100;
+        case "md":
+          return 200;
+        case "lg":
+          return 350;
+        case "xl":
+          return 600;
       }
-      return 300
+      return 300;
     },
     dashboardRingWidth() {
-      console.log(this.parentWidth)
+      console.log(this.parentWidth);
       if (this.parentWidth > 1000) {
-        return 150
-      } else if (this.parentWidth > 500 ) {
-        return 60
+        return 150;
+      } else if (this.parentWidth > 500) {
+        return 60;
       } else {
-        return 20
+        return 20;
       }
       /* switch (this.parentWidth) {
         case 'xs': return 40
@@ -131,33 +154,38 @@ export default {
         case 'xl': return 150
       }
       return 40 */
-    }
+    },
   },
   methods: {
-    ...mapActions([
-    ]),
+    ...mapActions([]),
     setChartType() {
       if (this.gauge && this.gauge.chartType) {
         switch (this.gauge.chartType) {
           case "Traditional":
             if (!this.gauge.segmentStops) {
-              this.activeSteps = [0, 70, 85, 100]
+              this.activeSteps = [0, 70, 85, 100];
             } else {
-              this.activeSteps = this.gauge.segmentStops.split(',').map(x => parseFloat(x))
+              this.activeSteps = this.gauge.segmentStops
+                .split(",")
+                .map((x) => parseFloat(x));
             }
             break;
           case "Middle":
             if (!this.gauge.segmentStops) {
-              this.activeSteps = [-100, -60, -25, 25, 60, 100]
+              this.activeSteps = [-100, -60, -25, 25, 60, 100];
             } else {
-              this.activeSteps = this.gauge.segmentStops.split(',').map(x => parseFloat(x))
+              this.activeSteps = this.gauge.segmentStops
+                .split(",")
+                .map((x) => parseFloat(x));
             }
             break;
           case "Left":
             if (!this.gauge.segmentStops) {
-              this.activeSteps = [0, 25, 75, 100]
+              this.activeSteps = [0, 25, 75, 100];
             } else {
-              this.activeSteps = this.gauge.segmentStops.split(',').map(x => parseFloat(x))
+              this.activeSteps = this.gauge.segmentStops
+                .split(",")
+                .map((x) => parseFloat(x));
             }
             //console.log(this.activeSteps)
             break;
@@ -168,14 +196,14 @@ export default {
     },
     setParentDims() {
       if (this.$parent.$el.clientHeight) {
-        this.parentHeight = this.$parent.$el.clientHeight
+        this.parentHeight = this.$parent.$el.clientHeight;
       }
       if (this.$parent.$el.clientWidth) {
-        this.parentWidth = this.$parent.$el.clientWidth
+        this.parentWidth = this.$parent.$el.clientWidth;
       }
     },
     toGauge(id) {
-      this.$router.replace(`/${this.currentChannels[0].name}/gauges/${id}`)
+      this.$router.replace(`/${this.currentChannels[0].name}/gauges/${id}`);
     },
     fullscreenGauge() {
       this.fullscreen = true;
@@ -191,10 +219,10 @@ export default {
   }, */
   mounted() {
     if (this.gauge) {
-      console.log(this.gauge)
-      this.setChartType()
+      console.log(this.gauge);
+      this.setChartType();
     }
-    this.setParentDims()
+    this.setParentDims();
   },
   created() {
     window.addEventListener("resize", this.setParentDims);
@@ -205,14 +233,14 @@ export default {
   watch: {
     staged() {
       if (this.staged && this.staged.length > 0) {
-        this.setChartType()
-        this.setParentDims()
+        this.setChartType();
+        this.setParentDims();
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
-    
+
 <style>
 .chart-menu {
   position: absolute;

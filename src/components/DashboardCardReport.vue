@@ -2,66 +2,113 @@
   <!-- <v-row > -->
   <!-- <v-col cols="12" sm="5" v-for="(report, i) in channelReports" :key="i"> -->
   <span>
-    <v-skeleton-loader v-if="$store.getters.loading" class="mx-auto" type="card, article"></v-skeleton-loader>
+    <v-skeleton-loader
+      v-if="$store.getters.loading"
+      class="mx-auto"
+      type="card, article"
+    ></v-skeleton-loader>
     <v-card class="pa-4 mb-4" v-if="data && data.length > 0">
       <span class="d-flex align-center">
         <h4>{{ report.title }}</h4>
         <v-tooltip top>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn class="ml-4" icon @click.prevent="toReport(report.id)" v-bind="attrs" v-on="on">
+            <v-btn
+              class="ml-4"
+              icon
+              @click.prevent="toReport(report.id)"
+              v-bind="attrs"
+              v-on="on"
+            >
               <v-icon small>fa-solid fa-up-right-from-square</v-icon>
             </v-btn>
           </template>
           <span>Go to Report</span>
         </v-tooltip>
         <v-tooltip top>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn class="ml-0 mt-2" icon @click="reveal = true" v-bind="attrs" v-on="on"><v-icon>mdi-chevron-up</v-icon>
-          </v-btn>
-        </template>
-        <span>See Notes</span>
-      </v-tooltip>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              class="ml-0 mt-2"
+              icon
+              @click="reveal = true"
+              v-bind="attrs"
+              v-on="on"
+              ><v-icon>mdi-chevron-up</v-icon>
+            </v-btn>
+          </template>
+          <span>See Notes</span>
+        </v-tooltip>
       </span>
 
       <v-btn @click="fullscreenReport" class="chart-menu" icon>
         <v-icon>mdi-fullscreen</v-icon>
       </v-btn>
-      <Component ref="chart" :is="graphType(report)" :chartData="data"
-        :chartColors="colors.find((scheme) => scheme.id == report.colorSchemeId).scheme" :graphType="report.chartType"
-        :height="350" class="mb-4">
+      <Component
+        ref="chart"
+        :is="graphType(report)"
+        :chartData="data"
+        :chartColors="
+          colors.find((scheme) => scheme.id == report.colorSchemeId).scheme
+        "
+        :graphType="report.chartType"
+        :height="350"
+        class="mb-4"
+      >
       </Component>
       <div class="d-flex justify-end mb-4">
-        <v-btn v-if="circleChart" @click="changeChartData" outlined small>Next Category <v-icon
-            small>mdi-arrow-right</v-icon></v-btn>
+        <v-btn v-if="circleChart" @click="changeChartData" outlined small
+          >Next Category <v-icon small>mdi-arrow-right</v-icon></v-btn
+        >
       </div>
-
     </v-card>
     <v-dialog v-model="fullscreen" fullscreen eager>
       <v-card>
         <v-toolbar class="px-5" color="info" dark>
           <h3>{{ report.title }}</h3>
           <v-spacer></v-spacer>
-          <v-btn @click="fullscreen = false" icon><v-icon>mdi-close-thick</v-icon></v-btn>
+          <v-btn @click="fullscreen = false" icon
+            ><v-icon>mdi-close-thick</v-icon></v-btn
+          >
         </v-toolbar>
-        <Component v-if="fullscreen" ref="fullscreenchart" :is="graphType(report)" :chartData="data"
-          :chartColors="colors.find((scheme) => scheme.id == report.colorSchemeId).scheme" :graphType="report.chartType"
-          :height="screenHeight" :title="report.title" class="pa-6">
+        <Component
+          v-if="fullscreen"
+          ref="fullscreenchart"
+          :is="graphType(report)"
+          :chartData="data"
+          :chartColors="
+            colors.find((scheme) => scheme.id == report.colorSchemeId).scheme
+          "
+          :graphType="report.chartType"
+          :height="screenHeight"
+          :title="report.title"
+          class="pa-6"
+        >
         </Component>
         <!-- Category Toggle Button -->
         <div class="d-flex justify-end pr-6">
-          <v-btn v-if="circleChart" @click="changeFSChartData" outlined small>Next Category <v-icon
-              small>mdi-arrow-right</v-icon></v-btn>
+          <v-btn v-if="circleChart" @click="changeFSChartData" outlined small
+            >Next Category <v-icon small>mdi-arrow-right</v-icon></v-btn
+          >
         </div>
       </v-card>
     </v-dialog>
-    <v-card v-if="reveal" class="transition-fast-in-fast-out v-card--reveal" style="height: 100%;">
+    <v-card
+      v-if="reveal"
+      class="transition-fast-in-fast-out v-card--reveal"
+      style="height: 100%"
+    >
       <v-card-text class="pb-0">
         {{ report.description }}
       </v-card-text>
       <v-card-actions class="pt-0">
         <v-tooltip top>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn class="ml-0 mt-2" icon @click="reveal = false" v-bind="attrs" v-on="on"><v-icon>mdi-chevron-down</v-icon>
+            <v-btn
+              class="ml-0 mt-2"
+              icon
+              @click="reveal = false"
+              v-bind="attrs"
+              v-on="on"
+              ><v-icon>mdi-chevron-down</v-icon>
             </v-btn>
           </template>
           <span>Hide Notes</span>
@@ -88,7 +135,7 @@ import reportMixin from "../mixins/report-mixin";
 export default {
   name: "DashboardCardReport",
   props: {
-    report: Object
+    report: Object,
   },
   data() {
     return {
@@ -98,7 +145,7 @@ export default {
       submitAttempted: false,
       deleteDialog: false,
       fullscreen: false,
-      items: ['Foo', 'Bar', 'Fizz', 'Buzz'],
+      items: ["Foo", "Bar", "Fizz", "Buzz"],
       chartTypes: [
         { text: "Line", value: "line" },
         { text: "Curve", value: "curve" },
@@ -180,7 +227,7 @@ export default {
       "addReport",
       "updateReportById",
       "deleteReport",
-      "updateChannelById"
+      "updateChannelById",
     ]),
     ...mapMutations(["SET_REPORT_DATASET", "SET_STATUS_CODE", "SET_REPORT"]),
     changeChartData() {
@@ -189,21 +236,21 @@ export default {
         (Object.keys(this.$refs.chart.chartData[0]).length - 1);
     },
     toReport(id) {
-      this.$router.replace(`/${this.currentChannels[0].name}/reports/${id}`)
+      this.$router.replace(`/${this.currentChannels[0].name}/reports/${id}`);
     },
     addDashboard() {
-      this.showForm = true
+      this.showForm = true;
     },
     // log(e){
     // console.log(e)
-    // }, 
+    // },
     changeFSChartData() {
       this.$refs.fullscreenchart.index =
         (this.$refs.fullscreenchart.index + 1) %
         (Object.keys(this.$refs.fullscreenchart.chartData[0]).length - 1);
     },
     resetAndGoBack() {
-      this.$router.go(-1)
+      this.$router.go(-1);
       this.$refs.form.reset();
     },
     graphType(report) {
@@ -250,7 +297,7 @@ export default {
           //  reports: [this.activeReport]
           // });
         } else {
-          console.log(data)
+          console.log(data);
           // data.user_id = this.user.id;
           this.addReport(data);
         }
@@ -263,22 +310,21 @@ export default {
         console.log(dataSetIds)
         
         for (var i = 0; i < this.channelReports.length; i++) { */
-      await this.fetchDataSet(this.report.dataSetId)
-      let ds = this.dataSet
-      let headers = Object.keys(ds.dataValues.items[0].data[0])
+      await this.fetchDataSet(this.report.dataSetId);
+      let ds = this.dataSet;
+      let headers = Object.keys(ds.dataValues.items[0].data[0]);
       //console.log(headers)
       headers.forEach((k, j) => {
         if (k == this.report.xAxis) {
           /* console.log(k)
           console.log("true", this.report.xAxis) */
-          this.arrayMove(headers, j, 0)
+          this.arrayMove(headers, j, 0);
         }
-      })
-      let newHeaders = []
+      });
+      let newHeaders = [];
       //console.log(this.report)
       if (this.report.columns && this.report.columns.length > 0) {
-
-        newHeaders = JSON.parse(this.report.columns)
+        newHeaders = JSON.parse(this.report.columns);
       } else {
         newHeaders = headers.map((item) => ({
           text: item,
@@ -290,8 +336,8 @@ export default {
         value: item,
       })); */
       //console.log(newHeaders)
-      this.data = this.createMasterData(ds.dataValues.items)
-      this.data = this.filterData(newHeaders, this.data)
+      this.data = this.createMasterData(ds.dataValues.items);
+      this.data = this.filterData(newHeaders, this.data);
       this.SET_REPORT_DATASET(ds);
       //}
 
@@ -310,11 +356,11 @@ export default {
     },
   },
   mounted() {
-    // this.updateChartData();    
+    // this.updateChartData();
     this.fetchReports();
     this.fetchDataSets();
     this.updateChartData();
-    //console.log(this.report)   
+    //console.log(this.report)
   },
   watch: {
     dataSets() {
@@ -322,12 +368,12 @@ export default {
     },
     data() {
       if (this.data.length > 0) {
-        return this.data
+        return this.data;
       }
     },
     report() {
-      this.updateChartData()
-    }
+      this.updateChartData();
+    },
   },
 };
 </script>

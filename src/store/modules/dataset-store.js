@@ -6,7 +6,6 @@ import { getDataSet } from "@/graphql/queries";
 import { listDataSets, listDataValues } from "@/graphql/queries";
 //import { onDeleteDataSet } from "../../graphql/subscriptions";
 
-
 export default {
   state: {
     dataSets: [],
@@ -16,7 +15,7 @@ export default {
   },
   actions: {
     async addDataSet({ commit, dispatch }, dataSet) {
-      console.log(dataSet)
+      console.log(dataSet);
       commit("TOGGLE_SAVING", true);
       try {
         await API.graphql(graphqlOperation(createDataSet, { input: dataSet }));
@@ -32,10 +31,12 @@ export default {
       commit("TOGGLE_SAVING", false);
     },
     async addDataValue({ commit, dispatch }, dataValue) {
-      console.log(dataValue)
+      console.log(dataValue);
       commit("TOGGLE_SAVING", true);
       try {
-        await API.graphql(graphqlOperation(createDataValue, { input: dataValue }));
+        await API.graphql(
+          graphqlOperation(createDataValue, { input: dataValue })
+        );
         dispatch("fetchDataValues");
         commit("SET_SNACKBAR", {
           show: true,
@@ -47,8 +48,8 @@ export default {
       }
       commit("TOGGLE_SAVING", false);
     },
-    async updateDataSetById({ commit, dispatch }, dataSet ) {
-      console.log(dataSet)
+    async updateDataSetById({ commit, dispatch }, dataSet) {
+      console.log(dataSet);
       commit("TOGGLE_SAVING", true);
       try {
         await API.graphql(graphqlOperation(updateDataSet, { input: dataSet }));
@@ -77,31 +78,40 @@ export default {
       }
     },
     async fetchDataSets({ commit }) {
-      try {     
-       const res = await API.graphql(graphqlOperation(listDataSets));
+      try {
+        const res = await API.graphql(graphqlOperation(listDataSets));
         commit("SET_DATA_SETS", res.data.listDataSets.items);
       } catch (error) {
         console.log(error);
       }
     },
     async fetchDataValues({ commit }) {
-      try {     
-       const res = await API.graphql(graphqlOperation(listDataValues));
+      try {
+        const res = await API.graphql(graphqlOperation(listDataValues));
         commit("SET_DATA_VALUES", res.data.listDataValues.items);
       } catch (error) {
         console.log(error);
       }
     },
-    async fetchDataSet({ commit } , id) {
+    async fetchDataSet({ commit }, id) {
       commit("TOGGLE_LOADING", true);
-      try {     
-       const res = await API.graphql(graphqlOperation(getDataSet, { id: id }));    
-       if (res.data.getDataSet.dataValues.items && res.data.getDataSet.dataValues.items.length > 0){
-        for (let i = 0; i < res.data.getDataSet.dataValues.items.length; i++) {
-          res.data.getDataSet.dataValues.items[i].data = JSON.parse(res.data.getDataSet.dataValues.items[i].data)
-        } 
-       } 
-      //  console.log(res.data.getDataSet)
+      try {
+        const res = await API.graphql(graphqlOperation(getDataSet, { id: id }));
+        if (
+          res.data.getDataSet.dataValues.items &&
+          res.data.getDataSet.dataValues.items.length > 0
+        ) {
+          for (
+            let i = 0;
+            i < res.data.getDataSet.dataValues.items.length;
+            i++
+          ) {
+            res.data.getDataSet.dataValues.items[i].data = JSON.parse(
+              res.data.getDataSet.dataValues.items[i].data
+            );
+          }
+        }
+        //  console.log(res.data.getDataSet)
         commit("SET_DATA_SET", res.data.getDataSet);
       } catch (error) {
         console.log(error);
@@ -109,24 +119,35 @@ export default {
       commit("TOGGLE_LOADING", false);
     },
     async fetchDataSetThenAddDataValue({ commit, dispatch }, id, data) {
-      console.log(data)
-      try {     
-       const res = await API.graphql(graphqlOperation(getDataSet, { id: id }));    
-       if (res.data.getDataSet.dataValues.items && res.data.getDataSet.dataValues.items.length > 0){
-        for (let i = 0; i < res.data.getDataSet.dataValues.items.length; i++) {
-          res.data.getDataSet.dataValues.items[i].data = JSON.parse(res.data.getDataSet.dataValues.items[i].data)
-        } 
-       } 
-       console.log(res.data.getDataSet)
-       commit("SET_DATA_SET", res.data.getDataSet);
-       try {
-        let newDataValue = ({
-          dataSetId: id,
-          data: JSON.stringify(data)
-        })
-        
-        console.log(newDataValue)
-          await API.graphql(graphqlOperation(createDataValue, { input: newDataValue }));
+      console.log(data);
+      try {
+        const res = await API.graphql(graphqlOperation(getDataSet, { id: id }));
+        if (
+          res.data.getDataSet.dataValues.items &&
+          res.data.getDataSet.dataValues.items.length > 0
+        ) {
+          for (
+            let i = 0;
+            i < res.data.getDataSet.dataValues.items.length;
+            i++
+          ) {
+            res.data.getDataSet.dataValues.items[i].data = JSON.parse(
+              res.data.getDataSet.dataValues.items[i].data
+            );
+          }
+        }
+        console.log(res.data.getDataSet);
+        commit("SET_DATA_SET", res.data.getDataSet);
+        try {
+          let newDataValue = {
+            dataSetId: id,
+            data: JSON.stringify(data),
+          };
+
+          console.log(newDataValue);
+          await API.graphql(
+            graphqlOperation(createDataValue, { input: newDataValue })
+          );
           dispatch("fetchDataValues");
           commit("SET_SNACKBAR", {
             show: true,
@@ -151,10 +172,8 @@ export default {
   },
   getters: {
     dataSets: (state) => state.dataSets,
-    dataValues: (state) => state.dataValues,  
-    dataSet: (state) => state.dataSet, 
+    dataValues: (state) => state.dataValues,
+    dataSet: (state) => state.dataSet,
     channelDataSets: (state) => state.channelDataSets,
   },
 };
-
-

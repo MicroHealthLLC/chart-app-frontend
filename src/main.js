@@ -3,13 +3,13 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
-import locale from 'element-ui/lib/locale/lang/en'
-Vue.use(ElementUI, { locale })
+import ElementUI from "element-ui";
+import "element-ui/lib/theme-chalk/index.css";
+import locale from "element-ui/lib/locale/lang/en";
+Vue.use(ElementUI, { locale });
 
 // import sso_config from "./sso-exports"
-import aws_config from "./aws-exports"
+import aws_config from "./aws-exports";
 import { Amplify } from "aws-amplify";
 
 // amplify pull

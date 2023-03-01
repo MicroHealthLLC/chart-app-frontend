@@ -34,9 +34,9 @@ export default {
     ...mapGetters(["channels", "snackbar", "statusCode", "user", "logout"]),
   },
   async mounted() {
-   await this.fetchCurrentUser();
+    await this.fetchCurrentUser();
     if (this.user) {
-      console.log(this.user)
+      console.log(this.user);
     }
   },
   watch: {

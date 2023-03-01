@@ -26,7 +26,8 @@
         type="error"
         dense
         dismissible
-        >Please fix highlighted fields below before submitting Dashboard</v-alert
+        >Please fix highlighted fields below before submitting
+        Dashboard</v-alert
       >
     </v-col>
 
@@ -34,7 +35,13 @@
       <!-- <h3>Dashboard Details</h3>
       <v-divider class="mb-4"></v-divider> -->
       <v-form v-model="formValid" ref="form">
-        <v-text-field outlined label="Title" dense v-model="dashboard.title" :rules="[v => !!v || 'Title is required']">
+        <v-text-field
+          outlined
+          label="Title"
+          dense
+          v-model="dashboard.title"
+          :rules="[(v) => !!v || 'Title is required']"
+        >
         </v-text-field>
       </v-form>
 
@@ -100,16 +107,21 @@ export default {
       "user",
     ]),
     channelReports() {
-      if (this.reports && this.reports.length > 0 && this.currentChannels && this.currentChannels[0]) {
-        let reports = this.reports.filter(t => t.channelId == this.currentChannels[0].channelId)
-        return reports
-      } else return []
+      if (
+        this.reports &&
+        this.reports.length > 0 &&
+        this.currentChannels &&
+        this.currentChannels[0]
+      ) {
+        let reports = this.reports.filter(
+          (t) => t.channelId == this.currentChannels[0].channelId
+        );
+        return reports;
+      } else return [];
     },
   },
   methods: {
-    ...mapActions([
-      "addDashboard", "fetchDashboards",
-    ]),
+    ...mapActions(["addDashboard", "fetchDashboards"]),
     ...mapMutations(["SET_DASHBOARD"]),
     async saveDashboard() {
       this.$refs.form.validate();
@@ -120,22 +132,22 @@ export default {
           title: this.dashboard.title,
           description: this.dashboard.description,
           channelId: this.currentChannels[0].channelId,
-        };        
+        };
         if (this.dashboard.id) {
           //Update dashboard
         } else {
-          data.createdBy = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`
+          data.createdBy = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
           await this.addDashboard(data);
         }
-        this.resetAndGoBack()
+        this.resetAndGoBack();
       }
     },
     resetAndGoBack() {
       this.$refs.form.reset();
       if (this.$route.path === `/${this.currentChannels[0].name}/dashboards`) {
-        this.$emit("closeDashboardForm")
+        this.$emit("closeDashboardForm");
       } else {
-        this.$router.push(`/${this.currentChannels[0].name}/dashboards`)
+        this.$router.push(`/${this.currentChannels[0].name}/dashboards`);
       }
     },
   },
@@ -144,10 +156,10 @@ export default {
   },
   beforeMount() {
     this.SET_DASHBOARD({
-        id: '',
-        title: "",
-        description: "",
-      });
+      id: "",
+      title: "",
+      description: "",
+    });
     /* if (this.$route.params.dashboardId != "new") {
       this.fetchDashboard(this.$route.params.dashboardId);
     } else {
@@ -157,8 +169,7 @@ export default {
       });
     } */
   },
-  watch: {
-  },
+  watch: {},
 };
 </script>
 

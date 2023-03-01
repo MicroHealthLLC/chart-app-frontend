@@ -5,13 +5,12 @@ import { deleteGauge, deleteHeatMap } from "@/graphql/mutations";
 import { getGauge, getHeatMap } from "@/graphql/queries";
 import { listGauges, listHeatMaps } from "@/graphql/queries";
 
-
 export default {
   state: {
     gauges: [],
     gauge: {},
     heatMaps: [],
-    heatMap: {}
+    heatMap: {},
   },
   actions: {
     async addGauge({ commit, dispatch }, gauge) {
@@ -44,7 +43,7 @@ export default {
       }
       commit("TOGGLE_SAVING", false);
     },
-    async updateGaugeById({ commit, dispatch }, gauge ) {
+    async updateGaugeById({ commit, dispatch }, gauge) {
       commit("TOGGLE_SAVING", true);
       try {
         await API.graphql(graphqlOperation(updateGauge, { input: gauge }));
@@ -59,7 +58,7 @@ export default {
       }
       commit("TOGGLE_SAVING", false);
     },
-    async updateHeatMapById({ commit, dispatch }, heatMap ) {
+    async updateHeatMapById({ commit, dispatch }, heatMap) {
       commit("TOGGLE_SAVING", true);
       try {
         await API.graphql(graphqlOperation(updateHeatMap, { input: heatMap }));
@@ -101,17 +100,17 @@ export default {
       }
     },
     async fetchGauges({ commit }) {
-      try {     
-       const res = await API.graphql(graphqlOperation(listGauges));
+      try {
+        const res = await API.graphql(graphqlOperation(listGauges));
         commit("SET_GAUGES", res.data.listGauges.items);
       } catch (error) {
         console.log(error);
       }
     },
-    async fetchGauge({ commit } , id) {
+    async fetchGauge({ commit }, id) {
       commit("TOGGLE_LOADING", true);
-      try {     
-       const res = await API.graphql(graphqlOperation(getGauge, { id: id }));    
+      try {
+        const res = await API.graphql(graphqlOperation(getGauge, { id: id }));
         commit("SET_GAUGE", res.data.getGauge);
       } catch (error) {
         console.log(error);
@@ -119,23 +118,29 @@ export default {
       commit("TOGGLE_LOADING", false);
     },
     async fetchHeatMaps({ commit }) {
-      try {     
-       const res = await API.graphql(graphqlOperation(listHeatMaps));
+      try {
+        const res = await API.graphql(graphqlOperation(listHeatMaps));
         commit("SET_HEAT_MAPS", res.data.listHeatMaps.items);
       } catch (error) {
         console.log(error);
       }
     },
-    async fetchHeatMap({ commit } , id) {
+    async fetchHeatMap({ commit }, id) {
       commit("TOGGLE_LOADING", true);
-      try {     
-       const res = await API.graphql(graphqlOperation(getHeatMap, { id: id }));
-       if (res.data.getHeatMap.columns && typeof res.data.getHeatMap.columns == 'string') {
-        res.data.getHeatMap.columns = JSON.parse(res.data.getHeatMap.columns)
-       }
-       if (res.data.getHeatMap.options && typeof res.data.getHeatMap.options == 'string') {
-        res.data.getHeatMap.options = JSON.parse(res.data.getHeatMap.options)
-       }    
+      try {
+        const res = await API.graphql(graphqlOperation(getHeatMap, { id: id }));
+        if (
+          res.data.getHeatMap.columns &&
+          typeof res.data.getHeatMap.columns == "string"
+        ) {
+          res.data.getHeatMap.columns = JSON.parse(res.data.getHeatMap.columns);
+        }
+        if (
+          res.data.getHeatMap.options &&
+          typeof res.data.getHeatMap.options == "string"
+        ) {
+          res.data.getHeatMap.options = JSON.parse(res.data.getHeatMap.options);
+        }
         commit("SET_HEAT_MAP", res.data.getHeatMap);
       } catch (error) {
         console.log(error);
@@ -151,11 +156,9 @@ export default {
     SET_HEAT_MAP: (state, heatMap) => (state.heatMap = heatMap),
   },
   getters: {
-    gauges: (state) => state.gauges, 
+    gauges: (state) => state.gauges,
     gauge: (state) => state.gauge,
-    heatMaps: (state) => state.heatMaps, 
-    heatMap: (state) => state.heatMap, 
+    heatMaps: (state) => state.heatMaps,
+    heatMap: (state) => state.heatMap,
   },
 };
-
-

@@ -1,69 +1,74 @@
 <template>
   <v-row>
-     <v-col>
-        <div class="" :load="log(user)">
-          <v-card class="pt-0 pr-5 pb-5 pl-5 card" :loading="loading">
-            <v-alert
-              v-model="hasError"
-              type="error"
-              transition="scroll-y-transition"
-              dismissible
-              >{{ error }}</v-alert
-            >
-            <v-card-title class="d-flex flex-column"
+    <v-col>
+      <div class="" :load="log(user)">
+        <v-card class="pt-0 pr-5 pb-5 pl-5 card" :loading="loading">
+          <v-alert
+            v-model="hasError"
+            type="error"
+            transition="scroll-y-transition"
+            dismissible
+            >{{ error }}</v-alert
+          >
+          <v-card-title class="d-flex flex-column">
+            <h2 class="text-body-1">
+              <span class="beWell"
+                >Welcome to mRMS
+                <v-icon color="orange darken-2"
+                  >mdi-chart-box-outline</v-icon
+                ></span
               >
-              <h2 class="text-body-1"><span class="beWell">Welcome to mRMS   <v-icon color="orange darken-2">mdi-chart-box-outline</v-icon></span></h2></v-card-title
-            >
-            <v-card-text>
-              <v-form ref="form" v-model="valid">
-                <label class="d-block text-left">Email</label>
-                <v-text-field
-                  class="pt-0"
-                  v-model="username"                 
-                  :rules="[
-                    (v) => !!v || 'Email is required',
-                    (v) =>
-                      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
-                      'Not a valid email address',
-                  ]"
-                  required
-                  validate-on-blur
-                ></v-text-field>
-                <label class="d-block text-left">Password</label>
-                <v-text-field
-                  class="pt-0"
-                  v-model="password"
-                  type="password"
-                  :rules="[(v) => !!v || 'Password is required']"
-                  required
-                ></v-text-field>
-                <p class="mt-4">
-                  Forgot password?
-                  <span @click="resetPW" class="reset">Reset</span>
-                </p>
-              </v-form>
-            </v-card-text>
-            <v-card-actions class="d-flex flex-column">
-              <v-btn
-               color="var(--mh-blue)"
-                @click="userLogin"
-                :loading="loading"
-                :disabled="loading"
-                :dark="!loading"
-                block
-                >Login</v-btn
-              >
+            </h2></v-card-title
+          >
+          <v-card-text>
+            <v-form ref="form" v-model="valid">
+              <label class="d-block text-left">Email</label>
+              <v-text-field
+                class="pt-0"
+                v-model="username"
+                :rules="[
+                  (v) => !!v || 'Email is required',
+                  (v) =>
+                    /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
+                    'Not a valid email address',
+                ]"
+                required
+                validate-on-blur
+              ></v-text-field>
+              <label class="d-block text-left">Password</label>
+              <v-text-field
+                class="pt-0"
+                v-model="password"
+                type="password"
+                :rules="[(v) => !!v || 'Password is required']"
+                required
+              ></v-text-field>
               <p class="mt-4">
-                No account? <router-link to="/signup">Create Account</router-link>
+                Forgot password?
+                <span @click="resetPW" class="reset">Reset</span>
               </p>
-            </v-card-actions>
-            <!-- <v-img class="shrink" contain src="../assets/mh-logo.png" max-width="180"></v-img> -->
-          </v-card>
-         
-        </div>
-      </v-col>
-    </v-row>
-<!-- <v-row class="fill-height">
+            </v-form>
+          </v-card-text>
+          <v-card-actions class="d-flex flex-column">
+            <v-btn
+              color="var(--mh-blue)"
+              @click="userLogin"
+              :loading="loading"
+              :disabled="loading"
+              :dark="!loading"
+              block
+              >Login</v-btn
+            >
+            <p class="mt-4">
+              No account? <router-link to="/signup">Create Account</router-link>
+            </p>
+          </v-card-actions>
+          <!-- <v-img class="shrink" contain src="../assets/mh-logo.png" max-width="180"></v-img> -->
+        </v-card>
+      </div>
+    </v-col>
+  </v-row>
+  <!-- <v-row class="fill-height">
     <v-col>
       <div class="d-flex justify-center align-center fill-height">
         <v-card class="login-card pa-4" elevation="10">
@@ -125,70 +130,69 @@
 import { mapActions, mapGetters } from "vuex";
 export default {
   name: "Signin",
-    data() {
-      return {
-        username: "",
-        password: "",
-        email: "",
-        test: 'test',
-        error: "",
-        valid: true,
-        hasError: false,
-      };
-    },
+  data() {
+    return {
+      username: "",
+      password: "",
+      email: "",
+      test: "test",
+      error: "",
+      valid: true,
+      hasError: false,
+    };
+  },
   methods: {
-      ...mapActions(["login"]),
-      log(e){
-        if (e){
-          console.log(e)
-        }
-     
-      },
-      resetPW(){
-        this.$router.push("/reset-password")
-      },
-      async userLogin() {
-        if (!this.$refs.form.validate()) {
-          return;
-        }
-  
-        try {
-          await this.login({
-            username: this.username,
-            password: this.password,
-          });  
-          this.$router.push("/");
-        } catch (error) {
-          this.hasError = true;
-          this.error = error.message;
-        }
-      },
+    ...mapActions(["login"]),
+    log(e) {
+      if (e) {
+        console.log(e);
+      }
     },
-    computed: {
-      ...mapGetters(["loading", "user"]),
+    resetPW() {
+      this.$router.push("/reset-password");
     },
+    async userLogin() {
+      if (!this.$refs.form.validate()) {
+        return;
+      }
+
+      try {
+        await this.login({
+          username: this.username,
+          password: this.password,
+        });
+        this.$router.push("/");
+      } catch (error) {
+        this.hasError = true;
+        this.error = error.message;
+      }
+    },
+  },
+  computed: {
+    ...mapGetters(["loading", "user"]),
+  },
 };
 </script>
 <style scoped>
-  a {
-    text-decoration: none;
-  }
-  .card {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    min-width: 350px;
-  }
-  .beWell {
-    font-family: inherit;
-    font-weight: 600;
-  }
-  .reset {
-    cursor: pointer;
-    color:royalblue;
-  }
-  </style>
+a {
+  text-decoration: none;
+}
+.card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 350px;
+}
+.beWell {
+  font-family: inherit;
+  font-weight: 600;
+}
+.reset {
+  cursor: pointer;
+  color: royalblue;
+}
+</style>
 <!-- <script>
 import { Auth } from "aws-amplify";
 
@@ -204,4 +208,3 @@ export default {
   },
 };
 </script> -->
-

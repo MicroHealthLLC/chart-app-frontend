@@ -3,11 +3,11 @@
     <!-- Title -->
     <v-col class="col-12">
       <div class="d-flex justify-space-between">
-         <h3 class="pr-2">
-         <v-icon class="gre pr-2 pb-1" >mdi-television-classic</v-icon>
+        <h3 class="pr-2">
+          <v-icon class="gre pr-2 pb-1">mdi-television-classic</v-icon>
           <span v-if="channel.id">Update Channel</span>
           <span v-else>Create Channel</span>
-         </h3>
+        </h3>
         <div>
           <v-btn
             @click="saveChannel"
@@ -37,25 +37,25 @@
             </v-text-field>
           </div>
           <div class="ml-auto">
-          <el-select             
-            v-model="channel.type"       
-            value-key="id"       
-            filterable
-            clearable
-            allow-create
-            default-first-option
-            placeholder="Channel Type"
-            size="small"
-          >
-          <el-option
-            v-for="item in uniqueTypes"
-            :key="item.id"
-            :label="item.title"
-            :value="item">
-            </el-option>         
-                    
-          </el-select>
-          <!-- JUAN TO DO (12/1/2023) :
+            <el-select
+              v-model="channel.type"
+              value-key="id"
+              filterable
+              clearable
+              allow-create
+              default-first-option
+              placeholder="Channel Type"
+              size="small"
+            >
+              <el-option
+                v-for="item in uniqueTypes"
+                :key="item.id"
+                :label="item.title"
+                :value="item"
+              >
+              </el-option>
+            </el-select>
+            <!-- JUAN TO DO (12/1/2023) :
           IF user selects Group, need to display a multi-select component where user can select users to save in group. -->
 
             <!-- <v-select
@@ -118,20 +118,24 @@ export default {
   data() {
     return {
       formValid: true,
-      options: [{
-          value: 'HTML',
-          label: 'HTML',
-          id: 1
-        }, {
-          value: 'CSS',
-          label: 'CSS',
-          id: 2
-        }, {
-          value: 'JavaScript',
-          label: 'JavaScript',
-          id: 3
-        }],
-        value: [],
+      options: [
+        {
+          value: "HTML",
+          label: "HTML",
+          id: 1,
+        },
+        {
+          value: "CSS",
+          label: "CSS",
+          id: 2,
+        },
+        {
+          value: "JavaScript",
+          label: "JavaScript",
+          id: 3,
+        },
+      ],
+      value: [],
       usersRules: [
         (v) => v.length > 0 || "At least 1 user is required",
         (v) =>
@@ -141,20 +145,33 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["channel", "channels", "statusCode", "user", "users", "channelTypes"]),
+    ...mapGetters([
+      "channel",
+      "channels",
+      "statusCode",
+      "user",
+      "users",
+      "channelTypes",
+    ]),
     uniqueTypes() {
       let channel_types = this.channelTypes;
       return [...new Set(channel_types.map((item) => item.title))];
     },
   },
   methods: {
-    ...mapActions(["addChannel", "updateChannelById", "addChannelType", "fetchChannelTypes", "fetchChannels"]),
+    ...mapActions([
+      "addChannel",
+      "updateChannelById",
+      "addChannelType",
+      "fetchChannelTypes",
+      "fetchChannels",
+    ]),
     ...mapMutations(["SET_STATUS_CODE"]),
-    resetAndGoBack(){
+    resetAndGoBack() {
       //this.$router.go(-1)
-      this.channel.type = null
+      this.channel.type = null;
       this.$refs.form.reset();
-      this.$emit("closeChannelForm")
+      this.$emit("closeChannelForm");
     },
     saveChannel() {
       this.$refs.form.validate();
@@ -163,23 +180,23 @@ export default {
         if (!this.uniqueTypes.includes(this.channel.type)) {
           this.addChannelType({
             title: this.channel.type,
-          })
+          });
         }
         if (this.channel.id) {
           this.updateChannelById({
             id: this.channel.id,
             title: this.channel.title,
             description: this.channel.description,
-            type: this.channel.type
+            type: this.channel.type,
           });
         } else {
           this.addChannel({
-            ...this.channel
+            ...this.channel,
           });
         }
         this.$refs.form.reset();
-        this.channel.type = null
-        this.$emit("closeChannelForm")
+        this.channel.type = null;
+        this.$emit("closeChannelForm");
       }
     },
 
@@ -194,10 +211,9 @@ export default {
     },
   },
   mounted() {
-    this.fetchChannelTypes()  
-    this.fetchChannels() 
-    
-   },
+    this.fetchChannelTypes();
+    this.fetchChannels();
+  },
   watch: {
     // statusCode() {
     //   if (this.statusCode == 201) {
@@ -205,18 +221,18 @@ export default {
     //     this.SET_STATUS_CODE(0);
     //   }
     // },
-    channels(){
-      if(this.channels){
+    channels() {
+      if (this.channels) {
         //console.log("Channels")
         //console.log(this.$route.path)
         //console.log(this.channels)
       }
     },
-    channel(){
-      this.data = this.channel
-      if(this.data.length > 0){
+    channel() {
+      this.data = this.channel;
+      if (this.data.length > 0) {
         //console.log(this.data)
-      } 
+      }
       // else this.$refs.form.reset();
     },
   },
@@ -229,8 +245,8 @@ export default {
   grid-template-columns: 1fr 1fr;
   grid-gap: 10px;
 }
-.gre{
-  color: #388E3C !important
+.gre {
+  color: #388e3c !important;
 }
 .description,
 .users {

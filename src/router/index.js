@@ -26,59 +26,53 @@ import AddDashboard from "../views/AddDashboard.vue";
 import Dashboards from "../views/Dashboards.vue";
 import Gauges from "../views/Gauges.vue";
 import Gauge from "../views/Gauge.vue";
-import HeatMap from "../views/HeatMap.vue"
+import HeatMap from "../views/HeatMap.vue";
 import Dashboard from "../views/Dashboard.vue";
 import ChannelDashboards from "../views/ChannelDashboards.vue";
 
 import SettingsIndex from "../views/channelSettings/SettingsIndex.vue";
 
-import Forbidden from "../views/Forbidden.vue"
+import Forbidden from "../views/Forbidden.vue";
 import store from "../store";
 
 Vue.use(VueRouter);
 
 const routes = [
-    {
+  {
     path: "/signin",
     name: "Signin",
-    component: () =>
-      import("../views/auth/Signin.vue"),
+    component: () => import("../views/auth/Signin.vue"),
   },
   {
     path: "/signup",
     name: "SignUp",
-    component: () =>
-      import("../views/auth/SignUp.vue"),
+    component: () => import("../views/auth/SignUp.vue"),
   },
   {
     path: "/reset-password",
     name: "ResetPW",
-    component: () =>
-      import("../views/auth/ResetPW.vue"),
+    component: () => import("../views/auth/ResetPW.vue"),
   },
   {
     path: "/dashboards",
     name: "NewDashboards",
     component: Dashboards,
   },
-    {
+  {
     path: "/verify",
     name: "SignUpVerify",
     props: true,
-    component: () =>
-      import("../views/auth/SignUpVerify.vue"),
+    component: () => import("../views/auth/SignUpVerify.vue"),
   },
   {
     path: "/",
     name: "Home",
-    component: () =>
-      import("../views/Home.vue"),
+    component: () => import("../views/Home.vue"),
   },
   {
     path: "/channel-card",
     name: "ChannelCard",
-    component: () =>
-      import("../components/ChannelCard.vue"),
+    component: () => import("../components/ChannelCard.vue"),
   },
   {
     path: "/news",
@@ -95,12 +89,12 @@ const routes = [
     name: "DataSets",
     component: DataSets,
   },
-//   {
-//     path: "/:title",
-//     name: "ChannelHome",
-//     component: () =>
-//     import("../views/ChannelHome.vue"),
-// },
+  //   {
+  //     path: "/:title",
+  //     name: "ChannelHome",
+  //     component: () =>
+  //     import("../views/ChannelHome.vue"),
+  // },
   {
     path: "/:title/data-sets/:dataSetId",
     name: "DataSet",
@@ -204,8 +198,7 @@ const routes = [
   {
     path: "/page-not-found",
     name: "PageNotFound",
-    component: () =>
-      import("../views/PageNotFound.vue"),
+    component: () => import("../views/PageNotFound.vue"),
   },
   {
     path: "*",
@@ -240,15 +233,15 @@ router.beforeEach(async (to, from, next) => {
     currentUserInfo = await Auth.currentUserInfo();
     // if (currentUserInfo) {
     //   const userCredentials = await Auth.currentAuthenticatedUser();
-      // const groups =
-      //   userCredentials.signInUserSession.accessToken.payload[
-      //     "cognito:groups"
-      //   ] || [];
-      // isEditor = groups.includes("Editors");
+    // const groups =
+    //   userCredentials.signInUserSession.accessToken.payload[
+    //     "cognito:groups"
+    //   ] || [];
+    // isEditor = groups.includes("Editors");
     // }
   }
   // isEditor
- if (!currentUserInfo) {
+  if (!currentUserInfo) {
     next("/signin");
   } else {
     next();
@@ -256,4 +249,3 @@ router.beforeEach(async (to, from, next) => {
 });
 
 export default router;
-

@@ -1,8 +1,18 @@
 <template>
   <v-row justify="center">
     <v-col cols="11" class="pt-0">
-      <div v-if="$route.path != `/${this.currentChannels[0].name}/gauges`" class="d-flex">
-        <v-text-field class="mx-3 mb-3" v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
+      <div
+        v-if="$route.path != `/${this.currentChannels[0].name}/gauges`"
+        class="d-flex"
+      >
+        <v-text-field
+          class="mx-3 mb-3"
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Search"
+          single-line
+          hide-details
+        ></v-text-field>
         <!-- <v-btn class="mt-4" @click="toggleFilter" icon :color="filter ? 'blue darken-2' : 'grey'">
           <v-icon>mdi-filter</v-icon>
         </v-btn> -->
@@ -28,8 +38,22 @@
           </v-col>
         </v-row>
       </v-card> -->
-      <v-data-table :headers="headers" :items="dataItems" class="elevation-4 ml-2" show-first-last-page="true" :loading="$store.getters.loading" loading-text="Loading... Please wait" :options="{ itemsPerPage: 5 }" :search="search" :custom-sort="customSort" :custom-filter="customFilter">
-        <template v-for="h, i in headers.slice(1)" v-slot:[`item.${h.text}`]="{ item }">
+      <v-data-table
+        :headers="headers"
+        :items="dataItems"
+        class="elevation-4 ml-2"
+        show-first-last-page="true"
+        :loading="$store.getters.loading"
+        loading-text="Loading... Please wait"
+        :options="{ itemsPerPage: 5 }"
+        :search="search"
+        :custom-sort="customSort"
+        :custom-filter="customFilter"
+      >
+        <template
+          v-for="(h, i) in headers.slice(1)"
+          v-slot:[`item.${h.text}`]="{ item }"
+        >
           <v-chip :color="getColor(item, item[`${h.text}`], i)" label :key="i">
             {{ item[`${h.text}`] }}
           </v-chip>
@@ -104,14 +128,13 @@
     </v-col> -->
   </v-row>
 </template>
-    
+
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters } from "vuex";
 
 export default {
   name: "KPIHeatMap",
-  components: {
-  },
+  components: {},
   props: {
     heatMap: Object,
     headers: Array,
@@ -121,7 +144,7 @@ export default {
   data() {
     return {
       show: false,
-      search: '',
+      search: "",
       filter: false,
       expanded: [],
       filterHeaders: [],
@@ -129,42 +152,56 @@ export default {
         showFirstLastPage: true,
         disableItemsPerPage: true,
       },
-    }
+    };
   },
   computed: {
-    ...mapGetters(["currentChannels",])
+    ...mapGetters(["currentChannels"]),
   },
   methods: {
     log(e) {
-      console.log(e)
+      console.log(e);
     },
     customSort(items, sortBy, isDesc) {
-      if (this.heatMap.options && this.heatMap.options.cols && this.heatMap.options.cols.length > 0) {
-        let absCol = this.heatMap.options.cols.filter(c => c.abs).map(a => a.name)
+      if (
+        this.heatMap.options &&
+        this.heatMap.options.cols &&
+        this.heatMap.options.cols.length > 0
+      ) {
+        let absCol = this.heatMap.options.cols
+          .filter((c) => c.abs)
+          .map((a) => a.name);
         items.sort((a, b) => {
           if (absCol.includes(sortBy[0])) {
-            return isDesc[0] ? Math.abs(b[sortBy]) - Math.abs(a[sortBy]) : Math.abs(a[sortBy]) - Math.abs(b[sortBy]);
+            return isDesc[0]
+              ? Math.abs(b[sortBy]) - Math.abs(a[sortBy])
+              : Math.abs(a[sortBy]) - Math.abs(b[sortBy]);
           } else if (!isNaN(a[sortBy])) {
-            return !isDesc[0] ? (b[sortBy]) - (a[sortBy]) : (a[sortBy]) - (b[sortBy])
+            return !isDesc[0] ? b[sortBy] - a[sortBy] : a[sortBy] - b[sortBy];
           } else if (this.isDate(a[sortBy])) {
-            return !isDesc[0] ? new Date(b[sortBy]) - new Date(a[sortBy]) : new Date(a[sortBy]) - new Date(b[sortBy])
+            return !isDesc[0]
+              ? new Date(b[sortBy]) - new Date(a[sortBy])
+              : new Date(a[sortBy]) - new Date(b[sortBy]);
           } else {
-            if (typeof a[sortBy] !== 'undefined') {
-              return !isDesc[0] ? a[sortBy].toLowerCase().localeCompare(b[sortBy].toLowerCase()) : b[sortBy].toLowerCase().localeCompare(a[sortBy].toLowerCase());
+            if (typeof a[sortBy] !== "undefined") {
+              return !isDesc[0]
+                ? a[sortBy].toLowerCase().localeCompare(b[sortBy].toLowerCase())
+                : b[sortBy]
+                    .toLowerCase()
+                    .localeCompare(a[sortBy].toLowerCase());
             }
           }
         });
       }
-      return items
+      return items;
     },
     isDate(str) {
-      return (new Date(str) !== "Invalid Date") && !isNaN(new Date(str))
+      return new Date(str) !== "Invalid Date" && !isNaN(new Date(str));
     },
     getKeyByValue(obj, val) {
-      return Object.keys(obj).find(k => obj[k] === val)
+      return Object.keys(obj).find((k) => obj[k] === val);
     },
     getKeyNames(obj) {
-      return Object.keys(obj[0])
+      return Object.keys(obj[0]);
     },
     /* setHeaders(items) {
       if (items) {
@@ -179,34 +216,42 @@ export default {
       }
     }, */
     getColor(item, val, num) {
-      let options = this.heatMap.options
-      if (typeof options == "string") options = JSON.parse(options)
-      
+      let options = this.heatMap.options;
+      if (typeof options == "string") options = JSON.parse(options);
+
       if (!options.cols[num].abs) {
-        return val >= options.cols[num].gre ? 'green lighten-1' : val >= options.cols[num].yel ? 'amber lighten-1' : 'red lighten-1'
+        return val >= options.cols[num].gre
+          ? "green lighten-1"
+          : val >= options.cols[num].yel
+          ? "amber lighten-1"
+          : "red lighten-1";
       } else {
-        let abs = Math.abs(val)
-        return abs > options.cols[num].yel ? 'red lighten-1' : abs >= options.cols[num].gre ? 'amber lighten-1' : 'green lighten-1'
+        let abs = Math.abs(val);
+        return abs > options.cols[num].yel
+          ? "red lighten-1"
+          : abs >= options.cols[num].gre
+          ? "amber lighten-1"
+          : "green lighten-1";
       }
     },
     toggleFilter() {
       if (this.filter) {
-        this.filter = false
+        this.filter = false;
       } else {
-        this.filter = true
+        this.filter = true;
       }
     },
     createFilters() {
       this.filterHeaders = this.headers.slice(1).map((h) => {
         return {
-          'name': h.text,
-          'minmax': []
-        }
-      })
+          name: h.text,
+          minmax: [],
+        };
+      });
       this.filterHeaders.forEach((h) => {
-        let a = this.dataItems.map(d => parseFloat(d[`${h.name}`]))
-        h.minmax = [Math.min(...a), Math.max(...a)]
-      })
+        let a = this.dataItems.map((d) => parseFloat(d[`${h.name}`]));
+        h.minmax = [Math.min(...a), Math.max(...a)];
+      });
     },
     /* filterData(event) {
       if (this.headers.length > 0) {
@@ -222,22 +267,20 @@ export default {
       }
     }, */
     customFilter(value, search, item) {
-      console.log(value)
-      console.log(search)
-      console.log(item)
-    }
+      console.log(value);
+      console.log(search);
+      console.log(item);
+    },
   },
   watch: {
     filterHeaders() {
-      console.log(this.filterHeaders)
-    }
+      console.log(this.filterHeaders);
+    },
   },
-  mounted() {
-
-  }
+  mounted() {},
 };
 </script>
-    
+
 <style scoped>
 .v-chip.v-chip--label.theme--light.v-size--default {
   width: 60px;

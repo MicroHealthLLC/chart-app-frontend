@@ -8,9 +8,9 @@ import newsStore from "./modules/news-store";
 // import snackbarStore from "./modules/snackbar-store";
 import reportStore from "./modules/report-store";
 // import userStore from "./modules/user-store";
-import gaugeStore from './modules/gauge-store'
+import gaugeStore from "./modules/gauge-store";
 import utilStore from "./modules/util-store";
-import auth from "./modules/auth"
+import auth from "./modules/auth";
 
 Vue.use(Vuex);
 
@@ -44,7 +44,7 @@ export default new Vuex.Store({
     TOGGLE_LOADING: (state, isLoading) => (state.loading = isLoading),
     SET_STATUS_CODE: (state, code) => (state.status_code = code),
     SET_TAGS: (state, tags) => (state.tags = tags),
-    SET_CURRENT_CHANNEL: (state, ch) => (state.current_channel = ch)
+    SET_CURRENT_CHANNEL: (state, ch) => (state.current_channel = ch),
   },
   getters: {
     statusCode: (state) => state.status_code,
@@ -64,6 +64,6 @@ export default new Vuex.Store({
     reportStore,
     // userStore,
     utilStore,
-    auth
+    auth,
   },
 });

@@ -19,7 +19,7 @@ export default {
   },
   methods: {
     loadTable() {
-      console.log(this.activeReport)
+      console.log(this.activeReport);
       const data = this.chartData;
 
       const keys = Object.keys(data[0]);
