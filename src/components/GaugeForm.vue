@@ -20,7 +20,8 @@
                   :ringWidth="ringWidth" />
               </v-col>
               <v-col cols="4">
-                <v-textarea v-model="gauge.notes" solo auto-grow background-color="grey lighten-4" label="Enter notes here" rows="4"></v-textarea>
+                <vue-editor v-model="gauge.notes"></vue-editor>
+                <!-- <v-textarea v-model="gauge.notes" solo auto-grow background-color="grey lighten-4" label="Enter notes here" rows="4"></v-textarea> -->
               </v-col>
             </v-row>
           </v-card>
@@ -100,11 +101,13 @@
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import gaugeMixin from "../mixins/gauge-mixin";
 import KPIGauge from "./KPIGauge.vue";
+import { VueEditor } from 'vue2-quill-editor'
 
 export default {
   name: "GaugeForm",
   components: {
-    KPIGauge
+    KPIGauge,
+    VueEditor
   },
   mixins: [gaugeMixin],
   data() {

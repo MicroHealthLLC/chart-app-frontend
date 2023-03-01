@@ -201,6 +201,16 @@ const routes = [
     name: "Forbidden",
     component: Forbidden,
   },
+  {
+    path: "/page-not-found",
+    name: "PageNotFound",
+    component: () =>
+      import("../views/PageNotFound.vue"),
+  },
+  {
+    path: "*",
+    redirect: "/page-not-found",
+  },
 ];
 
 const router = new VueRouter({

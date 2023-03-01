@@ -15,7 +15,6 @@ export default {
   },
   actions: {
     async addGauge({ commit, dispatch }, gauge) {
-      console.log(gauge)
       commit("TOGGLE_SAVING", true);
       try {
         await API.graphql(graphqlOperation(createGauge, { input: gauge }));
@@ -31,7 +30,6 @@ export default {
       commit("TOGGLE_SAVING", false);
     },
     async addHeatMap({ commit, dispatch }, heatMap) {
-      console.log(heatMap)
       commit("TOGGLE_SAVING", true);
       try {
         await API.graphql(graphqlOperation(createHeatMap, { input: heatMap }));
@@ -47,7 +45,6 @@ export default {
       commit("TOGGLE_SAVING", false);
     },
     async updateGaugeById({ commit, dispatch }, gauge ) {
-      console.log(gauge)
       commit("TOGGLE_SAVING", true);
       try {
         await API.graphql(graphqlOperation(updateGauge, { input: gauge }));
@@ -63,7 +60,6 @@ export default {
       commit("TOGGLE_SAVING", false);
     },
     async updateHeatMapById({ commit, dispatch }, heatMap ) {
-      console.log(heatMap)
       commit("TOGGLE_SAVING", true);
       try {
         await API.graphql(graphqlOperation(updateHeatMap, { input: heatMap }));
@@ -107,7 +103,6 @@ export default {
     async fetchGauges({ commit }) {
       try {     
        const res = await API.graphql(graphqlOperation(listGauges));
-       console.log(res.data.listGauges)
         commit("SET_GAUGES", res.data.listGauges.items);
       } catch (error) {
         console.log(error);
@@ -126,7 +121,6 @@ export default {
     async fetchHeatMaps({ commit }) {
       try {     
        const res = await API.graphql(graphqlOperation(listHeatMaps));
-       console.log(res.data.listHeatMaps)
         commit("SET_HEAT_MAPS", res.data.listHeatMaps.items);
       } catch (error) {
         console.log(error);
@@ -136,7 +130,6 @@ export default {
       commit("TOGGLE_LOADING", true);
       try {     
        const res = await API.graphql(graphqlOperation(getHeatMap, { id: id }));
-       console.log(res.data.getHeatMap)
        if (res.data.getHeatMap.columns && typeof res.data.getHeatMap.columns == 'string') {
         res.data.getHeatMap.columns = JSON.parse(res.data.getHeatMap.columns)
        }

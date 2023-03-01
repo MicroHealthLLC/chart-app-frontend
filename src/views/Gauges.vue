@@ -29,7 +29,7 @@
           <v-card width="250px" min-width="250px" @click.prevent="toGauge(gauge.id)" tile elevation="4">
             <v-card-title>{{ gauge.title }}</v-card-title>
             <v-card-subtitle>By: {{ gauge.createdBy }}</v-card-subtitle>
-            <KPIGauge :gauge="gauge" :height="130" :width="200" :segmentStops="gauge.segmentStops.split(',').map(x => parseFloat(x))" :needleHeightRatio=".7" />
+            <KPIGauge class="ml-6" :gauge="gauge" :height="130" :width="200" :segmentStops="gauge.segmentStops.split(',').map(x => parseFloat(x))" :needleHeightRatio=".7" />
           </v-card>
         </v-col>
         <!-- <div class="d-flex justify-end btn-container">

@@ -1,15 +1,37 @@
 <template>
   <div>
+
     <span class="d-flex">
       <h4 class="pa-4">{{ gauge.title }}</h4>
-      <v-btn class="ml-0 mt-2" icon @click.prevent="toGauge(gauge.id)"><v-icon small>fa-solid
-          fa-up-right-from-square</v-icon></v-btn>
+      <v-tooltip top>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn class="ml-0 mt-2" icon @click.prevent="toGauge(gauge.id)" v-bind="attrs" v-on="on"><v-icon small>fa-solid
+              fa-up-right-from-square</v-icon>
+          </v-btn>
+        </template>
+        <span>Go to KPI Gauge</span>
+      </v-tooltip>
+      <!-- <v-tooltip top>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn class="ml-0 mt-2" icon @click="reveal = true" v-bind="attrs" v-on="on"><v-icon>mdi-chevron-up</v-icon>
+          </v-btn>
+        </template>
+        <span>See Notes</span>
+      </v-tooltip> -->
     </span>
     <v-btn @click="fullscreenGauge" class="chart-menu" icon>
       <v-icon>mdi-fullscreen</v-icon>
     </v-btn>
-    <KPIGauge :gauge="gauge" :width="parentWidth - 100" :height="parentWidth / 2" :segmentStops="activeSteps"
-      :ringWidth="ringWidth" class="pb-4" />
+
+    <div class="d-flex">
+      <KPIGauge :gauge="gauge" :width="parentWidth - 220" :height="parentWidth / 2" :segmentStops="activeSteps"
+        :ringWidth="dashboardRingWidth" class="pb-4 mr-2" />
+      <v-card class="mr-2" style="height: 100%;">
+        <v-card-text class="pb-0" v-html="gauge.notes">
+        </v-card-text>
+      </v-card>
+    </div>
+    <!-- <KPIGauge :gauge="gauge" :width="parentWidth - 100" :height="parentWidth / 2" :segmentStops="activeSteps" :ringWidth="ringWidth" class="pb-4" /> -->
     <v-dialog v-model="fullscreen" fullscreen eager>
       <v-card>
         <v-toolbar class="px-5" color="info" dark>
@@ -17,9 +39,29 @@
           <v-spacer></v-spacer>
           <v-btn @click="fullscreen = false" icon><v-icon>mdi-close-thick</v-icon></v-btn>
         </v-toolbar>
-        <KPIGauge :gauge="gauge" :width="dashboardGaugeWidth" :height="dashboardGaugeHeight" :segmentStops="activeSteps" :ringWidth="ringWidth" class="pb-4" />
+        <div class="d-flex justify-space-around">
+        <KPIGauge :gauge="gauge" :width="dashboardGaugeWidth" :height="dashboardGaugeWidth / 2" :segmentStops="activeSteps"
+          :ringWidth="ringWidth" class="pb-4" />
+          <v-card class="mr-15 mt-10" style="height: 100%;">
+        <v-card-text class="pb-0" v-html="gauge.notes">
+        </v-card-text>
+      </v-card>
+    </div>
       </v-card>
     </v-dialog>
+    <!-- <v-card v-if="reveal" class="transition-fast-in-fast-out v-card--reveal" style="height: 100%;">
+      <v-card-text class="pb-0" v-html="gauge.notes">
+      </v-card-text>
+      <v-card-actions class="pt-0">
+        <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn class="ml-0 mt-2" icon @click="reveal = false" v-bind="attrs" v-on="on"><v-icon>mdi-chevron-down</v-icon>
+            </v-btn>
+          </template>
+          <span>Hide Notes</span>
+        </v-tooltip>
+      </v-card-actions>
+    </v-card> -->
   </div>
 </template>
     
@@ -43,6 +85,7 @@ export default {
       parentHeight: 0,
       parentWidth: 0,
       fullscreen: false,
+      reveal: false,
     };
   },
   mixins: [gaugeMixin],
@@ -63,14 +106,32 @@ export default {
     },
     dashboardGaugeWidth() {
       switch (this.$vuetify.breakpoint.name) {
-        case 'xs': return 200
-        case 'sm': return 250
-        case 'md': return 300
-        case 'lg': return 500
-        case 'xl': return 800
+        case 'xs': return 50
+        case 'sm': return 100
+        case 'md': return 200
+        case 'lg': return 350
+        case 'xl': return 600
       }
       return 300
     },
+    dashboardRingWidth() {
+      console.log(this.parentWidth)
+      if (this.parentWidth > 1000) {
+        return 150
+      } else if (this.parentWidth > 500 ) {
+        return 60
+      } else {
+        return 20
+      }
+      /* switch (this.parentWidth) {
+        case 'xs': return 40
+        case 'sm': return 50
+        case 'md': return 60
+        case 'lg': return 100
+        case 'xl': return 150
+      }
+      return 40 */
+    }
   },
   methods: {
     ...mapActions([
@@ -128,8 +189,9 @@ export default {
       this.parentWidth = this.$parent.$el.clientWidth
     }
   }, */
-  async mounted() {
+  mounted() {
     if (this.gauge) {
+      console.log(this.gauge)
       this.setChartType()
     }
     this.setParentDims()
@@ -143,6 +205,7 @@ export default {
   watch: {
     staged() {
       if (this.staged && this.staged.length > 0) {
+        this.setChartType()
         this.setParentDims()
       }
     }
@@ -152,8 +215,15 @@ export default {
     
 <style>
 .chart-menu {
-	position: absolute;
-	top: 10px;
-	right: 10px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.v-card--reveal {
+  bottom: 0;
+  opacity: 1 !important;
+  position: absolute;
+  width: 100%;
 }
 </style>

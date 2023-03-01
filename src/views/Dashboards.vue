@@ -41,12 +41,12 @@
       <v-col cols="12" sm="5"
         v-for="(report, i) in channelReports.filter(r => r.createdBy == `${user.attributes.given_name} ${user.attributes.family_name}`)"
         :key="i" @click.prevent="toReport(report.id)">
-        <DashboardCard_test :report="report" />
+        <DashboardCardReport :report="report" />
       </v-col>
     </v-row>
     <v-row v-else>
       <v-col cols="12" sm="5" v-for="(report, i) in channelReports" :key="i" @click.prevent="toReport(report.id)">
-        <DashboardCard_test :report="report" />
+        <DashboardCardReport :report="report" />
       </v-col>
     </v-row>
     <v-divider class="mb-4"></v-divider>
@@ -209,7 +209,6 @@ export default {
     } else {
       this.dataSetChoices = [...this.dataSets]; // was ...this.channelDataSets
     }
-    console.log(this.channelReports)
   },
   watch: {
   
