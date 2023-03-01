@@ -1,83 +1,75 @@
 <template>
   <!-- <v-row > -->
-    <!-- <v-col cols="12" sm="5" v-for="(report, i) in channelReports" :key="i"> --> 
-      <span>
-        <v-skeleton-loader
-        v-if="$store.getters.loading"
-      class="mx-auto"
-      type="card, article"
-    ></v-skeleton-loader>    
-      <v-card class="pa-4 mb-4" v-if="data && data.length > 0">
-        <span class="d-flex align-center">
+  <!-- <v-col cols="12" sm="5" v-for="(report, i) in channelReports" :key="i"> -->
+  <span>
+    <v-skeleton-loader v-if="$store.getters.loading" class="mx-auto" type="card, article"></v-skeleton-loader>
+    <v-card class="pa-4 mb-4" v-if="data && data.length > 0">
+      <span class="d-flex align-center">
         <h4>{{ report.title }}</h4>
-        <v-tooltip right>
+        <v-tooltip top>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn class="ml-4" icon @click.prevent="toReport(report.id)" v-bind="attrs" 
-          v-on="on"><v-icon small>fa-solid fa-up-right-from-square</v-icon></v-btn>
+            <v-btn class="ml-4" icon @click.prevent="toReport(report.id)" v-bind="attrs" v-on="on">
+              <v-icon small>fa-solid fa-up-right-from-square</v-icon>
+            </v-btn>
           </template>
           <span>Go to Report</span>
-        </v-tooltip>  
+        </v-tooltip>
+        <v-tooltip top>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn class="ml-0 mt-2" icon @click="reveal = true" v-bind="attrs" v-on="on"><v-icon>mdi-chevron-up</v-icon>
+          </v-btn>
+        </template>
+        <span>See Notes</span>
+      </v-tooltip>
       </span>
-                 
-        <v-btn @click="fullscreenReport" class="chart-menu" icon >
-          <v-icon>mdi-fullscreen</v-icon>    
-        </v-btn>
-         <Component               
-          ref="chart"
-          :is="graphType(report)"
-          :chartData="data"
-          :chartColors="colors.find((scheme) => scheme.id == report.colorSchemeId).scheme"
-          :graphType="report.chartType"
-          :height="350"
-          class="mb-4"
-        >
-        </Component> 
-        <div class="d-flex justify-end mb-4">
-          <v-btn
-            v-if="circleChart"
-            @click="changeChartData"
-            outlined
-            small
-            >Next Category <v-icon small>mdi-arrow-right</v-icon></v-btn
-          >         
+
+      <v-btn @click="fullscreenReport" class="chart-menu" icon>
+        <v-icon>mdi-fullscreen</v-icon>
+      </v-btn>
+      <Component ref="chart" :is="graphType(report)" :chartData="data"
+        :chartColors="colors.find((scheme) => scheme.id == report.colorSchemeId).scheme" :graphType="report.chartType"
+        :height="350" class="mb-4">
+      </Component>
+      <div class="d-flex justify-end mb-4">
+        <v-btn v-if="circleChart" @click="changeChartData" outlined small>Next Category <v-icon
+            small>mdi-arrow-right</v-icon></v-btn>
+      </div>
+
+    </v-card>
+    <v-dialog v-model="fullscreen" fullscreen eager>
+      <v-card>
+        <v-toolbar class="px-5" color="info" dark>
+          <h3>{{ report.title }}</h3>
+          <v-spacer></v-spacer>
+          <v-btn @click="fullscreen = false" icon><v-icon>mdi-close-thick</v-icon></v-btn>
+        </v-toolbar>
+        <Component v-if="fullscreen" ref="fullscreenchart" :is="graphType(report)" :chartData="data"
+          :chartColors="colors.find((scheme) => scheme.id == report.colorSchemeId).scheme" :graphType="report.chartType"
+          :height="screenHeight" :title="report.title" class="pa-6">
+        </Component>
+        <!-- Category Toggle Button -->
+        <div class="d-flex justify-end pr-6">
+          <v-btn v-if="circleChart" @click="changeFSChartData" outlined small>Next Category <v-icon
+              small>mdi-arrow-right</v-icon></v-btn>
         </div>
-        
       </v-card>
-       <v-dialog v-model="fullscreen" fullscreen eager>
-            <v-card>
-              <v-toolbar class="px-5" color="info" dark>
-                <h3>{{ report.title }}</h3>
-                <v-spacer></v-spacer>
-                <v-btn @click="fullscreen = false" icon
-                  ><v-icon>mdi-close-thick</v-icon></v-btn
-                >
-              </v-toolbar>
-              <Component
-                v-if="fullscreen"
-                ref="fullscreenchart"
-                :is="graphType(report)"
-                :chartData="data"
-                :chartColors="colors.find((scheme) => scheme.id == report.colorSchemeId).scheme"
-                :graphType="report.chartType"
-                :height="screenHeight"
-                :title="report.title"
-                class="pa-6"
-              >
-              </Component>
-              <!-- Category Toggle Button -->
-              <div class="d-flex justify-end pr-6">
-                <v-btn
-                  v-if="circleChart"
-                  @click="changeFSChartData"
-                  outlined
-                  small
-                  >Next Category <v-icon small>mdi-arrow-right</v-icon></v-btn
-                >
-              </div>
-            </v-card>
-          </v-dialog>
-        </span>
-    <!-- </v-col> -->
+    </v-dialog>
+    <v-card v-if="reveal" class="transition-fast-in-fast-out v-card--reveal" style="height: 100%;">
+      <v-card-text class="pb-0">
+        {{ report.description }}
+      </v-card-text>
+      <v-card-actions class="pt-0">
+        <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn class="ml-0 mt-2" icon @click="reveal = false" v-bind="attrs" v-on="on"><v-icon>mdi-chevron-down</v-icon>
+            </v-btn>
+          </template>
+          <span>Hide Notes</span>
+        </v-tooltip>
+      </v-card-actions>
+    </v-card>
+  </span>
+  <!-- </v-col> -->
   <!-- </v-row> -->
 </template>
 
@@ -94,14 +86,14 @@ import datasetMixin from "../mixins/dataset-mixin";
 import reportMixin from "../mixins/report-mixin";
 
 export default {
-  name: "DashboardCard_test",
+  name: "DashboardCardReport",
   props: {
-    report: Object  
+    report: Object
   },
   data() {
     return {
       formValid: true,
-      showForm: false, 
+      showForm: false,
       hhh: [],
       submitAttempted: false,
       deleteDialog: false,
@@ -120,7 +112,8 @@ export default {
       ],
       //report: {},
       colorScheme: [],
-      data: []
+      data: [],
+      reveal: false,
     };
   },
   mixins: [datasetMixin, reportMixin],
@@ -131,7 +124,7 @@ export default {
       "channels",
       "currentChannel",
       "currentChannels",
-    //   "channelReports",
+      //   "channelReports",
       "currentChannel",
       "colors",
       "reports",
@@ -143,7 +136,7 @@ export default {
       "statusCode",
       "user",
     ]),
-   circleChart() {
+    circleChart() {
       return (
         this.report.chartType == "donut" ||
         this.report.chartType == "pie" ||
@@ -196,9 +189,9 @@ export default {
         (Object.keys(this.$refs.chart.chartData[0]).length - 1);
     },
     toReport(id) {
-            this.$router.replace(`/${this.currentChannels[0].name}/reports/${id}`)
-        },
-    addDashboard(){
+      this.$router.replace(`/${this.currentChannels[0].name}/reports/${id}`)
+    },
+    addDashboard() {
       this.showForm = true
     },
     // log(e){
@@ -209,7 +202,7 @@ export default {
         (this.$refs.fullscreenchart.index + 1) %
         (Object.keys(this.$refs.fullscreenchart.chartData[0]).length - 1);
     },
-    resetAndGoBack(){
+    resetAndGoBack() {
       this.$router.go(-1)
       this.$refs.form.reset();
     },
@@ -252,14 +245,14 @@ export default {
           data.id = this.activeReport.id;
           this.updateReportById(data);
 
-           // this.updateChannelById({
+          // this.updateChannelById({
           //  id:  this.activeReport.channelId,
           //  reports: [this.activeReport]
           // });
         } else {
           console.log(data)
           // data.user_id = this.user.id;
-           this.addReport(data);
+          this.addReport(data);
         }
       }
     },
@@ -316,80 +309,36 @@ export default {
       ).scheme;
     },
   },
-  // computed: {
-  //   ...mapGetters([
-  //     "activeDataSet",
-  //     "activeReport",
-  //     "channels",
-  //     "currentChannel",
-  //     "currentChannels",
-  //   //   "channelReports",
-  //     "currentChannel",
-  //     "colors",
-  //     "reports",
-  //     "channelDataSets",
-  //     "dataSets",
-  //     "dataSet",
-  //     "reportLoaded",
-  //     "tags",
-  //     "statusCode",
-  //     "user",
-  //   ]),
-  //  circleChart() {
-  //     return (
-  //       this.activeReport.chartType == "donut" ||
-  //       this.activeReport.chartType == "pie" ||
-  //       this.activeReport.chartType == "polar-area"
-  //     );
-  //   },
-  //   /* channelReports(){
-  //   if (this.reports && this.reports.length > 0 &&  this.currentChannels &&  this.currentChannels[0]){
-  //     console.log(this.currentChannels[0])
-  //         return this.reports.filter(t => t.channelId == this.currentChannels[0].channelId)
-  //       } else return []
-  //     }, */
-  //   newChannelReport() {
-  //     return this.$route.params.reportId == "new";
-  //   },
-  //   screenHeight() {
-  //     return window.innerHeight - 200;
-  //   },
-  //   /* createdBy() {
-  //     if (this.activeReport && this.activeReport.id && this.user && this.user.attributes) {
-  //       return `${this.user.attributes.given_name} ${this.user.attributes.family_name} on ${new Date(this.activeReport.createdAt).toLocaleString()}`;
-  //     } else {
-  //       return `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
-  //     }
-  //   },
-  //   updatedBy() {
-  //     if (this.activeReport && this.activeReport.id) {
-  //       return `${this.user.attributes.given_name}  ${this.user.attributes.family_name} on ${new Date(this.activeReport.updatedAt).toLocaleString()}`;
-  //     } else {
-  //       return `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
-  //     }
-  //   }, */
-  // },
   mounted() {
     // this.updateChartData();    
     this.fetchReports();
     this.fetchDataSets();
-    this.updateChartData(); 
+    this.updateChartData();
     //console.log(this.report)   
   },
   watch: {
-   dataSets() {
+    dataSets() {
       this.dataSetChoices = [...this.dataSets];
-    },    
-    data(){
-      if(this.data.length > 0){
-        return this.data 
-      }    
-    }, 
+    },
+    data() {
+      if (this.data.length > 0) {
+        return this.data
+      }
+    },
+    report() {
+      this.updateChartData()
+    }
   },
 };
 </script>
 
 <style scoped>
+.v-card--reveal {
+  bottom: 0;
+  opacity: 1 !important;
+  position: absolute;
+  width: 100%;
+}
 .card {
   position: absolute;
   top: 50%;
@@ -397,35 +346,42 @@ export default {
   transform: translate(-50%, -50%);
   min-width: 350px;
   min-height: 180px;
-  }
-.no-content-msg{
+}
+
+.no-content-msg {
   font-size: larger;
   font-style: italic;
   font-weight: 400;
-  }
+}
+
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 10px;
 }
+
 .margin-auto {
- margin: auto !important;
+  margin: auto !important;
 }
 
 .description,
 .tags {
   grid-column: 1 / span 2;
 }
+
 .placeholder-title {
   color: gray;
 }
+
 .place-holder {
   height: 300px;
 }
+
 .placeholder-text,
 .placeholder-icon {
   color: #1976d2;
 }
+
 .chart-menu {
   position: absolute;
   top: 10px;
