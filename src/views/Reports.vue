@@ -48,10 +48,10 @@
               <v-list-item-content>
                 <v-list-item-title>
                   <span v-if="channelReports.filter(t => t.reportGroupId == item.id).length > 0">
-                    <v-icon x-large class="pr-1" color="yellow darken-2">mdi-folder-open-outline</v-icon>
+                    <v-icon x-large class="pr-1 file-icon" color="yellow darken-2">mdi-folder-open-outline</v-icon>
                   </span>
                   <span v-else>
-                    <v-icon x-large class="pr-1" color="yellow darken-2">mdi-folder-outline</v-icon>
+                    <v-icon x-large class="pr-1 file-icon" color="yellow darken-2">mdi-folder-outline</v-icon>
                   </span>
                   {{ item.title }} ({{ channelReports.filter(t => t.reportGroupId == item.id).length }})
                 </v-list-item-title>
@@ -59,7 +59,7 @@
             </template>
             <v-list-item v-for="report in channelReports.filter(t => t.reportGroupId == item.id)" :key="report.id" link>
               <v-list-item-icon>
-                <v-icon large color="orange darken-2">mdi-circle-small</v-icon>
+                <v-icon color="orange darken-2">mdi-file-chart-outline</v-icon>
               </v-list-item-icon>
               <v-list-item-title v-text="report.title" @click.prevent="toReport(report.id)">
               </v-list-item-title>
@@ -73,7 +73,7 @@
       <div v-if="channelReports.length > 0" class="singleReportGrid pl-5">
         <span v-for="(report) in channelReports.filter(t => t && !t.reportGroupId)" :key="report.id">
           <span class="click" @click.prevent="toSingleReport(report.id)">
-            <v-icon x-large class="pl-2" color="orange darken-2">mdi-file-chart-outline</v-icon>
+            <v-icon x-large class="pl-2 file-icon" color="orange darken-2">mdi-file-chart-outline</v-icon>
             {{ report.title }}
             <small class="d-inline blu" v-if="report.reportGroup && report.reportGroup.title">({{
               report.reportGroup.title
@@ -203,6 +203,9 @@ export default {
 <style scoped>
 .blu {
   color: #1976d2;
+}
+.file-icon{
+  font-size: 100px !important;
 }
 
 .views {
