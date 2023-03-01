@@ -228,19 +228,6 @@ export default {
     }
   },
   watch: {
-    dataItems() {
-      if (this.dataItems) {
-        console.log(this.dataItems)
-        console.log(this.headers)
-        //this.setHeaders(this.dataItems)
-      }
-    },
-    headers() {
-      if (this.headers.length > 0) {
-        console.log(this.filterHeaders)
-        this.createFilters()
-      }
-    },
     filterHeaders() {
       console.log(this.filterHeaders)
     }

@@ -2,8 +2,20 @@
 	<div>
 		<span class="d-flex">
 			<h4 class="pa-4">{{ heatMap.title }}</h4>
-			<v-btn class="ml-0 mt-2" icon @click.prevent="toHeatMap(heatMap.id)"><v-icon small>fa-solid
-					fa-up-right-from-square</v-icon></v-btn>
+			<v-tooltip top>
+				<template v-slot:activator="{ on, attrs }">
+					<v-btn class="ml-0 mt-2" icon @click.prevent="toHeatMap(heatMap.id)" v-bind="attrs" v-on="on"><v-icon small>fa-solid fa-up-right-from-square</v-icon>
+					</v-btn>
+				</template>
+				<span>Go to KPI Heat Map</span>
+			</v-tooltip>
+			<v-tooltip top>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn class="ml-0 mt-2" icon @click="reveal = true" v-bind="attrs" v-on="on"><v-icon>mdi-chevron-up</v-icon>
+          </v-btn>
+        </template>
+        <span>See Notes</span>
+      </v-tooltip>
 		</span>
 		<v-btn @click="fullscreenHeatMap" class="chart-menu" icon>
 			<v-icon>mdi-fullscreen</v-icon>
@@ -19,6 +31,20 @@
 				<KPIHeatMap :heatMap="heatMap" :headers="cols" :dataItems="data" />
 			</v-card>
 		</v-dialog>
+		<v-card v-if="reveal" class="transition-fast-in-fast-out v-card--reveal" style="height: 100%;">
+      <v-card-text class="pb-0">
+        {{ heatMap.description }}
+      </v-card-text>
+      <v-card-actions class="pt-0">
+        <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn class="ml-0 mt-2" icon @click="reveal = false" v-bind="attrs" v-on="on"><v-icon>mdi-chevron-down</v-icon>
+            </v-btn>
+          </template>
+          <span>Hide Notes</span>
+        </v-tooltip>
+      </v-card-actions>
+    </v-card>
 	</div>
 </template>
 
@@ -40,6 +66,7 @@ export default {
 			data: [],
 			cols: [],
 			fullscreen: false,
+			reveal: false,
 		};
 	},
 	mixins: [datasetMixin],
@@ -69,15 +96,22 @@ export default {
 	async mounted() {
 		await this.fetchDataSet(this.heatMap.dataSetId)
 		this.data = this.createMasterData(this.dataSet.dataValues.items)
+		console.log(this.data)
+		console.log(this.heatMap)
 		if (this.heatMap.columns && typeof this.heatMap.columns == "string") {
 			this.cols = JSON.parse(this.heatMap.columns)
 			this.heatMap.columns = JSON.parse(this.heatMap.columns)
+		} else {
+			this.cols = this.heatMap.columns
 		}
 		if (this.heatMap.options && typeof this.heatMap.options == 'string') {
 			this.heatMap.options = JSON.parse(this.heatMap.options)
 		}
 	},
 	watch: {
+		heatMap() {
+			console.log(this.heatMap)
+		}
 	}
 }
 </script>
@@ -87,5 +121,11 @@ export default {
 	position: absolute;
 	top: 10px;
 	right: 10px;
+}
+.v-card--reveal {
+  bottom: 0;
+  opacity: 1 !important;
+  position: absolute;
+  width: 100%;
 }
 </style>
