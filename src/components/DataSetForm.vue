@@ -24,7 +24,7 @@
           <v-col cols="6">
             <v-text-field v-model="dataSet.title" label="Title" dense required :readonly="isReadOnly" :rules="[(v) => !!v || 'Title is required']"></v-text-field>
               <div class="d-flex">
-                <v-file-input v-show="dataSet.id != ''" placeholder="Please choose a file..." type="file" @change.native="onChange" @click:clear="clearInput('file')" dense mulitple />
+                <v-file-input v-show="dataSet.id != ''" placeholder="Please choose a file..." type="file" @change.native="onChange" @click:clear="clearInput('file')" dense />
                 <xlsx-read :options="readOptions" :file="file">
                   <xlsx-json :options="readOptions" @parsed="uploadData"></xlsx-json>
                 </xlsx-read>
@@ -193,9 +193,11 @@ export default {
       this.clearInput("file")
     },
     clearInput(type) {
+      console.log(type)
       this.$refs.form.inputs.forEach(input => {
+        console.log(input)
         if (input.type == type) {
-          input.reset()
+          input = ''
         }
       })
     },
