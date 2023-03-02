@@ -61,7 +61,7 @@ export default {
 }
 .main-container {
   width: 100%;
-  max-width: 1800px;
+  max-width: 2000px;
   background: white;
 }
 .v-main__wrap {

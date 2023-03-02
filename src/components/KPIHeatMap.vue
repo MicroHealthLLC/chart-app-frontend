@@ -1,6 +1,6 @@
 <template>
   <v-row justify="center">
-    <v-col cols="11" class="pt-0">
+    <v-col :cols="isDashboard && heatMap.notes ? 8 : 11" class="pt-0">
       <div
         v-if="$route.path != `/${this.currentChannels[0].name}/gauges`"
         class="d-flex"
@@ -79,53 +79,11 @@
             </template> -->
       </v-data-table>
     </v-col>
-    <!-- <v-col cols="5">
-      <v-card class="mr-2">
-        <v-card-title>
-          {{ heatMap.title }}
-        </v-card-title>
-        <v-card-subtitle>
-          Legend
-        </v-card-subtitle>
-        <v-divider></v-divider> -->
-    <!-- <v-container fluid v-for="name, index in getKeyNames(dataItems).slice(1)" :key="name" class="pb-5">
-          <v-row>
-            <v-col cols="12">
-              <v-card>
-                <v-card-title class="py-2">Column: {{ name }}</v-card-title>
-                <v-card-subtitle v-if="options.cols[index].abs">Absolute Value</v-card-subtitle>
-                <v-row v-if="!options.cols[index].abs" justify="space-around" class="pb-3 px-2" dense>
-                  <v-chip small label color="green lighten-1">
-                    <v-icon color="grey darken-4">mdi-greater-than-or-equal</v-icon>
-                    {{ options.cols[index].gre }}
-                  </v-chip>
-                  <v-chip small label color="amber lighten-1">
-                    <v-icon color="grey darken-4">mdi-greater-than-or-equal</v-icon>
-                    {{ options.cols[index].yel }}
-                  </v-chip>
-                  <v-chip small label color="red lighten-1"><v-icon color="grey darken-4">mdi-less-than</v-icon>
-                    {{ options.cols[index].yel }}
-                  </v-chip>
-                </v-row>
-                <v-row v-else justify="space-around" class="pb-3 px-2" dense>
-                  <v-chip small label color="green lighten-1">
-                    <v-icon color="grey darken-4">mdi-less-than-or-equal</v-icon>
-                    {{ options.cols[index].gre }}
-                  </v-chip>
-                  <v-chip small label color="amber lighten-1">
-                    <v-icon color="grey darken-4">mdi-less-than-or-equal</v-icon>
-                    {{ options.cols[index].yel }}
-                  </v-chip>
-                  <v-chip small label color="red lighten-1"><v-icon color="grey darken-4">mdi-greater-than</v-icon>
-                    {{ options.cols[index].yel }}
-                  </v-chip>
-                </v-row>
-              </v-card>
-            </v-col>
-          </v-row>
-        </v-container> -->
-    <!-- </v-card>
-    </v-col> -->
+    <v-col v-if="isDashboard && heatMap.notes" cols="3" class="mr-2">
+      <v-card>
+        <v-card-text v-html="heatMap.notes"></v-card-text>
+      </v-card>
+    </v-col>
   </v-row>
 </template>
 
@@ -139,6 +97,7 @@ export default {
     heatMap: Object,
     headers: Array,
     dataItems: Array,
+    isDashboard: Boolean
     //options: Object,
   },
   data() {

@@ -15,7 +15,7 @@
         </template>
         <span>Go to KPI Heat Map</span>
       </v-tooltip>
-      <v-tooltip top>
+      <!-- <v-tooltip top>
         <template v-slot:activator="{ on, attrs }">
           <v-btn
             class="ml-0 mt-2"
@@ -27,12 +27,12 @@
           </v-btn>
         </template>
         <span>See Notes</span>
-      </v-tooltip>
+      </v-tooltip> -->
     </span>
     <v-btn @click="fullscreenHeatMap" class="chart-menu" icon>
       <v-icon>mdi-fullscreen</v-icon>
     </v-btn>
-    <KPIHeatMap :heatMap="heatMap" :headers="cols" :dataItems="data" />
+    <KPIHeatMap :heatMap="heatMap" :headers="cols" :dataItems="data" :isDashboard="true" />
     <v-dialog v-model="fullscreen" fullscreen eager>
       <v-card>
         <v-toolbar class="px-5" color="info" dark>
@@ -45,13 +45,12 @@
         <KPIHeatMap :heatMap="heatMap" :headers="cols" :dataItems="data" />
       </v-card>
     </v-dialog>
-    <v-card
+    <!-- <v-card
       v-if="reveal"
       class="transition-fast-in-fast-out v-card--reveal"
       style="height: 100%"
     >
-      <v-card-text class="pb-0">
-        {{ heatMap.description }}
+      <v-card-text class="pb-0" v-html="heatMap.notes">
       </v-card-text>
       <v-card-actions class="pt-0">
         <v-tooltip top>
@@ -68,7 +67,7 @@
           <span>Hide Notes</span>
         </v-tooltip>
       </v-card-actions>
-    </v-card>
+    </v-card> -->
   </div>
 </template>
 

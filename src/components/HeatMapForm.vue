@@ -80,10 +80,23 @@
                 @change="onChangeAxis"
               ></v-select>
             </div>
+            <div class="expansion">
+              <v-expansion-panels >
+                <v-expansion-panel>
+                  <v-expansion-panel-header>Click to reveal notes</v-expansion-panel-header>
+                  <v-expansion-panel-content>
+                    <vue-editor v-model="heatMap.notes" placeholder="Enter notes here" :editor-toolbar="toolbarOptions" ></vue-editor>
+                  </v-expansion-panel-content>
+                </v-expansion-panel>
+              </v-expansion-panels>
+            </div>
           </div>
         </v-form>
       </v-col>
     </v-row>
+    <!-- <v-row>
+      <vue-editor v-model="heatMap.notes" placeholder="Enter notes here" :editor-toolbar="toolbarOptions" ></vue-editor>
+    </v-row> -->
     <v-row justify="start">
       <v-col
         v-if="heatMap.dataSet && heatMap.options && heatMap.options.cols"
@@ -103,8 +116,8 @@
       >
         <v-row>
           <v-col
-            xl="3"
-            md="4"
+            xl="2"
+            md="3"
             sm="5"
             xs="6"
             :key="i"
@@ -217,11 +230,13 @@
 import KPIHeatMap from "./KPIHeatMap.vue";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import datasetMixin from "../mixins/dataset-mixin";
+import { VueEditor } from "vue2-quill-editor";
 
 export default {
   name: "HeatMapForm",
   components: {
     KPIHeatMap,
+    VueEditor
   },
   data() {
     return {
@@ -234,26 +249,18 @@ export default {
       leadColKeys: [],
       leadCol: "",
       items: [],
-      //options: {},
-      /* mapOptions: {
-        cols: [
-          {
-            abs: false,
-            yel: 50,
-            gre: 80,
-          },
-          {
-            abs: true,
-            yel: 5,
-            gre: 1,
-          },
-          {
-            abs: false,
-            yel: 1,
-            gre: 2,
-          }
-        ]
-      } */
+      toolbarOptions: [
+        ['bold', 'italic', 'underline', 'strike'],   // toggled buttons
+        ['blockquote', 'code-block'],
+        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+        [{ 'align': [] }],    
+        [{ 'indent': '-1' }, { 'indent': '+1' }], // outdent/indent
+        [{ 'script': 'sub' }, { 'script': 'super' }],  // superscript/subscript
+        [{ 'font': [] }],
+        [{ 'header': [1, 2, 3, false] }],
+        [{ 'color': [] }, { 'background': [] }],    // dropdown with defaults from theme
+        
+      ],
     };
   },
   mixins: [datasetMixin],
@@ -320,6 +327,7 @@ export default {
           options: JSON.stringify(this.heatMap.options),
           leadCol: this.leadCol,
           columns: JSON.stringify(this.selectedHeaders),
+          notes: this.heatMap.notes,
           channelId: this.currentChannels[0].channelId,
         };
         if (this.heatMap.id) {
@@ -535,10 +543,8 @@ export default {
   grid-template-columns: 1fr 1fr;
   grid-gap: 10px;
 }
-
-.channels,
-.description {
-  grid-column: 1 / span 2;
+.expansion {
+  grid-column: 1 / span 2
 }
 
 div >>> .v-select__selections {

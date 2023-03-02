@@ -36,8 +36,8 @@
         :ringWidth="dashboardRingWidth"
         class="pb-4 mr-2"
       />
-      <v-card class="mr-2" style="height: 100%">
-        <v-card-text class="pb-0" v-html="gauge.notes"> </v-card-text>
+      <v-card v-if="gauge.notes" class="mr-2" style="height: 100%">
+        <v-card-text v-html="gauge.notes"> </v-card-text>
       </v-card>
     </div>
     <!-- <KPIGauge :gauge="gauge" :width="parentWidth - 100" :height="parentWidth / 2" :segmentStops="activeSteps" :ringWidth="ringWidth" class="pb-4" /> -->
@@ -59,8 +59,8 @@
             :ringWidth="ringWidth"
             class="pb-4"
           />
-          <v-card class="mr-15 mt-10" style="height: 100%">
-            <v-card-text class="pb-0" v-html="gauge.notes"> </v-card-text>
+          <v-card v-if="gauge.notes" class="mr-15 mt-10" style="height: 100%">
+            <v-card-text v-html="gauge.notes"> </v-card-text>
           </v-card>
         </div>
       </v-card>
@@ -138,14 +138,13 @@ export default {
       return 300;
     },
     dashboardRingWidth() {
-      console.log(this.parentWidth);
       if (this.parentWidth > 1000) {
         return 150;
       } else if (this.parentWidth > 500) {
-        return 60;
-      } else {
-        return 20;
-      }
+        return 80;
+      } else if (this.parentWidth > 350) {
+        return 30;
+      } else  return 10
       /* switch (this.parentWidth) {
         case 'xs': return 40
         case 'sm': return 50

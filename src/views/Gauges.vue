@@ -22,7 +22,7 @@
           </v-btn>
         </div>
       </div>
-      <v-dialog v-model="showAddGaugeForm" width="60%">
+      <v-dialog v-model="showAddGaugeForm" width="80%">
         <v-card class="px-4 py-4 modal">
           <GaugeForm
             @closeGaugeForm="closeGaugeForm"

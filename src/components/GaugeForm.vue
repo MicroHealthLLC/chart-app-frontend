@@ -34,7 +34,7 @@
                 />
               </v-col>
               <v-col cols="4">
-                <vue-editor v-model="gauge.notes"></vue-editor>
+                <vue-editor v-model="gauge.notes" placeholder="Enter notes here" :editor-toolbar="toolbarOptions"></vue-editor>
                 <!-- <v-textarea v-model="gauge.notes" solo auto-grow background-color="grey lighten-4" label="Enter notes here" rows="4"></v-textarea> -->
               </v-col>
             </v-row>
@@ -236,6 +236,23 @@ export default {
       minVal: 0,
       maxValue: 100,
       activeSteps: [],
+      toolbarOptions: [
+        ['bold', 'italic', 'underline', 'strike'],   // toggled buttons
+        ['blockquote', 'code-block'],
+        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+        [{ 'align': [] }],    
+        [{ 'indent': '-1' }, { 'indent': '+1' }], // outdent/indent
+        [{ 'script': 'sub' }, { 'script': 'super' }],  // superscript/subscript
+        [{ 'font': [] }],
+        [{ 'header': [1, 2, 3, false] }],
+        [{ 'color': [] }, { 'background': [] }],    // dropdown with defaults from theme
+        
+      ],
+      /* customToolbar: [
+      ["bold", "italic", "underline"],
+      [{ list: "ordered" }, { list: "bullet" }],
+      ["image", "code-block"]
+    ] */
     };
   },
   props: {
