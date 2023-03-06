@@ -15,6 +15,19 @@
         </template>
         <span>Go to KPI Gauge</span>
       </v-tooltip>
+      <v-tooltip top v-if="!isReadOnly">
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            class="ml-4 mt-2"
+            icon
+            @click.prevent="$emit('deleteItem', gauge.id)"
+            v-bind="attrs"
+            v-on="on"
+            ><v-icon small color="red">fa-trash</v-icon>
+          </v-btn>
+        </template>
+        <span>Remove from Dashboard</span>
+      </v-tooltip>
       <!-- <v-tooltip top>
         <template v-slot:activator="{ on, attrs }">
           <v-btn class="ml-0 mt-2" icon @click="reveal = true" v-bind="attrs" v-on="on"><v-icon>mdi-chevron-up</v-icon>
@@ -158,6 +171,9 @@ export default {
   },
   methods: {
     ...mapActions([]),
+    checkLog(e) {
+      console.log(e)
+    },
     setChartType() {
       if (this.gauge && this.gauge.chartType) {
         switch (this.gauge.chartType) {

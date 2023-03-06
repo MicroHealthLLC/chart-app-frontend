@@ -27,7 +27,7 @@
         <v-tooltip top>
           <template v-slot:activator="{ on, attrs }">
             <v-btn
-              class="ml-0 mt-2"
+              class="ml-4"
               icon
               @click="reveal = true"
               v-bind="attrs"
@@ -37,6 +37,19 @@
           </template>
           <span>See Notes</span>
         </v-tooltip>
+        <v-tooltip top v-if="!isReadOnly">
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            class="ml-4"
+            icon
+            @click.prevent="$emit('deleteItem', report.id)"
+            v-bind="attrs"
+            v-on="on"
+            ><v-icon small color="red">fa-trash</v-icon>
+          </v-btn>
+        </template>
+        <span>Remove from Dashboard</span>
+      </v-tooltip>
       </span>
 
       <v-btn @click="fullscreenReport" class="chart-menu" icon>
@@ -136,6 +149,7 @@ export default {
   name: "DashboardCardReport",
   props: {
     report: Object,
+    isReadOnly: Boolean,
   },
   data() {
     return {

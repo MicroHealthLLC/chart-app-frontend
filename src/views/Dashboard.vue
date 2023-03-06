@@ -37,9 +37,9 @@
         <draggable :list="staged" group="universalGroup" :disabled="isReadOnly" class="drag-area row"><!--  :removeOnSpill="true" :onSpill="deleteItem" -->
           <v-col :cols="dashboardCols(staged, index)" v-for="(item, index) in staged" :key="index">
             <v-card :ref="`card${index}`">
-              <DashboardCardHeatMap :heatMap="item" v-if="checkChartType(item) == 'heatMap'" />
-              <DashboardCardGauge :gauge="item" v-if="checkChartType(item) == 'gauge'" :staged="staged" :isReadOnly="isReadOnly" />
-              <DashboardCardReport :report="item" v-if="checkChartType(item) == 'report'" />
+              <DashboardCardHeatMap :heatMap="item" v-if="checkChartType(item) == 'heatMap'" :isReadOnly="isReadOnly" @deleteItem="deleteItem" />
+              <DashboardCardGauge :gauge="item" v-if="checkChartType(item) == 'gauge'" :staged="staged" :isReadOnly="isReadOnly" @deleteItem="deleteItem" />
+              <DashboardCardReport :report="item" v-if="checkChartType(item) == 'report'" :isReadOnly="isReadOnly" @deleteItem="deleteItem" />
             </v-card>
           </v-col>
         </draggable>
@@ -58,7 +58,7 @@
           <v-col :cols="dashboardCols(staged, index)" v-for="(item, index) in staged" :key="index">
             <v-card :ref="`card${index}`">
               <DashboardCardHeatMap :heatMap="item" v-if="checkChartType(item) == 'heatMap'" />
-              <DashboardCardGauge :gauge="item" v-if="checkChartType(item) == 'gauge'" :staged="staged" />
+              <DashboardCardGauge :gauge="item" v-if="checkChartType(item) == 'gauge'" :staged="staged"  />
               <DashboardCardReport :report="item" v-if="checkChartType(item) == 'report'" />
             </v-card>
           </v-col>
@@ -169,6 +169,7 @@ export default {
     return {
       isReadOnly: true,
       staged: [],
+      trashZone: [],
       draggedItem: null,
       deleteDialog: false,
       fullscreen: false,
@@ -201,8 +202,9 @@ export default {
       this.removeDashboard({ id: this.dashboard.id });
       this.$router.push(`/${this.$route.params.channelId}/dashboards`);
     },
-    deleteItem(event) {
-      this.staged.splice(event.oldIndex, 1);
+    deleteItem(id) {
+      this.staged = this.staged.filter(s => s.id !== id)
+      //this.staged.splice(event.oldIndex, 1);
     },
     async cancelForm() {
       this.isReadOnly = true;
@@ -305,7 +307,10 @@ export default {
       if (this.staged.length == 0) {
         this.isReadOnly = false;
       }
-    }
+    },
+    isReadOnly() {
+      console.log(this)
+    },
   },
 };
 </script>

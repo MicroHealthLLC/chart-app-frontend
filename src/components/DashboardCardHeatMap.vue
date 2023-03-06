@@ -15,6 +15,19 @@
         </template>
         <span>Go to KPI Heat Map</span>
       </v-tooltip>
+      <v-tooltip top v-if="!isReadOnly">
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            class="ml-4 mt-2"
+            icon
+            @click.prevent="$emit('deleteItem', heatMap.id)"
+            v-bind="attrs"
+            v-on="on"
+            ><v-icon small color="red">fa-trash</v-icon>
+          </v-btn>
+        </template>
+        <span>Remove from Dashboard</span>
+      </v-tooltip>
       <!-- <v-tooltip top>
         <template v-slot:activator="{ on, attrs }">
           <v-btn
@@ -87,6 +100,7 @@ export default {
   name: "DashboardCardHeatMap",
   props: {
     heatMap: Object,
+    isReadOnly: Boolean,
   },
   components: {
     KPIHeatMap,
@@ -135,11 +149,15 @@ export default {
     if (this.heatMap.options && typeof this.heatMap.options == "string") {
       this.heatMap.options = JSON.parse(this.heatMap.options);
     }
+    console.log(this)
   },
   watch: {
     heatMap() {
       console.log(this.heatMap);
     },
+    isReadOnly() {
+      console.log(this)
+    }
   },
 };
 </script>
