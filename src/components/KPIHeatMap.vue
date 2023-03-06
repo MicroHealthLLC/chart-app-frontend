@@ -48,8 +48,8 @@
         :options="{ itemsPerPage: 5 }"
         :search="search"
         :custom-sort="customSort"
-        :custom-filter="customFilter"
-      >
+        
+      ><!-- :custom-filter="customFilter" -->
         <template
           v-for="(h, i) in headers.slice(1)"
           v-slot:[`item.${h.text}`]="{ item }"
