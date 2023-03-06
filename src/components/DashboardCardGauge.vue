@@ -36,8 +36,8 @@
         :ringWidth="dashboardRingWidth"
         class="pb-4 mr-2"
       />
-      <v-card v-if="gauge.notes" class="mr-2" style="height: 100%">
-        <v-card-text v-html="gauge.notes"> </v-card-text>
+      <v-card v-if="gauge.notes" style="height: 100%" max-width="190">
+        <v-card-text v-html="gauge.notes"></v-card-text>
       </v-card>
     </div>
     <!-- <KPIGauge :gauge="gauge" :width="parentWidth - 100" :height="parentWidth / 2" :segmentStops="activeSteps" :ringWidth="ringWidth" class="pb-4" /> -->
@@ -59,7 +59,7 @@
             :ringWidth="ringWidth"
             class="pb-4"
           />
-          <v-card v-if="gauge.notes" class="mr-15 mt-10" style="height: 100%">
+          <v-card v-if="gauge.notes" class="mr-15 mt-10" style="height: 100%" max-width="500">
             <v-card-text v-html="gauge.notes"> </v-card-text>
           </v-card>
         </div>
@@ -91,6 +91,7 @@ export default {
   props: {
     gauge: Object,
     staged: Array,
+    isReadOnly: Boolean
   },
   components: {
     KPIGauge,
@@ -236,6 +237,10 @@ export default {
         this.setParentDims();
       }
     },
+    isReadOnly() {
+      console.log("here")
+      this.setParentDims();
+    }
   },
 };
 </script>

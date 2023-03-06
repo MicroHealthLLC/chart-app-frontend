@@ -12,42 +12,15 @@
           <h3 v-else-if="dashboard.id">View {{ dashboard.title }}</h3>
           <h3 v-else>"Dashboard Title"</h3>
           <div>
-            <v-btn
-              v-if="!isReadOnly"
-              @click="saveDashboard"
-              class="px-5 mr-2 mb-2"
-              color="primary"
-              depressed
-              small
-              >Save</v-btn
-            >
-            <v-btn
-              v-else
-              @click="editForm"
-              class="px-5 mr-2 mb-2"
-              color="primary"
-              depressed
-              small
-              >{{
-                !dashboard.cards && staged.length == 0 ? "Add" : "Edit"
-              }}</v-btn
-            >
-            <v-btn
-              v-if="isReadOnly"
-              class="mb-2"
-              @click="resetAndGoBack"
-              small
-              outlined
-              >Close</v-btn
-            >
-            <v-btn
-              v-if="!isReadOnly"
-              class="mb-2"
-              @click="cancelForm"
-              small
-              outlined
-              >Cancel</v-btn
-            >
+            <v-btn v-if="isReadOnly" @click="fullscreenDashboard" class="px-3 mr-2 mb-2" color="blue lighten-3" depressed
+              small>View Fullscreen <v-icon class="ml-2">mdi-fullscreen</v-icon></v-btn>
+            <v-btn v-if="!isReadOnly" @click="saveDashboard" class="px-5 mr-2 mb-2" color="primary" depressed
+              small>Save</v-btn>
+            <v-btn v-else @click="editForm" class="px-5 mr-2 mb-2" color="primary" depressed small>{{
+              !dashboard.cards && staged.length == 0 ? "Add" : "Edit"
+            }}</v-btn>
+            <v-btn v-if="isReadOnly" class="mb-2" @click="resetAndGoBack" small outlined>Close</v-btn>
+            <v-btn v-if="!isReadOnly" class="mb-2" @click="cancelForm" small outlined>Cancel</v-btn>
           </div>
         </div>
         <v-divider></v-divider>
@@ -60,41 +33,41 @@
     </v-row>
     <v-row>
       <!-- DASHBOARD CARDS -->
-      <v-col :cols="isReadOnly ? 12 : 10">
-        <draggable
-          :list="staged"
-          group="universalGroup"
-          :removeOnSpill="true"
-          :onSpill="deleteItem"
-          :disabled="isReadOnly"
-          class="drag-area row"
-        >
-          <v-col
-            :cols="dashboardCols(staged, index)"
-            v-for="(item, index) in staged"
-            :key="index"
-          >
+      <v-col :cols="isReadOnly ? 12 : 9">
+        <draggable :list="staged" group="universalGroup" :disabled="isReadOnly" class="drag-area row"><!--  :removeOnSpill="true" :onSpill="deleteItem" -->
+          <v-col :cols="dashboardCols(staged, index)" v-for="(item, index) in staged" :key="index">
             <v-card :ref="`card${index}`">
-              <DashboardCardHeatMap
-                :heatMap="item"
-                v-if="checkChartType(item) == 'heatMap'"
-              />
-              <DashboardCardGauge
-                :gauge="item"
-                v-if="checkChartType(item) == 'gauge'"
-                :staged="staged"
-              />
-              <DashboardCardReport
-                :report="item"
-                v-if="checkChartType(item) == 'report'"
-              />
+              <DashboardCardHeatMap :heatMap="item" v-if="checkChartType(item) == 'heatMap'" />
+              <DashboardCardGauge :gauge="item" v-if="checkChartType(item) == 'gauge'" :staged="staged" :isReadOnly="isReadOnly" />
+              <DashboardCardReport :report="item" v-if="checkChartType(item) == 'report'" />
             </v-card>
           </v-col>
         </draggable>
       </v-col>
 
+      <v-dialog v-model="fullscreen" fullscreen>
+        <v-toolbar class="mb-2" color="grey lighten-2">
+          <h3>{{ dashboard.title }}</h3>
+          <v-spacer></v-spacer>
+          <v-btn @click="fullscreen = false" icon>
+            <v-icon>mdi-close-thick</v-icon>
+          </v-btn>
+        </v-toolbar>
+        <v-card>
+          <v-row>
+          <v-col :cols="dashboardCols(staged, index)" v-for="(item, index) in staged" :key="index">
+            <v-card :ref="`card${index}`">
+              <DashboardCardHeatMap :heatMap="item" v-if="checkChartType(item) == 'heatMap'" />
+              <DashboardCardGauge :gauge="item" v-if="checkChartType(item) == 'gauge'" :staged="staged" />
+              <DashboardCardReport :report="item" v-if="checkChartType(item) == 'report'" />
+            </v-card>
+          </v-col>
+        </v-row>
+        </v-card>
+      </v-dialog>
+
       <!-- DASHBOARD SELECT AREA -->
-      <v-col cols="2" v-if="!isReadOnly">
+      <v-col cols="3" v-if="!isReadOnly">
         <v-card height="max-content">
           <h4 class="pt-4 pl-2">Available Modules</h4>
           <v-list>
@@ -102,23 +75,13 @@
             <v-list-item>
               <v-list-item-content>
                 <v-list-item-title>
-                  <draggable
-                    :list="channelReports"
-                    :group="{
-                      name: 'universalGroup',
-                      pull: 'clone',
-                      put: false,
-                    }"
-                    class="d-flex flex-wrap"
-                  >
-                    <v-chip
-                      v-for="(item, index) in channelReports"
-                      :key="index"
-                      class="mr-2 mt-2"
-                      color="orange lighten-1"
-                      text-color="grey lighten-4"
-                      >{{ item.title }}</v-chip
-                    >
+                  <draggable :list="channelReports" :group="{
+                    name: 'universalGroup',
+                    pull: 'clone',
+                    put: false,
+                  }" class="d-flex flex-wrap">
+                    <v-chip v-for="(item, index) in channelReports" :key="index" class="mr-2 mt-2"
+                      color="orange lighten-1" text-color="grey lighten-4">{{ item.title }}</v-chip>
                   </draggable>
                 </v-list-item-title>
               </v-list-item-content>
@@ -130,23 +93,13 @@
             <v-list-item>
               <v-list-item-content>
                 <v-list-item-title>
-                  <draggable
-                    :list="channelGauges"
-                    :group="{
-                      name: 'universalGroup',
-                      pull: 'clone',
-                      put: false,
-                    }"
-                    class="d-flex flex-wrap"
-                  >
-                    <v-chip
-                      v-for="(item, index) in channelGauges"
-                      :key="index"
-                      class="mr-2 mt-2"
-                      color="red lighten-1"
-                      text-color="grey lighten-4"
-                      >{{ item.title }}</v-chip
-                    >
+                  <draggable :list="channelGauges" :group="{
+                    name: 'universalGroup',
+                    pull: 'clone',
+                    put: false,
+                  }" class="d-flex flex-wrap">
+                    <v-chip v-for="(item, index) in channelGauges" :key="index" class="mr-2 mt-2" color="red lighten-1"
+                      text-color="grey lighten-4">{{ item.title }}</v-chip>
                   </draggable>
                 </v-list-item-title>
               </v-list-item-content>
@@ -158,39 +111,21 @@
             <v-list-item>
               <v-list-item-content>
                 <v-list-item-title>
-                  <draggable
-                    :list="channelHeatMaps"
-                    :group="{
-                      name: 'universalGroup',
-                      pull: 'clone',
-                      put: false,
-                    }"
-                    class="d-flex flex-wrap"
-                  >
-                    <v-chip
-                      v-for="(item, index) in channelHeatMaps"
-                      :key="index"
-                      class="mr-2 mt-2"
-                      color="green 
-                      lighten-1"
-                      text-color="grey lighten-4"
-                      >{{ item.title }}</v-chip
-                    >
+                  <draggable :list="channelHeatMaps" :group="{
+                    name: 'universalGroup',
+                    pull: 'clone',
+                    put: false,
+                  }" class="d-flex flex-wrap">
+                    <v-chip v-for="(item, index) in channelHeatMaps" :key="index" class="mr-2 mt-2" color="green 
+                        lighten-1" text-color="grey lighten-4">{{ item.title }}</v-chip>
                   </draggable>
                 </v-list-item-title>
               </v-list-item-content>
             </v-list-item>
           </v-list>
           <v-divider class="mx-4 mb-4"></v-divider>
-          <v-btn
-            @click="deleteDialog = true"
-            small
-            color="error"
-            depressed
-            outlined
-            class="ml-3 mb-3"
-            >Delete Dashboard</v-btn
-          >
+          <v-btn @click="deleteDialog = true" small color="error" depressed outlined class="ml-3 mb-3">Delete
+            Dashboard</v-btn>
         </v-card>
       </v-col>
       <!-- Delete Prompt -->
@@ -198,20 +133,10 @@
         <v-card>
           <v-card-title>Delete this dashboard?</v-card-title>
           <v-divider class="mx-4 mb-2"></v-divider>
-          <v-card-text
-            >Are you sure you would like to delete this dashboard?</v-card-text
-          >
+          <v-card-text>Are you sure you would like to delete this dashboard?</v-card-text>
           <v-card-actions class="d-flex justify-end">
-            <v-btn
-              @click="deleteDialog = false"
-              small
-              outlined
-              color="secondary"
-              >Cancel</v-btn
-            >
-            <v-btn @click="deleteDashboard" small depressed color="error"
-              >Delete</v-btn
-            >
+            <v-btn @click="deleteDialog = false" small outlined color="secondary">Cancel</v-btn>
+            <v-btn @click="deleteDashboard" small depressed color="error">Delete</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -246,6 +171,7 @@ export default {
       staged: [],
       draggedItem: null,
       deleteDialog: false,
+      fullscreen: false,
     };
   },
   mixins: [datasetMixin, reportMixin, gaugeMixin],
@@ -317,6 +243,12 @@ export default {
         return "gauge";
       } else return "heatMap";
     },
+    fullscreenDashboard() {
+      this.fullscreen = true
+    },
+    generateReport() {
+      this.$refs.html2Pdf.generatePdf()
+    }
   },
   computed: {
     ...mapGetters([
@@ -361,16 +293,26 @@ export default {
     }
   },
   watch: {
-    /* staged() {
-      console.log(this.staged)
-    } */
+    async fullscreen() {
+      this.fetchReports();
+      this.fetchDataSets();
+      this.fetchGauges();
+      this.fetchHeatMaps();
+      if (this.$route.params.dashboardId) {
+        await this.fetchDashboard(this.$route.params.dashboardId);
+        this.staged = this.dashboard.cards ? this.dashboard.cards : [];
+      }
+      if (this.staged.length == 0) {
+        this.isReadOnly = false;
+      }
+    }
   },
 };
 </script>
 
 <style scoped>
 .drag-area {
-  height: 80vh !important;
+  height: 90vh !important;
 }
 
 .v-card--reveal {

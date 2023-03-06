@@ -18,14 +18,14 @@
     </div>
     <v-divider class="mb-4"></v-divider>
 
-    <v-container v-if="dashboards.length > 0" class="pl-5">
+    <v-container v-if="channelDashboards.length > 0" class="pl-5">
       <v-row>
         <v-col
           xl="2"
           lg="3"
           md="4"
           sm="6"
-          v-for="dashboard in dashboards"
+          v-for="dashboard in channelDashboards"
           :key="dashboard.id"
         >
           <v-card
@@ -59,73 +59,20 @@
         </div> -->
       </v-row>
     </v-container>
-    <!-- <v-row v-if="switch1">
-      <v-col cols="12" sm="5"
-        v-for="(report, i) in channelReports.filter(r => r.createdBy == `${user.attributes.given_name} ${user.attributes.family_name}`)"
-        :key="i" @click.prevent="toReport(report.id)">
-        <DashboardCardReport :report="report" />
-      </v-col>
-    </v-row>
-    <v-row v-else>
-      <v-col cols="12" sm="5" v-for="(report, i) in channelReports" :key="i" @click.prevent="toReport(report.id)">
-        <DashboardCardReport :report="report" />
-      </v-col>
-    </v-row>
-    <v-divider class="mb-4"></v-divider>
-    
-    <v-row class="mb-2" v-if="switch1">
-      <v-col xl="2" lg="3" md="4" sm="6"
-        v-for="(gauge) in channelGauges.filter(r => r.createdBy == `${user.attributes.given_name} ${user.attributes.family_name}`)"
-        :key="gauge.id">
-        <v-card width="250px" min-width="250px" @click.prevent="toGauge(gauge.id)" tile elevation="4">
-          <KPIGauge :gauge="gauge" :height="130" :width="200"
-            :segmentStops="gauge.segmentStops.split(',').map(x => parseFloat(x))" :needleHeightRatio=".7" />
-          <v-divider class="my-2"></v-divider>
-          <v-card-title>{{ gauge.title }}</v-card-title>
-          <v-card-subtitle>By: {{ gauge.createdBy }}</v-card-subtitle>
-        </v-card>
-      </v-col> -->
-    <!-- <div class="d-flex justify-end btn-container">
-              <v-btn
-                v-if="reports.length >= 6"
-                to="/public-reports"
-                class="d-flex-end"
-                color="primary"
-                text
-                >View All</v-btn
-              >
-            </div> -->
-    <!-- </v-row>
-    <v-row class="mb-2" v-else>
-      <v-col xl="2" lg="3" md="4" sm="6" v-for="(gauge) in channelGauges" :key="gauge.id">
-        <v-card width="250px" min-width="250px" @click.prevent="toGauge(gauge.id)" tile elevation="4">
-          <KPIGauge :gauge="gauge" :height="130" :width="200"
-            :segmentStops="gauge.segmentStops.split(',').map(x => parseFloat(x))" :needleHeightRatio=".7" />
-          <v-divider class="my-2"></v-divider>
-          <v-card-title>{{ gauge.title }}</v-card-title>
-          <v-card-subtitle>By: {{ gauge.createdBy }}</v-card-subtitle>
-        </v-card>
-      </v-col>
-    </v-row>
-    <v-divider class="mb-4"></v-divider>
-    
-    <v-row class="mt-2">
-      <v-col v-for="(heatMap) in channelHeatMaps" :key="heatMap.id" xl="2" lg="3" md="4" sm="6" xs="12">
-        <v-card tile elevation="4">
-          <v-row justify="center" class="mb-3">
-            <v-col>
-              <DashboardCardHeatMap :heatMap="heatMap" />
-            </v-col>
-          </v-row>
-          <v-divider class="mb-2"></v-divider>
-          <div @click.prevent="toHeatMap(heatMap.id)">
-            <v-card-title>{{ heatMap.title }}</v-card-title>
-            <v-card-text v-if="heatMap.createdBy">By: {{ heatMap.createdBy }}</v-card-text>
-            <v-card-text class="pt-0" v-if="heatMap.dataSet">Dataset: {{ heatMap.dataSet.title }}</v-card-text>
-          </div>
-        </v-card>
-      </v-col>
-    </v-row> -->
+    <div
+        v-if="channelDashboards.length == 0"
+        class="placeholder d-flex flex-column justify-center align-center"
+      >
+        <p class="font-weight-light">No Dashboards on this Channel yet...</p>
+        <v-btn
+          text
+          small
+          class="mb-4"
+          color="primary"
+          @click="showAddDashboardForm"
+          >Add a Dashboard</v-btn
+        >
+      </div>
   </div>
 </template>
 
@@ -209,7 +156,20 @@ export default {
     screenHeight() {
       return window.innerHeight - 200;
     },
+    channelDashboards() {
+      if (
+        this.dashboards &&
+        this.dashboards.length > 0 &&
+        this.currentChannels &&
+        this.currentChannels[0].channelId
+      ) {
+        return this.dashboards.filter(
+          (t) => t.channelId == this.currentChannels[0].channelId
+        );
+      } else return [];
+    },
   },
+  
   async beforeMount() {
     await this.fetchDashboards();
     if (this.dataSets && this.dataSets.length < 1) {

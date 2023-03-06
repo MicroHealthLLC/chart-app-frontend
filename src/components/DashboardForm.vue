@@ -34,7 +34,7 @@
     <v-col class="col-12">
       <!-- <h3>Dashboard Details</h3>
       <v-divider class="mb-4"></v-divider> -->
-      <v-form v-model="formValid" ref="form">
+      <v-form v-model="formValid" ref="form" @submit.prevent="saveDashboard">
         <v-text-field
           outlined
           label="Title"

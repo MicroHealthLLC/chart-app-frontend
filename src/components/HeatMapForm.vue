@@ -81,9 +81,9 @@
               ></v-select>
             </div>
             <div class="expansion">
-              <v-expansion-panels >
+              <v-expansion-panels @change="isExpanded" >
                 <v-expansion-panel>
-                  <v-expansion-panel-header>Click to reveal notes</v-expansion-panel-header>
+                  <v-expansion-panel-header>{{ !expanded ? 'Click to reveal notes' : 'Click to hide notes' }}</v-expansion-panel-header>
                   <v-expansion-panel-content>
                     <vue-editor v-model="heatMap.notes" placeholder="Enter notes here" :editor-toolbar="toolbarOptions" ></vue-editor>
                   </v-expansion-panel-content>
@@ -243,6 +243,7 @@ export default {
       submitAttempted: false,
       deleteDialog: false,
       formValid: true,
+      expanded: false,
       headers: [],
       dataHeaders: [],
       selectedHeaders: [],
@@ -472,6 +473,9 @@ export default {
         } */
       }
     },
+    isExpanded(event) {
+      return event == 0 ? this.expanded = true : this.expanded = false
+    }
   },
   async mounted() {
     if (this.$route.path === `/${this.currentChannels[0].name}/gauges`) {

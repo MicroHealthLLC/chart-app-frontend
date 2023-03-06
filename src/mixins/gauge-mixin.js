@@ -6,6 +6,7 @@ export default {
         title: "",
         value: 0,
         chartType: "Traditional",
+        notes: ''
         //segmentStops: [0, 70, 90, 100]
       },
     };

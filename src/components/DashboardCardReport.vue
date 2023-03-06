@@ -50,7 +50,7 @@
           colors.find((scheme) => scheme.id == report.colorSchemeId).scheme
         "
         :graphType="report.chartType"
-        :height="350"
+        :height="340"
         class="mb-4"
       >
       </Component>

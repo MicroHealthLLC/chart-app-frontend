@@ -38,11 +38,18 @@
         <v-toolbar class="px-5" color="info" dark>
           <h3>{{ heatMap.title }}</h3>
           <v-spacer></v-spacer>
-          <v-btn @click="fullscreen = false" icon
-            ><v-icon>mdi-close-thick</v-icon></v-btn
-          >
+          <v-btn @click="fullscreen = false" icon>
+            <v-icon>mdi-close-thick</v-icon>
+          </v-btn>
         </v-toolbar>
-        <KPIHeatMap :heatMap="heatMap" :headers="cols" :dataItems="data" />
+          <v-row justify="space-around">
+            <v-col cols="6">
+              <KPIHeatMap :heatMap="heatMap" :headers="cols" :dataItems="data" />
+            </v-col>
+            <v-col cols="4">
+              <v-card width="fit-content" class="pa-6 ma-8" v-html="heatMap.notes"></v-card>
+            </v-col>
+          </v-row>
       </v-card>
     </v-dialog>
     <!-- <v-card
