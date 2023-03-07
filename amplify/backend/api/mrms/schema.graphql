@@ -59,6 +59,7 @@ type Dashboard @model @auth(rules: [{ allow: public }]) {
   title: String!
   description: String
   cards: AWSJSON
+  background: String
   channelId: ID @index(name: "byChannel")
   createdBy: String
   updatedBy: String
