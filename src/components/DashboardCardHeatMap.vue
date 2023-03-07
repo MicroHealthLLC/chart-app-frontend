@@ -28,66 +28,30 @@
         </template>
         <span>Remove from Dashboard</span>
       </v-tooltip>
-      <!-- <v-tooltip top>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            class="ml-0 mt-2"
-            icon
-            @click="reveal = true"
-            v-bind="attrs"
-            v-on="on"
-            ><v-icon>mdi-chevron-up</v-icon>
-          </v-btn>
-        </template>
-        <span>See Notes</span>
-      </v-tooltip> -->
     </span>
     <v-btn @click="fullscreenHeatMap" class="chart-menu" icon>
       <v-icon>mdi-fullscreen</v-icon>
     </v-btn>
-    <KPIHeatMap :heatMap="heatMap" :headers="cols" :dataItems="data" :isDashboard="true" />
-    <v-dialog v-model="fullscreen" fullscreen eager>
-      <v-card>
+    <fullscreen v-model="fullscreenHM">
+      <v-card v-if="fullscreenHM" height="100vh">
         <v-toolbar class="px-5" color="info" dark>
           <h3>{{ heatMap.title }}</h3>
           <v-spacer></v-spacer>
-          <v-btn @click="fullscreen = false" icon>
+          <v-btn @click="fullscreenHM = false" icon>
             <v-icon>mdi-close-thick</v-icon>
           </v-btn>
         </v-toolbar>
           <v-row justify="space-around">
             <v-col cols="6">
-              <KPIHeatMap :heatMap="heatMap" :headers="cols" :dataItems="data" />
+              <KPIHeatMap :heatMap="heatMap" :headers="cols" :dataItems="data" class="mt-4" />
             </v-col>
             <v-col cols="4">
-              <v-card width="fit-content" class="pa-6 ma-8" v-html="heatMap.notes"></v-card>
+              <v-card elevation="1" width="fit-content" class="pa-6 ma-8" v-html="heatMap.notes"></v-card>
             </v-col>
           </v-row>
       </v-card>
-    </v-dialog>
-    <!-- <v-card
-      v-if="reveal"
-      class="transition-fast-in-fast-out v-card--reveal"
-      style="height: 100%"
-    >
-      <v-card-text class="pb-0" v-html="heatMap.notes">
-      </v-card-text>
-      <v-card-actions class="pt-0">
-        <v-tooltip top>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              class="ml-0 mt-2"
-              icon
-              @click="reveal = false"
-              v-bind="attrs"
-              v-on="on"
-              ><v-icon>mdi-chevron-down</v-icon>
-            </v-btn>
-          </template>
-          <span>Hide Notes</span>
-        </v-tooltip>
-      </v-card-actions>
-    </v-card> -->
+      <KPIHeatMap v-else :heatMap="heatMap" :headers="cols" :dataItems="data" :isDashboard="true" />
+    </fullscreen>
   </div>
 </template>
 
@@ -109,7 +73,7 @@ export default {
     return {
       data: [],
       cols: [],
-      fullscreen: false,
+      fullscreenHM: false,
       reveal: false,
     };
   },
@@ -129,7 +93,7 @@ export default {
       this.$router.replace(`/${this.currentChannels[0].name}/heatMaps/${id}`);
     },
     fullscreenHeatMap() {
-      this.fullscreen = true;
+      this.fullscreenHM = true;
       /* setTimeout(() => {
 				this.$refs.fullscreenchart.loadChart();
 			}, 100); */

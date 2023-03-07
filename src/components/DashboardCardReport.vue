@@ -55,7 +55,8 @@
       <v-btn @click="fullscreenReport" class="chart-menu" icon>
         <v-icon>mdi-fullscreen</v-icon>
       </v-btn>
-      <Component
+      <fullscreen v-model="fullscreen">
+      <Component v-if="!fullscreen"
         ref="chart"
         :is="graphType(report)"
         :chartData="data"
@@ -67,11 +68,41 @@
         class="mb-4"
       >
       </Component>
-      <div class="d-flex justify-end mb-4">
+      <div class="d-flex justify-end mb-4" v-if="!fullscreen">
         <v-btn v-if="circleChart" @click="changeChartData" outlined small
           >Next Category <v-icon small>mdi-arrow-right</v-icon></v-btn
         >
       </div>
+      <v-card v-else height="100vh">
+        <v-toolbar class="px-5" color="info" dark>
+          <h3>{{ report.title }}</h3>
+          <v-spacer></v-spacer>
+          <v-btn @click="fullscreen = false" icon
+            ><v-icon>mdi-close-thick</v-icon></v-btn
+          >
+        </v-toolbar>
+        <Component
+          v-if="fullscreen"
+          ref="fullscreenchart"
+          :is="graphType(report)"
+          :chartData="data"
+          :chartColors="
+            colors.find((scheme) => scheme.id == report.colorSchemeId).scheme
+          "
+          :graphType="report.chartType"
+          :height="screenHeight"
+          :title="report.title"
+          class="pa-6"
+        >
+        </Component>
+        <!-- Category Toggle Button -->
+        <div class="d-flex justify-end pr-6">
+          <v-btn v-if="circleChart" @click="changeFSChartData" outlined small
+            >Next Category <v-icon small>mdi-arrow-right</v-icon></v-btn
+          >
+        </div>
+      </v-card>
+      </fullscreen>
     </v-card>
     <v-dialog v-model="fullscreen" fullscreen eager>
       <v-card>

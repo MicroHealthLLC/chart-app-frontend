@@ -12,8 +12,7 @@
           <h3 v-else-if="dashboard.id">View {{ dashboard.title }}</h3>
           <h3 v-else>"Dashboard Title"</h3>
           <div>
-            <v-btn v-if="isReadOnly" @click="fullscreenDashboard" class="px-3 mr-2 mb-2" color="blue lighten-3" depressed
-              small>View Fullscreen <v-icon class="ml-2">mdi-fullscreen</v-icon></v-btn>
+            <v-btn v-if="isReadOnly && staged.length > 0" @click="fullscreenDashboard" class="px-3 mr-2 mb-2" color="green white--text" depressed small>View Presentation<v-icon class="ml-2">mdi-presentation</v-icon></v-btn>
             <v-btn v-if="!isReadOnly" @click="saveDashboard" class="px-5 mr-2 mb-2" color="primary" depressed
               small>Save</v-btn>
             <v-btn v-else @click="editForm" class="px-5 mr-2 mb-2" color="primary" depressed small>{{
@@ -31,21 +30,23 @@
         <h3>Drag and drop a chip from the right panel to add components</h3>
       </v-col>
     </v-row>
+    <fullscreen v-model="fullscreen" :class="fullscreen ? 'fullscreen-window pa-5' : 'pa-5'">
     <v-row>
       <!-- DASHBOARD CARDS -->
-      <v-col :cols="isReadOnly ? 12 : 9">
-        <draggable :list="staged" group="universalGroup" :disabled="isReadOnly" class="drag-area row"><!--  :removeOnSpill="true" :onSpill="deleteItem" -->
-          <v-col :cols="dashboardCols(staged, index)" v-for="(item, index) in staged" :key="index">
-            <v-card :ref="`card${index}`">
-              <DashboardCardHeatMap :heatMap="item" v-if="checkChartType(item) == 'heatMap'" :isReadOnly="isReadOnly" @deleteItem="deleteItem" />
-              <DashboardCardGauge :gauge="item" v-if="checkChartType(item) == 'gauge'" :staged="staged" :isReadOnly="isReadOnly" @deleteItem="deleteItem" />
-              <DashboardCardReport :report="item" v-if="checkChartType(item) == 'report'" :isReadOnly="isReadOnly" @deleteItem="deleteItem" />
-            </v-card>
-          </v-col>
-        </draggable>
-      </v-col>
+        <v-col :cols="isReadOnly ? 12 : 9">
+          <draggable :list="staged" group="universalGroup" :disabled="isReadOnly" class="drag-area row"><!--  :removeOnSpill="true" :onSpill="deleteItem" -->
+            <v-col :cols="dashboardCols(staged, index)" v-for="(item, index) in staged" :key="index">
+              <v-card :ref="`card${index}`">
+                <DashboardCardHeatMap :heatMap="item" v-if="checkChartType(item) == 'heatMap'" :isReadOnly="isReadOnly" @deleteItem="deleteItem" />
+                <DashboardCardGauge :gauge="item" v-if="checkChartType(item) == 'gauge'" :staged="staged" :isReadOnly="isReadOnly" @deleteItem="deleteItem" />
+                <DashboardCardReport :report="item" v-if="checkChartType(item) == 'report'" :isReadOnly="isReadOnly" @deleteItem="deleteItem" />
+              </v-card>
+            </v-col>
+          </draggable>
+        </v-col>
+      
 
-      <v-dialog v-model="fullscreen" fullscreen>
+      <!-- <v-dialog v-model="fullscreen" fullscreen>
         <v-toolbar class="mb-2" color="grey lighten-2">
           <h3>{{ dashboard.title }}</h3>
           <v-spacer></v-spacer>
@@ -64,7 +65,7 @@
           </v-col>
         </v-row>
         </v-card>
-      </v-dialog>
+      </v-dialog> -->
 
       <!-- DASHBOARD SELECT AREA -->
       <v-col cols="3" v-if="!isReadOnly">
@@ -124,8 +125,21 @@
             </v-list-item>
           </v-list>
           <v-divider class="mx-4 mb-4"></v-divider>
+          <v-subheader>Presentation Background Color</v-subheader>
+          <v-color-picker
+            v-model="background"
+            hide-canvas
+            hide-inputs
+            hide-mode-switch
+            hide-sliders
+            show-swatches
+            mode="rgba"
+            swatches-max-height="90"
+          ></v-color-picker>
+          <v-divider class="mx-4 mb-4"></v-divider>
           <v-btn @click="deleteDialog = true" small color="error" depressed outlined class="ml-3 mb-3">Delete
-            Dashboard</v-btn>
+            Dashboard
+          </v-btn>
         </v-card>
       </v-col>
       <!-- Delete Prompt -->
@@ -141,6 +155,7 @@
         </v-card>
       </v-dialog>
     </v-row>
+  </fullscreen>
   </v-container>
 </template>
 
@@ -169,10 +184,10 @@ export default {
     return {
       isReadOnly: true,
       staged: [],
-      trashZone: [],
       draggedItem: null,
       deleteDialog: false,
       fullscreen: false,
+      background: '#EEEEEEFF',
     };
   },
   mixins: [datasetMixin, reportMixin, gaugeMixin],
@@ -195,6 +210,7 @@ export default {
         id: this.dashboard.id,
         title: this.dashboard.title,
         cards: JSON.stringify(this.staged),
+        background: this.background,
       };
       this.updateDashboardById(data);
     },
@@ -293,6 +309,10 @@ export default {
     if (this.staged.length == 0) {
       this.isReadOnly = false;
     }
+    if (this.dashboard.background) {
+      this.background = this.dashboard.background
+    }
+    console.log(this.$fullscreen)
   },
   watch: {
     async fullscreen() {
@@ -308,9 +328,6 @@ export default {
         this.isReadOnly = false;
       }
     },
-    isReadOnly() {
-      console.log(this)
-    },
   },
 };
 </script>
@@ -325,5 +342,10 @@ export default {
   opacity: 1 !important;
   position: absolute;
   width: 100%;
+}
+.fullscreen-window {
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: v-bind(background)
 }
 </style>

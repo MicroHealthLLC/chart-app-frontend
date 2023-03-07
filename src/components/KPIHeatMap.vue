@@ -41,11 +41,11 @@
       <v-data-table
         :headers="headers"
         :items="dataItems"
-        class="elevation-4 ml-2"
+        class="elevation-0 ml-2"
         show-first-last-page="true"
         :loading="$store.getters.loading"
         loading-text="Loading... Please wait"
-        :options="{ itemsPerPage: 5 }"
+        :itemsPerPage="5"
         :search="search"
         :custom-sort="customSort"
         
@@ -80,7 +80,7 @@
       </v-data-table>
     </v-col>
     <v-col v-if="isDashboard && heatMap.notes" cols="3" class="mr-2">
-      <v-card>
+      <v-card color="" elevation="1">
         <v-card-text v-html="heatMap.notes"></v-card-text>
       </v-card>
     </v-col>
