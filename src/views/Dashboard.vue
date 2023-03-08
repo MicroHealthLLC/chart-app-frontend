@@ -25,11 +25,14 @@
         <v-divider></v-divider>
       </v-col>
     </v-row>
-    <v-row>
-      <v-col v-if="staged.length == 0">
+    <div class="d-flex justify-end mt-4 mr-4">
+      <span v-if="staged.length == 0">
         <h3>Drag and drop a chip from the right panel to add components</h3>
-      </v-col>
-    </v-row>
+      </span>
+      <span v-if="staged.length > 0 && !isReadOnly">
+        <h2>Drag and drop cards to reorder</h2>
+      </span>
+    </div>
     <fullscreen v-model="fullscreen" :class="fullscreen ? 'fullscreen-window pa-5' : 'pa-5'">
     <v-row>
       <!-- DASHBOARD CARDS -->
@@ -334,7 +337,7 @@ export default {
 
 <style scoped>
 .drag-area {
-  height: 90vh !important;
+  height: 90% !important;
 }
 
 .v-card--reveal {

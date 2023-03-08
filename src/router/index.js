@@ -28,6 +28,7 @@ import Gauges from "../views/Gauges.vue";
 import Gauge from "../views/Gauge.vue";
 import HeatMap from "../views/HeatMap.vue";
 import Dashboard from "../views/Dashboard.vue";
+//import SlideShows from '../views/SlideShows.vue';
 import ChannelDashboards from "../views/ChannelDashboards.vue";
 
 import SettingsIndex from "../views/channelSettings/SettingsIndex.vue";
@@ -160,6 +161,11 @@ const routes = [
     name: "Dashboards",
     component: Dashboards,
   },
+  /* {
+    path: "/:title/dashboards/slideshows",
+    name: "SlideShows",
+    component: SlideShows,
+  }, */
   {
     path: "/:title/dashboards/:dashboardId",
     name: "Dashboard",

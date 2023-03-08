@@ -1,9 +1,13 @@
 <template>
   <div>
     <v-dialog v-model="showForm" width="30%">
-      <v-card class="px-4 py-4 modal">
+      <v-card class="pa-4 modal">
         <DashboardForm @closeDashboardForm="closeDashboardForm" />
       </v-card>
+    </v-dialog>
+    <v-dialog v-model="showSlideShowForm" width="50%">
+      <v-card class="pa-4"><SlideShows @toggleSlideShow="toggleSlideShow" /></v-card>
+      
     </v-dialog>
 
     <div class="d-flex justify-space-between">
@@ -11,6 +15,10 @@
         <v-icon class="mr-2 pb-2" color="cyan">mdi-monitor-dashboard</v-icon
         >Dashboards
       </h3>
+      <v-btn class="mb-2" color="success" small @click="toggleSlideShow">
+        Create Slide Show
+      </v-btn>
+      
       <!-- <v-switch v-model="switch1" label="Show My Dashboard"></v-switch> -->
       <v-btn class="mb-2" color="primary" small @click="showAddDashboardForm"
         >Add Dashboard <v-icon small>mdi-plus</v-icon></v-btn
@@ -82,11 +90,13 @@ import datasetMixin from "../mixins/dataset-mixin";
 import reportMixin from "../mixins/report-mixin";
 import gaugeMixin from "../mixins/gauge-mixin";
 import DashboardForm from "../components/DashboardForm.vue";
+import SlideShows from "./SlideShows.vue";
 
 export default {
   name: "Dashboards",
   components: {
     DashboardForm,
+    SlideShows
   },
 
   data() {
@@ -97,6 +107,7 @@ export default {
       submitAttempted: false,
       deleteDialog: false,
       fullscreen: false,
+      showSlideShowForm: false,
       colorScheme: [],
       dataSetChoices: [],
       data: [],
@@ -134,6 +145,10 @@ export default {
     toDashboard(dashboardId) {
       this.fetchDashboard(dashboardId);
       this.$router.push(`dashboards/${dashboardId}`);
+    },
+    toggleSlideShow() {
+      //this.$router.push(`dashboards/slideshows`);
+      this.showSlideShowForm = this.showSlideShowForm ? false : true;
     },
   },
   computed: {

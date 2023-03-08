@@ -32,15 +32,15 @@
       <v-btn @click="fullscreenGauge" class="chart-menu" icon>
         <v-icon>mdi-fullscreen</v-icon>
       </v-btn>
-      <fullscreen v-model="fullscreen">
-      <div class="d-flex" v-if="!fullscreen">
+      <fullscreen v-model="fullscreenG">
+      <div class="d-flex gauge-wrap" v-if="!fullscreenG">
         <KPIGauge
           :gauge="gauge"
-          :width="parentWidth - 220"
-          :height="parentWidth / 2"
+          :width="parentWidth - 250"
+          :height="parentWidth / 2 - 100"
           :segmentStops="activeSteps"
           :ringWidth="dashboardRingWidth"
-          class="pb-4 mr-2"
+          class="pb-10 px-2 mr-2"
         />
         <v-card v-if="gauge.notes" style="height: 100%" max-width="190" elevation="1">
           <v-card-text v-html="gauge.notes"></v-card-text>
@@ -50,7 +50,7 @@
           <v-toolbar class="px-5" color="info" dark>
             <h3>{{ gauge.title }}</h3>
             <v-spacer></v-spacer>
-            <v-btn @click="fullscreen = false" icon
+            <v-btn @click="fullscreenG = false" icon
               ><v-icon>mdi-close-thick</v-icon></v-btn
             >
           </v-toolbar>
@@ -92,7 +92,7 @@ export default {
       activeSteps: [],
       parentHeight: 0,
       parentWidth: 0,
-      fullscreen: false,
+      fullscreenG: false,
       reveal: false,
     };
   },
@@ -200,7 +200,7 @@ export default {
       this.$router.replace(`/${this.currentChannels[0].name}/gauges/${id}`);
     },
     fullscreenGauge() {
-      this.fullscreen = true;
+      this.fullscreenG = true;
       console.log(this)
     },
   },
@@ -245,6 +245,10 @@ export default {
   position: absolute;
   top: 10px;
   right: 10px;
+}
+
+.gauge-wrap {
+  
 }
 
 .v-card--reveal {

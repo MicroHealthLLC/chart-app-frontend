@@ -55,7 +55,7 @@
       <v-list-item>
         <v-list-item-title>
           <v-icon color="cyan">mdi-monitor-dashboard</v-icon>
-          Dashboard Items:
+          Dashboards:
         </v-list-item-title>
         <v-list-item-subtitle class="text-right text-h6 text--primary">
           <span class="pill px-2">
