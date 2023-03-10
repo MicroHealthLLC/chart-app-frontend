@@ -8,6 +8,7 @@ type Report @model @auth(rules: [{ allow: public }]) {
   description: String,
   reportGroupId: ID @index(name: "byReportGroup")  
   channelId: ID @index(name: "byChannel")
+  # dashboards: [Dashboard] @manyToMany(relationName: "DashboardReports")
   colorSchemeId: Int
   chartType: String
   dataSet: DataSet @hasOne
@@ -60,6 +61,7 @@ type Dashboard @model @auth(rules: [{ allow: public }]) {
   description: String
   cards: AWSJSON
   background: String
+  # reports: [Report] @manyToMany(relationName: "DashboardReports")
   channelId: ID @index(name: "byChannel")
   createdBy: String
   updatedBy: String

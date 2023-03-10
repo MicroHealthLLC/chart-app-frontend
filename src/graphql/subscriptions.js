@@ -6,27 +6,6 @@ export const onCreateReport = /* GraphQL */ `
     onCreateReport(filter: $filter) {
       id
       title
-      channel {
-        id
-        description
-        reports {
-          nextToken
-        }
-        dataSets {
-          nextToken
-        }
-        gauges {
-          nextToken
-        }
-        heatMap {
-          nextToken
-        }
-        type
-        title
-        channelTypeId
-        createdAt
-        updatedAt
-      }
       reportGroup {
         id
         title
@@ -34,65 +13,28 @@ export const onCreateReport = /* GraphQL */ `
           nextToken
         }
         reportIds
+        channelId
         createdBy
         updatedBy
-        channelId
         createdAt
         updatedAt
       }
       description
       reportGroupId
       channelId
-      dashboard {
-        id
-        title
-        description
-        reports {
-          nextToken
-        }
-        gauges {
-          nextToken
-        }
-        createdBy
-        updatedBy
-        createdAt
-        updatedAt
-      }
-      dashboardId
       colorSchemeId
       chartType
       dataSet {
         id
         title
         description
-        channel {
-          id
-          description
-          type
-          title
-          channelTypeId
-          createdAt
-          updatedAt
-        }
         channelId
         dataValues {
           nextToken
         }
-        heatMap {
-          id
-          title
-          dataSetId
-          options
-          channelId
-          createdBy
-          updatedBy
-          createdAt
-          updatedAt
-        }
         user
         createdAt
         updatedAt
-        dataSetHeatMapId
       }
       dataSetId
       xAxis
@@ -110,27 +52,6 @@ export const onUpdateReport = /* GraphQL */ `
     onUpdateReport(filter: $filter) {
       id
       title
-      channel {
-        id
-        description
-        reports {
-          nextToken
-        }
-        dataSets {
-          nextToken
-        }
-        gauges {
-          nextToken
-        }
-        heatMap {
-          nextToken
-        }
-        type
-        title
-        channelTypeId
-        createdAt
-        updatedAt
-      }
       reportGroup {
         id
         title
@@ -138,65 +59,28 @@ export const onUpdateReport = /* GraphQL */ `
           nextToken
         }
         reportIds
+        channelId
         createdBy
         updatedBy
-        channelId
         createdAt
         updatedAt
       }
       description
       reportGroupId
       channelId
-      dashboard {
-        id
-        title
-        description
-        reports {
-          nextToken
-        }
-        gauges {
-          nextToken
-        }
-        createdBy
-        updatedBy
-        createdAt
-        updatedAt
-      }
-      dashboardId
       colorSchemeId
       chartType
       dataSet {
         id
         title
         description
-        channel {
-          id
-          description
-          type
-          title
-          channelTypeId
-          createdAt
-          updatedAt
-        }
         channelId
         dataValues {
           nextToken
         }
-        heatMap {
-          id
-          title
-          dataSetId
-          options
-          channelId
-          createdBy
-          updatedBy
-          createdAt
-          updatedAt
-        }
         user
         createdAt
         updatedAt
-        dataSetHeatMapId
       }
       dataSetId
       xAxis
@@ -214,27 +98,6 @@ export const onDeleteReport = /* GraphQL */ `
     onDeleteReport(filter: $filter) {
       id
       title
-      channel {
-        id
-        description
-        reports {
-          nextToken
-        }
-        dataSets {
-          nextToken
-        }
-        gauges {
-          nextToken
-        }
-        heatMap {
-          nextToken
-        }
-        type
-        title
-        channelTypeId
-        createdAt
-        updatedAt
-      }
       reportGroup {
         id
         title
@@ -242,65 +105,28 @@ export const onDeleteReport = /* GraphQL */ `
           nextToken
         }
         reportIds
+        channelId
         createdBy
         updatedBy
-        channelId
         createdAt
         updatedAt
       }
       description
       reportGroupId
       channelId
-      dashboard {
-        id
-        title
-        description
-        reports {
-          nextToken
-        }
-        gauges {
-          nextToken
-        }
-        createdBy
-        updatedBy
-        createdAt
-        updatedAt
-      }
-      dashboardId
       colorSchemeId
       chartType
       dataSet {
         id
         title
         description
-        channel {
-          id
-          description
-          type
-          title
-          channelTypeId
-          createdAt
-          updatedAt
-        }
         channelId
         dataValues {
           nextToken
         }
-        heatMap {
-          id
-          title
-          dataSetId
-          options
-          channelId
-          createdBy
-          updatedBy
-          createdAt
-          updatedAt
-        }
         user
         createdAt
         updatedAt
-        dataSetHeatMapId
       }
       dataSetId
       xAxis
@@ -327,7 +153,6 @@ export const onCreateReportGroup = /* GraphQL */ `
           description
           reportGroupId
           channelId
-          dashboardId
           colorSchemeId
           chartType
           dataSetId
@@ -342,9 +167,9 @@ export const onCreateReportGroup = /* GraphQL */ `
         nextToken
       }
       reportIds
+      channelId
       createdBy
       updatedBy
-      channelId
       createdAt
       updatedAt
     }
@@ -364,7 +189,6 @@ export const onUpdateReportGroup = /* GraphQL */ `
           description
           reportGroupId
           channelId
-          dashboardId
           colorSchemeId
           chartType
           dataSetId
@@ -379,9 +203,9 @@ export const onUpdateReportGroup = /* GraphQL */ `
         nextToken
       }
       reportIds
+      channelId
       createdBy
       updatedBy
-      channelId
       createdAt
       updatedAt
     }
@@ -401,7 +225,6 @@ export const onDeleteReportGroup = /* GraphQL */ `
           description
           reportGroupId
           channelId
-          dashboardId
           colorSchemeId
           chartType
           dataSetId
@@ -416,9 +239,9 @@ export const onDeleteReportGroup = /* GraphQL */ `
         nextToken
       }
       reportIds
+      channelId
       createdBy
       updatedBy
-      channelId
       createdAt
       updatedAt
     }
@@ -433,44 +256,7 @@ export const onCreateGauge = /* GraphQL */ `
       value
       segmentStops
       chartType
-      channel {
-        id
-        description
-        reports {
-          nextToken
-        }
-        dataSets {
-          nextToken
-        }
-        gauges {
-          nextToken
-        }
-        heatMap {
-          nextToken
-        }
-        type
-        title
-        channelTypeId
-        createdAt
-        updatedAt
-      }
       channelId
-      dashboard {
-        id
-        title
-        description
-        reports {
-          nextToken
-        }
-        gauges {
-          nextToken
-        }
-        createdBy
-        updatedBy
-        createdAt
-        updatedAt
-      }
-      dashboardId
       createdBy
       updatedBy
       createdAt
@@ -487,44 +273,7 @@ export const onUpdateGauge = /* GraphQL */ `
       value
       segmentStops
       chartType
-      channel {
-        id
-        description
-        reports {
-          nextToken
-        }
-        dataSets {
-          nextToken
-        }
-        gauges {
-          nextToken
-        }
-        heatMap {
-          nextToken
-        }
-        type
-        title
-        channelTypeId
-        createdAt
-        updatedAt
-      }
       channelId
-      dashboard {
-        id
-        title
-        description
-        reports {
-          nextToken
-        }
-        gauges {
-          nextToken
-        }
-        createdBy
-        updatedBy
-        createdAt
-        updatedAt
-      }
-      dashboardId
       createdBy
       updatedBy
       createdAt
@@ -541,44 +290,7 @@ export const onDeleteGauge = /* GraphQL */ `
       value
       segmentStops
       chartType
-      channel {
-        id
-        description
-        reports {
-          nextToken
-        }
-        dataSets {
-          nextToken
-        }
-        gauges {
-          nextToken
-        }
-        heatMap {
-          nextToken
-        }
-        type
-        title
-        channelTypeId
-        createdAt
-        updatedAt
-      }
       channelId
-      dashboard {
-        id
-        title
-        description
-        reports {
-          nextToken
-        }
-        gauges {
-          nextToken
-        }
-        createdBy
-        updatedBy
-        createdAt
-        updatedAt
-      }
-      dashboardId
       createdBy
       updatedBy
       createdAt
@@ -595,58 +307,19 @@ export const onCreateHeatMap = /* GraphQL */ `
         id
         title
         description
-        channel {
-          id
-          description
-          type
-          title
-          channelTypeId
-          createdAt
-          updatedAt
-        }
         channelId
         dataValues {
           nextToken
         }
-        heatMap {
-          id
-          title
-          dataSetId
-          options
-          channelId
-          createdBy
-          updatedBy
-          createdAt
-          updatedAt
-        }
         user
         createdAt
         updatedAt
-        dataSetHeatMapId
       }
       dataSetId
       options
-      channel {
-        id
-        description
-        reports {
-          nextToken
-        }
-        dataSets {
-          nextToken
-        }
-        gauges {
-          nextToken
-        }
-        heatMap {
-          nextToken
-        }
-        type
-        title
-        channelTypeId
-        createdAt
-        updatedAt
-      }
+      leadCol
+      columns
+      notes
       channelId
       createdBy
       updatedBy
@@ -664,58 +337,19 @@ export const onUpdateHeatMap = /* GraphQL */ `
         id
         title
         description
-        channel {
-          id
-          description
-          type
-          title
-          channelTypeId
-          createdAt
-          updatedAt
-        }
         channelId
         dataValues {
           nextToken
         }
-        heatMap {
-          id
-          title
-          dataSetId
-          options
-          channelId
-          createdBy
-          updatedBy
-          createdAt
-          updatedAt
-        }
         user
         createdAt
         updatedAt
-        dataSetHeatMapId
       }
       dataSetId
       options
-      channel {
-        id
-        description
-        reports {
-          nextToken
-        }
-        dataSets {
-          nextToken
-        }
-        gauges {
-          nextToken
-        }
-        heatMap {
-          nextToken
-        }
-        type
-        title
-        channelTypeId
-        createdAt
-        updatedAt
-      }
+      leadCol
+      columns
+      notes
       channelId
       createdBy
       updatedBy
@@ -733,58 +367,19 @@ export const onDeleteHeatMap = /* GraphQL */ `
         id
         title
         description
-        channel {
-          id
-          description
-          type
-          title
-          channelTypeId
-          createdAt
-          updatedAt
-        }
         channelId
         dataValues {
           nextToken
         }
-        heatMap {
-          id
-          title
-          dataSetId
-          options
-          channelId
-          createdBy
-          updatedBy
-          createdAt
-          updatedAt
-        }
         user
         createdAt
         updatedAt
-        dataSetHeatMapId
       }
       dataSetId
       options
-      channel {
-        id
-        description
-        reports {
-          nextToken
-        }
-        dataSets {
-          nextToken
-        }
-        gauges {
-          nextToken
-        }
-        heatMap {
-          nextToken
-        }
-        type
-        title
-        channelTypeId
-        createdAt
-        updatedAt
-      }
+      leadCol
+      columns
+      notes
       channelId
       createdBy
       updatedBy
@@ -801,44 +396,9 @@ export const onCreateDashboard = /* GraphQL */ `
       id
       title
       description
-      reports {
-        items {
-          id
-          title
-          description
-          reportGroupId
-          channelId
-          dashboardId
-          colorSchemeId
-          chartType
-          dataSetId
-          xAxis
-          columns
-          createdBy
-          updatedBy
-          createdAt
-          updatedAt
-          reportDataSetId
-        }
-        nextToken
-      }
-      gauges {
-        items {
-          id
-          title
-          notes
-          value
-          segmentStops
-          chartType
-          channelId
-          dashboardId
-          createdBy
-          updatedBy
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
+      cards
+      background
+      channelId
       createdBy
       updatedBy
       createdAt
@@ -854,44 +414,9 @@ export const onUpdateDashboard = /* GraphQL */ `
       id
       title
       description
-      reports {
-        items {
-          id
-          title
-          description
-          reportGroupId
-          channelId
-          dashboardId
-          colorSchemeId
-          chartType
-          dataSetId
-          xAxis
-          columns
-          createdBy
-          updatedBy
-          createdAt
-          updatedAt
-          reportDataSetId
-        }
-        nextToken
-      }
-      gauges {
-        items {
-          id
-          title
-          notes
-          value
-          segmentStops
-          chartType
-          channelId
-          dashboardId
-          createdBy
-          updatedBy
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
+      cards
+      background
+      channelId
       createdBy
       updatedBy
       createdAt
@@ -907,44 +432,9 @@ export const onDeleteDashboard = /* GraphQL */ `
       id
       title
       description
-      reports {
-        items {
-          id
-          title
-          description
-          reportGroupId
-          channelId
-          dashboardId
-          colorSchemeId
-          chartType
-          dataSetId
-          xAxis
-          columns
-          createdBy
-          updatedBy
-          createdAt
-          updatedAt
-          reportDataSetId
-        }
-        nextToken
-      }
-      gauges {
-        items {
-          id
-          title
-          notes
-          value
-          segmentStops
-          chartType
-          channelId
-          dashboardId
-          createdBy
-          updatedBy
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
+      cards
+      background
+      channelId
       createdBy
       updatedBy
       createdAt
@@ -964,7 +454,6 @@ export const onCreateChannel = /* GraphQL */ `
           description
           reportGroupId
           channelId
-          dashboardId
           colorSchemeId
           chartType
           dataSetId
@@ -978,6 +467,19 @@ export const onCreateChannel = /* GraphQL */ `
         }
         nextToken
       }
+      reportGroups {
+        items {
+          id
+          title
+          reportIds
+          channelId
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       dataSets {
         items {
           id
@@ -987,7 +489,6 @@ export const onCreateChannel = /* GraphQL */ `
           user
           createdAt
           updatedAt
-          dataSetHeatMapId
         }
         nextToken
       }
@@ -1000,7 +501,6 @@ export const onCreateChannel = /* GraphQL */ `
           segmentStops
           chartType
           channelId
-          dashboardId
           createdBy
           updatedBy
           createdAt
@@ -1008,12 +508,30 @@ export const onCreateChannel = /* GraphQL */ `
         }
         nextToken
       }
-      heatMap {
+      heatMaps {
         items {
           id
           title
           dataSetId
           options
+          leadCol
+          columns
+          notes
+          channelId
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      dashboards {
+        items {
+          id
+          title
+          description
+          cards
+          background
           channelId
           createdBy
           updatedBy
@@ -1042,7 +560,6 @@ export const onUpdateChannel = /* GraphQL */ `
           description
           reportGroupId
           channelId
-          dashboardId
           colorSchemeId
           chartType
           dataSetId
@@ -1056,6 +573,19 @@ export const onUpdateChannel = /* GraphQL */ `
         }
         nextToken
       }
+      reportGroups {
+        items {
+          id
+          title
+          reportIds
+          channelId
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       dataSets {
         items {
           id
@@ -1065,7 +595,6 @@ export const onUpdateChannel = /* GraphQL */ `
           user
           createdAt
           updatedAt
-          dataSetHeatMapId
         }
         nextToken
       }
@@ -1078,7 +607,6 @@ export const onUpdateChannel = /* GraphQL */ `
           segmentStops
           chartType
           channelId
-          dashboardId
           createdBy
           updatedBy
           createdAt
@@ -1086,12 +614,30 @@ export const onUpdateChannel = /* GraphQL */ `
         }
         nextToken
       }
-      heatMap {
+      heatMaps {
         items {
           id
           title
           dataSetId
           options
+          leadCol
+          columns
+          notes
+          channelId
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      dashboards {
+        items {
+          id
+          title
+          description
+          cards
+          background
           channelId
           createdBy
           updatedBy
@@ -1120,7 +666,6 @@ export const onDeleteChannel = /* GraphQL */ `
           description
           reportGroupId
           channelId
-          dashboardId
           colorSchemeId
           chartType
           dataSetId
@@ -1134,6 +679,19 @@ export const onDeleteChannel = /* GraphQL */ `
         }
         nextToken
       }
+      reportGroups {
+        items {
+          id
+          title
+          reportIds
+          channelId
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       dataSets {
         items {
           id
@@ -1143,7 +701,6 @@ export const onDeleteChannel = /* GraphQL */ `
           user
           createdAt
           updatedAt
-          dataSetHeatMapId
         }
         nextToken
       }
@@ -1156,7 +713,6 @@ export const onDeleteChannel = /* GraphQL */ `
           segmentStops
           chartType
           channelId
-          dashboardId
           createdBy
           updatedBy
           createdAt
@@ -1164,12 +720,30 @@ export const onDeleteChannel = /* GraphQL */ `
         }
         nextToken
       }
-      heatMap {
+      heatMaps {
         items {
           id
           title
           dataSetId
           options
+          leadCol
+          columns
+          notes
+          channelId
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      dashboards {
+        items {
+          id
+          title
+          description
+          cards
+          background
           channelId
           createdBy
           updatedBy
@@ -1192,27 +766,6 @@ export const onCreateDataSet = /* GraphQL */ `
       id
       title
       description
-      channel {
-        id
-        description
-        reports {
-          nextToken
-        }
-        dataSets {
-          nextToken
-        }
-        gauges {
-          nextToken
-        }
-        heatMap {
-          nextToken
-        }
-        type
-        title
-        channelTypeId
-        createdAt
-        updatedAt
-      }
       channelId
       dataValues {
         items {
@@ -1224,40 +777,9 @@ export const onCreateDataSet = /* GraphQL */ `
         }
         nextToken
       }
-      heatMap {
-        id
-        title
-        dataSet {
-          id
-          title
-          description
-          channelId
-          user
-          createdAt
-          updatedAt
-          dataSetHeatMapId
-        }
-        dataSetId
-        options
-        channel {
-          id
-          description
-          type
-          title
-          channelTypeId
-          createdAt
-          updatedAt
-        }
-        channelId
-        createdBy
-        updatedBy
-        createdAt
-        updatedAt
-      }
       user
       createdAt
       updatedAt
-      dataSetHeatMapId
     }
   }
 `;
@@ -1267,27 +789,6 @@ export const onUpdateDataSet = /* GraphQL */ `
       id
       title
       description
-      channel {
-        id
-        description
-        reports {
-          nextToken
-        }
-        dataSets {
-          nextToken
-        }
-        gauges {
-          nextToken
-        }
-        heatMap {
-          nextToken
-        }
-        type
-        title
-        channelTypeId
-        createdAt
-        updatedAt
-      }
       channelId
       dataValues {
         items {
@@ -1299,40 +800,9 @@ export const onUpdateDataSet = /* GraphQL */ `
         }
         nextToken
       }
-      heatMap {
-        id
-        title
-        dataSet {
-          id
-          title
-          description
-          channelId
-          user
-          createdAt
-          updatedAt
-          dataSetHeatMapId
-        }
-        dataSetId
-        options
-        channel {
-          id
-          description
-          type
-          title
-          channelTypeId
-          createdAt
-          updatedAt
-        }
-        channelId
-        createdBy
-        updatedBy
-        createdAt
-        updatedAt
-      }
       user
       createdAt
       updatedAt
-      dataSetHeatMapId
     }
   }
 `;
@@ -1342,27 +812,6 @@ export const onDeleteDataSet = /* GraphQL */ `
       id
       title
       description
-      channel {
-        id
-        description
-        reports {
-          nextToken
-        }
-        dataSets {
-          nextToken
-        }
-        gauges {
-          nextToken
-        }
-        heatMap {
-          nextToken
-        }
-        type
-        title
-        channelTypeId
-        createdAt
-        updatedAt
-      }
       channelId
       dataValues {
         items {
@@ -1374,40 +823,9 @@ export const onDeleteDataSet = /* GraphQL */ `
         }
         nextToken
       }
-      heatMap {
-        id
-        title
-        dataSet {
-          id
-          title
-          description
-          channelId
-          user
-          createdAt
-          updatedAt
-          dataSetHeatMapId
-        }
-        dataSetId
-        options
-        channel {
-          id
-          description
-          type
-          title
-          channelTypeId
-          createdAt
-          updatedAt
-        }
-        channelId
-        createdBy
-        updatedBy
-        createdAt
-        updatedAt
-      }
       user
       createdAt
       updatedAt
-      dataSetHeatMapId
     }
   }
 `;
@@ -1423,34 +841,13 @@ export const onCreateDataValue = /* GraphQL */ `
         id
         title
         description
-        channel {
-          id
-          description
-          type
-          title
-          channelTypeId
-          createdAt
-          updatedAt
-        }
         channelId
         dataValues {
           nextToken
         }
-        heatMap {
-          id
-          title
-          dataSetId
-          options
-          channelId
-          createdBy
-          updatedBy
-          createdAt
-          updatedAt
-        }
         user
         createdAt
         updatedAt
-        dataSetHeatMapId
       }
       createdAt
       updatedAt
@@ -1469,34 +866,13 @@ export const onUpdateDataValue = /* GraphQL */ `
         id
         title
         description
-        channel {
-          id
-          description
-          type
-          title
-          channelTypeId
-          createdAt
-          updatedAt
-        }
         channelId
         dataValues {
           nextToken
         }
-        heatMap {
-          id
-          title
-          dataSetId
-          options
-          channelId
-          createdBy
-          updatedBy
-          createdAt
-          updatedAt
-        }
         user
         createdAt
         updatedAt
-        dataSetHeatMapId
       }
       createdAt
       updatedAt
@@ -1515,34 +891,13 @@ export const onDeleteDataValue = /* GraphQL */ `
         id
         title
         description
-        channel {
-          id
-          description
-          type
-          title
-          channelTypeId
-          createdAt
-          updatedAt
-        }
         channelId
         dataValues {
           nextToken
         }
-        heatMap {
-          id
-          title
-          dataSetId
-          options
-          channelId
-          createdBy
-          updatedBy
-          createdAt
-          updatedAt
-        }
         user
         createdAt
         updatedAt
-        dataSetHeatMapId
       }
       createdAt
       updatedAt

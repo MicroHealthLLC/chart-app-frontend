@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-row>
+    <!-- <v-row>
       <v-col>
         <div class="d-flex justify-space-between">
           <h3 v-if="!isReadOnly && dashboard.id" class="d-flex align-center">
@@ -34,11 +34,18 @@
       </span>
     </div>
     <fullscreen v-model="fullscreen" :class="fullscreen ? 'fullscreen-window pa-5' : 'pa-5'">
-    <v-row>
+    <v-row -->
 
       <!-- DASHBOARD CARDS -->
-        <v-col :cols="isReadOnly ? 12 : 9">
-          <draggable :list="staged" group="universalGroup" :disabled="isReadOnly" class="drag-area row"><!--  :removeOnSpill="true" :onSpill="deleteItem" -->
+       <!--  <v-col :cols="isReadOnly ? 12 : 9"> -->
+          <dashboard :id="'dashExample'">
+            <dash-layout v-for="layout in dlayouts" v-bind="layout" :debug="true" :key="layout.breakpoint">
+              <dash-item v-for="item in layout.items" v-bind.sync="item" :key="item.id">
+                <div class="content"></div>
+              </dash-item>
+            </dash-layout>
+          </dashboard>
+          <!-- <draggable :list="staged" group="universalGroup" :disabled="isReadOnly" class="drag-area row">
             <v-col :cols="dashboardCols(staged, index)" v-for="(item, index) in staged" :key="index">
               <v-card :ref="`card${index}`">
                 <DashboardCardHeatMap :heatMap="item" v-if="checkChartType(item) == 'heatMap'" :isReadOnly="isReadOnly" @deleteItem="deleteItem" :fullscreen="fullscreen" />
@@ -46,11 +53,11 @@
                 <DashboardCardReport :report="item" v-if="checkChartType(item) == 'report'" :isReadOnly="isReadOnly" @deleteItem="deleteItem" :fullscreen="fullscreen" />
               </v-card>
             </v-col>
-          </draggable>
-        </v-col>
+          </draggable> 
+        </v-col>-->
       
       <!-- DASHBOARD SELECT AREA -->
-      <v-col cols="3" v-if="!isReadOnly">
+      <!-- <v-col cols="3" v-if="!isReadOnly">
         <v-card height="max-content">
           <h4 class="pt-4 pl-2">Available Modules</h4>
           <v-list>
@@ -123,7 +130,7 @@
             Dashboard
           </v-btn>
         </v-card>
-      </v-col>
+      </v-col> -->
       <!-- Delete Prompt -->
       <v-dialog v-model="deleteDialog" max-width="400">
         <v-card>
@@ -136,19 +143,20 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-    </v-row>
-  </fullscreen>
+    <!-- </v-row> -->
+  <!-- </fullscreen> -->
   </v-container>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
 
-import draggable from "vuedraggable";
+import { Dashboard, DashLayout, DashItem } from "vue-responsive-dash";
+//import draggable from "vuedraggable";
 
-import DashboardCardHeatMap from "../components/DashboardCardHeatMap.vue";
+/* import DashboardCardHeatMap from "../components/DashboardCardHeatMap.vue";
 import DashboardCardGauge from "../components/DashboardCardGauge.vue";
-import DashboardCardReport from "../components/DashboardCardReport.vue";
+import DashboardCardReport from "../components/DashboardCardReport.vue"; */
 
 import datasetMixin from "../mixins/dataset-mixin";
 import reportMixin from "../mixins/report-mixin";
@@ -157,10 +165,13 @@ import gaugeMixin from "../mixins/gauge-mixin";
 export default {
   name: "Dashboard",
   components: {
-    draggable,
-    DashboardCardHeatMap,
+    //draggable,
+    /* DashboardCardHeatMap,
     DashboardCardGauge,
-    DashboardCardReport,
+    DashboardCardReport, */
+    Dashboard,
+    DashLayout,
+    DashItem
   },
   data() {
     return {
@@ -170,6 +181,67 @@ export default {
       deleteDialog: false,
       fullscreen: false,
       background: '#EEEEEEFF',
+      dlayouts: [
+        {
+          breakpoint: "xl",
+          numberOfCols: 12,
+          items: [
+            { id: "1", x: 0, y: 0, width: 1, height: 1 },
+            { id: "2", x: 1, y: 0, width: 2, height: 1 },
+          ]
+        },
+        {
+          breakpoint: "lg",
+          breakpointWidth: 1200,
+          numberOfCols: 10,
+          items: [
+            { id: "1", x: 0, y: 0, width: 1, height: 1 },
+            { id: "2", x: 1, y: 0, width: 2, height: 1 },
+          ]
+        },
+        {
+          breakpoint: "md",
+          breakpointWidth: 996,
+          numberOfCols: 8,
+          items: [
+            { id: "1", x: 0, y: 0, width: 1, height: 1 },
+            { id: "2", x: 1, y: 0, width: 2, height: 1 },
+          ]
+        },
+        {
+          breakpoint: "sm",
+          breakpointWidth: 768,
+          numberOfCols: 4,
+          items: [
+            { id: "1", x: 0, y: 0, width: 1, height: 1 },
+            { id: "2", x: 1, y: 0, width: 2, height: 1 },
+          ]
+        },
+        {
+          breakpoint: "xs",
+          breakpointWidth: 480,
+          numberOfCols: 2,
+          items: [
+            { id: "1", x: 0, y: 0, width: 1, height: 1 },
+            { id: "2", x: 1, y: 0, width: 1, height: 1 },
+          ]
+        },
+        {
+          breakpoint: "xxs",
+          breakpointWidth: 0,
+          numberOfCols: 1,
+          items: [
+            {
+              id: "1",
+              x: 0,
+              y: 0,
+              width: 1,
+              height: 1
+            },
+            { id: "2", x: 0, y: 1, width: 1, height: 1 }
+          ]
+        }
+      ]
     };
   },
   mixins: [datasetMixin, reportMixin, gaugeMixin],
@@ -329,5 +401,11 @@ export default {
   overflow-y: auto;
   overflow-x: hidden;
   background: v-bind(background)
+}
+.content {
+  height: 100%;
+  width: 100%;
+  border: 2px solid #42b983;
+  border-radius: 5px;
 }
 </style>

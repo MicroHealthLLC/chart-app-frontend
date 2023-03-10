@@ -31,10 +31,10 @@
                 v-for="(item, index) in JSON.parse(dashboard.cards)" :key="index">
                 <v-card :ref="`card${index}`" class="pa-4 ma-2">
                   <DashboardCardHeatMap :heatMap="item" v-if="checkChartType(item) == 'heatMap'"
-                    :isReadOnly="isReadOnly" />
+                    :isReadOnly="isReadOnly" :fullscreen="fullscreen" />
                   <DashboardCardGauge :gauge="item" v-if="checkChartType(item) == 'gauge'"
-                    :staged="JSON.parse(dashboard.cards)" :isReadOnly="isReadOnly" />
-                  <DashboardCardReport :report="item" v-if="checkChartType(item) == 'report'" :isReadOnly="isReadOnly" />
+                    :staged="JSON.parse(dashboard.cards)" :isReadOnly="isReadOnly" :fullscreen="fullscreen" />
+                  <DashboardCardReport :report="item" v-if="checkChartType(item) == 'report'" :isReadOnly="isReadOnly" :fullscreen="fullscreen" />
                 </v-card>
               </v-col>
             </v-row>
