@@ -35,41 +35,20 @@
     </div>
     <fullscreen v-model="fullscreen" :class="fullscreen ? 'fullscreen-window pa-5' : 'pa-5'">
     <v-row>
+
       <!-- DASHBOARD CARDS -->
         <v-col :cols="isReadOnly ? 12 : 9">
           <draggable :list="staged" group="universalGroup" :disabled="isReadOnly" class="drag-area row"><!--  :removeOnSpill="true" :onSpill="deleteItem" -->
             <v-col :cols="dashboardCols(staged, index)" v-for="(item, index) in staged" :key="index">
               <v-card :ref="`card${index}`">
-                <DashboardCardHeatMap :heatMap="item" v-if="checkChartType(item) == 'heatMap'" :isReadOnly="isReadOnly" @deleteItem="deleteItem" />
-                <DashboardCardGauge :gauge="item" v-if="checkChartType(item) == 'gauge'" :staged="staged" :isReadOnly="isReadOnly" @deleteItem="deleteItem" />
-                <DashboardCardReport :report="item" v-if="checkChartType(item) == 'report'" :isReadOnly="isReadOnly" @deleteItem="deleteItem" />
+                <DashboardCardHeatMap :heatMap="item" v-if="checkChartType(item) == 'heatMap'" :isReadOnly="isReadOnly" @deleteItem="deleteItem" :fullscreen="fullscreen" />
+                <DashboardCardGauge :gauge="item" v-if="checkChartType(item) == 'gauge'" :staged="staged" :isReadOnly="isReadOnly" @deleteItem="deleteItem" :fullscreen="fullscreen" />
+                <DashboardCardReport :report="item" v-if="checkChartType(item) == 'report'" :isReadOnly="isReadOnly" @deleteItem="deleteItem" :fullscreen="fullscreen" />
               </v-card>
             </v-col>
           </draggable>
         </v-col>
       
-
-      <!-- <v-dialog v-model="fullscreen" fullscreen>
-        <v-toolbar class="mb-2" color="grey lighten-2">
-          <h3>{{ dashboard.title }}</h3>
-          <v-spacer></v-spacer>
-          <v-btn @click="fullscreen = false" icon>
-            <v-icon>mdi-close-thick</v-icon>
-          </v-btn>
-        </v-toolbar>
-        <v-card>
-          <v-row>
-          <v-col :cols="dashboardCols(staged, index)" v-for="(item, index) in staged" :key="index">
-            <v-card :ref="`card${index}`">
-              <DashboardCardHeatMap :heatMap="item" v-if="checkChartType(item) == 'heatMap'" />
-              <DashboardCardGauge :gauge="item" v-if="checkChartType(item) == 'gauge'" :staged="staged"  />
-              <DashboardCardReport :report="item" v-if="checkChartType(item) == 'report'" />
-            </v-card>
-          </v-col>
-        </v-row>
-        </v-card>
-      </v-dialog> -->
-
       <!-- DASHBOARD SELECT AREA -->
       <v-col cols="3" v-if="!isReadOnly">
         <v-card height="max-content">

@@ -30,20 +30,56 @@
           <span>Remove from Dashboard</span>
         </v-tooltip>
       </span>
-
-      <v-btn @click="fullscreenReport" class="chart-menu" icon>
-        <v-icon>mdi-fullscreen</v-icon>
-      </v-btn>
-      <fullscreen v-model="fullscreenR">
-        <Component v-if="!fullscreenR" ref="chart" :is="graphType(report)" :chartData="data" :chartColors="
+      <fullscreen v-if="!fullscreen" v-model="fullscreenR">
+          <v-btn @click="fullscreenReport" class="chart-menu" icon>
+            <v-icon>{{ fullscreenR ? 'mdi-fullscreen-exit' : 'mdi-fullscreen' }}</v-icon>
+          </v-btn>
+          <Component ref="chart" :is="graphType(report)" :chartData="data" :chartColors="
+            colors.find((scheme) => scheme.id == report.colorSchemeId).scheme
+          " :graphType="report.chartType" :height="reportHeight" class="mb-4">
+          </Component>
+          <div class="d-flex justify-end mb-4">
+            <v-btn v-if="circleChart" @click="changeChartData" outlined small>Next Category<v-icon
+                small>mdi-arrow-right</v-icon></v-btn>
+          </div>
+      </fullscreen>
+      <span v-else-if="fullscreen && !fullscreenD">
+        <v-btn @click="fullscreenDialog" class="chart-menu" icon>
+          <v-icon>mdi-arrow-expand</v-icon>
+        </v-btn>
+        <Component ref="chart" :is="graphType(report)" :chartData="data" :chartColors="
           colors.find((scheme) => scheme.id == report.colorSchemeId).scheme
         " :graphType="report.chartType" :height="400" class="mb-4">
         </Component>
-        <div class="d-flex justify-end mb-4" v-if="!fullscreenR">
-          <v-btn v-if="circleChart" @click="changeChartData" outlined small>Next Category <v-icon
+        <div class="d-flex justify-end mb-4">
+          <v-btn v-if="circleChart" @click="changeChartData" outlined small>Next Category<v-icon
               small>mdi-arrow-right</v-icon></v-btn>
         </div>
-        <v-card v-else height="100vh">
+        <!-- <v-dialog v-model="fullscreenD" fullscreen eager> -->
+      
+    <!-- </v-dialog> -->
+      </span>
+      <div v-else-if="fullscreen && fullscreenD">
+        <!-- <v-toolbar class="px-5" color="info" dark>
+          <h3>{{ report.title }}</h3>
+          <v-spacer></v-spacer>
+          <v-btn @click="fullscreenD = false" icon><v-icon>mdi-close-thick</v-icon></v-btn>
+        </v-toolbar> -->
+        <v-btn @click="fullscreenD = false" class="chart-menu" icon>
+          <v-icon>mdi-arrow-collapse</v-icon>
+        </v-btn>
+        <Component ref="fullscreenchart" :is="graphType(report)" :chartData="data" :chartColors="
+          colors.find((scheme) => scheme.id == report.colorSchemeId).scheme
+        " :graphType="report.chartType" :height="screenHeight" :title="report.title" class="pa-6">
+        </Component>
+
+        <div class="d-flex justify-end pr-6">
+          <v-btn v-if="circleChart" @click="changeFSChartData" outlined small>Next Category <v-icon
+            small>mdi-arrow-right</v-icon>
+          </v-btn>
+        </div>
+      </div>
+      <!-- <v-card v-else height="100vh">
           <v-toolbar class="px-5" color="info" dark>
             <h3>{{ report.title }}</h3>
             <v-spacer></v-spacer>
@@ -53,32 +89,14 @@
             colors.find((scheme) => scheme.id == report.colorSchemeId).scheme
           " :graphType="report.chartType" :height="screenHeight" :title="report.title" class="pa-6">
           </Component>
-          <!-- Category Toggle Button -->
+          
           <div class="d-flex justify-end pr-6">
-            <v-btn v-if="circleChart" @click="changeFSChartData" outlined small>Next Category <v-icon
+            <v-btn v-if="circleChart" @click="changeFSChartData" outlined small>Next Category fullscreenReport<v-icon
                 small>mdi-arrow-right</v-icon></v-btn>
           </div>
-        </v-card>
-      </fullscreen>
+        </v-card> -->
     </v-card>
-    <!-- <v-dialog v-model="fullscreenR" fullscreen eager>
-      <v-card>
-        <v-toolbar class="px-5" color="info" dark>
-          <h3>{{ report.title }}</h3>
-          <v-spacer></v-spacer>
-          <v-btn @click="fullscreenR = false" icon><v-icon>mdi-close-thick</v-icon></v-btn>
-        </v-toolbar>
-        <Component v-if="fullscreenR" ref="fullscreenchart" :is="graphType(report)" :chartData="data" :chartColors="
-          colors.find((scheme) => scheme.id == report.colorSchemeId).scheme
-        " :graphType="report.chartType" :height="screenHeight" :title="report.title" class="pa-6">
-        </Component>
-
-        <div class="d-flex justify-end pr-6">
-          <v-btn v-if="circleChart" @click="changeFSChartData" outlined small>Next Category <v-icon
-              small>mdi-arrow-right</v-icon></v-btn>
-        </div>
-      </v-card>
-    </v-dialog> -->
+    
     <v-card v-if="reveal" class="transition-fast-in-fast-out v-card--reveal" style="height: 100%">
       <v-card-text class="pb-0">
         {{ report.description }}
@@ -116,6 +134,7 @@ export default {
   props: {
     report: Object,
     isReadOnly: Boolean,
+    fullscreen: Boolean,
   },
   data() {
     return {
@@ -125,6 +144,8 @@ export default {
       submitAttempted: false,
       deleteDialog: false,
       fullscreenR: false,
+      fullscreenD: false,
+      reportHeight: 400,
       items: ["Foo", "Bar", "Fizz", "Buzz"],
       chartTypes: [
         { text: "Line", value: "line" },
@@ -151,7 +172,6 @@ export default {
       "channels",
       "currentChannel",
       "currentChannels",
-      //   "channelReports",
       "currentChannel",
       "colors",
       "reports",
@@ -170,32 +190,13 @@ export default {
         this.report.chartType == "polar-area"
       );
     },
-    /* channelReports(){
-    if (this.reports && this.reports.length > 0 &&  this.currentChannels &&  this.currentChannels[0]){
-      console.log(this.currentChannels[0])
-          return this.reports.filter(t => t.channelId == this.currentChannels[0].channelId)
-        } else return []
-      }, */
     newChannelReport() {
       return this.$route.params.reportId == "new";
     },
-    screenHeight() {
-      return window.innerHeight - 200;
+    screenHeight(){
+      console.log(window)
+      return window.innerHeight - 110;
     },
-    /* createdBy() {
-      if (this.activeReport && this.activeReport.id && this.user && this.user.attributes) {
-        return `${this.user.attributes.given_name} ${this.user.attributes.family_name} on ${new Date(this.activeReport.createdAt).toLocaleString()}`;
-      } else {
-        return `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
-      }
-    },
-    updatedBy() {
-      if (this.activeReport && this.activeReport.id) {
-        return `${this.user.attributes.given_name}  ${this.user.attributes.family_name} on ${new Date(this.activeReport.updatedAt).toLocaleString()}`;
-      } else {
-        return `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
-      }
-    }, */
   },
   methods: {
     ...mapActions([
@@ -324,10 +325,13 @@ export default {
       //}
     },
     fullscreenReport() {
-      this.fullscreenR = true;
-      setTimeout(() => {
+      this.fullscreenR = this.fullscreenR ? false : true;
+      /* setTimeout(() => {
         this.$refs.fullscreenchart.loadChart();
-      }, 100);
+      }, 100); */
+    },
+    fullscreenDialog() {
+      this.fullscreenD = true
     },
     updateColors(selectedSchemeId) {
       this.colorScheme = this.colors.find(
@@ -354,11 +358,23 @@ export default {
     report() {
       this.updateChartData();
     },
+    fullscreenR() {
+      console.log(this.fullscreenR)
+      if (this.fullscreenR) {
+        this.reportHeight = this.screenHeight
+      } else {
+        this.reportHeight = 400
+      }
+      this.updateChartData()
+    }
   },
 };
 </script>
 
 <style scoped>
+.fullscreen {
+  background: whitesmoke;
+}
 .v-card--reveal {
   bottom: 0;
   opacity: 1 !important;
