@@ -25,9 +25,9 @@
       </v-btn>
 
       <div class="d-flex gauge-wrap">
-        <KPIGauge :gauge="gauge" :width="parentWidth - 250" :height="parentWidth / 2 - 100" :segmentStops="activeSteps"
-          :ringWidth="dashboardRingWidth" class="pb-10 px-2 mr-2" />
-        <v-card v-if="gauge.notes" style="height: 100%" max-width="190" elevation="1">
+        <KPIGauge :gauge="gauge" :width="gauge.notes ? parentWidth - 200 : parentWidth - 50" :height="parentHeight - 144" :segmentStops="activeSteps"
+          :ringWidth="dashboardRingWidth" class="pb-10 mr-2" />
+        <v-card v-if="gauge.notes" class="mr-2" style="height: 100%" max-width="190" elevation="1">
           <v-card-text v-html="gauge.notes"></v-card-text>
         </v-card>
       </div>
@@ -37,7 +37,7 @@
         <v-icon>mdi-arrow-expand</v-icon>
       </v-btn>
       <div class="d-flex gauge-wrap" v-if="fullscreenD">
-        <KPIGauge :gauge="gauge" :width="parentWidth - 250" :height="parentWidth / 2 -100" :segmentStops="activeSteps" :ringWidth="dashboardRingWidth" class="pb-10 px-2 mr-2" />
+        <KPIGauge :gauge="gauge" :width="parentWidth" :height="parentHeight" :segmentStops="activeSteps" :ringWidth="dashboardRingWidth" class="pb-10 px-2 mr-2" />
         <v-card v-if="gauge.notes" style="height: 100%" max-width="190" elevation="1">
           <v-card-text v-html="gauge.notes"></v-card-text>
         </v-card>
@@ -93,6 +93,7 @@ export default {
     staged: Array,
     isReadOnly: Boolean,
     fullscreen: Boolean,
+    resized: Boolean,
   },
   components: {
     KPIGauge,
@@ -200,11 +201,11 @@ export default {
       }
     },
     setParentDims() {
-      if (this.$parent.$el.clientHeight) {
-        this.parentHeight = this.$parent.$el.clientHeight;
+      if (this.$parent.$parent.$el.clientHeight) {
+        this.parentHeight = this.$parent.$parent.$el.clientHeight;
       }
-      if (this.$parent.$el.clientWidth) {
-        this.parentWidth = this.$parent.$el.clientWidth;
+      if (this.$parent.$parent.$el.clientWidth) {
+        this.parentWidth = this.$parent.$parent.$el.clientWidth;
       }
     },
     toGauge(id) {
@@ -245,6 +246,11 @@ export default {
         this.setParentDims();
       }
     },
+    resized() {
+      if (this.resized) {
+        this.setParentDims()
+      }
+    },  
     isReadOnly() {
       console.log("here")
       this.setParentDims();

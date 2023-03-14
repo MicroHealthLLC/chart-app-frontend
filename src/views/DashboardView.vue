@@ -40,24 +40,27 @@
 
         <!-- DASHBOARD CARDS -->
         <v-col :cols="isReadOnly ? 12 : 9">
-          <draggable :list="staged" :group="{ name: 'universalGroup',
-                      pull: false,
-                      put: true }" :disabled="isReadOnly" class="drag-area row">
-          <dashboard :id="'dashExample'">
-            <dash-layout v-for="layout in dlayouts" v-bind="layout" :key="layout.breakpoint" :debug="true">
-              <dash-item v-for="item, index in layout.items" v-bind.sync="item" :key="item.id"><!--  v-for="(stage, index) in staged" :key="index" v-bind.sync="stage" -->
-                <v-card :ref="`card${index}`" v-if="staged[index]"><!--  v-for="(stage, index) in staged" :key="index" -->
-                  <DashboardCardHeatMap :heatMap="staged[index]" v-if="checkChartType(staged[index]) == 'heatMap'"
-                    :isReadOnly="isReadOnly" @deleteItem="deleteItem" :fullscreen="fullscreen" />
-                  <DashboardCardGauge :gauge="staged[index]" v-if="checkChartType(staged[index]) == 'gauge'" :staged="staged"
-                    :isReadOnly="isReadOnly" @deleteItem="deleteItem" :fullscreen="fullscreen" />
-                  <DashboardCardReport :report="staged[index]" v-if="checkChartType(staged[index]) == 'report'" :isReadOnly="isReadOnly"
-                    @deleteItem="deleteItem" :fullscreen="fullscreen" />
-                </v-card>
-              </dash-item>
-            </dash-layout>
-          </dashboard>
-        </draggable>
+          <draggable :list="staged" :group="{
+            name: 'universalGroup',
+            pull: false,
+            put: true
+          }" :disabled="isReadOnly" class="drag-area row">
+            <dashboard :id="'dashExample'">
+              <dash-layout v-for="layout in dlayouts" v-bind="layout" :key="layout.breakpoint" :debug="true">
+                <dash-item v-for="item, index in layout.items" v-bind.sync="item" :key="item.id" @resizeEnd="setResized">
+                  <v-card :ref="`card${index}`" v-if="staged[index]">
+                    <DashboardCardHeatMap :heatMap="staged[index]" v-if="checkChartType(staged[index]) == 'heatMap'"
+                      :isReadOnly="isReadOnly" @deleteItem="deleteItem" :fullscreen="fullscreen" />
+                    <DashboardCardGauge :gauge="staged[index]" v-if="checkChartType(staged[index]) == 'gauge'"
+                      :staged="staged" :isReadOnly="isReadOnly" @deleteItem="deleteItem" :fullscreen="fullscreen"
+                      :resized="resized" />
+                    <DashboardCardReport :report="staged[index]" v-if="checkChartType(staged[index]) == 'report'"
+                      :isReadOnly="isReadOnly" @deleteItem="deleteItem" :fullscreen="fullscreen" />
+                  </v-card>
+                </dash-item>
+              </dash-layout>
+            </dashboard>
+          </draggable>
           <!-- <draggable :list="staged" group="universalGroup" :disabled="isReadOnly" class="drag-area row">
             <v-col :cols="dashboardCols(staged, index)" v-for="(item, index) in staged" :key="index">
               <v-card :ref="`card${index}`">
@@ -120,7 +123,7 @@
                       put: false,
                     }" class="d-flex flex-wrap">
                       <v-chip v-for="(item, index) in channelHeatMaps" :key="index" class="mr-2 mt-2" color="green 
-                          lighten-1" text-color="grey lighten-4">{{ item.title }}</v-chip>
+                            lighten-1" text-color="grey lighten-4">{{ item.title }}</v-chip>
                     </draggable>
                   </v-list-item-title>
                 </v-list-item-content>
@@ -186,6 +189,7 @@ export default {
       deleteDialog: false,
       fullscreen: false,
       background: '#EEEEEEFF',
+      resized: false,
       dlayouts: [
         {
           breakpoint: "xl",
@@ -195,8 +199,8 @@ export default {
               id: "1",
               x: 0,
               y: 0,
-              width: 1,
-              height: 1
+              width: 3,
+              height: 3
             },
             { id: "2", x: 3, y: 0, width: 3, height: 3 },
             { id: "3", x: 6, y: 0, width: 3, height: 3 },
@@ -215,15 +219,15 @@ export default {
               id: "1",
               x: 0,
               y: 0,
-              width: 1,
-              height: 1
+              width: 9,
+              height: 3
             },
-            { id: "2", x: 3, y: 0, width: 3, height: 3 },
-            { id: "3", x: 6, y: 0, width: 3, height: 3 },
-            { id: "4", x: 0, y: 3, width: 3, height: 3 },
-            { id: "5", x: 3, y: 3, width: 3, height: 3 },
+            { id: "2", x: 0, y: 3, width: 3, height: 3 },
+            { id: "3", x: 3, y: 3, width: 3, height: 3 },
+            { id: "4", x: 6, y: 3, width: 3, height: 3 },
+            /* { id: "5", x: 3, y: 3, width: 3, height: 3 },
             { id: "6", x: 6, y: 3, width: 3, height: 3 },
-            { id: "7", x: 0, y: 6, width: 3, height: 3 }
+            { id: "7", x: 0, y: 6, width: 3, height: 3 } */
           ]
         },
         {
@@ -310,6 +314,12 @@ export default {
       "updateDashboardById",
       "removeDashboard",
     ]),
+    setResized() {
+      this.resized = true;
+      setTimeout(() => {
+        this.resized = false;
+      }, 1000);
+    },
     saveDashboard() {
       this.isReadOnly = true;
       console.log(this.dashboard);
@@ -385,6 +395,9 @@ export default {
           height: 3,
         }))
       })
+    },
+    filterLayoutItems(items, idx) {
+      return items.filter(item => item && this.staged[idx])
     }
   },
   computed: {
@@ -397,7 +410,7 @@ export default {
       "currentChannels",
     ]),
     stagedLayouts() {
-      if(this.staged && this.staged.length > 0) {
+      if (this.staged && this.staged.length > 0) {
         let list = this.staged.map((s, i) => ({
           id: i,
           x: 3 * i,
@@ -405,7 +418,7 @@ export default {
           width: 3,
           height: 3,
         }))
-        console.log(list) 
+        console.log(list)
         return list
       } else return []
     },
@@ -488,5 +501,4 @@ export default {
   width: 100%;
   border: 2px solid #42b983;
   border-radius: 5px;
-}
-</style>
+}</style>
