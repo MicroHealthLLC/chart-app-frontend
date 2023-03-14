@@ -27,7 +27,7 @@ import Dashboards from "../views/Dashboards.vue";
 import Gauges from "../views/Gauges.vue";
 import Gauge from "../views/Gauge.vue";
 import HeatMap from "../views/HeatMap.vue";
-import Dashboard from "../views/Dashboard.vue";
+import DashboardView from "../views/DashboardView.vue";
 //import SlideShows from '../views/SlideShows.vue';
 import ChannelDashboards from "../views/ChannelDashboards.vue";
 
@@ -168,8 +168,8 @@ const routes = [
   }, */
   {
     path: "/:title/dashboards/:dashboardId",
-    name: "Dashboard",
-    component: Dashboard,
+    name: "DashboardView",
+    component: DashboardView,
   },
   /* {
     path: "/:title/dashboards/dashboard",

@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <!-- <v-row>
+    <v-row>
       <v-col>
         <div class="d-flex justify-space-between">
           <h3 v-if="!isReadOnly && dashboard.id" class="d-flex align-center">
@@ -12,7 +12,9 @@
           <h3 v-else-if="dashboard.id">View {{ dashboard.title }}</h3>
           <h3 v-else>"Dashboard Title"</h3>
           <div>
-            <v-btn v-if="isReadOnly && staged.length > 0" @click="fullscreenDashboard" class="px-3 mr-2 mb-2" color="green white--text" depressed small>View Presentation<v-icon class="ml-2">mdi-presentation</v-icon></v-btn>
+            <v-btn v-if="isReadOnly && staged.length > 0" @click="fullscreenDashboard" class="px-3 mr-2 mb-2"
+              color="green white--text" depressed small>View Presentation<v-icon
+                class="ml-2">mdi-presentation</v-icon></v-btn>
             <v-btn v-if="!isReadOnly" @click="saveDashboard" class="px-5 mr-2 mb-2" color="primary" depressed
               small>Save</v-btn>
             <v-btn v-else @click="editForm" class="px-5 mr-2 mb-2" color="primary" depressed small>{{
@@ -34,17 +36,28 @@
       </span>
     </div>
     <fullscreen v-model="fullscreen" :class="fullscreen ? 'fullscreen-window pa-5' : 'pa-5'">
-    <v-row -->
+      <v-row>
 
-      <!-- DASHBOARD CARDS -->
-       <!--  <v-col :cols="isReadOnly ? 12 : 9"> -->
+        <!-- DASHBOARD CARDS -->
+        <v-col :cols="isReadOnly ? 12 : 9">
+          <draggable :list="staged" :group="{ name: 'universalGroup',
+                      pull: false,
+                      put: true }" :disabled="isReadOnly" class="drag-area row">
           <dashboard :id="'dashExample'">
-            <dash-layout v-for="layout in dlayouts" v-bind="layout" :debug="true" :key="layout.breakpoint">
-              <dash-item v-for="item in layout.items" v-bind.sync="item" :key="item.id">
-                <div class="content"></div>
+            <dash-layout v-for="layout in dlayouts" v-bind="layout" :key="layout.breakpoint" :debug="true">
+              <dash-item v-for="item, index in layout.items" v-bind.sync="item" :key="item.id"><!--  v-for="(stage, index) in staged" :key="index" v-bind.sync="stage" -->
+                <v-card :ref="`card${index}`" v-if="staged[index]"><!--  v-for="(stage, index) in staged" :key="index" -->
+                  <DashboardCardHeatMap :heatMap="staged[index]" v-if="checkChartType(staged[index]) == 'heatMap'"
+                    :isReadOnly="isReadOnly" @deleteItem="deleteItem" :fullscreen="fullscreen" />
+                  <DashboardCardGauge :gauge="staged[index]" v-if="checkChartType(staged[index]) == 'gauge'" :staged="staged"
+                    :isReadOnly="isReadOnly" @deleteItem="deleteItem" :fullscreen="fullscreen" />
+                  <DashboardCardReport :report="staged[index]" v-if="checkChartType(staged[index]) == 'report'" :isReadOnly="isReadOnly"
+                    @deleteItem="deleteItem" :fullscreen="fullscreen" />
+                </v-card>
               </dash-item>
             </dash-layout>
           </dashboard>
+        </draggable>
           <!-- <draggable :list="staged" group="universalGroup" :disabled="isReadOnly" class="drag-area row">
             <v-col :cols="dashboardCols(staged, index)" v-for="(item, index) in staged" :key="index">
               <v-card :ref="`card${index}`">
@@ -53,98 +66,90 @@
                 <DashboardCardReport :report="item" v-if="checkChartType(item) == 'report'" :isReadOnly="isReadOnly" @deleteItem="deleteItem" :fullscreen="fullscreen" />
               </v-card>
             </v-col>
-          </draggable> 
-        </v-col>-->
-      
-      <!-- DASHBOARD SELECT AREA -->
-      <!-- <v-col cols="3" v-if="!isReadOnly">
-        <v-card height="max-content">
-          <h4 class="pt-4 pl-2">Available Modules</h4>
-          <v-list>
-            <v-subheader>Reports</v-subheader>
-            <v-list-item>
-              <v-list-item-content>
-                <v-list-item-title>
-                  <draggable :list="channelReports" :group="{
-                    name: 'universalGroup',
-                    pull: 'clone',
-                    put: false,
-                  }" class="d-flex flex-wrap">
-                    <v-chip v-for="(item, index) in channelReports" :key="index" class="mr-2 mt-2"
-                      color="orange lighten-1" text-color="grey lighten-4">{{ item.title }}</v-chip>
-                  </draggable>
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
-          <v-divider class="mx-4"></v-divider>
-          <v-list>
-            <v-subheader>Gauges</v-subheader>
-            <v-list-item>
-              <v-list-item-content>
-                <v-list-item-title>
-                  <draggable :list="channelGauges" :group="{
-                    name: 'universalGroup',
-                    pull: 'clone',
-                    put: false,
-                  }" class="d-flex flex-wrap">
-                    <v-chip v-for="(item, index) in channelGauges" :key="index" class="mr-2 mt-2" color="red lighten-1"
-                      text-color="grey lighten-4">{{ item.title }}</v-chip>
-                  </draggable>
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
-          <v-divider class="mx-4"></v-divider>
-          <v-list>
-            <v-subheader>Heat Maps</v-subheader>
-            <v-list-item>
-              <v-list-item-content>
-                <v-list-item-title>
-                  <draggable :list="channelHeatMaps" :group="{
-                    name: 'universalGroup',
-                    pull: 'clone',
-                    put: false,
-                  }" class="d-flex flex-wrap">
-                    <v-chip v-for="(item, index) in channelHeatMaps" :key="index" class="mr-2 mt-2" color="green 
-                        lighten-1" text-color="grey lighten-4">{{ item.title }}</v-chip>
-                  </draggable>
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
-          <v-divider class="mx-4 mb-4"></v-divider>
-          <v-subheader>Presentation Background Color</v-subheader>
-          <v-color-picker
-            v-model="background"
-            hide-canvas
-            hide-inputs
-            hide-mode-switch
-            hide-sliders
-            show-swatches
-            mode="rgba"
-            swatches-max-height="90"
-          ></v-color-picker>
-          <v-divider class="mx-4 mb-4"></v-divider>
-          <v-btn @click="deleteDialog = true" small color="error" depressed outlined class="ml-3 mb-3">Delete
-            Dashboard
-          </v-btn>
-        </v-card>
-      </v-col> -->
-      <!-- Delete Prompt -->
-      <v-dialog v-model="deleteDialog" max-width="400">
-        <v-card>
-          <v-card-title>Delete this dashboard?</v-card-title>
-          <v-divider class="mx-4 mb-2"></v-divider>
-          <v-card-text>Are you sure you would like to delete this dashboard?</v-card-text>
-          <v-card-actions class="d-flex justify-end">
-            <v-btn @click="deleteDialog = false" small outlined color="secondary">Cancel</v-btn>
-            <v-btn @click="deleteDashboard" small depressed color="error">Delete</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    <!-- </v-row> -->
-  <!-- </fullscreen> -->
+          </draggable> -->
+        </v-col>
+
+        <!-- DASHBOARD SELECT AREA -->
+        <v-col cols="3" v-if="!isReadOnly">
+          <v-card height="max-content">
+            <h4 class="pt-4 pl-2">Available Modules</h4>
+            <v-list>
+              <v-subheader>Reports</v-subheader>
+              <v-list-item>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    <draggable :list="channelReports" :group="{
+                      name: 'universalGroup',
+                      pull: 'clone',
+                      put: false,
+                    }" class="d-flex flex-wrap">
+                      <v-chip v-for="(item, index) in channelReports" :key="index" class="mr-2 mt-2"
+                        color="orange lighten-1" text-color="grey lighten-4">{{ item.title }}</v-chip>
+                    </draggable>
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+            <v-divider class="mx-4"></v-divider>
+            <v-list>
+              <v-subheader>Gauges</v-subheader>
+              <v-list-item>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    <draggable :list="channelGauges" :group="{
+                      name: 'universalGroup',
+                      pull: 'clone',
+                      put: false,
+                    }" class="d-flex flex-wrap">
+                      <v-chip v-for="(item, index) in channelGauges" :key="index" class="mr-2 mt-2" color="red lighten-1"
+                        text-color="grey lighten-4">{{ item.title }}</v-chip>
+                    </draggable>
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+            <v-divider class="mx-4"></v-divider>
+            <v-list>
+              <v-subheader>Heat Maps</v-subheader>
+              <v-list-item>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    <draggable :list="channelHeatMaps" :group="{
+                      name: 'universalGroup',
+                      pull: 'clone',
+                      put: false,
+                    }" class="d-flex flex-wrap">
+                      <v-chip v-for="(item, index) in channelHeatMaps" :key="index" class="mr-2 mt-2" color="green 
+                          lighten-1" text-color="grey lighten-4">{{ item.title }}</v-chip>
+                    </draggable>
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+            <v-divider class="mx-4 mb-4"></v-divider>
+            <v-subheader>Presentation Background Color</v-subheader>
+            <v-color-picker v-model="background" hide-canvas hide-inputs hide-mode-switch hide-sliders show-swatches
+              mode="rgba" swatches-max-height="90"></v-color-picker>
+            <v-divider class="mx-4 mb-4"></v-divider>
+            <v-btn @click="deleteDialog = true" small color="error" depressed outlined class="ml-3 mb-3">Delete
+              Dashboard
+            </v-btn>
+          </v-card>
+        </v-col>
+        <!-- Delete Prompt -->
+        <v-dialog v-model="deleteDialog" max-width="400">
+          <v-card>
+            <v-card-title>Delete this dashboard?</v-card-title>
+            <v-divider class="mx-4 mb-2"></v-divider>
+            <v-card-text>Are you sure you would like to delete this dashboard?</v-card-text>
+            <v-card-actions class="d-flex justify-end">
+              <v-btn @click="deleteDialog = false" small outlined color="secondary">Cancel</v-btn>
+              <v-btn @click="deleteDashboard" small depressed color="error">Delete</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-row>
+    </fullscreen>
   </v-container>
 </template>
 
@@ -152,23 +157,23 @@
 import { mapActions, mapGetters } from "vuex";
 
 import { Dashboard, DashLayout, DashItem } from "vue-responsive-dash";
-//import draggable from "vuedraggable";
+import draggable from "vuedraggable";
 
-/* import DashboardCardHeatMap from "../components/DashboardCardHeatMap.vue";
+import DashboardCardHeatMap from "../components/DashboardCardHeatMap.vue";
 import DashboardCardGauge from "../components/DashboardCardGauge.vue";
-import DashboardCardReport from "../components/DashboardCardReport.vue"; */
+import DashboardCardReport from "../components/DashboardCardReport.vue";
 
 import datasetMixin from "../mixins/dataset-mixin";
 import reportMixin from "../mixins/report-mixin";
 import gaugeMixin from "../mixins/gauge-mixin";
 
 export default {
-  name: "Dashboard",
+  name: "DashboardView",
   components: {
-    //draggable,
-    /* DashboardCardHeatMap,
+    draggable,
+    DashboardCardHeatMap,
     DashboardCardGauge,
-    DashboardCardReport, */
+    DashboardCardReport,
     Dashboard,
     DashLayout,
     DashItem
@@ -186,8 +191,19 @@ export default {
           breakpoint: "xl",
           numberOfCols: 12,
           items: [
-            { id: "1", x: 0, y: 0, width: 1, height: 1 },
-            { id: "2", x: 1, y: 0, width: 2, height: 1 },
+            {
+              id: "1",
+              x: 0,
+              y: 0,
+              width: 1,
+              height: 1
+            },
+            { id: "2", x: 3, y: 0, width: 3, height: 3 },
+            { id: "3", x: 6, y: 0, width: 3, height: 3 },
+            { id: "4", x: 0, y: 3, width: 3, height: 3 },
+            { id: "5", x: 3, y: 3, width: 3, height: 3 },
+            { id: "6", x: 6, y: 3, width: 3, height: 3 },
+            { id: "7", x: 0, y: 6, width: 3, height: 3 }
           ]
         },
         {
@@ -195,8 +211,19 @@ export default {
           breakpointWidth: 1200,
           numberOfCols: 10,
           items: [
-            { id: "1", x: 0, y: 0, width: 1, height: 1 },
-            { id: "2", x: 1, y: 0, width: 2, height: 1 },
+            {
+              id: "1",
+              x: 0,
+              y: 0,
+              width: 1,
+              height: 1
+            },
+            { id: "2", x: 3, y: 0, width: 3, height: 3 },
+            { id: "3", x: 6, y: 0, width: 3, height: 3 },
+            { id: "4", x: 0, y: 3, width: 3, height: 3 },
+            { id: "5", x: 3, y: 3, width: 3, height: 3 },
+            { id: "6", x: 6, y: 3, width: 3, height: 3 },
+            { id: "7", x: 0, y: 6, width: 3, height: 3 }
           ]
         },
         {
@@ -204,8 +231,19 @@ export default {
           breakpointWidth: 996,
           numberOfCols: 8,
           items: [
-            { id: "1", x: 0, y: 0, width: 1, height: 1 },
+            {
+              id: "1",
+              x: 0,
+              y: 0,
+              width: 1,
+              height: 1
+            },
             { id: "2", x: 1, y: 0, width: 2, height: 1 },
+            { id: "3", x: 0, y: 1, width: 2, height: 1 },
+            { id: "4", x: 3, y: 0, width: 2, height: 2 },
+            { id: "5", x: 5, y: 0, width: 1, height: 2 },
+            { id: "6", x: 6, y: 0, width: 2, height: 1 },
+            { id: "7", x: 7, y: 1, width: 1, height: 1 }
           ]
         },
         {
@@ -213,8 +251,17 @@ export default {
           breakpointWidth: 768,
           numberOfCols: 4,
           items: [
-            { id: "1", x: 0, y: 0, width: 1, height: 1 },
+            {
+              id: "1",
+              x: 0,
+              y: 0,
+              width: 1,
+              height: 1
+            },
             { id: "2", x: 1, y: 0, width: 2, height: 1 },
+            { id: "3", x: 0, y: 1, width: 2, height: 1 },
+            { id: "4", x: 3, y: 0, width: 1, height: 2 },
+            { id: "5", x: 2, y: 1, width: 1, height: 1 }
           ]
         },
         {
@@ -222,8 +269,15 @@ export default {
           breakpointWidth: 480,
           numberOfCols: 2,
           items: [
-            { id: "1", x: 0, y: 0, width: 1, height: 1 },
+            {
+              id: "1",
+              x: 0,
+              y: 0,
+              width: 1,
+              height: 1
+            },
             { id: "2", x: 1, y: 0, width: 1, height: 1 },
+            { id: "3", x: 0, y: 1, width: 2, height: 1 }
           ]
         },
         {
@@ -320,6 +374,17 @@ export default {
     },
     generateReport() {
       this.$refs.html2Pdf.generatePdf()
+    },
+    setStagedLayouts() {
+      this.dlayouts.forEach(d => {
+        d.items = this.staged.map((s, i) => ({
+          id: i,
+          x: 3 * i,
+          y: 3 * i,
+          width: 3,
+          height: 3,
+        }))
+      })
     }
   },
   computed: {
@@ -331,6 +396,19 @@ export default {
       "heatMaps",
       "currentChannels",
     ]),
+    stagedLayouts() {
+      if(this.staged && this.staged.length > 0) {
+        let list = this.staged.map((s, i) => ({
+          id: i,
+          x: 3 * i,
+          y: 3 * i,
+          width: 3,
+          height: 3,
+        }))
+        console.log(list) 
+        return list
+      } else return []
+    },
     channelReports() {
       if (
         this.reports &&
@@ -360,6 +438,7 @@ export default {
       await this.fetchDashboard(this.$route.params.dashboardId);
       this.staged = this.dashboard.cards ? this.dashboard.cards : [];
     }
+    //this.setStagedLayouts()
     if (this.staged.length == 0) {
       this.isReadOnly = false;
     }
@@ -397,11 +476,13 @@ export default {
   position: absolute;
   width: 100%;
 }
+
 .fullscreen-window {
   overflow-y: auto;
   overflow-x: hidden;
   background: v-bind(background)
 }
+
 .content {
   height: 100%;
   width: 100%;
