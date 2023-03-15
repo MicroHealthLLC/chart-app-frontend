@@ -254,6 +254,13 @@ export default {
     isReadOnly() {
       console.log("here")
       this.setParentDims();
+    },
+    fullscreen() {
+      if (this.fullscreen) {
+        this.setChartType();
+        this.setParentDims()
+      }
+      
     }
   },
 };

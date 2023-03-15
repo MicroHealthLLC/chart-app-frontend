@@ -31,9 +31,9 @@
       <span v-if="staged.length == 0">
         <h3>Drag and drop a chip from the right panel to add components</h3>
       </span>
-      <span v-if="staged.length > 0 && !isReadOnly">
+      <!-- <span v-if="staged.length > 0 && !isReadOnly">
         <h2>Drag and drop cards to reorder</h2>
-      </span>
+      </span> -->
     </div>
     <fullscreen v-model="fullscreen" :class="fullscreen ? 'fullscreen-window pa-5' : 'pa-5'">
       <v-row>
@@ -44,10 +44,11 @@
             name: 'universalGroup',
             pull: false,
             put: true
-          }" :disabled="isReadOnly" class="drag-area row">
-            <dashboard :id="'dashExample'">
-              <dash-layout v-for="layout in dlayouts" v-bind="layout" :key="layout.breakpoint" :debug="true">
-                <dash-item v-for="item, index in layout.items" v-bind.sync="item" :key="item.id" @resizeEnd="setResized">
+          }" :disabled="isReadOnly" class="drag-area">
+            <dashboard :id="'dashExample'" @currentBreakpointUpdated="logBreak">
+              <dash-layout v-for="layout in dlayouts" v-bind="layout" :key="layout.breakpoint">
+                <dash-item v-for="item, index in layout.items" v-bind.sync="item" :key="item.id" @resizeEnd="setResized"
+                  :locked="!fullscreen">
                   <v-card :ref="`card${index}`" v-if="staged[index]">
                     <DashboardCardHeatMap :heatMap="staged[index]" v-if="checkChartType(staged[index]) == 'heatMap'"
                       :isReadOnly="isReadOnly" @deleteItem="deleteItem" :fullscreen="fullscreen" />
@@ -123,7 +124,7 @@
                       put: false,
                     }" class="d-flex flex-wrap">
                       <v-chip v-for="(item, index) in channelHeatMaps" :key="index" class="mr-2 mt-2" color="green 
-                            lighten-1" text-color="grey lighten-4">{{ item.title }}</v-chip>
+                                lighten-1" text-color="grey lighten-4">{{ item.title }}</v-chip>
                     </draggable>
                   </v-list-item-title>
                 </v-list-item-content>
@@ -195,7 +196,7 @@ export default {
           breakpoint: "xl",
           numberOfCols: 12,
           items: [
-            {
+            /* {
               id: "1",
               x: 0,
               y: 0,
@@ -207,7 +208,7 @@ export default {
             { id: "4", x: 0, y: 3, width: 3, height: 3 },
             { id: "5", x: 3, y: 3, width: 3, height: 3 },
             { id: "6", x: 6, y: 3, width: 3, height: 3 },
-            { id: "7", x: 0, y: 6, width: 3, height: 3 }
+            { id: "7", x: 0, y: 6, width: 3, height: 3 } */
           ]
         },
         {
@@ -215,7 +216,7 @@ export default {
           breakpointWidth: 1200,
           numberOfCols: 10,
           items: [
-            {
+            /* {
               id: "1",
               x: 0,
               y: 0,
@@ -225,7 +226,7 @@ export default {
             { id: "2", x: 0, y: 3, width: 3, height: 3 },
             { id: "3", x: 3, y: 3, width: 3, height: 3 },
             { id: "4", x: 6, y: 3, width: 3, height: 3 },
-            /* { id: "5", x: 3, y: 3, width: 3, height: 3 },
+            { id: "5", x: 3, y: 3, width: 3, height: 3 },
             { id: "6", x: 6, y: 3, width: 3, height: 3 },
             { id: "7", x: 0, y: 6, width: 3, height: 3 } */
           ]
@@ -235,7 +236,7 @@ export default {
           breakpointWidth: 996,
           numberOfCols: 8,
           items: [
-            {
+            /* {
               id: "1",
               x: 0,
               y: 0,
@@ -247,7 +248,7 @@ export default {
             { id: "4", x: 3, y: 0, width: 2, height: 2 },
             { id: "5", x: 5, y: 0, width: 1, height: 2 },
             { id: "6", x: 6, y: 0, width: 2, height: 1 },
-            { id: "7", x: 7, y: 1, width: 1, height: 1 }
+            { id: "7", x: 7, y: 1, width: 1, height: 1 } */
           ]
         },
         {
@@ -255,7 +256,7 @@ export default {
           breakpointWidth: 768,
           numberOfCols: 4,
           items: [
-            {
+            /* {
               id: "1",
               x: 0,
               y: 0,
@@ -265,7 +266,7 @@ export default {
             { id: "2", x: 1, y: 0, width: 2, height: 1 },
             { id: "3", x: 0, y: 1, width: 2, height: 1 },
             { id: "4", x: 3, y: 0, width: 1, height: 2 },
-            { id: "5", x: 2, y: 1, width: 1, height: 1 }
+            { id: "5", x: 2, y: 1, width: 1, height: 1 } */
           ]
         },
         {
@@ -273,7 +274,7 @@ export default {
           breakpointWidth: 480,
           numberOfCols: 2,
           items: [
-            {
+            /* {
               id: "1",
               x: 0,
               y: 0,
@@ -281,7 +282,7 @@ export default {
               height: 1
             },
             { id: "2", x: 1, y: 0, width: 1, height: 1 },
-            { id: "3", x: 0, y: 1, width: 2, height: 1 }
+            { id: "3", x: 0, y: 1, width: 2, height: 1 } */
           ]
         },
         {
@@ -289,14 +290,14 @@ export default {
           breakpointWidth: 0,
           numberOfCols: 1,
           items: [
-            {
+            /* {
               id: "1",
               x: 0,
               y: 0,
               width: 1,
               height: 1
             },
-            { id: "2", x: 0, y: 1, width: 1, height: 1 }
+            { id: "2", x: 0, y: 1, width: 1, height: 1 } */
           ]
         }
       ]
@@ -314,6 +315,116 @@ export default {
       "updateDashboardById",
       "removeDashboard",
     ]),
+    logBreak(event) {
+      console.log(event)
+    },
+    setStagedLayouts() {
+      this.dlayouts.forEach(d => {
+        /* if(d.breakpoint != 'xxs') {
+          d.items = this.staged.map((s, i) => ({
+          id: i + 1,
+          x: 3 * i,
+          y: i < 3 ? 0 : 3,
+          width: 3,
+          height: 3,
+        }))
+        } else {
+          d.items = this.staged.map((s, i) => ({
+          id: i + 1,
+          x: 0,
+          y: i,
+          width: 1,
+          height: 1,
+        }))
+        } */
+        let count = 0;
+        switch (d.breakpoint) {
+          case 'xxs':
+            d.items = this.staged.map((s, i) => ({
+              id: i + 1,
+              x: 0,
+              y: i * 2,
+              width: 2,
+              height: 2,
+            }))
+            break;
+          case 'xs':
+            d.items = this.staged.map((s, i) => ({
+              id: i + 1,
+              x: 0,
+              y: i * 2,
+              width: 2,
+              height: 2,
+            }))
+            break;
+          case 'sm':
+            for (let i = 0; i < this.staged.length; i++) {
+              if (count > 2) {
+                count = 0;
+              }
+              d.items[i] = {
+                id: i + 1,
+                x: count,
+                y: i < 2 ? 0 : 2,
+                width: 2,
+                height: 2,
+              }
+              count += 2;
+            }
+            break;
+          case 'md':
+            for (let i = 0; i < this.staged.length; i++) {
+              if (count > 5) {
+                count = 0;
+              }
+              d.items[i] = {
+                id: i + 1,
+                x: count,
+                y: i < 2 ? 0 : 3,
+                width: 3,
+                height: 3,
+              }
+              count += 3;
+            }
+            break;
+          case 'lg':
+            for (let i = 0; i < this.staged.length; i++) {
+              if (count > 7) {
+                count = 0;
+              }
+              d.items[i] = {
+                id: i + 1,
+                x: count,
+                y: i < 3 ? 0 : 3,
+                width: 3,
+                height: 3,
+              }
+              count += 3;
+            }
+            break;
+          case 'xl':
+            for (let i = 0; i < this.staged.length; i++) {
+              if (count > 10) {
+                count = 0;
+              }
+              d.items[i] = {
+                id: i + 1,
+                x: count,
+                y: i < 4 ? 0 : 3,
+                width: 3,
+                height: 3,
+              }
+              count += 3;
+            }
+            break;
+
+          default:
+            break;
+        }
+
+      })
+      console.log(this.dlayouts)
+    },
     setResized() {
       this.resized = true;
       setTimeout(() => {
@@ -385,17 +496,6 @@ export default {
     generateReport() {
       this.$refs.html2Pdf.generatePdf()
     },
-    setStagedLayouts() {
-      this.dlayouts.forEach(d => {
-        d.items = this.staged.map((s, i) => ({
-          id: i,
-          x: 3 * i,
-          y: 3 * i,
-          width: 3,
-          height: 3,
-        }))
-      })
-    },
     filterLayoutItems(items, idx) {
       return items.filter(item => item && this.staged[idx])
     }
@@ -409,19 +509,6 @@ export default {
       "heatMaps",
       "currentChannels",
     ]),
-    stagedLayouts() {
-      if (this.staged && this.staged.length > 0) {
-        let list = this.staged.map((s, i) => ({
-          id: i,
-          x: 3 * i,
-          y: 3 * i,
-          width: 3,
-          height: 3,
-        }))
-        console.log(list)
-        return list
-      } else return []
-    },
     channelReports() {
       if (
         this.reports &&
@@ -443,22 +530,22 @@ export default {
     },
   },
   async mounted() {
-    this.fetchReports();
-    this.fetchDataSets();
-    this.fetchGauges();
-    this.fetchHeatMaps();
     if (this.$route.params.dashboardId) {
       await this.fetchDashboard(this.$route.params.dashboardId);
       this.staged = this.dashboard.cards ? this.dashboard.cards : [];
     }
-    //this.setStagedLayouts()
+    this.setStagedLayouts()
     if (this.staged.length == 0) {
       this.isReadOnly = false;
     }
     if (this.dashboard.background) {
       this.background = this.dashboard.background
     }
-    console.log(this.$fullscreen)
+
+    this.fetchReports();
+    this.fetchDataSets();
+    this.fetchGauges();
+    this.fetchHeatMaps();
   },
   watch: {
     async fullscreen() {
@@ -474,6 +561,9 @@ export default {
         this.isReadOnly = false;
       }
     },
+    staged() {
+      this.setStagedLayouts()
+    }
   },
 };
 </script>
@@ -495,10 +585,4 @@ export default {
   overflow-x: hidden;
   background: v-bind(background)
 }
-
-.content {
-  height: 100%;
-  width: 100%;
-  border: 2px solid #42b983;
-  border-radius: 5px;
-}</style>
+</style>

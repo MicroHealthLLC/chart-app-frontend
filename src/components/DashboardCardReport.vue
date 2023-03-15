@@ -36,7 +36,7 @@
           </v-btn>
           <Component ref="chart" :is="graphType(report)" :chartData="data" :chartColors="
             colors.find((scheme) => scheme.id == report.colorSchemeId).scheme
-          " :graphType="report.chartType" :height="reportHeight" class="mb-4">
+          " :graphType="report.chartType" class="mb-4">
           </Component>
           <div class="d-flex justify-end mb-4">
             <v-btn v-if="circleChart" @click="changeChartData" outlined small>Next Category<v-icon
@@ -49,7 +49,7 @@
         </v-btn>
         <Component ref="chart" :is="graphType(report)" :chartData="data" :chartColors="
           colors.find((scheme) => scheme.id == report.colorSchemeId).scheme
-        " :graphType="report.chartType" :height="400" class="mb-4">
+        " :graphType="report.chartType" class="mb-4">
         </Component>
         <div class="d-flex justify-end mb-4">
           <v-btn v-if="circleChart" @click="changeChartData" outlined small>Next Category<v-icon
@@ -145,7 +145,7 @@ export default {
       deleteDialog: false,
       fullscreenR: false,
       fullscreenD: false,
-      reportHeight: 400,
+      reportHeight: 320,
       items: ["Foo", "Bar", "Fizz", "Buzz"],
       chartTypes: [
         { text: "Line", value: "line" },
@@ -366,7 +366,7 @@ export default {
         this.reportHeight = 400
       }
       this.updateChartData()
-    }
+    },
   },
 };
 </script>
