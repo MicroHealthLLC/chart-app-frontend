@@ -25,8 +25,8 @@
       </v-btn>
 
       <div class="d-flex gauge-wrap">
-        <KPIGauge :gauge="gauge" :width="gauge.notes ? parentWidth - 200 : parentWidth - 50" :height="parentHeight - 144" :segmentStops="activeSteps"
-          :ringWidth="dashboardRingWidth" class="pb-10 mr-2" />
+        <KPIGauge :gauge="gauge" :width="gauge.notes ? parentWidth - 200 : parentWidth - 70" :height="parentHeight - 144"
+          :segmentStops="activeSteps" :ringWidth="dashboardRingWidth" class="pb-10 mr-2" />
         <v-card v-if="gauge.notes" class="mr-2" style="height: 100%" max-width="190" elevation="1">
           <v-card-text v-html="gauge.notes"></v-card-text>
         </v-card>
@@ -36,8 +36,9 @@
       <v-btn @click="fullscreenDialog" class="chart-menu" icon>
         <v-icon>mdi-arrow-expand</v-icon>
       </v-btn>
-      <div class="d-flex gauge-wrap" v-if="fullscreenD">
-        <KPIGauge :gauge="gauge" :width="parentWidth" :height="parentHeight" :segmentStops="activeSteps" :ringWidth="dashboardRingWidth" class="pb-10 px-2 mr-2" />
+      <div class="d-flex gauge-wrap">
+        <KPIGauge :gauge="gauge" :width="parentWidth - 320" :height="(parentWidth - 270) / 2" :segmentStops="activeSteps"
+          :ringWidth="dashboardRingWidth" class="pb-9 px-2 mr-2" />
         <v-card v-if="gauge.notes" style="height: 100%" max-width="190" elevation="1">
           <v-card-text v-html="gauge.notes"></v-card-text>
         </v-card>
@@ -48,15 +49,15 @@
         <v-icon>mdi-arrow-collapse</v-icon>
       </v-btn>
       <div class="d-flex gauge-wrap">
-        <KPIGauge :gauge="gauge" :width="800" :height="450" :segmentStops="activeSteps"
+        <KPIGauge :gauge="gauge" :width="parentWidth - 100" :height="parentHeight - 50" :segmentStops="activeSteps"
           :ringWidth="dashboardRingWidth" class="pb-10 px-2 mr-2" />
         <v-card v-if="gauge.notes" style="height: 100%" max-width="190" elevation="1">
           <v-card-text v-html="gauge.notes"></v-card-text>
         </v-card>
       </div>
 
-  </div>
-  <!-- <v-card v-else height="100vh">
+    </div>
+    <!-- <v-card v-else height="100vh">
           <v-toolbar class="px-5" color="info" dark>
             <h3>{{ gauge.title }}</h3>
             <v-spacer></v-spacer>
@@ -78,7 +79,7 @@
             </v-card>
           </div>
         </v-card> -->
-</div>
+  </div>
 </template>
 
 <script>
@@ -201,12 +202,17 @@ export default {
       }
     },
     setParentDims() {
-      if (this.$parent.$parent.$el.clientHeight) {
-        this.parentHeight = this.$parent.$parent.$el.clientHeight;
-      }
-      if (this.$parent.$parent.$el.clientWidth) {
-        this.parentWidth = this.$parent.$parent.$el.clientWidth;
-      }
+      setTimeout(() => {
+        if (this.$parent.$parent.$el.clientHeight != 0) {
+          this.parentHeight = this.$parent.$parent.$el.clientHeight;
+        } else this.parentHeight = this.$parent.$el.clientHeight;
+        if (this.$parent.$parent.$el.clientWidth != 0) {
+          this.parentWidth = this.$parent.$parent.$el.clientWidth;
+        } else {
+          this.parentWidth = this.$parent.$el.clientWidth;
+        }
+      }, 100);
+
     },
     toGauge(id) {
       this.$router.replace(`/${this.currentChannels[0].name}/gauges/${id}`);
@@ -233,6 +239,7 @@ export default {
     }
     this.setParentDims();
   },
+
   created() {
     window.addEventListener("resize", this.setParentDims);
   },
@@ -250,9 +257,8 @@ export default {
       if (this.resized) {
         this.setParentDims()
       }
-    },  
+    },
     isReadOnly() {
-      console.log("here")
       this.setParentDims();
     },
     fullscreen() {
@@ -260,7 +266,7 @@ export default {
         this.setChartType();
         this.setParentDims()
       }
-      
+
     }
   },
 };

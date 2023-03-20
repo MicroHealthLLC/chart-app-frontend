@@ -48,8 +48,8 @@
             <dashboard :id="'dashExample'" @currentBreakpointUpdated="logBreak">
               <dash-layout v-for="layout in dlayouts" v-bind="layout" :key="layout.breakpoint">
                 <dash-item v-for="item, index in layout.items" v-bind.sync="item" :key="item.id" @resizeEnd="setResized"
-                  :locked="!fullscreen">
-                  <v-card :ref="`card${index}`" v-if="staged[index]">
+                  ><!-- :locked="!fullscreen" -->
+                  <v-card :ref="`card${index}`" v-if="staged[index]" :class="checkChartType(staged[index]) == 'report' ? 'pa-4' : ''">
                     <DashboardCardHeatMap :heatMap="staged[index]" v-if="checkChartType(staged[index]) == 'heatMap'"
                       :isReadOnly="isReadOnly" @deleteItem="deleteItem" :fullscreen="fullscreen" />
                     <DashboardCardGauge :gauge="staged[index]" v-if="checkChartType(staged[index]) == 'gauge'"
@@ -215,6 +215,7 @@ export default {
           breakpoint: "lg",
           breakpointWidth: 1200,
           numberOfCols: 10,
+          rowHeight: 85,
           items: [
             /* {
               id: "1",
@@ -235,6 +236,7 @@ export default {
           breakpoint: "md",
           breakpointWidth: 996,
           numberOfCols: 8,
+          rowHeight: 160,
           items: [
             /* {
               id: "1",
@@ -320,24 +322,8 @@ export default {
     },
     setStagedLayouts() {
       this.dlayouts.forEach(d => {
-        /* if(d.breakpoint != 'xxs') {
-          d.items = this.staged.map((s, i) => ({
-          id: i + 1,
-          x: 3 * i,
-          y: i < 3 ? 0 : 3,
-          width: 3,
-          height: 3,
-        }))
-        } else {
-          d.items = this.staged.map((s, i) => ({
-          id: i + 1,
-          x: 0,
-          y: i,
-          width: 1,
-          height: 1,
-        }))
-        } */
-        let count = 0;
+        let countX = 0;
+        let countY = 0;
         switch (d.breakpoint) {
           case 'xxs':
             d.items = this.staged.map((s, i) => ({
@@ -346,6 +332,7 @@ export default {
               y: i * 2,
               width: 2,
               height: 2,
+              resizeEdges: "left bottom right",
             }))
             break;
           case 'xs':
@@ -355,75 +342,82 @@ export default {
               y: i * 2,
               width: 2,
               height: 2,
+              resizeEdges: "left bottom right",
             }))
             break;
           case 'sm':
             for (let i = 0; i < this.staged.length; i++) {
-              if (count > 2) {
-                count = 0;
+              if (countX > 2) {
+                countX = 0;
+                countY += 2;
               }
               d.items[i] = {
                 id: i + 1,
-                x: count,
-                y: i < 2 ? 0 : 2,
+                x: countX,
+                y: countY,
                 width: 2,
                 height: 2,
+                resizeEdges: "left bottom right",
               }
-              count += 2;
+              countX += 2;
             }
             break;
           case 'md':
             for (let i = 0; i < this.staged.length; i++) {
-              if (count > 5) {
-                count = 0;
+              if (countX > 4) {
+                countX = 0;
+                countY += 4;
               }
               d.items[i] = {
                 id: i + 1,
-                x: count,
-                y: i < 2 ? 0 : 3,
-                width: 3,
-                height: 3,
+                x: countX,
+                y: countY,
+                width: 4,
+                height: 4,
+                resizeEdges: "left bottom right",
               }
-              count += 3;
+              countX += 4;
             }
             break;
           case 'lg':
             for (let i = 0; i < this.staged.length; i++) {
-              if (count > 7) {
-                count = 0;
+              if (countX > 5) {
+                countX = 0;
+                countY += 5;
               }
               d.items[i] = {
                 id: i + 1,
-                x: count,
-                y: i < 3 ? 0 : 3,
-                width: 3,
-                height: 3,
+                x: countX,
+                y: countY,
+                width: 5,
+                height: 5,
+                resizeEdges: "left bottom right",
               }
-              count += 3;
+              countX += 5;
             }
             break;
           case 'xl':
             for (let i = 0; i < this.staged.length; i++) {
-              if (count > 10) {
-                count = 0;
+              if (countX > 9) {
+                countX = 0;
+                countY += 3;
               }
               d.items[i] = {
                 id: i + 1,
-                x: count,
-                y: i < 4 ? 0 : 3,
+                x: countX,
+                y: countY,
                 width: 3,
                 height: 3,
+                resizeEdges: "left bottom right",
               }
-              count += 3;
+              countX += 3;
             }
             break;
 
           default:
             break;
         }
-
       })
-      console.log(this.dlayouts)
     },
     setResized() {
       this.resized = true;
@@ -563,6 +557,9 @@ export default {
     },
     staged() {
       this.setStagedLayouts()
+    },
+    dlayouts() {
+      console.log(this.dlayouts)
     }
   },
 };

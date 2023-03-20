@@ -1,57 +1,70 @@
 <template>
   <div>
+    <fullscreen v-if="!fullscreen" v-model="fullscreenHM" :class="fullscreenHM ? 'pa-6' : ''">
     <span class="d-flex">
       <h4 class="pa-4">{{ heatMap.title }}</h4>
       <v-tooltip top>
         <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            class="ml-0 mt-2"
-            icon
-            @click.prevent="toHeatMap(heatMap.id)"
-            v-bind="attrs"
-            v-on="on"
-            ><v-icon small>fa-solid fa-up-right-from-square</v-icon>
+          <v-btn class="ml-0 mt-2" icon @click.prevent="toHeatMap(heatMap.id)" v-bind="attrs" v-on="on"><v-icon
+              small>fa-solid fa-up-right-from-square</v-icon>
           </v-btn>
         </template>
         <span>Go to KPI Heat Map</span>
       </v-tooltip>
       <v-tooltip top v-if="!isReadOnly">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            class="ml-4 mt-2"
-            icon
-            @click.prevent="$emit('deleteItem', heatMap.id)"
-            v-bind="attrs"
-            v-on="on"
-            ><v-icon small color="red">fa-trash</v-icon>
+          <v-btn class="ml-4 mt-2" icon @click.prevent="$emit('deleteItem', heatMap.id)" v-bind="attrs" v-on="on"><v-icon
+              small color="red">fa-trash</v-icon>
           </v-btn>
         </template>
         <span>Remove from Dashboard</span>
       </v-tooltip>
     </span>
     <v-btn @click="fullscreenHeatMap" class="chart-menu" icon>
-      <v-icon>mdi-fullscreen</v-icon>
+      <v-icon>{{ fullscreenHM ? 'mdi-fullscreen-exit' : 'mdi-fullscreen' }}</v-icon>
     </v-btn>
-    <fullscreen v-model="fullscreenHM">
-      <v-card v-if="fullscreenHM" height="100vh">
-        <v-toolbar class="px-5" color="info" dark>
+    <!-- <fullscreen v-if="!fullscreen" v-model="fullscreenHM"> -->
+      <span v-if="fullscreenHM" height="100vh">
+        <!-- <v-toolbar class="px-5" color="info" dark>
           <h3>{{ heatMap.title }}</h3>
           <v-spacer></v-spacer>
           <v-btn @click="fullscreenHM = false" icon>
             <v-icon>mdi-close-thick</v-icon>
           </v-btn>
-        </v-toolbar>
-          <v-row justify="space-around">
-            <v-col cols="6">
-              <KPIHeatMap :heatMap="heatMap" :headers="cols" :dataItems="data" class="mt-4" />
-            </v-col>
-            <v-col cols="4">
-              <v-card elevation="1" width="fit-content" class="pa-6 ma-8" v-html="heatMap.notes"></v-card>
-            </v-col>
-          </v-row>
-      </v-card>
+        </v-toolbar> -->
+        <v-row justify="space-around" class="mt-10">
+          <v-col :cols="heatMap.notes ? 8 : 12">
+            <KPIHeatMap :heatMap="heatMap" :headers="cols" :dataItems="data" />
+          </v-col>
+          <v-col v-if="heatMap.notes" cols="3">
+            <v-card elevation="1" width="fit-content" class="pa-6 ma-8" v-html="heatMap.notes"></v-card>
+          </v-col>
+        </v-row>
+      </span>
       <KPIHeatMap v-else :heatMap="heatMap" :headers="cols" :dataItems="data" :isDashboard="true" />
     </fullscreen>
+    <span v-else>
+      <!-- </v-toolbar> -->
+      <span class="d-flex">
+      <h4 class="pa-4">{{ heatMap.title }}</h4>
+      <v-tooltip top>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn class="ml-0 mt-2" icon @click.prevent="toHeatMap(heatMap.id)" v-bind="attrs" v-on="on"><v-icon
+              small>fa-solid fa-up-right-from-square</v-icon>
+          </v-btn>
+        </template>
+        <span>Go to KPI Heat Map</span>
+      </v-tooltip>
+    </span>
+      <v-row justify="space-around">
+        <v-col :cols="heatMap.notes ? 6 : 10">
+          <KPIHeatMap :heatMap="heatMap" :headers="cols" :dataItems="data" />
+        </v-col>
+        <v-col v-if="heatMap.notes" cols="4">
+          <v-card elevation="1" width="fit-content" class="pa-6 ma-8" v-html="heatMap.notes"></v-card>
+        </v-col>
+      </v-row>
+    </span>
   </div>
 </template>
 
@@ -65,6 +78,7 @@ export default {
   props: {
     heatMap: Object,
     isReadOnly: Boolean,
+    fullscreen: Boolean
   },
   components: {
     KPIHeatMap,
@@ -93,17 +107,14 @@ export default {
       this.$router.replace(`/${this.currentChannels[0].name}/heatMaps/${id}`);
     },
     fullscreenHeatMap() {
-      this.fullscreenHM = true;
-      /* setTimeout(() => {
-				this.$refs.fullscreenchart.loadChart();
-			}, 100); */
+      this.fullscreenHM = this.fullscreenHM ? false : true;
     },
   },
   async mounted() {
     await this.fetchDataSet(this.heatMap.dataSetId);
     this.data = this.createMasterData(this.dataSet.dataValues.items);
-    console.log(this.data);
-    console.log(this.heatMap);
+    // console.log(this.data);
+    // console.log(this.heatMap);
     if (this.heatMap.columns && typeof this.heatMap.columns == "string") {
       this.cols = JSON.parse(this.heatMap.columns);
       this.heatMap.columns = JSON.parse(this.heatMap.columns);
@@ -121,7 +132,7 @@ export default {
     },
     isReadOnly() {
       console.log(this)
-    }
+    },
   },
 };
 </script>
@@ -132,6 +143,7 @@ export default {
   top: 10px;
   right: 10px;
 }
+
 .v-card--reveal {
   bottom: 0;
   opacity: 1 !important;

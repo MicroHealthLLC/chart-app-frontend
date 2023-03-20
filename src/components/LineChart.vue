@@ -17,6 +17,9 @@ export default {
     chartColors: {
       type: Array,
     },
+    height: {
+      type: Number,
+    }
   },
   data() {
     return {
@@ -88,7 +91,11 @@ export default {
   },
   computed: {},
   mounted() {
-    this.loadChart();
+    
+    setTimeout(() => {
+      this.loadChart();
+      }, 150);
+    console.log(this.height)
   },
   watch: {
     options() {
@@ -103,6 +110,16 @@ export default {
     chartData() {
       this.loadChart();
     },
+    height() {
+      setTimeout(() => {
+      this.loadChart();
+      }, 200);
+    }
   },
 };
 </script>
+<style>
+canvas {
+  height: v-bind('height');
+}
+</style>

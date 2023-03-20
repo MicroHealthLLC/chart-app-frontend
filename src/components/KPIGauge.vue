@@ -98,4 +98,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+ .current-value {
+    margin-bottom: 10px !important;
+  }
+</style>
