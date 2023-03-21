@@ -1,5 +1,6 @@
 <template>
   <div>
+    <fullscreen v-if="!fullscreen" v-model="fullscreenG">
     <span class="d-flex">
       <h4 class="pa-4">{{ gauge.title }}</h4>
       <v-tooltip top>
@@ -19,23 +20,49 @@
         <span>Remove from Dashboard</span>
       </v-tooltip>
     </span>
-    <fullscreen v-if="!fullscreen" v-model="fullscreenG">
-      <v-btn @click="fullscreenGauge" class="chart-menu" icon>
-        <v-icon>{{ fullscreenG ? 'mdi-fullscreen-exit' : 'mdi-fullscreen' }}</v-icon>
-      </v-btn>
+    <!-- <fullscreen v-if="!fullscreen" v-model="fullscreenG"> -->
+      <span v-if="fullscreenG">
+        <v-btn @click="fullscreenGauge" class="chart-menu" icon>
+          <v-icon>mdi-fullscreen-exit</v-icon>
+        </v-btn>
 
-      <div class="d-flex gauge-wrap">
-        <KPIGauge :gauge="gauge" :width="gauge.notes ? parentWidth - 200 : parentWidth - 70" :height="parentHeight - 144"
-          :segmentStops="activeSteps" :ringWidth="dashboardRingWidth" class="pb-10 mr-2" />
-        <v-card v-if="gauge.notes" class="mr-2" style="height: 100%" max-width="190" elevation="1">
-          <v-card-text v-html="gauge.notes"></v-card-text>
-        </v-card>
-      </div>
+        <div class="d-flex gauge-wrap">
+          <KPIGauge :gauge="gauge" :width="1200"
+            :height="650" :segmentStops="activeSteps" ringWidth="150" class="pb-10 ml-10" />
+          <v-card v-if="gauge.notes" class="mr-2" style="height: 100%" max-width="190" elevation="1">
+            <v-card-text v-html="gauge.notes"></v-card-text>
+          </v-card>
+        </div>
+      </span>
+      <span v-else>
+        <v-btn @click="fullscreenGauge" class="chart-menu" icon>
+          <v-icon>mdi-fullscreen</v-icon>
+        </v-btn>
+
+        <div class="d-flex gauge-wrap">
+          <KPIGauge :gauge="gauge" :width="gauge.notes ? parentWidth - 200 : parentWidth - 70"
+            :height="parentHeight - 144" :segmentStops="activeSteps" :ringWidth="dashboardRingWidth" class="pb-10 mr-2" />
+          <v-card v-if="gauge.notes" class="mr-2" style="height: 100%" max-width="190" elevation="1">
+            <v-card-text v-html="gauge.notes"></v-card-text>
+          </v-card>
+        </div>
+      </span>
     </fullscreen>
-    <span v-else-if="fullscreen && !fullscreenD">
-      <v-btn @click="fullscreenDialog" class="chart-menu" icon>
+    <span v-else>
+      <span class="d-flex">
+      <h4 class="pa-4">{{ gauge.title }}</h4>
+      <v-tooltip top>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn class="ml-0 mt-2" icon @click.prevent="toGauge(gauge.id)" v-bind="attrs" v-on="on"><v-icon small>fa-solid
+              fa-up-right-from-square</v-icon>
+          </v-btn>
+        </template>
+        <span>Go to KPI Gauge</span>
+      </v-tooltip>
+    </span>
+      <!-- <v-btn @click="fullscreenDialog" class="chart-menu" icon>
         <v-icon>mdi-arrow-expand</v-icon>
-      </v-btn>
+      </v-btn> -->
       <div class="d-flex gauge-wrap">
         <KPIGauge :gauge="gauge" :width="parentWidth - 320" :height="(parentWidth - 270) / 2" :segmentStops="activeSteps"
           :ringWidth="dashboardRingWidth" class="pb-9 px-2 mr-2" />
@@ -44,7 +71,7 @@
         </v-card>
       </div>
     </span>
-    <div v-else-if="fullscreen && fullscreenD">
+    <!-- <div v-else-if="fullscreen && fullscreenD">
       <v-btn @click="fullscreenDialog" class="chart-menu" icon>
         <v-icon>mdi-arrow-collapse</v-icon>
       </v-btn>
@@ -56,7 +83,7 @@
         </v-card>
       </div>
 
-    </div>
+    </div> -->
     <!-- <v-card v-else height="100vh">
           <v-toolbar class="px-5" color="info" dark>
             <h3>{{ gauge.title }}</h3>

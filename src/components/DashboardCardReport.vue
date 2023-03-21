@@ -33,7 +33,20 @@
           </v-tooltip>
         </span>
         <!-- <fullscreen v-if="!fullscreen" v-model="fullscreenR"> -->
-        <span>
+        <span v-if="fullscreenR">
+          <v-btn @click="fullscreenReport" class="chart-menu" icon>
+            <v-icon>{{ fullscreenR ? 'mdi-fullscreen-exit' : 'mdi-fullscreen' }}</v-icon>
+          </v-btn>
+          <Component ref="chart" :is="graphType(report)" :chartData="data" :chartColors="
+            colors.find((scheme) => scheme.id == report.colorSchemeId).scheme
+          " :graphType="report.chartType" class="mb-4" :height="screenHeight">
+          </Component>
+          <div class="d-flex justify-end mb-4">
+            <v-btn v-if="circleChart" @click="changeChartData" outlined small>Next Category<v-icon
+                small>mdi-arrow-right</v-icon></v-btn>
+          </div>
+        </span>
+        <span v-else>
           <v-btn @click="fullscreenReport" class="chart-menu" icon>
             <v-icon>{{ fullscreenR ? 'mdi-fullscreen-exit' : 'mdi-fullscreen' }}</v-icon>
           </v-btn>

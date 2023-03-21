@@ -37,9 +37,84 @@
     </div>
     <fullscreen v-model="fullscreen" :class="fullscreen ? 'fullscreen-window pa-5' : 'pa-5'">
       <v-row>
+        <!-- DASHBOARD SELECT AREA -->
+        <v-col cols="12" v-if="!isReadOnly">
+          <v-card height="max-content">
+            <h4 class="pt-4 pl-2">Available Modules</h4>
+            <v-row>
+              <v-col cols="4">
+                <v-list dense>
+                  <v-subheader>Reports</v-subheader>
+                  <v-list-item>
+                    <v-list-item-content>
+                      <v-list-item-title>
+                        <draggable :list="channelReports" :group="{
+                          name: 'universalGroup',
+                          pull: 'clone',
+                          put: false,
+                        }" class="d-flex flex-wrap">
+                          <v-chip v-for="(item, index) in channelReports" :key="index" class="mr-2 mt-2"
+                            color="orange lighten-1" text-color="grey lighten-4">{{ item.title }}</v-chip>
+                        </draggable>
+                      </v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-list>
+              </v-col>
+              <v-divider class="my-6" vertical></v-divider>
+              <v-col cols="4">
+                <v-list dense>
+                  <v-subheader>Gauges</v-subheader>
+                  <v-list-item>
+                    <v-list-item-content>
+                      <v-list-item-title>
+                        <draggable :list="channelGauges" :group="{
+                          name: 'universalGroup',
+                          pull: 'clone',
+                          put: false,
+                        }" class="d-flex flex-wrap">
+                          <v-chip v-for="(item, index) in channelGauges" :key="index" class="mr-2 mt-2"
+                            color="red lighten-1" text-color="grey lighten-4">{{ item.title }}</v-chip>
+                        </draggable>
+                      </v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-list>
+              </v-col>
+              <v-divider class="my-6" vertical></v-divider>
+              <v-col cols="4">
+                <v-list dense>
+                  <v-subheader>Heat Maps</v-subheader>
+                  <v-list-item>
+                    <v-list-item-content>
+                      <v-list-item-title>
+                        <draggable :list="channelHeatMaps" :group="{
+                          name: 'universalGroup',
+                          pull: 'clone',
+                          put: false,
+                        }" class="d-flex flex-wrap">
+                          <v-chip v-for="(item, index) in channelHeatMaps" :key="index" class="mr-2 mt-2" color="green 
+                                  lighten-1" text-color="grey lighten-4">{{ item.title }}</v-chip>
+                        </draggable>
+                      </v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-list>
+              </v-col>
+            </v-row>
+            <v-divider class="mx-4 mb-4"></v-divider>
+            <v-subheader>Presentation Background Color</v-subheader>
+            <v-color-picker v-model="background" hide-canvas hide-inputs hide-mode-switch hide-sliders show-swatches
+              mode="rgba" swatches-max-height="60"></v-color-picker>
+            <v-divider class="ma-4"></v-divider>
+            <v-btn @click="deleteDialog = true" small color="error" depressed outlined class="ml-3 mb-3">Delete
+              Dashboard
+            </v-btn>
+          </v-card>
+        </v-col>
 
         <!-- DASHBOARD CARDS -->
-        <v-col :cols="isReadOnly ? 12 : 9">
+        <v-col cols="12">
           <draggable :list="staged" :group="{
             name: 'universalGroup',
             pull: false,
@@ -47,9 +122,10 @@
           }" :disabled="isReadOnly" class="drag-area">
             <dashboard :id="'dashExample'" @currentBreakpointUpdated="logBreak">
               <dash-layout v-for="layout in dlayouts" v-bind="layout" :key="layout.breakpoint">
-                <dash-item v-for="item, index in layout.items" v-bind.sync="item" :key="item.id" @resizeEnd="setResized"
-                  ><!-- :locked="!fullscreen" -->
-                  <v-card :ref="`card${index}`" v-if="staged[index]" :class="checkChartType(staged[index]) == 'report' ? 'pa-4' : ''">
+                <dash-item v-for="item, index in layout.items" v-bind.sync="item" :key="item.id"
+                  @resizeEnd="setResized"><!-- :locked="!fullscreen" -->
+                  <v-card :ref="`card${index}`" v-if="staged[index]"
+                    :class="checkChartType(staged[index]) == 'report' ? 'pa-4' : ''">
                     <DashboardCardHeatMap :heatMap="staged[index]" v-if="checkChartType(staged[index]) == 'heatMap'"
                       :isReadOnly="isReadOnly" @deleteItem="deleteItem" :fullscreen="fullscreen" />
                     <DashboardCardGauge :gauge="staged[index]" v-if="checkChartType(staged[index]) == 'gauge'"
@@ -73,73 +149,7 @@
           </draggable> -->
         </v-col>
 
-        <!-- DASHBOARD SELECT AREA -->
-        <v-col cols="3" v-if="!isReadOnly">
-          <v-card height="max-content">
-            <h4 class="pt-4 pl-2">Available Modules</h4>
-            <v-list>
-              <v-subheader>Reports</v-subheader>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-list-item-title>
-                    <draggable :list="channelReports" :group="{
-                      name: 'universalGroup',
-                      pull: 'clone',
-                      put: false,
-                    }" class="d-flex flex-wrap">
-                      <v-chip v-for="(item, index) in channelReports" :key="index" class="mr-2 mt-2"
-                        color="orange lighten-1" text-color="grey lighten-4">{{ item.title }}</v-chip>
-                    </draggable>
-                  </v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
-            <v-divider class="mx-4"></v-divider>
-            <v-list>
-              <v-subheader>Gauges</v-subheader>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-list-item-title>
-                    <draggable :list="channelGauges" :group="{
-                      name: 'universalGroup',
-                      pull: 'clone',
-                      put: false,
-                    }" class="d-flex flex-wrap">
-                      <v-chip v-for="(item, index) in channelGauges" :key="index" class="mr-2 mt-2" color="red lighten-1"
-                        text-color="grey lighten-4">{{ item.title }}</v-chip>
-                    </draggable>
-                  </v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
-            <v-divider class="mx-4"></v-divider>
-            <v-list>
-              <v-subheader>Heat Maps</v-subheader>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-list-item-title>
-                    <draggable :list="channelHeatMaps" :group="{
-                      name: 'universalGroup',
-                      pull: 'clone',
-                      put: false,
-                    }" class="d-flex flex-wrap">
-                      <v-chip v-for="(item, index) in channelHeatMaps" :key="index" class="mr-2 mt-2" color="green 
-                                lighten-1" text-color="grey lighten-4">{{ item.title }}</v-chip>
-                    </draggable>
-                  </v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
-            <v-divider class="mx-4 mb-4"></v-divider>
-            <v-subheader>Presentation Background Color</v-subheader>
-            <v-color-picker v-model="background" hide-canvas hide-inputs hide-mode-switch hide-sliders show-swatches
-              mode="rgba" swatches-max-height="90"></v-color-picker>
-            <v-divider class="mx-4 mb-4"></v-divider>
-            <v-btn @click="deleteDialog = true" small color="error" depressed outlined class="ml-3 mb-3">Delete
-              Dashboard
-            </v-btn>
-          </v-card>
-        </v-col>
+
         <!-- Delete Prompt -->
         <v-dialog v-model="deleteDialog" max-width="400">
           <v-card>
