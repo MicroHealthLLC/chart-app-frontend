@@ -75,6 +75,7 @@
                 dense
               />
               <xlsx-read :options="readOptions" :file="file">
+                
                 <xlsx-json
                   :options="readOptions"
                   @parsed="uploadData"
@@ -98,6 +99,11 @@
               dense
               :readonly="isReadOnly"
             ></v-text-field>
+            <v-select
+              :items="choices"
+              label="Add a column"
+              outlined
+            ></v-select>
           </v-col>
         </v-row>
       </v-form>
@@ -128,7 +134,11 @@
             class="m-2"></v-progress-circular> -->
         </v-card-title>
         <div class="ma-4" v-if="chartType === 'Data Table'">
-          <v-data-table
+          <vue-excel-editor v-model="selected" filter-row :readonly="isReadOnly">
+            <vue-excel-column v-for="col, i in Object.keys(selected[0])" :key="i" :field="col" :label="col" :type="col == 'Date' ? 'date' : 'string'" width="200px" />
+            <!-- <vue-excel-column field="gender" label="Gender" type="select" width="50px" :options="['F','M','U']" /> -->
+        </vue-excel-editor>
+          <!-- <v-data-table
             :headers="headers"
             :items="items"
             :single-select="false"
@@ -136,7 +146,7 @@
             :loading="$store.getters.loading"
             loading-text="Loading... Please wait"
           >
-          </v-data-table>
+          </v-data-table> -->
         </div>
       </v-card>
     </v-col>
@@ -144,8 +154,7 @@
 </template>
 
 <script>
-import { XlsxRead } from "vue-xlsx";
-import { XlsxJson } from "vue-xlsx";
+import { XlsxRead, XlsxJson } from "vue-xlsx";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import datasetMixin from "../mixins/dataset-mixin";
 
@@ -154,9 +163,11 @@ export default {
   components: {
     XlsxRead,
     XlsxJson,
+   
   },
   data() {
     return {
+      choices: ['Count', 'Count Unique Values', 'Sum', 'Average', 'Median'],
       file: null,
       //data: [],
       chartOptions: {
@@ -353,6 +364,7 @@ export default {
     if (!this.dataSet.user) {
       this.dataSet.user = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
     }
+    console.log(Object.keys(this.selected[0])[0])
   },
   watch: {
     dataSet() {
@@ -367,7 +379,7 @@ export default {
     },
     selected() {
       if (this.selected && this.selected.length > 0) {
-        //console.log(this.selected)
+        console.log(this.selected)
       } else console.log("no SELECTED data");
     },
     statusCode() {
