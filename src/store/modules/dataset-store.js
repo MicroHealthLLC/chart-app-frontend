@@ -78,20 +78,24 @@ export default {
       }
     },
     async fetchDataSets({ commit }) {
+      commit("TOGGLE_LOADING", true);
       try {
         const res = await API.graphql(graphqlOperation(listDataSets));
         commit("SET_DATA_SETS", res.data.listDataSets.items);
       } catch (error) {
         console.log(error);
       }
+      commit("TOGGLE_LOADING", false);
     },
     async fetchDataValues({ commit }) {
+      commit("TOGGLE_LOADING", true);
       try {
         const res = await API.graphql(graphqlOperation(listDataValues));
         commit("SET_DATA_VALUES", res.data.listDataValues.items);
       } catch (error) {
         console.log(error);
       }
+      commit("TOGGLE_LOADING", false);
     },
     async fetchDataSet({ commit }, id) {
       commit("TOGGLE_LOADING", true);
