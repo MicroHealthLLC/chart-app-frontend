@@ -1,6 +1,6 @@
 import { API, graphqlOperation } from "aws-amplify";
 import { createDataSet, createDataValue } from "@/graphql/mutations";
-import { updateDataSet } from "@/graphql/mutations";
+import { updateDataSet, updateDataValue } from "@/graphql/mutations";
 import { deleteDataSet } from "@/graphql/mutations";
 import { getDataSet } from "@/graphql/queries";
 import { listDataSets, listDataValues } from "@/graphql/queries";
@@ -11,6 +11,7 @@ export default {
     dataSets: [],
     dataValues: [],
     dataSet: {},
+    dataValue: {},
     channelDataSets: [],
   },
   actions: {
@@ -38,11 +39,11 @@ export default {
           graphqlOperation(createDataValue, { input: dataValue })
         );
         dispatch("fetchDataValues");
-        commit("SET_SNACKBAR", {
+        /* commit("SET_SNACKBAR", {
           show: true,
           message: "DataValue Successfully Added!",
           color: "var(--mh-green)",
-        });
+        }); */
       } catch (error) {
         console.log(error);
       }
@@ -59,6 +60,22 @@ export default {
           message: "DataSet Successfully Updated!",
           color: "var(--mh-green)",
         });
+      } catch (error) {
+        console.log(error);
+      }
+      commit("TOGGLE_SAVING", false);
+    },
+    async updateDataValueById({ commit, dispatch }, dataValue) {
+      console.log(dataValue);
+      commit("TOGGLE_SAVING", true);
+      try {
+        await API.graphql(graphqlOperation(updateDataValue, { input: dataValue }));
+        dispatch("fetchDataValues");
+        /* commit("SET_SNACKBAR", {
+          show: true,
+          message: "DataValue Successfully Updated!",
+          color: "var(--mh-green)",
+        }); */
       } catch (error) {
         console.log(error);
       }

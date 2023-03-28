@@ -30,7 +30,7 @@
                 @change.native="onChange" @click:clear="clearInput('file')" dense />
               <xlsx-read :options="readOptions" :file="file">
 
-                <xlsx-json :options="readOptions" @parsed="uploadData"></xlsx-json>
+                <xlsx-json :options="readOptions" @parsed="setTableItems"></xlsx-json>
               </xlsx-read>
               <v-btn v-if="dataSet.id" :disabled="!file" class="mb-1 ml-2" elevation="4" small
                 @click="addNewDataValue"><v-icon>mdi-plus-circle-outline</v-icon>Add to Dataset</v-btn>
@@ -65,25 +65,22 @@
           <v-progress-circular v-if="$store.getters.loading" :size="70" indeterminate color="primary"
             class="m-2"></v-progress-circular>
         </v-card-title> -->
-        <v-skeleton-loader
-          v-if="$store.getters.loading"
-          class="mx-auto"
-          type="table"
-          width="100%"
-        ></v-skeleton-loader>
-        <span v-else class="d-flex justify-end">
-          <v-btn small class="mr-4 mt-4" @click="showRemoveColumn">
+        <v-skeleton-loader v-if="$store.getters.loading || $store.getters.saving" class="mx-auto" type="table" width="100%"></v-skeleton-loader>
+        
+
+        <div class="ma-4" v-else>
+          <span class="d-flex justify-end">
+          <v-btn small class="mr-4 mb-4" @click="showRemoveColumn">
             Remove Columns
           </v-btn>
-          <v-btn small class="mt-4 mr-6"
-            @click="showAddColumn"><v-icon>mdi-plus</v-icon><v-icon small
-            class="ml-2">mdi-function-variant</v-icon>
+          <v-btn small class="mb-4 mr-6" @click="showAddColumn"><v-icon>mdi-plus</v-icon><v-icon small
+              class="ml-2">mdi-function-variant</v-icon>
           </v-btn>
         </span>
-
-        <div class="ma-4" v-if="chartType === 'Data Table' && items.length > 0">
-          <vue-excel-editor v-if="renderComponent" v-model="items" :readonly="isReadOnly" :free-select="true" ref="grid" no-header-edit>
-            <vue-excel-column autoFillWidth v-for="col in allKeys" :key="col.title" :field="col" :label="col" :type="checkColType(col, items)" text-align="left" />
+          <vue-excel-editor v-if="renderComponent" v-model="items" readonly :free-select="true" ref="grid"
+            no-header-edit @update="onUpdate">
+            <vue-excel-column autoFillWidth v-for="col, i in allKeys" :key="i" :field="col" :label="col"
+              :type="checkColType(col, items)" text-align="left" />
           </vue-excel-editor>
           <!-- <v-data-table :headers="headers" :items="items" :single-select="false" :search="search"
             :loading="$store.getters.loading" loading-text="Loading... Please wait">
@@ -115,18 +112,11 @@
     </v-dialog>
     <v-dialog v-model="rmColForm" width="20%">
       <v-card class="pa-4">
-        <v-select
-          v-model="colsToRemove"
-          :items="allKeys"
-          label="Select"
-          multiple
-          chips
-          hint="Choose the columns you wish to remove"
-          persistent-hint
-        ></v-select>
+        <v-select v-model="colsToRemove" :items="allKeys" label="Select" multiple chips
+          hint="Choose the columns you wish to remove" persistent-hint></v-select>
         <v-btn class="mt-6" color="primary" @click="removeColumns" small>
-            Remove Columns
-          </v-btn>
+          Remove Columns
+        </v-btn>
       </v-card>
     </v-dialog>
   </v-row>
@@ -159,13 +149,12 @@ export default {
         },
         bezierCurve: false,
       },
-      chartType: "Data Table",
       readOptions: {
         cellDates: true,
         raw: false,
         dateNF: "mm/dd/yyyy",
       },
-      headers: [],
+      //headers: [],
       //selectedHeaders:[],
       value: [],
       items: [],
@@ -213,6 +202,7 @@ export default {
             }
           })
         })
+        console.log(uniqueKeys.filter(k => k != '$id'))
         return uniqueKeys.filter(k => k != '$id')
       } else return []
     }
@@ -222,7 +212,7 @@ export default {
       "addDataSet",
       "addDataValue",
       "updateDataSetById",
-      "updateDataSet",
+      "updateDataValueById",
       "fetchDataSet",
       "fetchDataSets",
       "fetchDataSetThenAddDataValue",
@@ -253,7 +243,7 @@ export default {
       this.file = null;
       this.data = [];
       //this.selected = [];
-      this.headers = [];
+      //this.headers = [];
       this.items = [];
     },
     async saveDataSet() {
@@ -283,7 +273,7 @@ export default {
               .filter((d) => !oldDataSetIds.includes(d.id));
             let id = lastAdded[0].id;
             /* this.$router.push(`/data-sets/${id}`) */
-            this.$router.push(`/${this.currentChannels[0].channelId}/data-sets/${id}`);
+            this.$router.push(`/${this.currentChannels[0].name}/data-sets/${id}`);
             //console.log(this.selected)
             /* console.log(this.selected)
             this.fetchDataSetThenAddDataValue(id, this.selected) */
@@ -293,14 +283,28 @@ export default {
         this.resetAndGoBack();
       }
     },
-    async addNewDataValue() {
-      let objString = JSON.stringify(this.items);
-      await this.addDataValue({
-        data: objString,
-        dataSetId: this.dataSet.id,
-      });
+    addNewDataValue() {
+      let objString = ''
+      this.items.forEach((item) => {
+        objString = JSON.stringify(item);
+        this.addDataValue({
+          data: objString,
+          dataSetId: this.dataSet.id,
+        })
+      })
       this.showDataChart();
       this.clearInput("file");
+    },
+    updateDataValues() {
+      let data = ''
+      this.dataSet.dataValues.items.forEach(item => {
+        data = JSON.stringify(item.data);
+        this.updateDataValueById({
+          id: item.id,
+          data: data,
+          dataSetId: this.dataSet.id,
+        })
+      })
     },
     clearInput(type) {
       console.log(type);
@@ -316,38 +320,17 @@ export default {
     },
     async showDataChart() {
       await this.fetchDataSet(this.$route.params.dataSetId);
-
-      //this.createMasterData(this.dataSet.dataValues.items)
-      this.uploadData(this.createMasterData(this.dataSet.dataValues.items));
+      this.setTableItems(this.createMasterData(this.dataSet.dataValues.items));
     },
-    uploadData(data) {
-      console.log(data)
+    setTableItems(data) {
       this.items = data;
-      console.log(this.dataSet)
-      //this.selected = data;
-      //const keys = Object.keys(data[0]);
-
-      this.headers = this.allKeys.map((item) => ({
-        text: item,
-        value: item,
-      }));
       this.fixNullVals()
-      /* const keys = Object.keys(newData[0])
-      this.xAxisKeys = keys */
-      //this.moveArrByKey(this.xAxisKeys, this.xAxisValue)
-      //this.setDataTable(data)
-      //this.selectedHeaders = this.headers
     },
     fixNullVals() {
       this.items.forEach(i => {
         this.allKeys.forEach(k => {
           if (i[k] == undefined) {
             i[k] = ''
-            /* if (this.checkColType(k, this.items) == 'number') {
-              i[k] = 0
-            } else if (this.checkColType(k, this.items) == 'string') {
-              i[k] = ''
-            } */
           }
         })
       })
@@ -358,13 +341,8 @@ export default {
     },
     showAddColumn() {
       this.columnForm = true
-      /* this.items.forEach(s => {
-        s.newCol = 7
-      })
-      this.$forceUpdate() */
     },
     addColumn() {
-      console.log(this.newColumn)
       this.items.forEach(item => {
         switch (this.newColumn.action) {
           case "Difference":
@@ -406,7 +384,8 @@ export default {
       /* This force re-renders the table... */
       this.items.push({})
       this.cancelColumnForm()
-      this.items.pop() 
+      this.items.pop()
+      this.updateDataValues()
     },
     cancelColumnForm() {
       this.columnForm = false
@@ -426,12 +405,19 @@ export default {
           delete item[col]
         })
       })
+      this.$refs.grid.fields.forEach((field, i) => {
+        if (this.colsToRemove.includes(field.name)) {
+          this.$refs.grid.fields.splice(i, 1)
+        }
+      })
       this.items.push({})
       this.rmColForm = false
       this.items.pop()
-      console.log(this.allKeys)
+      this.updateDataValues()
+    },
+    onUpdate(records) {
+      console.log(records)
     }
-    
   },
   async mounted() {
     if (this.$route.path === `/${this.currentChannels[0].name}/data-sets`) {
@@ -456,7 +442,7 @@ export default {
           value: item,
         })); */
         //this.selectedHeaders = this.headers
-        this.uploadData(this.createMasterData(this.dataSet.dataValues.items));
+        this.setTableItems(this.createMasterData(this.dataSet.dataValues.items));
       }
       this.isReadOnly = true;
     }
@@ -477,10 +463,6 @@ export default {
           this.clear();
         }
       } else this.isReadOnly = false;
-    },
-    items() {
-      console.log(this.items)
-      this.$forceUpdate()
     },
     /* selected() {
       if (this.selected && this.selected.length > 0) {
