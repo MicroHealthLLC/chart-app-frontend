@@ -65,7 +65,10 @@
         </v-progress-circular>
       </v-card> -->
 
-      <h3>Report Details</h3>
+      <span class="d-flex justify-space-between">
+        <h3>Report Details</h3>
+        <h5 v-if="activeReport.createdBy">By: {{ activeReport.createdBy }}</h5>
+      </span>
       <v-divider class="mb-8"></v-divider>
       <!-- Form Fields -->
       <v-form v-if="activeReport" v-model="formValid" ref="form">
@@ -82,10 +85,10 @@
           <div class="description">
             <v-textarea v-model="activeReport.description" label="Description" rows="1" auto-grow dense></v-textarea>
           </div>
-          <div>
+          <!-- <div>
             <v-text-field v-if="activeReport.createdBy" :value="activeReport.createdBy" label="Created By" dense
               readonly></v-text-field>
-          </div>
+          </div> -->
           <!-- <div>
             <v-select
               v-model="activeReport.channelId"
@@ -99,10 +102,10 @@
               :readonly="newChannelReport"
             ></v-select>
           </div> -->
-          <div>
+          <!-- <div>
             <v-text-field v-if="activeReport.updatedBy" :value="activeReport.updatedBy" label="Last Updated By" dense
               readonly></v-text-field>
-          </div>
+          </div> -->
           <div>
             <v-select v-model="activeReport.dataSetId" :items="dataSetChoices" item-text="title" item-value="id"
               label="Data Set" dense @change="updateChartData" required
@@ -118,9 +121,15 @@
             </v-select>
           </div>
           <div>
-            <v-select v-model="xAxisValue" :items="xAxisKeys" label="X-Axis" dense @change="onChangeAxis"></v-select>
+            <v-select v-model="activeReport.colorSchemeId" label="Color Scheme" :items="colors" item-text="title"
+              item-value="id" dense @change="updateColors"></v-select>
           </div>
-
+          <div>
+            <v-select v-model="xAxisValue" :items="xAxisKeys" label="X-Axis" dense @change="onChangeXAxis"></v-select>
+          </div>
+          <div>
+            <v-select v-model="yAxisValue" :items="yAxisKeys" label="Y-Axis" dense @change="onChangeYAxis"></v-select>
+          </div>
           <!-- <div class="tags">
             <v-select
               v-model="activeReport.tags"
@@ -137,10 +146,7 @@
             >
             </v-select>
           </div> -->
-          <div>
-            <v-select v-model="activeReport.colorSchemeId" label="Color Scheme" :items="colors" item-text="title"
-              item-value="id" dense @change="updateColors"></v-select>
-          </div>
+          
         </div>
       </v-form>
       <!-- Delete Button -->
@@ -221,6 +227,8 @@ export default {
       selectedHeaders: [],
       xAxisKeys: [],
       xAxisValue: "",
+      yAxisKeys: [],
+      yAxisValue: "",
     };
   },
   mixins: [datasetMixin, reportMixin],
@@ -385,7 +393,7 @@ export default {
     },
     async updateChartData() {
       await this.fetchDataSet(this.activeReport.dataSetId);
-
+      console.log(this.dataSet.dataValues.items)
       /* GET KEYS FROM ALL DATA */
       let uniqueKeys = []
       let newKeys = this.dataSet.dataValues.items.map(s => Object.keys(s.data))
@@ -403,7 +411,11 @@ export default {
         if (k == this.xAxisValue) {
           this.arrayMove(headers, i, 0);
         }
+        if (k == this.yAxisValue) {
+          this.arrayMove(headers, i, 1);
+        }
       });
+      console.log(this.headers)
       this.headers = headers;
       let newHeaders = [];
       if (this.activeReport.columns && this.activeReport.columns.length > 0) {
@@ -428,6 +440,7 @@ export default {
         }
       });
       this.xAxisKeys = this.selectedHeaders.map((h) => h.text || h);
+      this.yAxisKeys = this.selectedHeaders.map((h) => h.text || h);
       /* if (this.dataSet && this.dataSet.dataValues && this.dataSet.dataValues.items && this.dataSet.dataValues.items.length > 0) { */
       this.data = this.filterData(
         this.selectedHeaders,
@@ -435,9 +448,9 @@ export default {
       );
       /* } */
     },
-    onChangeAxis() {
+    onChangeXAxis() {
       this.xAxisKeys = this.selectedHeaders.map((h) => h.text || h);
-      this.moveArrByKey(this.xAxisKeys, this.xAxisValue);
+      this.moveArrByKey(this.xAxisKeys, this.xAxisValue, 0);
       this.selectedHeaders = this.xAxisKeys.map((x) => ({
         text: x,
         value: x,
@@ -447,10 +460,24 @@ export default {
         this.createMasterData(this.dataSet.dataValues.items)
       );
     },
-    moveArrByKey(keys, selected = "Date") {
+    onChangeYAxis() {
+      /* console.log(this.xAxisKeys, this.xAxisValue)
+      console.log(this.yAxisKeys, this.yAxisValue) */
+      this.yAxisKeys = this.selectedHeaders.map((h) => h.text || h);
+      this.moveArrByKey(this.yAxisKeys, this.yAxisValue, 1);
+      this.selectedHeaders = this.yAxisKeys.map((y) => ({
+        text: y,
+        value: y,
+      }));
+      this.data = this.filterData(
+        this.selectedHeaders,
+        this.createMasterData(this.dataSet.dataValues.items)
+      );
+    },
+    moveArrByKey(keys, selected, axis) {
       keys.forEach((k, i) => {
         if (k == selected) {
-          this.arrayMove(keys, i, 0);
+          this.arrayMove(keys, i, axis);
         }
       });
     },
