@@ -21,7 +21,7 @@ export const createReport = /* GraphQL */ `
         gauges {
           nextToken
         }
-        heatMap {
+        heatMaps {
           nextToken
         }
         type
@@ -81,21 +81,9 @@ export const createReport = /* GraphQL */ `
         dataValues {
           nextToken
         }
-        heatMap {
-          id
-          title
-          dataSetId
-          options
-          channelId
-          createdBy
-          updatedBy
-          createdAt
-          updatedAt
-        }
         user
         createdAt
         updatedAt
-        dataSetHeatMapId
       }
       dataSetId
       xAxis
@@ -128,7 +116,7 @@ export const updateReport = /* GraphQL */ `
         gauges {
           nextToken
         }
-        heatMap {
+        heatMaps {
           nextToken
         }
         type
@@ -188,21 +176,9 @@ export const updateReport = /* GraphQL */ `
         dataValues {
           nextToken
         }
-        heatMap {
-          id
-          title
-          dataSetId
-          options
-          channelId
-          createdBy
-          updatedBy
-          createdAt
-          updatedAt
-        }
         user
         createdAt
         updatedAt
-        dataSetHeatMapId
       }
       dataSetId
       xAxis
@@ -235,7 +211,7 @@ export const deleteReport = /* GraphQL */ `
         gauges {
           nextToken
         }
-        heatMap {
+        heatMaps {
           nextToken
         }
         type
@@ -295,21 +271,9 @@ export const deleteReport = /* GraphQL */ `
         dataValues {
           nextToken
         }
-        heatMap {
-          id
-          title
-          dataSetId
-          options
-          channelId
-          createdBy
-          updatedBy
-          createdAt
-          updatedAt
-        }
         user
         createdAt
         updatedAt
-        dataSetHeatMapId
       }
       dataSetId
       xAxis
@@ -460,7 +424,7 @@ export const createGauge = /* GraphQL */ `
         gauges {
           nextToken
         }
-        heatMap {
+        heatMaps {
           nextToken
         }
         type
@@ -517,7 +481,7 @@ export const updateGauge = /* GraphQL */ `
         gauges {
           nextToken
         }
-        heatMap {
+        heatMaps {
           nextToken
         }
         type
@@ -574,7 +538,7 @@ export const deleteGauge = /* GraphQL */ `
         gauges {
           nextToken
         }
-        heatMap {
+        heatMaps {
           nextToken
         }
         type
@@ -632,24 +596,14 @@ export const createHeatMap = /* GraphQL */ `
         dataValues {
           nextToken
         }
-        heatMap {
-          id
-          title
-          dataSetId
-          options
-          channelId
-          createdBy
-          updatedBy
-          createdAt
-          updatedAt
-        }
         user
         createdAt
         updatedAt
-        dataSetHeatMapId
       }
       dataSetId
       options
+      leadCol
+      columns
       channel {
         id
         description
@@ -662,7 +616,7 @@ export const createHeatMap = /* GraphQL */ `
         gauges {
           nextToken
         }
-        heatMap {
+        heatMaps {
           nextToken
         }
         type
@@ -704,24 +658,14 @@ export const updateHeatMap = /* GraphQL */ `
         dataValues {
           nextToken
         }
-        heatMap {
-          id
-          title
-          dataSetId
-          options
-          channelId
-          createdBy
-          updatedBy
-          createdAt
-          updatedAt
-        }
         user
         createdAt
         updatedAt
-        dataSetHeatMapId
       }
       dataSetId
       options
+      leadCol
+      columns
       channel {
         id
         description
@@ -734,7 +678,7 @@ export const updateHeatMap = /* GraphQL */ `
         gauges {
           nextToken
         }
-        heatMap {
+        heatMaps {
           nextToken
         }
         type
@@ -776,24 +720,14 @@ export const deleteHeatMap = /* GraphQL */ `
         dataValues {
           nextToken
         }
-        heatMap {
-          id
-          title
-          dataSetId
-          options
-          channelId
-          createdBy
-          updatedBy
-          createdAt
-          updatedAt
-        }
         user
         createdAt
         updatedAt
-        dataSetHeatMapId
       }
       dataSetId
       options
+      leadCol
+      columns
       channel {
         id
         description
@@ -806,7 +740,7 @@ export const deleteHeatMap = /* GraphQL */ `
         gauges {
           nextToken
         }
-        heatMap {
+        heatMaps {
           nextToken
         }
         type
@@ -1023,7 +957,6 @@ export const createChannel = /* GraphQL */ `
           user
           createdAt
           updatedAt
-          dataSetHeatMapId
         }
         nextToken
       }
@@ -1044,12 +977,14 @@ export const createChannel = /* GraphQL */ `
         }
         nextToken
       }
-      heatMap {
+      heatMaps {
         items {
           id
           title
           dataSetId
           options
+          leadCol
+          columns
           channelId
           createdBy
           updatedBy
@@ -1104,7 +1039,6 @@ export const updateChannel = /* GraphQL */ `
           user
           createdAt
           updatedAt
-          dataSetHeatMapId
         }
         nextToken
       }
@@ -1125,12 +1059,14 @@ export const updateChannel = /* GraphQL */ `
         }
         nextToken
       }
-      heatMap {
+      heatMaps {
         items {
           id
           title
           dataSetId
           options
+          leadCol
+          columns
           channelId
           createdBy
           updatedBy
@@ -1185,7 +1121,6 @@ export const deleteChannel = /* GraphQL */ `
           user
           createdAt
           updatedAt
-          dataSetHeatMapId
         }
         nextToken
       }
@@ -1206,12 +1141,14 @@ export const deleteChannel = /* GraphQL */ `
         }
         nextToken
       }
-      heatMap {
+      heatMaps {
         items {
           id
           title
           dataSetId
           options
+          leadCol
+          columns
           channelId
           createdBy
           updatedBy
@@ -1249,7 +1186,7 @@ export const createDataSet = /* GraphQL */ `
         gauges {
           nextToken
         }
-        heatMap {
+        heatMaps {
           nextToken
         }
         type
@@ -1269,40 +1206,9 @@ export const createDataSet = /* GraphQL */ `
         }
         nextToken
       }
-      heatMap {
-        id
-        title
-        dataSet {
-          id
-          title
-          description
-          channelId
-          user
-          createdAt
-          updatedAt
-          dataSetHeatMapId
-        }
-        dataSetId
-        options
-        channel {
-          id
-          description
-          type
-          title
-          channelTypeId
-          createdAt
-          updatedAt
-        }
-        channelId
-        createdBy
-        updatedBy
-        createdAt
-        updatedAt
-      }
       user
       createdAt
       updatedAt
-      dataSetHeatMapId
     }
   }
 `;
@@ -1327,7 +1233,7 @@ export const updateDataSet = /* GraphQL */ `
         gauges {
           nextToken
         }
-        heatMap {
+        heatMaps {
           nextToken
         }
         type
@@ -1347,40 +1253,9 @@ export const updateDataSet = /* GraphQL */ `
         }
         nextToken
       }
-      heatMap {
-        id
-        title
-        dataSet {
-          id
-          title
-          description
-          channelId
-          user
-          createdAt
-          updatedAt
-          dataSetHeatMapId
-        }
-        dataSetId
-        options
-        channel {
-          id
-          description
-          type
-          title
-          channelTypeId
-          createdAt
-          updatedAt
-        }
-        channelId
-        createdBy
-        updatedBy
-        createdAt
-        updatedAt
-      }
       user
       createdAt
       updatedAt
-      dataSetHeatMapId
     }
   }
 `;
@@ -1405,7 +1280,7 @@ export const deleteDataSet = /* GraphQL */ `
         gauges {
           nextToken
         }
-        heatMap {
+        heatMaps {
           nextToken
         }
         type
@@ -1425,40 +1300,9 @@ export const deleteDataSet = /* GraphQL */ `
         }
         nextToken
       }
-      heatMap {
-        id
-        title
-        dataSet {
-          id
-          title
-          description
-          channelId
-          user
-          createdAt
-          updatedAt
-          dataSetHeatMapId
-        }
-        dataSetId
-        options
-        channel {
-          id
-          description
-          type
-          title
-          channelTypeId
-          createdAt
-          updatedAt
-        }
-        channelId
-        createdBy
-        updatedBy
-        createdAt
-        updatedAt
-      }
       user
       createdAt
       updatedAt
-      dataSetHeatMapId
     }
   }
 `;
@@ -1488,21 +1332,9 @@ export const createDataValue = /* GraphQL */ `
         dataValues {
           nextToken
         }
-        heatMap {
-          id
-          title
-          dataSetId
-          options
-          channelId
-          createdBy
-          updatedBy
-          createdAt
-          updatedAt
-        }
         user
         createdAt
         updatedAt
-        dataSetHeatMapId
       }
       createdAt
       updatedAt
@@ -1535,21 +1367,9 @@ export const updateDataValue = /* GraphQL */ `
         dataValues {
           nextToken
         }
-        heatMap {
-          id
-          title
-          dataSetId
-          options
-          channelId
-          createdBy
-          updatedBy
-          createdAt
-          updatedAt
-        }
         user
         createdAt
         updatedAt
-        dataSetHeatMapId
       }
       createdAt
       updatedAt
@@ -1582,21 +1402,9 @@ export const deleteDataValue = /* GraphQL */ `
         dataValues {
           nextToken
         }
-        heatMap {
-          id
-          title
-          dataSetId
-          options
-          channelId
-          createdBy
-          updatedBy
-          createdAt
-          updatedAt
-        }
         user
         createdAt
         updatedAt
-        dataSetHeatMapId
       }
       createdAt
       updatedAt

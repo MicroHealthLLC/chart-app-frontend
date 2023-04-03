@@ -34,8 +34,12 @@
                 />
               </v-col>
               <v-col cols="4">
+<<<<<<< HEAD
                 <vue-editor v-model="gauge.notes" placeholder="Enter notes here" :editor-toolbar="toolbarOptions"></vue-editor>
                 <!-- <v-textarea v-model="gauge.notes" solo auto-grow background-color="grey lighten-4" label="Enter notes here" rows="4"></v-textarea> -->
+=======
+                <v-textarea data-cy="notes" v-model="gauge.notes" solo auto-grow background-color="grey lighten-4" label="Enter notes here" rows="4"></v-textarea>
+>>>>>>> bfcdeeacea8b957911cbc768199b1f080cfe55b1
               </v-col>
             </v-row>
           </v-card>
@@ -54,6 +58,7 @@
         <v-container class="px-4 mx-4">
           <v-row>
             <v-col cols="6">
+<<<<<<< HEAD
               <v-text-field
                 v-model="gauge.title"
                 label="Title"
@@ -61,6 +66,10 @@
                 required
                 :rules="[(v) => !!v || 'Title is required']"
               ></v-text-field>
+=======
+              <v-text-field data-cy="title" v-model="gauge.title" label="Title" dense required
+                :rules="[(v) => !!v || 'Title is required']"></v-text-field>
+>>>>>>> bfcdeeacea8b957911cbc768199b1f080cfe55b1
             </v-col>
             <v-col cols="4">
               <v-select
@@ -163,6 +172,7 @@
           </v-row>
           <v-row>
             <v-col cols="2">
+<<<<<<< HEAD
               <v-text-field
                 v-model.number="gauge.value"
                 label="KPI Value"
@@ -173,11 +183,16 @@
                     !Number.isNaN(Number(v)) || 'The value must be a number',
                 ]"
               ></v-text-field>
+=======
+              <v-text-field data-cy='kpi-value' v-model.number="gauge.value" label="KPI Value" dense required
+                :rules="[v => !Number.isNaN(Number(v)) || 'The value must be a number']"></v-text-field>
+>>>>>>> bfcdeeacea8b957911cbc768199b1f080cfe55b1
             </v-col>
           </v-row>
         </v-container>
       </v-form>
 
+<<<<<<< HEAD
       <div v-if="gauge && gauge.id" class="d-flex justify-end mt-4">
         <v-btn
           @click="deleteDialog = true"
@@ -187,9 +202,13 @@
           outlined
           >Delete KPI</v-btn
         >
+=======
+      <div data-cy="div-delete" v-if="gauge && gauge.id" class="d-flex justify-end mt-4">
+        <v-btn data-cy="delete" @click="deleteDialog = true" small color="error" depressed outlined>Delete KPI</v-btn>
+>>>>>>> bfcdeeacea8b957911cbc768199b1f080cfe55b1
       </div>
 
-      <v-dialog v-model="deleteDialog" max-width="400">
+      <v-dialog data-cy="confirm-delete" v-model="deleteDialog" max-width="400">
         <v-card>
           <v-card-title>Delete this KPI?</v-card-title>
           <v-divider class="mx-4 mb-2"></v-divider>
@@ -197,6 +216,7 @@
             >Are you sure you would like to delete this KPI?</v-card-text
           >
           <v-card-actions class="d-flex justify-end">
+<<<<<<< HEAD
             <v-btn
               @click="deleteDialog = false"
               small
@@ -207,6 +227,10 @@
             <v-btn @click="deleteGauge" small depressed color="error"
               >Delete</v-btn
             >
+=======
+            <v-btn @click="deleteDialog = false" small outlined color="secondary">Cancel</v-btn>
+            <v-btn data-cy="delete-btn" @click="deleteGauge" small depressed color="error">Delete</v-btn>
+>>>>>>> bfcdeeacea8b957911cbc768199b1f080cfe55b1
           </v-card-actions>
         </v-card>
       </v-dialog>
