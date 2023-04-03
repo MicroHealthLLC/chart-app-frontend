@@ -19,6 +19,7 @@
                 <label class="d-block text-left">Email</label>
                 <v-text-field
                   class="pt-0"
+                  data-cy="username"
                   v-model="username"                 
                   :rules="[
                     (v) => !!v || 'Email is required',
@@ -32,6 +33,7 @@
                 <label class="d-block text-left">Password</label>
                 <v-text-field
                   class="pt-0"
+                  data-cy="password"
                   v-model="password"
                   type="password"
                   :rules="[(v) => !!v || 'Password is required']"
@@ -46,6 +48,7 @@
             <v-card-actions class="d-flex flex-column">
               <v-btn
                color="var(--mh-blue)"
+                data-cy="login"
                 @click="userLogin"
                 :loading="loading"
                 :disabled="loading"

@@ -25,9 +25,9 @@
       <v-container v-if="channelGauges.length > 0" class="pl-5">
         <h4 class="mb-2">GAUGES</h4>
         <v-row>
-        <v-col xl="2" lg="3" md="4" sm="6" v-for="(gauge) in channelGauges" :key="gauge.id">
+        <v-col xl="2" lg="3" md="4" sm="6" v-for="(gauge) in gauges" :key="gauge.id">
           <v-card width="250px" min-width="250px" @click.prevent="toGauge(gauge.id)" tile elevation="4">
-            <v-card-title>{{ gauge.title }}</v-card-title>
+            <v-card-title data-cy="gauge">{{ gauge.title }}</v-card-title>
             <v-card-subtitle>By: {{ gauge.createdBy }}</v-card-subtitle>
             <KPIGauge :gauge="gauge" :height="130" :width="200" :segmentStops="gauge.segmentStops.split(',').map(x => parseFloat(x))" :needleHeightRatio=".7" />
           </v-card>

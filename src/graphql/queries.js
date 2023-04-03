@@ -18,7 +18,7 @@ export const getReport = /* GraphQL */ `
         gauges {
           nextToken
         }
-        heatMap {
+        heatMaps {
           nextToken
         }
         type
@@ -78,21 +78,9 @@ export const getReport = /* GraphQL */ `
         dataValues {
           nextToken
         }
-        heatMap {
-          id
-          title
-          dataSetId
-          options
-          channelId
-          createdBy
-          updatedBy
-          createdAt
-          updatedAt
-        }
         user
         createdAt
         updatedAt
-        dataSetHeatMapId
       }
       dataSetId
       xAxis
@@ -157,7 +145,6 @@ export const listReports = /* GraphQL */ `
           user
           createdAt
           updatedAt
-          dataSetHeatMapId
         }
         dataSetId
         xAxis
@@ -252,7 +239,7 @@ export const getGauge = /* GraphQL */ `
         gauges {
           nextToken
         }
-        heatMap {
+        heatMaps {
           nextToken
         }
         type
@@ -350,24 +337,14 @@ export const getHeatMap = /* GraphQL */ `
         dataValues {
           nextToken
         }
-        heatMap {
-          id
-          title
-          dataSetId
-          options
-          channelId
-          createdBy
-          updatedBy
-          createdAt
-          updatedAt
-        }
         user
         createdAt
         updatedAt
-        dataSetHeatMapId
       }
       dataSetId
       options
+      leadCol
+      columns
       channel {
         id
         description
@@ -380,7 +357,7 @@ export const getHeatMap = /* GraphQL */ `
         gauges {
           nextToken
         }
-        heatMap {
+        heatMaps {
           nextToken
         }
         type
@@ -415,10 +392,11 @@ export const listHeatMaps = /* GraphQL */ `
           user
           createdAt
           updatedAt
-          dataSetHeatMapId
         }
         dataSetId
         options
+        leadCol
+        columns
         channel {
           id
           description
@@ -550,7 +528,6 @@ export const getChannel = /* GraphQL */ `
           user
           createdAt
           updatedAt
-          dataSetHeatMapId
         }
         nextToken
       }
@@ -571,12 +548,14 @@ export const getChannel = /* GraphQL */ `
         }
         nextToken
       }
-      heatMap {
+      heatMaps {
         items {
           id
           title
           dataSetId
           options
+          leadCol
+          columns
           channelId
           createdBy
           updatedBy
@@ -612,7 +591,7 @@ export const listChannels = /* GraphQL */ `
         gauges {
           nextToken
         }
-        heatMap {
+        heatMaps {
           nextToken
         }
         type
@@ -643,7 +622,7 @@ export const getDataSet = /* GraphQL */ `
         gauges {
           nextToken
         }
-        heatMap {
+        heatMaps {
           nextToken
         }
         type
@@ -663,40 +642,9 @@ export const getDataSet = /* GraphQL */ `
         }
         nextToken
       }
-      heatMap {
-        id
-        title
-        dataSet {
-          id
-          title
-          description
-          channelId
-          user
-          createdAt
-          updatedAt
-          dataSetHeatMapId
-        }
-        dataSetId
-        options
-        channel {
-          id
-          description
-          type
-          title
-          channelTypeId
-          createdAt
-          updatedAt
-        }
-        channelId
-        createdBy
-        updatedBy
-        createdAt
-        updatedAt
-      }
       user
       createdAt
       updatedAt
-      dataSetHeatMapId
     }
   }
 `;
@@ -724,21 +672,9 @@ export const listDataSets = /* GraphQL */ `
         dataValues {
           nextToken
         }
-        heatMap {
-          id
-          title
-          dataSetId
-          options
-          channelId
-          createdBy
-          updatedBy
-          createdAt
-          updatedAt
-        }
         user
         createdAt
         updatedAt
-        dataSetHeatMapId
       }
       nextToken
     }
@@ -767,21 +703,9 @@ export const getDataValue = /* GraphQL */ `
         dataValues {
           nextToken
         }
-        heatMap {
-          id
-          title
-          dataSetId
-          options
-          channelId
-          createdBy
-          updatedBy
-          createdAt
-          updatedAt
-        }
         user
         createdAt
         updatedAt
-        dataSetHeatMapId
       }
       createdAt
       updatedAt
@@ -807,7 +731,6 @@ export const listDataValues = /* GraphQL */ `
           user
           createdAt
           updatedAt
-          dataSetHeatMapId
         }
         createdAt
         updatedAt
