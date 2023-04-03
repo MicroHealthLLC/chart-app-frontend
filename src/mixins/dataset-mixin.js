@@ -13,7 +13,7 @@ export default {
   methods: {
     ...mapActions([]),
     createMasterData(arr) {
-      console.log(arr)
+      //console.log(arr)
         let masterData = []
         if (arr.length > 1) {
           arr.forEach(d => masterData.unshift(d.data))
@@ -28,7 +28,11 @@ export default {
       sortByKey(arr, key = "Date") {
         return arr.sort((a,b) => {
           let x = a[key]
-          let y = b[key];
+          let y = b[key]
+          if (key.toLowerCase() == 'date') {
+            x = new Date(x)
+            y = new Date(y)
+          }
           return ((x < y) ? - 1 : ((x > y) ? 1 : 0));
         })
       },

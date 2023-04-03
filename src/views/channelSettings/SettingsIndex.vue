@@ -7,7 +7,7 @@
             small>mdi-plus</v-icon></v-btn> -->
         </div>  
         <v-divider class="mb-4"></v-divider>
-        <v-card class="pa-4 mb-4 col-4">
+        <v-card class="pa-4 mb-4 col-4" @click="myFirstClick">
          <v-icon  color="blue-grey darken-2" class="bigIcons">mdi-account</v-icon>
          PERSONAL INFO
         </v-card>       
@@ -60,7 +60,10 @@
       ...mapMutations(["SET_REPORT_DATASET", "SET_STATUS_CODE", "SET_REPORT"]),
       log(e){
       console.log(e)
-      }, 
+      },
+       myFirstClick(){
+        alert("this doesn't work yet")
+       },
      
    
     

@@ -207,15 +207,15 @@ export default {
     // },
     channels(){
       if(this.channels){
-        console.log("Channels")
-        console.log(this.$route.path)
-        console.log(this.channels)
+        //console.log("Channels")
+        //console.log(this.$route.path)
+        //console.log(this.channels)
       }
     },
     channel(){
       this.data = this.channel
       if(this.data.length > 0){
-        console.log(this.data)
+        //console.log(this.data)
       } 
       // else this.$refs.form.reset();
     },

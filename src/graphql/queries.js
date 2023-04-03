@@ -15,6 +15,12 @@ export const getReport = /* GraphQL */ `
         dataSets {
           nextToken
         }
+        gauges {
+          nextToken
+        }
+        heatMaps {
+          nextToken
+        }
         type
         title
         channelTypeId
@@ -37,6 +43,22 @@ export const getReport = /* GraphQL */ `
       description
       reportGroupId
       channelId
+      dashboard {
+        id
+        title
+        description
+        reports {
+          nextToken
+        }
+        gauges {
+          nextToken
+        }
+        createdBy
+        updatedBy
+        createdAt
+        updatedAt
+      }
+      dashboardId
       colorSchemeId
       chartType
       dataSet {
@@ -103,6 +125,16 @@ export const listReports = /* GraphQL */ `
         description
         reportGroupId
         channelId
+        dashboard {
+          id
+          title
+          description
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+        }
+        dashboardId
         colorSchemeId
         chartType
         dataSet {
@@ -139,6 +171,7 @@ export const getReportGroup = /* GraphQL */ `
           description
           reportGroupId
           channelId
+          dashboardId
           colorSchemeId
           chartType
           dataSetId
@@ -185,6 +218,281 @@ export const listReportGroups = /* GraphQL */ `
     }
   }
 `;
+export const getGauge = /* GraphQL */ `
+  query GetGauge($id: ID!) {
+    getGauge(id: $id) {
+      id
+      title
+      notes
+      value
+      segmentStops
+      chartType
+      channel {
+        id
+        description
+        reports {
+          nextToken
+        }
+        dataSets {
+          nextToken
+        }
+        gauges {
+          nextToken
+        }
+        heatMaps {
+          nextToken
+        }
+        type
+        title
+        channelTypeId
+        createdAt
+        updatedAt
+      }
+      channelId
+      dashboard {
+        id
+        title
+        description
+        reports {
+          nextToken
+        }
+        gauges {
+          nextToken
+        }
+        createdBy
+        updatedBy
+        createdAt
+        updatedAt
+      }
+      dashboardId
+      createdBy
+      updatedBy
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listGauges = /* GraphQL */ `
+  query ListGauges(
+    $filter: ModelGaugeFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listGauges(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        title
+        notes
+        value
+        segmentStops
+        chartType
+        channel {
+          id
+          description
+          type
+          title
+          channelTypeId
+          createdAt
+          updatedAt
+        }
+        channelId
+        dashboard {
+          id
+          title
+          description
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+        }
+        dashboardId
+        createdBy
+        updatedBy
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getHeatMap = /* GraphQL */ `
+  query GetHeatMap($id: ID!) {
+    getHeatMap(id: $id) {
+      id
+      title
+      dataSet {
+        id
+        title
+        description
+        channel {
+          id
+          description
+          type
+          title
+          channelTypeId
+          createdAt
+          updatedAt
+        }
+        channelId
+        dataValues {
+          nextToken
+        }
+        user
+        createdAt
+        updatedAt
+      }
+      dataSetId
+      options
+      leadCol
+      columns
+      channel {
+        id
+        description
+        reports {
+          nextToken
+        }
+        dataSets {
+          nextToken
+        }
+        gauges {
+          nextToken
+        }
+        heatMaps {
+          nextToken
+        }
+        type
+        title
+        channelTypeId
+        createdAt
+        updatedAt
+      }
+      channelId
+      createdBy
+      updatedBy
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listHeatMaps = /* GraphQL */ `
+  query ListHeatMaps(
+    $filter: ModelHeatMapFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listHeatMaps(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        title
+        dataSet {
+          id
+          title
+          description
+          channelId
+          user
+          createdAt
+          updatedAt
+        }
+        dataSetId
+        options
+        leadCol
+        columns
+        channel {
+          id
+          description
+          type
+          title
+          channelTypeId
+          createdAt
+          updatedAt
+        }
+        channelId
+        createdBy
+        updatedBy
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getDashboard = /* GraphQL */ `
+  query GetDashboard($id: ID!) {
+    getDashboard(id: $id) {
+      id
+      title
+      description
+      reports {
+        items {
+          id
+          title
+          description
+          reportGroupId
+          channelId
+          dashboardId
+          colorSchemeId
+          chartType
+          dataSetId
+          xAxis
+          columns
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+          reportDataSetId
+        }
+        nextToken
+      }
+      gauges {
+        items {
+          id
+          title
+          notes
+          value
+          segmentStops
+          chartType
+          channelId
+          dashboardId
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdBy
+      updatedBy
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listDashboards = /* GraphQL */ `
+  query ListDashboards(
+    $filter: ModelDashboardFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listDashboards(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        title
+        description
+        reports {
+          nextToken
+        }
+        gauges {
+          nextToken
+        }
+        createdBy
+        updatedBy
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getChannel = /* GraphQL */ `
   query GetChannel($id: ID!) {
     getChannel(id: $id) {
@@ -197,6 +505,7 @@ export const getChannel = /* GraphQL */ `
           description
           reportGroupId
           channelId
+          dashboardId
           colorSchemeId
           chartType
           dataSetId
@@ -217,6 +526,39 @@ export const getChannel = /* GraphQL */ `
           description
           channelId
           user
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      gauges {
+        items {
+          id
+          title
+          notes
+          value
+          segmentStops
+          chartType
+          channelId
+          dashboardId
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      heatMaps {
+        items {
+          id
+          title
+          dataSetId
+          options
+          leadCol
+          columns
+          channelId
+          createdBy
+          updatedBy
           createdAt
           updatedAt
         }
@@ -246,6 +588,12 @@ export const listChannels = /* GraphQL */ `
         dataSets {
           nextToken
         }
+        gauges {
+          nextToken
+        }
+        heatMaps {
+          nextToken
+        }
         type
         title
         channelTypeId
@@ -269,6 +617,12 @@ export const getDataSet = /* GraphQL */ `
           nextToken
         }
         dataSets {
+          nextToken
+        }
+        gauges {
+          nextToken
+        }
+        heatMaps {
           nextToken
         }
         type

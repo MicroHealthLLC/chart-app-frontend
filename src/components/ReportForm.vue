@@ -2,8 +2,7 @@
   <v-row>
     <v-col>
       <div class="d-flex justify-space-between">
-        <h3 v-if="activeReport && activeReport.title" :load="log( reportGroups.filter(group => group.id == activeReport.reportGroupId)
-        )">{{ activeReport.title }}</h3>
+        <h3 v-if="activeReport && activeReport.title">{{ activeReport.title }}</h3>
         <h3 v-else class="placeholder-title">(Report Title)</h3>
         <div>
           <v-btn
@@ -31,7 +30,7 @@
       >
       
 
-      <v-card v-if="(data && data.length > 0)" class="pa-4 mb-4">
+      <v-card v-if="(data && data.length > 0) && activeReport.colorSchemeId && activeReport.chartType" class="pa-4 mb-4">
         <v-btn @click="fullscreenReport" class="chart-menu" icon>
           <v-icon>mdi-fullscreen</v-icon>
         </v-btn>
@@ -81,11 +80,11 @@
           > -->
         </div>
       </v-card>
-      <v-card class="pa-4 mb-4 text-center" v-else>
-        <v-progress-circular v-if="$store.getters.loading" :size="70" indeterminate color="primary"
+      <!-- <v-card v-else-if="$store.getters.loading" class="pa-4 mb-4 text-center">
+        <v-progress-circular  :size="70" indeterminate color="primary"
           class="m-2">
         </v-progress-circular>
-      </v-card>
+      </v-card> -->
 
       <h3>Report Details</h3>
       <v-divider class="mb-8"></v-divider>
@@ -124,9 +123,9 @@
           </div>
           <div>
             <v-text-field
-              v-if="activeReport.createdAt"
-              :value="activeReport.createdBy ? `${activeReport.createdBy} on ${new Date(this.activeReport.createdAt).toLocaleString()}` : `${new Date(this.activeReport.createdAt).toLocaleString()}`"
-              :label="activeReport.createdBy ? 'Created By' : 'Created On'"
+              v-if="activeReport.createdBy"
+              :value="activeReport.createdBy"
+              label="Created By"
               dense
               readonly
             ></v-text-field>
@@ -146,8 +145,8 @@
           </div> -->
           <div>
             <v-text-field
-              v-if="activeReport.updatedAt"
-              :value="`${activeReport.updatedBy} on ${new Date(this.activeReport.updatedAt).toLocaleString()}`"
+              v-if="activeReport.updatedBy"
+              :value="activeReport.updatedBy"
               label="Last Updated By"
               dense
               readonly
@@ -425,17 +424,23 @@ export default {
         (this.$refs.chart.index + 1) %
         (Object.keys(this.$refs.chart.chartData[0]).length - 1);
     },
-    log(e){
+    /* log(e){
     console.log(e)
-    }, 
+    },  */
     changeFSChartData() {
       this.$refs.fullscreenchart.index =
         (this.$refs.fullscreenchart.index + 1) %
         (Object.keys(this.$refs.fullscreenchart.chartData[0]).length - 1);
     },
     resetAndGoBack(){
-      this.$router.go(-1)
+      //this.$router.go(-1)
       this.$refs.form.reset();
+      if (this.$route.path === `/${this.currentChannels[0].name}/reports`){
+        this.$emit("closeAddReportForm")
+      } else {
+        this.$router.go(-1)
+        //this.$router.push(`/${this.currentChannels[0].name}/reports`)
+      }
     },
     saveReport() {
       this.$refs.form.validate();
@@ -469,6 +474,8 @@ export default {
           // data.user_id = this.user.id;
            this.addReport(data);
         }
+
+        this.resetAndGoBack()
 
           
     // if (this.activeReport.id) {
@@ -504,7 +511,7 @@ export default {
           value: item,
         }));
       }
-      console.log(newHeaders)
+      //console.log(newHeaders)
       this.data = this.createMasterData(this.dataSet.dataValues.items)
       this.selectedHeaders = newHeaders
       this.data = this.filterData(this.selectedHeaders, this.data)
@@ -540,10 +547,10 @@ export default {
     },
     deleteReport() {
       this.removeReport({ id: this.activeReport.id });
-      this.$router.push(`/channels/${this.$route.params.channelId}/reports`);
+      this.$router.push(`/${this.$route.params.channelId}/reports`);
     },
     fullscreenReport() {
-      console.log(this.$refs.fullscreenchart)
+      //console.log(this.$refs.fullscreenchart)
       this.fullscreen = true;
       setTimeout(() => {
         this.$refs.fullscreenchart.loadChart();
@@ -564,6 +571,7 @@ export default {
   },
   async mounted() {
     await this.fetchDataSets();
+    //console.log(this.data)
     /* if (this.$route.name == "Report") {
       this.dataSetChoices = [...this.dataSets];
     } else { */
@@ -607,7 +615,7 @@ export default {
       }
     }, */
     data() {
-      console.log(this.data)
+      //console.log(this.data)
     }
   },
 };

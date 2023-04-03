@@ -27,16 +27,23 @@
       <span class="pill px-2"> {{this.reports.filter(t => t.channelId == channel.id).length}}</span>
         </v-list-item-subtitle>
       </v-list-item>
+      <v-list-item>
+      <v-list-item-title>
+          <v-icon color="red darken-2">mdi-gauge</v-icon>
+          KPIs: </v-list-item-title>
+        <v-list-item-subtitle class="text-right text-h6 text--primary">
+          <span class="pill px-2"> {{ this.gauges.filter(t => t.channelId == channel.id).length + this.heatMaps.filter(t => t.channelId == channel.id).length }}</span>
+        </v-list-item-subtitle>
+      </v-list-item>
       <v-list-item    
       >
         <v-list-item-title>
           <v-icon color="cyan">mdi-monitor-dashboard</v-icon>
           Dashboard Items: </v-list-item-title>
         <v-list-item-subtitle class="text-right text-h6 text--primary">
-          <span class="pill px-2">  0</span>
+          <span class="pill px-2"> {{/*temporary*/this.dashboards.filter(t => t.channelId == channel.id).length}}</span>
         </v-list-item-subtitle>
-      </v-list-item>
-     
+      </v-list-item>     
     </v-list>
     </v-card>
   </template>
@@ -53,12 +60,17 @@
     computed: {
       ...mapGetters([
          "dataSets",
-         "reports"
+         "reports",
+         "gauges",
+         "heatMaps",
+         "dashboards"
        ]),
    
     },
     async beforeMount() {
       this.fetchReports();
+      this.fetchGauges();
+      this.fetchHeatMaps()
       if(this.dataSets && this.dataSets.length < 1){
         await this.fetchDataSets();
       }
@@ -66,7 +78,9 @@
     methods: {
       ...mapActions([
          "fetchDataSets",
+         "fetchGauges",
          "fetchReports",
+         "fetchHeatMaps",
          "setCurrentChannel"
        ]),
        ...mapMutations([
@@ -76,7 +90,7 @@
       //   console.log(e)
       //  },
       toChannel() {
-        console.log(this.channel.title.toLowerCase().replace(/\s/g, '_'))
+        //console.log(this.channel.title.toLowerCase().replace(/\s/g, '_'))
         this.SET_CURRENT_CHANNEL({
           id: this.channel.id,
           name: this.channel.title.toLowerCase().replace(/\s/g, '_'),
@@ -89,7 +103,7 @@
           regName: this.channel.title
         };
         this.setCurrentChannel(data)
-        console.log(data)
+        //console.log(data)
         this.$router.push(
           `/${this.channel.title.toLowerCase().replace(/\s/g, '_')}/dashboards`
         );
