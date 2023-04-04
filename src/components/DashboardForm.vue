@@ -6,19 +6,25 @@
         <div>
           <v-btn
             class="px-5 mr-2 mb-2"
-            @click="saveDashboard"
             color="primary"
             depressed
             small
-            >Save</v-btn
+            @click="saveDashboard"
           >
-          <v-btn class="mb-2" small outlined @click="resetAndGoBack"
-            >Close</v-btn
+            Save
+          </v-btn>
+          <v-btn
+            class="mb-2"
+            small
+            outlined
+            @click="resetAndGoBack"
           >
+            Close
+          </v-btn>
         </div>
       </div>
 
-      <v-divider></v-divider>
+      <v-divider />
 
       <v-alert
         v-if="!formValid && submitAttempted"
@@ -26,23 +32,27 @@
         type="error"
         dense
         dismissible
-        >Please fix highlighted fields below before submitting
-        Dashboard</v-alert
       >
+        Please fix highlighted fields below before submitting
+        Dashboard
+      </v-alert>
     </v-col>
 
     <v-col class="col-12">
       <!-- <h3>Dashboard Details</h3>
       <v-divider class="mb-4"></v-divider> -->
-      <v-form v-model="formValid" ref="form" @submit.prevent="saveDashboard">
+      <v-form
+        ref="form"
+        v-model="formValid"
+        @submit.prevent="saveDashboard"
+      >
         <v-text-field
+          v-model="dashboard.title"
           outlined
           label="Title"
           dense
-          v-model="dashboard.title"
           :rules="[(v) => !!v || 'Title is required']"
-        >
-        </v-text-field>
+        />
       </v-form>
 
       <!-- Delete Button -->
@@ -88,6 +98,7 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
 import gaugeMixin from "../mixins/gauge-mixin";
 
 export default {
+  mixins: [gaugeMixin],
   data() {
     return {
       formValid: true,
@@ -95,7 +106,6 @@ export default {
       deleteDialog: false,
     };
   },
-  mixins: [gaugeMixin],
   computed: {
     ...mapGetters([
       "reports",
@@ -151,6 +161,7 @@ export default {
       }
     },
   },
+  watch: {},
   mounted() {
     //console.log(this.currentChannels[0].channelId)
   },
@@ -169,7 +180,6 @@ export default {
       });
     } */
   },
-  watch: {},
 };
 </script>
 

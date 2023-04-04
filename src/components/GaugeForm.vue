@@ -3,23 +3,33 @@
     <!-- Title -->
     <v-col>
       <div class="d-flex justify-space-between">
-        <h3 v-if="gauge.id">Update {{ gauge.title }}</h3>
-        <h3 v-else>Add KPI</h3>
+        <h3 v-if="gauge.id">
+          Update {{ gauge.title }}
+        </h3>
+        <h3 v-else>
+          Add KPI
+        </h3>
         <div>
           <v-btn
-            @click="saveGauge"
             class="px-5 mr-2 mb-2"
             color="primary"
             depressed
             small
-            >Save</v-btn
+            @click="saveGauge"
           >
-          <v-btn class="mb-2" @click="resetAndGoBack" small outlined
-            >Close</v-btn
+            Save
+          </v-btn>
+          <v-btn
+            class="mb-2"
+            small
+            outlined
+            @click="resetAndGoBack"
           >
+            Close
+          </v-btn>
         </div>
       </div>
-      <v-divider class="mb-4"></v-divider>
+      <v-divider class="mb-4" />
       <v-row justify="center">
         <v-col cols="11">
           <v-card class="pa-4 mb-4">
@@ -29,12 +39,16 @@
                   :gauge="gauge"
                   :height="gaugeHeight"
                   :width="gaugeWidth"
-                  :segmentStops="activeSteps"
-                  :ringWidth="ringWidth"
+                  :segment-stops="activeSteps"
+                  :ring-width="ringWidth"
                 />
               </v-col>
               <v-col cols="4">
-                <vue-editor v-model="gauge.notes" placeholder="Enter notes here" :editor-toolbar="toolbarOptions"></vue-editor>
+                <vue-editor
+                  v-model="gauge.notes"
+                  placeholder="Enter notes here"
+                  :editor-toolbar="toolbarOptions"
+                />
                 <!-- <v-textarea v-model="gauge.notes" solo auto-grow background-color="grey lighten-4" label="Enter notes here" rows="4"></v-textarea> -->
               </v-col>
             </v-row>
@@ -46,11 +60,16 @@
         type="error"
         dense
         dismissible
-        >Please fix highlighted fields below before sumbitting KPI</v-alert
       >
+        Please fix highlighted fields below before sumbitting KPI
+      </v-alert>
 
       <!-- Form Fields -->
-      <v-form v-model="formValid" ref="form" class="px-4 mx-4">
+      <v-form
+        ref="form"
+        v-model="formValid"
+        class="px-4 mx-4"
+      >
         <v-container class="px-4 mx-4">
           <v-row>
             <v-col cols="6">
@@ -60,7 +79,7 @@
                 dense
                 required
                 :rules="[(v) => !!v || 'Title is required']"
-              ></v-text-field>
+              />
             </v-col>
             <v-col cols="4">
               <v-select
@@ -69,7 +88,7 @@
                 :items="['Traditional', 'Middle', 'Left']"
                 dense
                 @change="setChartType"
-              ></v-select>
+              />
             </v-col>
           </v-row>
 
@@ -84,15 +103,15 @@
                   (v) =>
                     !Number.isNaN(Number(v)) || 'The value must be a number',
                 ]"
-              ></v-text-field>
+              />
             </v-col>
             <v-col
-              cols="2"
               v-if="
                 gauge.chartType == 'Traditional' ||
-                gauge.chartType == 'Middle' ||
-                gauge.chartType == 'Left'
+                  gauge.chartType == 'Middle' ||
+                  gauge.chartType == 'Left'
               "
+              cols="2"
             >
               <v-text-field
                 v-model="activeSteps[1]"
@@ -103,15 +122,15 @@
                   (v) =>
                     !Number.isNaN(Number(v)) || 'The value must be a number',
                 ]"
-              ></v-text-field>
+              />
             </v-col>
             <v-col
-              cols="2"
               v-if="
                 gauge.chartType == 'Traditional' ||
-                gauge.chartType == 'Middle' ||
-                gauge.chartType == 'Left'
+                  gauge.chartType == 'Middle' ||
+                  gauge.chartType == 'Left'
               "
+              cols="2"
             >
               <v-text-field
                 v-model="activeSteps[2]"
@@ -122,9 +141,12 @@
                   (v) =>
                     !Number.isNaN(Number(v)) || 'The value must be a number',
                 ]"
-              ></v-text-field>
+              />
             </v-col>
-            <v-col cols="2" v-if="gauge.chartType == 'Middle'">
+            <v-col
+              v-if="gauge.chartType == 'Middle'"
+              cols="2"
+            >
               <v-text-field
                 v-model="activeSteps[3]"
                 label="3rd Stop"
@@ -134,9 +156,12 @@
                   (v) =>
                     !Number.isNaN(Number(v)) || 'The value must be a number',
                 ]"
-              ></v-text-field>
+              />
             </v-col>
-            <v-col cols="2" v-if="gauge.chartType == 'Middle'">
+            <v-col
+              v-if="gauge.chartType == 'Middle'"
+              cols="2"
+            >
               <v-text-field
                 v-model="activeSteps[4]"
                 label="4th Stop"
@@ -146,7 +171,7 @@
                   (v) =>
                     !Number.isNaN(Number(v)) || 'The value must be a number',
                 ]"
-              ></v-text-field>
+              />
             </v-col>
             <v-col cols="2">
               <v-text-field
@@ -158,7 +183,7 @@
                   (v) =>
                     !Number.isNaN(Number(v)) || 'The value must be a number',
                 ]"
-              ></v-text-field>
+              />
             </v-col>
           </v-row>
           <v-row>
@@ -172,41 +197,54 @@
                   (v) =>
                     !Number.isNaN(Number(v)) || 'The value must be a number',
                 ]"
-              ></v-text-field>
+              />
             </v-col>
           </v-row>
         </v-container>
       </v-form>
 
-      <div v-if="gauge && gauge.id" class="d-flex justify-end mt-4">
+      <div
+        v-if="gauge && gauge.id"
+        class="d-flex justify-end mt-4"
+      >
         <v-btn
-          @click="deleteDialog = true"
           small
           color="error"
           depressed
           outlined
-          >Delete KPI</v-btn
+          @click="deleteDialog = true"
         >
+          Delete KPI
+        </v-btn>
       </div>
 
-      <v-dialog v-model="deleteDialog" max-width="400">
+      <v-dialog
+        v-model="deleteDialog"
+        max-width="400"
+      >
         <v-card>
           <v-card-title>Delete this KPI?</v-card-title>
-          <v-divider class="mx-4 mb-2"></v-divider>
-          <v-card-text
-            >Are you sure you would like to delete this KPI?</v-card-text
-          >
+          <v-divider class="mx-4 mb-2" />
+          <v-card-text>
+            Are you sure you would like to delete this KPI?
+          </v-card-text>
           <v-card-actions class="d-flex justify-end">
             <v-btn
-              @click="deleteDialog = false"
               small
               outlined
               color="secondary"
-              >Cancel</v-btn
+              @click="deleteDialog = false"
             >
-            <v-btn @click="deleteGauge" small depressed color="error"
-              >Delete</v-btn
+              Cancel
+            </v-btn>
+            <v-btn
+              small
+              depressed
+              color="error"
+              @click="deleteGauge"
             >
+              Delete
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -227,6 +265,9 @@ export default {
     VueEditor,
   },
   mixins: [gaugeMixin],
+  props: {
+    showAddGaugeForm: Boolean,
+  },
   data() {
     return {
       formValid: true,
@@ -254,9 +295,6 @@ export default {
       ["image", "code-block"]
     ] */
     };
-  },
-  props: {
-    showAddGaugeForm: Boolean,
   },
   computed: {
     ...mapGetters(["currentChannels", "gauge", "gauges", "user"]),
@@ -347,6 +385,16 @@ export default {
       }
     },
   },
+  watch: {
+    gauge() {
+      /* if (this.$route.path === `/${this.currentChannels[0].name}/gauges` && this.showAddGaugeForm) {
+        console.log("watch")
+        this.clear()
+
+      } */
+      this.setChartType();
+    },
+  },
   async mounted() {
     if (
       this.$route.path === `/${this.currentChannels[0].name}/gauges` &&
@@ -361,16 +409,6 @@ export default {
       await this.fetchGauge(this.$route.params.gaugeId);
     }
     //console.log(this.gauge)
-  },
-  watch: {
-    gauge() {
-      /* if (this.$route.path === `/${this.currentChannels[0].name}/gauges` && this.showAddGaugeForm) {
-        console.log("watch")
-        this.clear()
-
-      } */
-      this.setChartType();
-    },
   },
 };
 </script>

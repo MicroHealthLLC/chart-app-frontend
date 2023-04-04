@@ -1,18 +1,21 @@
 <template>
   <v-row justify="center">
-    <v-col :cols="isDashboard && heatMap.notes ? 8 : 11" class="pt-0">
+    <v-col
+      :cols="isDashboard && heatMap.notes ? 8 : 11"
+      class="pt-0"
+    >
       <div
         v-if="$route.path != `/${this.currentChannels[0].name}/gauges`"
         class="d-flex"
       >
         <v-text-field
-          class="mx-3 mb-3"
           v-model="search"
+          class="mx-3 mb-3"
           append-icon="mdi-magnify"
           label="Search"
           single-line
           hide-details
-        ></v-text-field>
+        />
         <!-- <v-btn class="mt-4" @click="toggleFilter" icon :color="filter ? 'blue darken-2' : 'grey'">
           <v-icon>mdi-filter</v-icon>
         </v-btn> -->
@@ -45,16 +48,20 @@
         show-first-last-page="true"
         :loading="$store.getters.loading"
         loading-text="Loading... Please wait"
-        :itemsPerPage="5"
+        :items-per-page="5"
         :search="search"
         :custom-sort="customSort"
-        
-      ><!-- :custom-filter="customFilter" -->
+      >
+        <!-- :custom-filter="customFilter" -->
         <template
           v-for="(h, i) in headers.slice(1)"
           v-slot:[`item.${h.text}`]="{ item }"
         >
-          <v-chip :color="getColor(item, item[`${h.text}`], i)" label :key="i">
+          <v-chip
+            :key="i"
+            :color="getColor(item, item[`${h.text}`], i)"
+            label
+          >
             {{ item[`${h.text}`] }}
           </v-chip>
         </template>
@@ -79,9 +86,16 @@
             </template> -->
       </v-data-table>
     </v-col>
-    <v-col v-if="isDashboard && heatMap.notes" cols="3" class="mr-2">
-      <v-card color="" elevation="1">
-        <v-card-text v-html="heatMap.notes"></v-card-text>
+    <v-col
+      v-if="isDashboard && heatMap.notes"
+      cols="3"
+      class="mr-2"
+    >
+      <v-card
+        color=""
+        elevation="1"
+      >
+        <v-card-text v-html="heatMap.notes" />
       </v-card>
     </v-col>
   </v-row>
@@ -116,6 +130,12 @@ export default {
   computed: {
     ...mapGetters(["currentChannels"]),
   },
+  watch: {
+    filterHeaders() {
+      console.log(this.filterHeaders);
+    },
+  },
+  mounted() {},
   methods: {
     log(e) {
       console.log(e);
@@ -231,12 +251,6 @@ export default {
       console.log(item);
     },
   },
-  watch: {
-    filterHeaders() {
-      console.log(this.filterHeaders);
-    },
-  },
-  mounted() {},
 };
 </script>
 

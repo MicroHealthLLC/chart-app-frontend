@@ -1,57 +1,90 @@
 <template>
   <div>
-    <v-dialog v-model="showForm" width="30%">
+    <v-dialog
+      v-model="showForm"
+      width="30%"
+    >
       <v-card class="pa-4 modal">
         <DashboardForm @closeDashboardForm="closeDashboardForm" />
       </v-card>
     </v-dialog>
-    <v-dialog v-model="showSlideShowForm" width="50%">
-      <v-card class="pa-4"><SlideShows @toggleSlideShow="toggleSlideShow" /></v-card>
-      
+    <v-dialog
+      v-model="showSlideShowForm"
+      width="50%"
+    >
+      <v-card class="pa-4">
+        <SlideShows @toggleSlideShow="toggleSlideShow" />
+      </v-card>
     </v-dialog>
 
     <div class="d-flex justify-space-between">
       <h3>
-        <v-icon class="mr-2 pb-2" color="cyan">mdi-monitor-dashboard</v-icon
-        >Dashboards
+        <v-icon
+          class="mr-2 pb-2"
+          color="cyan"
+        >
+          mdi-monitor-dashboard
+        </v-icon>Dashboards
       </h3>
-      <v-btn class="mb-2" color="success" small @click="toggleSlideShow">
+      <v-btn
+        class="mb-2"
+        color="success"
+        small
+        @click="toggleSlideShow"
+      >
         Create Slide Show
       </v-btn>
       
       <!-- <v-switch v-model="switch1" label="Show My Dashboard"></v-switch> -->
-      <v-btn class="mb-2" color="primary" small @click="showAddDashboardForm"
-        >Add Dashboard <v-icon small>mdi-plus</v-icon></v-btn
+      <v-btn
+        class="mb-2"
+        color="primary"
+        small
+        @click="showAddDashboardForm"
       >
+        Add Dashboard <v-icon small>
+          mdi-plus
+        </v-icon>
+      </v-btn>
     </div>
-    <v-divider class="mb-4"></v-divider>
+    <v-divider class="mb-4" />
 
-    <v-container v-if="channelDashboards.length > 0" class="pl-5">
+    <v-container
+      v-if="channelDashboards.length > 0"
+      class="pl-5"
+    >
       <v-row>
         <v-col
+          v-for="dashboard in channelDashboards"
+          :key="dashboard.id"
           xl="2"
           lg="3"
           md="4"
           sm="6"
-          v-for="dashboard in channelDashboards"
-          :key="dashboard.id"
         >
           <v-card
-            @click.prevent="toDashboard(dashboard.id)"
             width="250px"
             min-width="250px"
             height="250px"
             tile
             elevation="4"
+            @click.prevent="toDashboard(dashboard.id)"
           >
-            <v-card-title class="pb-0">{{ dashboard.title }}</v-card-title>
-            <v-card-text v-if="dashboard.createdBy"
-              >By: {{ dashboard.createdBy }}</v-card-text
+            <v-card-title class="pb-0">
+              {{ dashboard.title }}
+            </v-card-title>
+            <v-card-text
+              v-if="dashboard.createdBy"
             >
+              By: {{ dashboard.createdBy }}
+            </v-card-text>
             <v-row justify="center">
-              <v-icon class="pt-4 dashboard-icon" x-large
-                >mdi-monitor-dashboard</v-icon
+              <v-icon
+                class="pt-4 dashboard-icon"
+                x-large
               >
+                mdi-monitor-dashboard
+              </v-icon>
             </v-row>
           </v-card>
         </v-col>
@@ -68,19 +101,22 @@
       </v-row>
     </v-container>
     <div
-        v-if="channelDashboards.length == 0"
-        class="placeholder d-flex flex-column justify-center align-center"
+      v-if="channelDashboards.length == 0"
+      class="placeholder d-flex flex-column justify-center align-center"
+    >
+      <p class="font-weight-light">
+        No Dashboards on this Channel yet...
+      </p>
+      <v-btn
+        text
+        small
+        class="mb-4"
+        color="primary"
+        @click="showAddDashboardForm"
       >
-        <p class="font-weight-light">No Dashboards on this Channel yet...</p>
-        <v-btn
-          text
-          small
-          class="mb-4"
-          color="primary"
-          @click="showAddDashboardForm"
-          >Add a Dashboard</v-btn
-        >
-      </div>
+        Add a Dashboard
+      </v-btn>
+    </div>
   </div>
 </template>
 
@@ -98,6 +134,7 @@ export default {
     DashboardForm,
     SlideShows
   },
+  mixins: [datasetMixin, reportMixin, gaugeMixin],
 
   data() {
     return {
@@ -113,7 +150,6 @@ export default {
       data: [],
     };
   },
-  mixins: [datasetMixin, reportMixin, gaugeMixin],
   methods: {
     ...mapActions([
       "fetchReports",
@@ -184,6 +220,7 @@ export default {
       } else return [];
     },
   },
+  watch: {},
   
   async beforeMount() {
     await this.fetchDashboards();
@@ -204,7 +241,6 @@ export default {
       this.dataSetChoices = [...this.dataSets]; // was ...this.channelDataSets
     }
   },
-  watch: {},
 };
 </script>
 

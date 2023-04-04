@@ -4,23 +4,33 @@
       <!-- Title -->
       <v-col cols="11">
         <div class="d-flex justify-space-between">
-          <h3 v-if="heatMap.id">Update {{ heatMap.title }}</h3>
-          <h3 v-else>Add Heat Map</h3>
+          <h3 v-if="heatMap.id">
+            Update {{ heatMap.title }}
+          </h3>
+          <h3 v-else>
+            Add Heat Map
+          </h3>
           <div>
             <v-btn
-              @click="saveHeatMap"
               class="px-5 mr-2 mb-2"
               color="primary"
               depressed
               small
-              >Save</v-btn
+              @click="saveHeatMap"
             >
-            <v-btn class="mb-2" @click="resetAndGoBack" small outlined
-              >Close</v-btn
+              Save
+            </v-btn>
+            <v-btn
+              class="mb-2"
+              small
+              outlined
+              @click="resetAndGoBack"
             >
+              Close
+            </v-btn>
           </div>
         </div>
-        <v-divider></v-divider>
+        <v-divider />
       </v-col>
     </v-row>
     <v-row>
@@ -30,11 +40,16 @@
           type="error"
           dense
           dismissible
-          >Please fix highlighted fields below before submitting Heat
-          Map</v-alert
         >
+          Please fix highlighted fields below before submitting Heat
+          Map
+        </v-alert>
         <!-- Form Fields -->
-        <v-form v-model="formValid" ref="form" class="mt-2">
+        <v-form
+          ref="form"
+          v-model="formValid"
+          class="mt-2"
+        >
           <div class="grid">
             <div>
               <v-text-field
@@ -43,7 +58,7 @@
                 dense
                 required
                 :rules="[(v) => !!v || 'Title is required']"
-              ></v-text-field>
+              />
             </div>
             <div>
               <v-select
@@ -56,7 +71,7 @@
                 required
                 :rules="[(v) => !!v || 'Data Set is required']"
                 @change="loadTable"
-              ></v-select>
+              />
             </div>
             <div>
               <v-select
@@ -68,8 +83,7 @@
                 dense
                 return-object
                 @change="onChangeSelected"
-              >
-              </v-select>
+              />
             </div>
             <div>
               <v-select
@@ -78,14 +92,18 @@
                 label="Lead Column"
                 dense
                 @change="onChangeAxis"
-              ></v-select>
+              />
             </div>
             <div class="expansion">
-              <v-expansion-panels @change="isExpanded" >
+              <v-expansion-panels @change="isExpanded">
                 <v-expansion-panel>
                   <v-expansion-panel-header>{{ !expanded ? 'Click to reveal notes' : 'Click to hide notes' }}</v-expansion-panel-header>
                   <v-expansion-panel-content>
-                    <vue-editor v-model="heatMap.notes" placeholder="Enter notes here" :editor-toolbar="toolbarOptions" ></vue-editor>
+                    <vue-editor
+                      v-model="heatMap.notes"
+                      placeholder="Enter notes here"
+                      :editor-toolbar="toolbarOptions"
+                    />
                   </v-expansion-panel-content>
                 </v-expansion-panel>
               </v-expansion-panels>
@@ -104,9 +122,9 @@
         cols="5"
       >
         <KPIHeatMap
-          :heatMap="heatMap"
+          :heat-map="heatMap"
           :headers="selectedHeaders"
-          :dataItems="items"
+          :data-items="items"
         />
         <!-- :options="options" -->
       </v-col>
@@ -116,12 +134,12 @@
       >
         <v-row>
           <v-col
+            v-for="(col, i) in heatMap.options.cols"
+            :key="i"
             xl="2"
             md="3"
             sm="5"
             xs="6"
-            :key="i"
-            v-for="(col, i) in heatMap.options.cols"
             class="ml-2"
           >
             <v-card-subtitle>{{ col.name }}</v-card-subtitle>
@@ -135,7 +153,11 @@
               :rules="[(v) => !!v || 'required']"
               @change="updateTableColors"
             >
-              <v-icon color="green lighten-1" slot="prepend-inner" class="mr-1">
+              <v-icon
+                slot="prepend-inner"
+                color="green lighten-1"
+                class="mr-1"
+              >
                 {{
                   !heatMap.options.cols[i].abs
                     ? "mdi-greater-than-or-equal"
@@ -158,7 +180,11 @@
               :rules="[(v) => !!v || 'required']"
               @change="updateTableColors"
             >
-              <v-icon color="amber lighten-1" slot="prepend-inner" class="mr-1">
+              <v-icon
+                slot="prepend-inner"
+                color="amber lighten-1"
+                class="mr-1"
+              >
                 {{
                   !heatMap.options.cols[i].abs
                     ? "mdi-greater-than-or-equal"
@@ -181,7 +207,11 @@
               :rules="[(v) => !!v || 'required']"
               @change="updateTableColors"
             >
-              <v-icon color="red lighten-1" slot="prepend-inner" class="mr-1">
+              <v-icon
+                slot="prepend-inner"
+                color="red lighten-1"
+                class="mr-1"
+              >
                 {{
                   heatMap.options.cols[i].abs
                     ? "mdi-greater-than"
@@ -193,33 +223,55 @@
               v-model="heatMap.options.cols[i].abs"
               label="Use Absolute Value"
               @change="updateTableColors"
-            ></v-checkbox>
+            />
           </v-col>
         </v-row>
       </v-col>
     </v-row>
 
     <!-- Delete Button -->
-    <div v-if="heatMap && heatMap.id" class="d-flex justify-end mt-4">
-      <v-btn @click="deleteDialog = true" small color="error" depressed outlined
-        >Delete Heat Map</v-btn
+    <div
+      v-if="heatMap && heatMap.id"
+      class="d-flex justify-end mt-4"
+    >
+      <v-btn
+        small
+        color="error"
+        depressed
+        outlined
+        @click="deleteDialog = true"
       >
+        Delete Heat Map
+      </v-btn>
     </div>
     <!-- Delete Prompt -->
-    <v-dialog v-model="deleteDialog" max-width="400">
+    <v-dialog
+      v-model="deleteDialog"
+      max-width="400"
+    >
       <v-card>
         <v-card-title>Delete this Heat Map?</v-card-title>
-        <v-divider class="mx-4 mb-2"></v-divider>
-        <v-card-text
-          >Are you sure you would like to delete this heat map?</v-card-text
-        >
+        <v-divider class="mx-4 mb-2" />
+        <v-card-text>
+          Are you sure you would like to delete this heat map?
+        </v-card-text>
         <v-card-actions class="d-flex justify-end">
-          <v-btn @click="deleteDialog = false" small outlined color="secondary"
-            >Cancel</v-btn
+          <v-btn
+            small
+            outlined
+            color="secondary"
+            @click="deleteDialog = false"
           >
-          <v-btn @click="deleteHeatMap" small depressed color="error"
-            >Delete</v-btn
+            Cancel
+          </v-btn>
+          <v-btn
+            small
+            depressed
+            color="error"
+            @click="deleteHeatMap"
           >
+            Delete
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -238,6 +290,7 @@ export default {
     KPIHeatMap,
     VueEditor
   },
+  mixins: [datasetMixin],
   data() {
     return {
       submitAttempted: false,
@@ -264,7 +317,6 @@ export default {
       ],
     };
   },
-  mixins: [datasetMixin],
   computed: {
     ...mapGetters([
       "heatMap",
@@ -477,21 +529,6 @@ export default {
       return event == 0 ? this.expanded = true : this.expanded = false
     }
   },
-  async mounted() {
-    if (this.$route.path === `/${this.currentChannels[0].name}/gauges`) {
-      this.heatMap.id = "";
-      //this.clear()
-    } else {
-      await this.fetchHeatMap(this.$route.params.heatMapId);
-      await this.fetchDataSets();
-      await this.fetchDataSet(this.heatMap.dataSetId);
-      this.uploadData(this.createMasterData(this.dataSet.dataValues.items));
-      if (!this.heatMap.user) {
-        this.heatMap.user = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
-      }
-      this.populateData();
-    }
-  },
   watch: {
     headers() {
       //console.log(this.options)
@@ -532,6 +569,21 @@ export default {
         this.SET_STATUS_CODE(0);
       }
     },
+  },
+  async mounted() {
+    if (this.$route.path === `/${this.currentChannels[0].name}/gauges`) {
+      this.heatMap.id = "";
+      //this.clear()
+    } else {
+      await this.fetchHeatMap(this.$route.params.heatMapId);
+      await this.fetchDataSets();
+      await this.fetchDataSet(this.heatMap.dataSetId);
+      this.uploadData(this.createMasterData(this.dataSet.dataValues.items));
+      if (!this.heatMap.user) {
+        this.heatMap.user = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
+      }
+      this.populateData();
+    }
   },
 };
 </script>

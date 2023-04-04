@@ -1,8 +1,10 @@
 <template>
   <div>
     <v-row>
-      <h2 class="mt-5">CHANNEL HOME</h2>
-      <br />
+      <h2 class="mt-5">
+        CHANNEL HOME
+      </h2>
+      <br>
       <p>Current Channel {{ this.currentChannel.name }}</p>
 
       ID: {{ this.currentChannel.id }}
@@ -41,10 +43,6 @@ export default {
       "removeCurrentChannel",
     ]),
   },
-  beforeMount() {
-    this.fetchCurrentChannels();
-    console.log(this.currentChannels);
-  },
   watch: {
     reports() {
       console.log(this.reports);
@@ -70,6 +68,10 @@ export default {
     dataSets() {
       console.log(this.dataSets);
     },
+  },
+  beforeMount() {
+    this.fetchCurrentChannels();
+    console.log(this.currentChannels);
   },
 };
 </script>

@@ -2,25 +2,33 @@
   <v-row>
     <v-col>
       <div class="d-flex justify-center align-center main-container">
-        <v-card class="pt-0 pr-5 pb-5 pl-5" max-width="600" :loading="loading">
+        <v-card
+          class="pt-0 pr-5 pb-5 pl-5"
+          max-width="600"
+          :loading="loading"
+        >
           <v-alert
             v-model="hasError"
             type="error"
             transition="scroll-y-transition"
             dismissible
-            >{{ error }}</v-alert
           >
+            {{ error }}
+          </v-alert>
           <v-card-title class="d-flex flex-column">
             <p class="text-body-1">
               Create your <span class="bold">mRMS</span> account
-            </p></v-card-title
-          >
+            </p>
+          </v-card-title>
           <v-card-text>
-            <v-form ref="signupform" v-model="valid">
+            <v-form
+              ref="signupform"
+              v-model="valid"
+            >
               <label class="d-block text-left">Email</label>
               <v-text-field
-                class="pt-0"
                 v-model="email"
+                class="pt-0"
                 :rules="[
                   (v) => !!v || 'Email is required',
                   (v) =>
@@ -29,28 +37,28 @@
                 ]"
                 required
                 validate-on-blur
-              ></v-text-field>
+              />
               <v-text-field
                 v-model="firstName"
                 label="First Name"
                 :rules="[(v) => !!v || 'First Name is required']"
                 required
-              ></v-text-field>
+              />
               <v-text-field
                 v-model="lastName"
                 label="Last Name"
                 :rules="[(v) => !!v || 'Last Name is required']"
                 required
-              ></v-text-field>
+              />
 
               <label class="d-block text-left">Password</label>
               <v-text-field
-                class="pt-0"
                 v-model="password"
+                class="pt-0"
                 type="password"
                 :rules="[(v) => !!v || 'Password is required']"
                 required
-              ></v-text-field>
+              />
               <v-text-field
                 v-model="confirmPassword"
                 label="Confirm Password"
@@ -61,31 +69,34 @@
                 ]"
                 required
                 validate-on-blur
-              ></v-text-field>
+              />
               <v-text-field
-                class="pt-0"
                 v-model="phoneNumber"
+                class="pt-0"
                 label="Phone Number"
                 :rules="[(v) => !!v || 'Phone Number is required']"
                 required
                 validate-on-blur
                 hint="Enter a valid 10 digit phone number"
                 persistent-hint
-              ></v-text-field>
+              />
             </v-form>
           </v-card-text>
           <v-card-actions class="d-flex flex-column">
             <v-btn
-              @click="attemptSignUp"
               :disabled="loading"
               :loading="loading"
               :dark="!loading"
               block
-              >Sign Up</v-btn
+              @click="attemptSignUp"
             >
+              Sign Up
+            </v-btn>
             <p class="mt-4">
               Already have an account?
-              <router-link to="/signin">Sign In</router-link>
+              <router-link to="/signin">
+                Sign In
+              </router-link>
             </p>
           </v-card-actions>
         </v-card>

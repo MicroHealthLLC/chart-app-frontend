@@ -13,14 +13,14 @@ export default {
   methods: {
     ...mapActions(["fetchChannel"]),
   },
-  mounted() {
-    this.fetchChannel(this.$route.params.channelId);
-    console.log();
-  },
   watch: {
     $route() {
       this.fetchChannel(this.$route.params.channelId);
     },
+  },
+  mounted() {
+    this.fetchChannel(this.$route.params.channelId);
+    console.log();
   },
 };
 </script>

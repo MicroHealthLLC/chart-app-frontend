@@ -41,6 +41,8 @@ export const createReport = /* GraphQL */ `
       }
       dataSetId
       xAxis
+      yAxis
+      yAction
       columns
       createdBy
       updatedBy
@@ -90,6 +92,8 @@ export const updateReport = /* GraphQL */ `
       }
       dataSetId
       xAxis
+      yAxis
+      yAction
       columns
       createdBy
       updatedBy
@@ -139,6 +143,8 @@ export const deleteReport = /* GraphQL */ `
       }
       dataSetId
       xAxis
+      yAxis
+      yAction
       columns
       createdBy
       updatedBy
@@ -167,6 +173,8 @@ export const createReportGroup = /* GraphQL */ `
           chartType
           dataSetId
           xAxis
+          yAxis
+          yAction
           columns
           createdBy
           updatedBy
@@ -204,6 +212,8 @@ export const updateReportGroup = /* GraphQL */ `
           chartType
           dataSetId
           xAxis
+          yAxis
+          yAction
           columns
           createdBy
           updatedBy
@@ -241,6 +251,8 @@ export const deleteReportGroup = /* GraphQL */ `
           chartType
           dataSetId
           xAxis
+          yAxis
+          yAction
           columns
           createdBy
           updatedBy
@@ -494,6 +506,8 @@ export const createChannel = /* GraphQL */ `
           chartType
           dataSetId
           xAxis
+          yAxis
+          yAction
           columns
           createdBy
           updatedBy
@@ -603,6 +617,8 @@ export const updateChannel = /* GraphQL */ `
           chartType
           dataSetId
           xAxis
+          yAxis
+          yAction
           columns
           createdBy
           updatedBy
@@ -712,6 +728,8 @@ export const deleteChannel = /* GraphQL */ `
           chartType
           dataSetId
           xAxis
+          yAxis
+          yAction
           columns
           createdBy
           updatedBy

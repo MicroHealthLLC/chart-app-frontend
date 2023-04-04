@@ -1,14 +1,23 @@
 <template>
   <v-card>
-    <v-toolbar color="info" dark>Edit Channel Details</v-toolbar>
+    <v-toolbar
+      color="info"
+      dark
+    >
+      Edit Channel Details
+    </v-toolbar>
     <v-card-text>
-      <v-form v-model="formValid" ref="form" class="mt-4">
+      <v-form
+        ref="form"
+        v-model="formValid"
+        class="mt-4"
+      >
         <v-text-field
           v-model="title"
           label="Title"
           required
           :rules="[(v) => !!v || 'Title is required']"
-        ></v-text-field>
+        />
         <v-select
           v-if="false"
           v-model="category"
@@ -20,7 +29,7 @@
           ]"
           item-text="title"
           item-value="value"
-        ></v-select>
+        />
         <v-select
           v-if="category == 'group_channel'"
           v-model="channel.members"
@@ -37,7 +46,7 @@
           dense
           required
           :rules="usersRules"
-        ></v-select>
+        />
         <v-textarea
           v-model="description"
           class="mt-4"
@@ -47,12 +56,25 @@
           auto-grow
           required
           :rules="[(v) => !!v || 'Description is required']"
-        ></v-textarea>
+        />
       </v-form>
     </v-card-text>
     <v-card-actions class="justify-end">
-      <v-btn @click="closeForm" outlined small>Close</v-btn>
-      <v-btn @click="editChannel" color="primary" depressed small>Save</v-btn>
+      <v-btn
+        outlined
+        small
+        @click="closeForm"
+      >
+        Close
+      </v-btn>
+      <v-btn
+        color="primary"
+        depressed
+        small
+        @click="editChannel"
+      >
+        Save
+      </v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -105,17 +127,17 @@ export default {
       }
     },
   },
-  mounted() {
-    this.title = this.channel.title;
-    this.category = this.channel.category;
-    this.description = this.channel.description;
-  },
   watch: {
     channel() {
       this.title = this.channel.title;
       this.category = this.channel.category;
       this.description = this.channel.description;
     },
+  },
+  mounted() {
+    this.title = this.channel.title;
+    this.category = this.channel.category;
+    this.description = this.channel.description;
   },
 };
 </script>

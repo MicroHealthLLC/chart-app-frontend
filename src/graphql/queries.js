@@ -38,6 +38,8 @@ export const getReport = /* GraphQL */ `
       }
       dataSetId
       xAxis
+      yAxis
+      yAction
       columns
       createdBy
       updatedBy
@@ -83,6 +85,8 @@ export const listReports = /* GraphQL */ `
         }
         dataSetId
         xAxis
+        yAxis
+        yAction
         columns
         createdBy
         updatedBy
@@ -110,6 +114,8 @@ export const getReportGroup = /* GraphQL */ `
           chartType
           dataSetId
           xAxis
+          yAxis
+          yAction
           columns
           createdBy
           updatedBy
@@ -312,6 +318,8 @@ export const getChannel = /* GraphQL */ `
           chartType
           dataSetId
           xAxis
+          yAxis
+          yAction
           columns
           createdBy
           updatedBy

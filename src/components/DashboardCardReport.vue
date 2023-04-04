@@ -5,12 +5,22 @@
     <!-- <v-skeleton-loader v-if="$store.getters.loading" class="mx-auto" type="card, article"></v-skeleton-loader> -->
 
     <span v-if="data && data.length > 0">
-      <fullscreen v-if="!fullscreen" v-model="fullscreenR" :class="fullscreenR ? 'pa-6' : ''">
+      <fullscreen
+        v-if="!fullscreen"
+        v-model="fullscreenR"
+        :class="fullscreenR ? 'pa-6' : ''"
+      >
         <span class="d-flex align-center">
           <h4>{{ report.title }}</h4>
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
-              <v-btn class="ml-4" icon @click.prevent="toReport(report.id)" v-bind="attrs" v-on="on">
+              <v-btn
+                class="ml-4"
+                icon
+                v-bind="attrs"
+                @click.prevent="toReport(report.id)"
+                v-on="on"
+              >
                 <v-icon small>fa-solid fa-up-right-from-square</v-icon>
               </v-btn>
             </template>
@@ -18,15 +28,32 @@
           </v-tooltip>
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
-              <v-btn class="ml-4" icon @click="reveal = true" v-bind="attrs" v-on="on"><v-icon>mdi-chevron-up</v-icon>
+              <v-btn
+                class="ml-4"
+                icon
+                v-bind="attrs"
+                @click="reveal = true"
+                v-on="on"
+              ><v-icon>mdi-chevron-up</v-icon>
               </v-btn>
             </template>
             <span>See Notes</span>
           </v-tooltip>
-          <v-tooltip top v-if="!isReadOnly">
+          <v-tooltip
+            v-if="!isReadOnly"
+            top
+          >
             <template v-slot:activator="{ on, attrs }">
-              <v-btn class="ml-4" icon @click.prevent="$emit('deleteItem', report.id)" v-bind="attrs" v-on="on"><v-icon
-                  small color="red">fa-trash</v-icon>
+              <v-btn
+                class="ml-4"
+                icon
+                v-bind="attrs"
+                @click.prevent="$emit('deleteItem', report.id)"
+                v-on="on"
+              ><v-icon
+                small
+                color="red"
+              >fa-trash</v-icon>
               </v-btn>
             </template>
             <span>Remove from Dashboard</span>
@@ -34,39 +61,79 @@
         </span>
         <!-- <fullscreen v-if="!fullscreen" v-model="fullscreenR"> -->
         <span v-if="fullscreenR">
-          <v-btn @click="fullscreenReport" class="chart-menu" icon>
+          <v-btn
+            class="chart-menu"
+            icon
+            @click="fullscreenReport"
+          >
             <v-icon>{{ fullscreenR ? 'mdi-fullscreen-exit' : 'mdi-fullscreen' }}</v-icon>
           </v-btn>
-          <Component ref="chart" :is="graphType(report)" :chartData="data" :chartColors="
-            colors.find((scheme) => scheme.id == report.colorSchemeId).scheme
-          " :graphType="report.chartType" class="mb-4" :height="screenHeight">
-          </Component>
+          <Component
+            :is="graphType(report)"
+            ref="chart"
+            :chart-data="data"
+            :chart-colors="
+              colors.find((scheme) => scheme.id == report.colorSchemeId).scheme
+            "
+            :graph-type="report.chartType"
+            class="mb-4"
+            :height="screenHeight"
+          />
           <div class="d-flex justify-end mb-4">
-            <v-btn v-if="circleChart" @click="changeChartData" outlined small>Next Category<v-icon
-                small>mdi-arrow-right</v-icon></v-btn>
+            <v-btn
+              v-if="circleChart"
+              outlined
+              small
+              @click="changeChartData"
+            >Next Category<v-icon
+              small
+            >mdi-arrow-right</v-icon></v-btn>
           </div>
         </span>
         <span v-else>
-          <v-btn @click="fullscreenReport" class="chart-menu" icon>
+          <v-btn
+            class="chart-menu"
+            icon
+            @click="fullscreenReport"
+          >
             <v-icon>{{ fullscreenR ? 'mdi-fullscreen-exit' : 'mdi-fullscreen' }}</v-icon>
           </v-btn>
-          <Component ref="chart" :is="graphType(report)" :chartData="data" :chartColors="
-            colors.find((scheme) => scheme.id == report.colorSchemeId).scheme
-          " :graphType="report.chartType" class="mb-4" :height="reportHeight">
-          </Component>
+          <Component
+            :is="graphType(report)"
+            ref="chart"
+            :chart-data="data"
+            :chart-colors="
+              colors.find((scheme) => scheme.id == report.colorSchemeId).scheme
+            "
+            :graph-type="report.chartType"
+            class="mb-4"
+            :height="reportHeight"
+          />
           <div class="d-flex justify-end mb-4">
-            <v-btn v-if="circleChart" @click="changeChartData" outlined small>Next Category<v-icon
-                small>mdi-arrow-right</v-icon></v-btn>
+            <v-btn
+              v-if="circleChart"
+              outlined
+              small
+              @click="changeChartData"
+            >Next Category<v-icon
+              small
+            >mdi-arrow-right</v-icon></v-btn>
           </div>
         </span>
       </fullscreen>
       
-      <span v-else-if="fullscreen && !fullscreenD" >
+      <span v-else-if="fullscreen && !fullscreenD">
         <span class="d-flex align-center">
-        <h4>{{ report.title }}</h4>
-        <v-tooltip top>
+          <h4>{{ report.title }}</h4>
+          <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
-              <v-btn class="ml-4" icon @click.prevent="toReport(report.id)" v-bind="attrs" v-on="on">
+              <v-btn
+                class="ml-4"
+                icon
+                v-bind="attrs"
+                @click.prevent="toReport(report.id)"
+                v-on="on"
+              >
                 <v-icon small>fa-solid fa-up-right-from-square</v-icon>
               </v-btn>
             </template>
@@ -74,7 +141,13 @@
           </v-tooltip>
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
-              <v-btn class="ml-4" icon @click="reveal = true" v-bind="attrs" v-on="on"><v-icon>mdi-chevron-up</v-icon>
+              <v-btn
+                class="ml-4"
+                icon
+                v-bind="attrs"
+                @click="reveal = true"
+                v-on="on"
+              ><v-icon>mdi-chevron-up</v-icon>
               </v-btn>
             </template>
             <span>See Notes</span>
@@ -82,27 +155,40 @@
         <!-- <v-btn @click="fullscreenDialog" class="chart-menu" icon>
           <v-icon>mdi-arrow-expand</v-icon>
         </v-btn> -->
-        <Component ref="chart" :is="graphType(report)" :chartData="data" :chartColors="
-          colors.find((scheme) => scheme.id == report.colorSchemeId).scheme
-        " :graphType="report.chartType" class="mb-4" :height="reportHeight">
-        </Component>
+        <Component
+          :is="graphType(report)"
+          ref="chart"
+          :chart-data="data"
+          :chart-colors="
+            colors.find((scheme) => scheme.id == report.colorSchemeId).scheme
+          "
+          :graph-type="report.chartType"
+          class="mb-4"
+          :height="reportHeight"
+        />
         <div class="d-flex justify-end mb-4">
-          <v-btn v-if="circleChart" @click="changeChartData" outlined small>Next Category<v-icon
-            small>mdi-arrow-right</v-icon>
+          <v-btn
+            v-if="circleChart"
+            outlined
+            small
+            @click="changeChartData"
+          >Next Category<v-icon
+            small
+          >mdi-arrow-right</v-icon>
           </v-btn>
         </div>
       </span>
-        <!-- <v-dialog v-model="fullscreenD" fullscreen eager> -->
+      <!-- <v-dialog v-model="fullscreenD" fullscreen eager> -->
 
-        <!-- </v-dialog> -->
+      <!-- </v-dialog> -->
       <!-- 
       <div v-else-if="fullscreen && fullscreenD"> -->
-        <!-- <v-toolbar class="px-5" color="info" dark>
+      <!-- <v-toolbar class="px-5" color="info" dark>
           <h3>{{ report.title }}</h3>
           <v-spacer></v-spacer>
           <v-btn @click="fullscreenD = false" icon><v-icon>mdi-close-thick</v-icon></v-btn>
         </v-toolbar> -->
-        <!-- <v-btn @click="fullscreenD = false" class="chart-menu" icon>
+      <!-- <v-btn @click="fullscreenD = false" class="chart-menu" icon>
           <v-icon>mdi-arrow-collapse</v-icon>
         </v-btn>
         <Component ref="fullscreenchart" :is="graphType(report)" :chartData="data" :chartColors="
@@ -134,15 +220,24 @@
         </v-card> -->
     </span>
 
-    <v-card v-if="reveal" class="transition-fast-in-fast-out v-card--reveal" style="height: 100%">
+    <v-card
+      v-if="reveal"
+      class="transition-fast-in-fast-out v-card--reveal"
+      style="height: 100%"
+    >
       <v-card-text class="pb-0">
         {{ report.description }}
       </v-card-text>
       <v-card-actions class="pt-0">
         <v-tooltip top>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn class="ml-0 mt-2" icon @click="reveal = false" v-bind="attrs"
-              v-on="on"><v-icon>mdi-chevron-down</v-icon>
+            <v-btn
+              class="ml-0 mt-2"
+              icon
+              v-bind="attrs"
+              @click="reveal = false"
+              v-on="on"
+            ><v-icon>mdi-chevron-down</v-icon>
             </v-btn>
           </template>
           <span>Hide Notes</span>
@@ -168,6 +263,7 @@ import reportMixin from "../mixins/report-mixin";
 
 export default {
   name: "DashboardCardReport",
+  mixins: [datasetMixin, reportMixin],
   props: {
     report: Object,
     isReadOnly: Boolean,
@@ -201,7 +297,6 @@ export default {
       reveal: false,
     };
   },
-  mixins: [datasetMixin, reportMixin],
   computed: {
     ...mapGetters([
       "activeDataSet",
@@ -382,20 +477,6 @@ export default {
       ).scheme;
     },
   },
-  mounted() {
-    // this.updateChartData();
-    this.fetchReports();
-    this.fetchDataSets();
-    this.updateChartData();
-    console.log(this)
-    setTimeout(() => {
-        if (this.$parent.$parent.$el.clientHeight != 0) {
-          this.reportHeight = this.$parent.$parent.$el.clientHeight - 100
-        }
-        
-        console.log(this.reportHeight)
-      }, 100);
-  },
   watch: {
     dataSets() {
       this.dataSetChoices = [...this.dataSets];
@@ -420,6 +501,20 @@ export default {
     reportHeight() {
       //this.updateChartData();
     }
+  },
+  mounted() {
+    // this.updateChartData();
+    this.fetchReports();
+    this.fetchDataSets();
+    this.updateChartData();
+    console.log(this)
+    setTimeout(() => {
+        if (this.$parent.$parent.$el.clientHeight != 0) {
+          this.reportHeight = this.$parent.$parent.$el.clientHeight - 100
+        }
+        
+        console.log(this.reportHeight)
+      }, 100);
   },
 };
 </script>

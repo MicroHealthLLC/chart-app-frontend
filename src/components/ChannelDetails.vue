@@ -1,9 +1,7 @@
 <template>
   <ul class="text-caption">
     <li>
-      <strong
-        ><v-icon small>mdi-file-chart-outline</v-icon> Total Reports:</strong
-      >
+      <strong><v-icon small>mdi-file-chart-outline</v-icon> Total Reports:</strong>
       {{ reportCount }}
     </li>
     <li>
@@ -26,8 +24,9 @@
         x-small
         color="info"
         class="mr-1 mb-1"
-        >{{ member.first_name }} {{ member.last_name }}</v-chip
       >
+        {{ member.first_name }} {{ member.last_name }}
+      </v-chip>
     </li>
   </ul>
 </template>

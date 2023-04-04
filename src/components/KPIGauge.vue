@@ -6,16 +6,16 @@
     :value="gauge.value"
     :width="width"
     :height="height"
-    needleColor="black"
-    :paddingVertical="20"
-    :minValue="segmentStops[0]"
-    :maxValue="segmentStops[segmentStops.length - 1]"
-    :segmentColors="setSegments(gauge.chartType, 'color')"
-    :maxSegmentLabels="setSegments(gauge.chartType, 'label')"
-    :forceRender="true"
-    :customSegmentStops="segmentStops"
-    :ringWidth="ringWidth"
-    :needleHeightRatio="needleHeightRatio"
+    needle-color="black"
+    :padding-vertical="20"
+    :min-value="segmentStops[0]"
+    :max-value="segmentStops[segmentStops.length - 1]"
+    :segment-colors="setSegments(gauge.chartType, 'color')"
+    :max-segment-labels="setSegments(gauge.chartType, 'label')"
+    :force-render="true"
+    :custom-segment-stops="segmentStops"
+    :ring-width="ringWidth"
+    :needle-height-ratio="needleHeightRatio"
   />
   <!--    </v-col>
   </v-row> -->
@@ -44,6 +44,20 @@ export default {
       green: "#66BB6A",
     };
   },
+  watch: {
+    gauge() {
+      if (this.gauge) {
+        //console.log(this.gauge)
+      }
+    },
+    segmentStops() {
+      //console.log(this.segmentStops)
+    },
+    customSegmentStops() {
+      //console.log(this.customSegmentStops)
+    },
+  },
+  mounted() {},
   methods: {
     setSegments(chartType, prop) {
       if (chartType == "Traditional") {
@@ -81,20 +95,6 @@ export default {
       }
     },
   },
-  watch: {
-    gauge() {
-      if (this.gauge) {
-        //console.log(this.gauge)
-      }
-    },
-    segmentStops() {
-      //console.log(this.segmentStops)
-    },
-    customSegmentStops() {
-      //console.log(this.customSegmentStops)
-    },
-  },
-  mounted() {},
 };
 </script>
 

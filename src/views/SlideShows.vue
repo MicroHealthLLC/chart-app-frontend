@@ -5,11 +5,18 @@
         <h3>Create Slide Show</h3>
         <div>
           <!-- <v-btn class="px-5 mr-2 mb-2" @click="saveDashboard" color="primary" depressed small>Save</v-btn> -->
-          <v-btn class="mb-2" small outlined @click="closeSlideShowForm">Close</v-btn>
+          <v-btn
+            class="mb-2"
+            small
+            outlined
+            @click="closeSlideShowForm"
+          >
+            Close
+          </v-btn>
         </div>
       </div>
 
-      <v-divider></v-divider>
+      <v-divider />
 
       <!-- <v-alert v-if="!formValid && submitAttempted" class="mt-2 mb-0" type="error" dense dismissible>Please fix
         highlighted fields below before submitting
@@ -17,24 +24,55 @@
     </v-col>
 
     <v-col cols="12">
-
       <fullscreen v-model="fullscreen">
-        <v-carousel v-if="fullscreen" v-model="model" height="99vh">
-          <v-carousel-item v-for="(dashboard, i) in selectedDashboards" :key="i">
+        <v-carousel
+          v-if="fullscreen"
+          v-model="model"
+          height="99vh"
+        >
+          <v-carousel-item
+            v-for="(dashboard, i) in selectedDashboards"
+            :key="i"
+          >
             <v-row :style="{ background: dashboard.background, height: 'max-content' }">
-              <v-col cols="12"><v-card width="max-content" class="px-2 mx-auto mt-4">
+              <v-col cols="12">
+                <v-card
+                  width="max-content"
+                  class="px-2 mx-auto mt-4"
+                >
                   <h2>{{ dashboard.title }}</h2>
                   <h4>By: {{ dashboard.createdBy }}</h4>
-                </v-card></v-col>
+                </v-card>
+              </v-col>
 
-              <v-col :cols="dashboardCols(JSON.parse(dashboard.cards), index)"
-                v-for="(item, index) in JSON.parse(dashboard.cards)" :key="index">
-                <v-card :ref="`card${index}`" class="pa-4 ma-2">
-                  <DashboardCardHeatMap :heatMap="item" v-if="checkChartType(item) == 'heatMap'"
-                    :isReadOnly="isReadOnly" :fullscreen="fullscreen" />
-                  <DashboardCardGauge :gauge="item" v-if="checkChartType(item) == 'gauge'"
-                    :staged="JSON.parse(dashboard.cards)" :isReadOnly="isReadOnly" :fullscreen="fullscreen" />
-                  <DashboardCardReport :report="item" v-if="checkChartType(item) == 'report'" :isReadOnly="isReadOnly" :fullscreen="fullscreen" />
+              <v-col
+                v-for="(item, index) in JSON.parse(dashboard.cards)"
+                :key="index"
+                :cols="dashboardCols(JSON.parse(dashboard.cards), index)"
+              >
+                <v-card
+                  :ref="`card${index}`"
+                  class="pa-4 ma-2"
+                >
+                  <DashboardCardHeatMap
+                    v-if="checkChartType(item) == 'heatMap'"
+                    :heat-map="item"
+                    :is-read-only="isReadOnly"
+                    :fullscreen="fullscreen"
+                  />
+                  <DashboardCardGauge
+                    v-if="checkChartType(item) == 'gauge'"
+                    :gauge="item"
+                    :staged="JSON.parse(dashboard.cards)"
+                    :is-read-only="isReadOnly"
+                    :fullscreen="fullscreen"
+                  />
+                  <DashboardCardReport
+                    v-if="checkChartType(item) == 'report'"
+                    :report="item"
+                    :is-read-only="isReadOnly"
+                    :fullscreen="fullscreen"
+                  />
                 </v-card>
               </v-col>
             </v-row>
@@ -43,14 +81,28 @@
       </fullscreen>
       <v-row justify="center">
         <v-col cols="10">
-          <v-select v-model="selectedDashboards" :items="filteredDashboards" item-value="id" item-text="title" label="Select" solo
-            multiple chips return-object hint="Select the Dashboards for the Presentation" persistent-hint></v-select>
-          <v-checkbox v-model="crossChanDB" label="See All Channels Dashboards"></v-checkbox>
-          <v-btn @click="fullscreen = true">Show Slide Show</v-btn>
+          <v-select
+            v-model="selectedDashboards"
+            :items="filteredDashboards"
+            item-value="id"
+            item-text="title"
+            label="Select"
+            solo
+            multiple
+            chips
+            return-object
+            hint="Select the Dashboards for the Presentation"
+            persistent-hint
+          />
+          <v-checkbox
+            v-model="crossChanDB"
+            label="See All Channels Dashboards"
+          />
+          <v-btn @click="fullscreen = true">
+            Show Slide Show
+          </v-btn>
         </v-col>
       </v-row>
-
-
     </v-col>
   </v-row>
 </template>
@@ -69,10 +121,10 @@ export default {
     DashboardCardHeatMap,
     DashboardCardReport
   },
+  mixins: [dashboardMixin],
   props: {
     /* dashboards: Array, */
   },
-  mixins: [dashboardMixin],
   data() {
     return {
       fullscreen: false,

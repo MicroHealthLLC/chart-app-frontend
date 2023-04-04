@@ -3,15 +3,29 @@
     <v-col class="col-11">
       <div class="d-flex justify-space-between">
         <h3>
-          <v-icon class="mr-2 pb-2" color="blue darken-2">mdi-equalizer</v-icon
-          >Data Sets
+          <v-icon
+            class="mr-2 pb-2"
+            color="blue darken-2"
+          >
+            mdi-equalizer
+          </v-icon>Data Sets
         </h3>
-        <v-btn class="mb-2" color="primary" small @click.prevent="toNewDataSet"
-          >Add Data Set <v-icon small>mdi-plus</v-icon></v-btn
+        <v-btn
+          class="mb-2"
+          color="primary"
+          small
+          @click.prevent="toNewDataSet"
         >
+          Add Data Set <v-icon small>
+            mdi-plus
+          </v-icon>
+        </v-btn>
       </div>
 
-      <v-dialog v-model="showAddDataSetForm" width="40%">
+      <v-dialog
+        v-model="showAddDataSetForm"
+        width="40%"
+      >
         <v-card class="px-4 py-4">
           <!-- <v-form v-model="formValid" ref="form">
             <div class="grid">
@@ -45,9 +59,12 @@
         <!-- <span v-else>NO DATA</span> -->
       </v-dialog>
 
-      <v-divider class="mb-4"></v-divider>
+      <v-divider class="mb-4" />
       <v-card>
-        <v-data-table :headers="headers" :items="channelDataSets">
+        <v-data-table
+          :headers="headers"
+          :items="channelDataSets"
+        >
           <!-- Formatted Date -->
           <template v-slot:item.created_at="{ item }">
             <span>{{ new Date(item.createdAt).toLocaleDateString() }}</span>
@@ -64,8 +81,8 @@
                   color="primary"
                   small
                   class="mr-2"
-                  @click="editItem(item)"
                   v-bind="attrs"
+                  @click="editItem(item)"
                   v-on="on"
                 >
                   mdi-table-eye
@@ -82,8 +99,8 @@
                 <v-icon
                   color="primary"
                   small
-                  @click="deleteItem(item)"
                   v-bind="attrs"
+                  @click="deleteItem(item)"
                   v-on="on"
                 >
                   mdi-delete

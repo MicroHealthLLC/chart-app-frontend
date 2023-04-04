@@ -11,51 +11,80 @@
           color="primary"
           small
           :to="`/channels/${$route.params.channelId}/dashboards/new`"
-          >New Dashboard <v-icon right dark>mdi-plus</v-icon></v-btn
         >
+          New Dashboard <v-icon
+            right
+            dark
+          >
+            mdi-plus
+          </v-icon>
+        </v-btn>
       </div>
 
-      <v-divider class="mb-4"></v-divider>
+      <v-divider class="mb-4" />
 
-      <div v-if="channel.dashboards.length > 0" class="grid">
+      <div
+        v-if="channel.dashboards.length > 0"
+        class="grid"
+      >
         <DashboardCard
           v-for="(dashboard, index) in channel.dashboards"
-          :dashboard="dashboard"
           :key="index"
-        ></DashboardCard>
+          :dashboard="dashboard"
+        />
       </div>
       <div
         v-else
         class="placeholder d-flex flex-column justify-center align-center"
       >
-        <p class="font-weight-light">No Dashboards to show...</p>
-        <v-btn text small color="primary">Add a Dashboard</v-btn>
+        <p class="font-weight-light">
+          No Dashboards to show...
+        </p>
+        <v-btn
+          text
+          small
+          color="primary"
+        >
+          Add a Dashboard
+        </v-btn>
       </div>
     </v-col>
     <!-- Details -->
     <v-col class="col-3">
       <div class="d-flex justify-space-between">
-        <h3 class="mb-2">Details</h3>
-        <v-btn @click="openForm" small color="primary" icon class="btn-bg"
-          ><v-icon small>mdi-pencil</v-icon></v-btn
+        <h3 class="mb-2">
+          Details
+        </h3>
+        <v-btn
+          small
+          color="primary"
+          icon
+          class="btn-bg"
+          @click="openForm"
         >
+          <v-icon small>
+            mdi-pencil
+          </v-icon>
+        </v-btn>
       </div>
 
-      <v-divider class="mb-4"></v-divider>
+      <v-divider class="mb-4" />
 
       <ChannelDetails
-        :reportCount="channel.reports.length"
+        :report-count="channel.reports.length"
         :description="channel.description"
         :category="channel.category"
-        :createdBy="`${channel.user.first_name} ${channel.user.last_name}`"
+        :created-by="`${channel.user.first_name} ${channel.user.last_name}`"
         :members="channel.members"
       />
       <!-- Reports -->
       <div class="d-flex justify-space-between mt-4">
         <h3 class="mb-2">
-          <router-link :to="`/channels/${$route.params.channelId}/reports`"
-            >Reports</router-link
+          <router-link
+            :to="`/channels/${$route.params.channelId}/reports`"
           >
+            Reports
+          </router-link>
         </h3>
         <v-btn
           class="btn-bg"
@@ -63,19 +92,29 @@
           icon
           color="primary"
           :to="`/channels/${$route.params.channelId}/reports/new`"
-          ><v-icon>mdi-plus</v-icon></v-btn
         >
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
       </div>
 
-      <v-divider class="mb-4"></v-divider>
+      <v-divider class="mb-4" />
 
       <ul>
-        <li v-for="(report, index) in channel.reports" :key="index">
+        <li
+          v-for="(report, index) in channel.reports"
+          :key="index"
+        >
           <router-link
             :to="`/channels/${$route.params.channelId}/reports/${report.id}`"
-            ><v-icon small color="primary">mdi-file-chart-outline</v-icon>
-            {{ report.title }}</router-link
           >
+            <v-icon
+              small
+              color="primary"
+            >
+              mdi-file-chart-outline
+            </v-icon>
+            {{ report.title }}
+          </router-link>
         </li>
       </ul>
 
@@ -85,11 +124,15 @@
         small
         block
         :to="`/channels/${$route.params.channelId}/reports`"
-        >All Reports</v-btn
       >
+        All Reports
+      </v-btn>
     </v-col>
     <!-- Modal Form -->
-    <v-dialog v-model="showForm" width="50%">
+    <v-dialog
+      v-model="showForm"
+      width="50%"
+    >
       <ChannelModalForm @closeform="closeForm" />
     </v-dialog>
   </v-row>
@@ -125,15 +168,15 @@ export default {
       this.showForm = false;
     },
   },
-  beforeMount() {
-    this.fetchChannel(this.$route.params.channelId);
-    this.fetchDashboards();
-    this.fetchUsers();
-  },
   watch: {
     $route() {
       this.fetchChannel(this.$route.params.channelId);
     },
+  },
+  beforeMount() {
+    this.fetchChannel(this.$route.params.channelId);
+    this.fetchDashboards();
+    this.fetchUsers();
   },
 };
 </script>

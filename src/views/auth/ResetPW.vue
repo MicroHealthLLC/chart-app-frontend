@@ -2,20 +2,29 @@
   <v-row>
     <v-col>
       <div class="d-flex justify-center align-center main-container">
-        <v-card class="pt-0 pr-5 pb-5 pl-5" max-width="600" :loading="loading">
+        <v-card
+          class="pt-0 pr-5 pb-5 pl-5"
+          max-width="600"
+          :loading="loading"
+        >
           <v-alert
             v-model="hasError"
             type="error"
             transition="scroll-y-transition"
             dismissible
-            >{{ error }}</v-alert
           >
-          <v-card-title class="d-flex flex-column"
-            ><h4 class="bold">
+            {{ error }}
+          </v-alert>
+          <v-card-title
+            class="d-flex flex-column"
+          >
+            <h4 class="bold">
               mRMS
-              <v-icon color="primary"
-                >mdi-chart-timeline-variant-shimmer</v-icon
+              <v-icon
+                color="primary"
               >
+                mdi-chart-timeline-variant-shimmer
+              </v-icon>
             </h4>
           </v-card-title>
 
@@ -34,21 +43,21 @@
                 ]"
                 required
                 validate-on-blur
-              ></v-text-field>
+              />
               <div v-if="codeSent">
                 <v-text-field
                   v-model="code"
                   label="Reset Code"
                   :rules="[(v) => !!v || 'Reset Code is required']"
                   required
-                ></v-text-field>
+                />
                 <v-text-field
                   v-model="newPassword"
                   label="New Password"
                   type="password"
                   :rules="[(v) => !!v || 'New Password is required']"
                   required
-                ></v-text-field>
+                />
                 <v-text-field
                   v-model="confirmPassword"
                   label="Confirm New Password"
@@ -59,34 +68,38 @@
                   ]"
                   required
                   validate-on-blur
-                ></v-text-field>
+                />
               </div>
             </v-form>
           </v-card-text>
           <v-card-actions class="d-flex flex-column">
             <v-btn
               v-if="!codeSent"
-              @click="sendResetCode"
               color="var(--mh-blue)"
               block
               :loading="loading"
               :disabled="loading"
               :dark="!loading"
-              >Send Code</v-btn
+              @click="sendResetCode"
             >
+              Send Code
+            </v-btn>
             <v-btn
               v-else
-              @click="submitNewPassword"
               class="ml-0 mt-2"
               :loading="loading"
               :disabled="loading"
               :dark="!loading"
               color="var(--mh-blue)"
               block
-              >Submit</v-btn
+              @click="submitNewPassword"
             >
+              Submit
+            </v-btn>
             <p class="mt-4">
-              Return to <router-link to="/signin">Login</router-link>
+              Return to <router-link to="/signin">
+                Login
+              </router-link>
             </p>
           </v-card-actions>
         </v-card>

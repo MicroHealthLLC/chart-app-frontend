@@ -47,6 +47,18 @@ export default {
       },
     };
   },
+  watch: {
+    chartData() {
+      this.loadChart();
+    },
+    chartColors() {
+      this.loadChart();
+    },
+  },
+  mounted() {
+    this.addPlugin(ChartDatalabels);
+    this.loadChart();
+  },
   methods: {
     loadChart() {
       if (this.chartData && this.chartData[0]) {
@@ -78,18 +90,6 @@ export default {
           this.options
         );
       }
-    },
-  },
-  mounted() {
-    this.addPlugin(ChartDatalabels);
-    this.loadChart();
-  },
-  watch: {
-    chartData() {
-      this.loadChart();
-    },
-    chartColors() {
-      this.loadChart();
     },
   },
 };

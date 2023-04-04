@@ -3,33 +3,48 @@
     <v-col class="col-11">
       <div class="d-flex justify-space-between">
         <h3>
-          <v-icon color="purple-grey darken-2 pr-2">mdi-cog-outline</v-icon
-          >Channel Settings
+          <v-icon color="purple-grey darken-2 pr-2">
+            mdi-cog-outline
+          </v-icon>Channel Settings
         </h3>
         <!-- <v-btn class="mb-2" color="primary" small @click.prevent="toNewReport">Add Dashboard <v-icon
             small>mdi-plus</v-icon></v-btn> -->
       </div>
-      <v-divider class="mb-4"></v-divider>
+      <v-divider class="mb-4" />
       <v-card class="pa-4 mb-4 col-4">
-        <v-icon color="blue-grey darken-2" class="bigIcons">mdi-account</v-icon>
+        <v-icon
+          color="blue-grey darken-2"
+          class="bigIcons"
+        >
+          mdi-account
+        </v-icon>
         PERSONAL INFO
       </v-card>
       <v-card class="pa-4 mb-4 col-4">
-        <v-icon color="blue-grey darken-2" class="bigIcons"
-          >mdi-account-group</v-icon
+        <v-icon
+          color="blue-grey darken-2"
+          class="bigIcons"
         >
+          mdi-account-group
+        </v-icon>
         USERS
       </v-card>
       <v-card class="pa-4 mb-4 col-4">
-        <v-icon color="blue-grey darken-2" class="bigIcons"
-          >mdi-account-lock</v-icon
+        <v-icon
+          color="blue-grey darken-2"
+          class="bigIcons"
         >
+          mdi-account-lock
+        </v-icon>
         PERMISSIONS & ROLES
       </v-card>
       <v-card class="pa-4 mb-4 col-4">
-        <v-icon color="blue-grey darken-2" class="bigIcons"
-          >mdi-television-classic</v-icon
+        <v-icon
+          color="blue-grey darken-2"
+          class="bigIcons"
         >
+          mdi-television-classic
+        </v-icon>
         CHANNELS
       </v-card>
     </v-col>
@@ -50,10 +65,10 @@ import reportMixin from "../../mixins/report-mixin";
 
 export default {
   name: "SettingsIndex",
+  mixins: [datasetMixin, reportMixin],
   data() {
     return {};
   },
-  mixins: [datasetMixin, reportMixin],
   methods: {
     ...mapActions([
       "fetchReport",
@@ -112,6 +127,22 @@ export default {
       }
     },
   },
+  watch: {
+    activeReport() {
+      // this.colorScheme = this.colors.find((scheme) => scheme.id == this.activeReport.colorSchemeId).scheme;
+      //console.log(this.activeReport.colorSchemeId)
+      console.log(this.$route);
+
+      console.log(this.newReport);
+      if (!this.activeReport) {
+        this.SET_REPORT(this.newReport);
+        console.log("No Active Report");
+      }
+    },
+    dataSets() {
+      this.dataSetChoices = [...this.dataSets];
+    },
+  },
   async beforeMount() {
     if (this.dataSets && this.dataSets.length < 1) {
       await this.fetchDataSets();
@@ -130,22 +161,6 @@ export default {
     } else {
       this.dataSetChoices = [...this.dataSets]; // was ...this.channelDataSets
     }
-  },
-  watch: {
-    activeReport() {
-      // this.colorScheme = this.colors.find((scheme) => scheme.id == this.activeReport.colorSchemeId).scheme;
-      //console.log(this.activeReport.colorSchemeId)
-      console.log(this.$route);
-
-      console.log(this.newReport);
-      if (!this.activeReport) {
-        this.SET_REPORT(this.newReport);
-        console.log("No Active Report");
-      }
-    },
-    dataSets() {
-      this.dataSetChoices = [...this.dataSets];
-    },
   },
 };
 </script>

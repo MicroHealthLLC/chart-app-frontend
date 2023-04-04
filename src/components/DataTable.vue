@@ -6,7 +6,7 @@
     :item-key="headers[0].text"
     :single-select="false"
     show-select
-  ></v-data-table>
+  />
 </template>
 
 <script>

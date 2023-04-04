@@ -1,5 +1,8 @@
 <template>
-  <v-data-table :headers="headers" :items="items"> </v-data-table>
+  <v-data-table
+    :headers="headers"
+    :items="items"
+  />
 </template>
 
 <script>
@@ -35,13 +38,13 @@ export default {
   computed: {
     ...mapGetters(["activeReport"]),
   },
-  mounted() {
-    this.loadTable();
-  },
   watch: {
     "activeReport.data_set"() {
       this.loadTable();
     },
+  },
+  mounted() {
+    this.loadTable();
   },
 };
 </script>

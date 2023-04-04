@@ -1,31 +1,41 @@
 <template>
   <v-row>
     <v-col>
-      <div class="" :load="log(user)">
-        <v-card class="pt-0 pr-5 pb-5 pl-5 card" :loading="loading">
+      <div
+        class=""
+        :load="log(user)"
+      >
+        <v-card
+          class="pt-0 pr-5 pb-5 pl-5 card"
+          :loading="loading"
+        >
           <v-alert
             v-model="hasError"
             type="error"
             transition="scroll-y-transition"
             dismissible
-            >{{ error }}</v-alert
           >
+            {{ error }}
+          </v-alert>
           <v-card-title class="d-flex flex-column">
             <h2 class="text-body-1">
-              <span class="beWell"
-                >Welcome to mRMS
-                <v-icon color="orange darken-2"
-                  >mdi-chart-box-outline</v-icon
-                ></span
-              >
-            </h2></v-card-title
-          >
+              <span
+                class="beWell"
+              >Welcome to mRMS
+                <v-icon
+                  color="orange darken-2"
+                >mdi-chart-box-outline</v-icon></span>
+            </h2>
+          </v-card-title>
           <v-card-text>
-            <v-form ref="form" v-model="valid">
+            <v-form
+              ref="form"
+              v-model="valid"
+            >
               <label class="d-block text-left">Email</label>
               <v-text-field
-                class="pt-0"
                 v-model="username"
+                class="pt-0"
                 :rules="[
                   (v) => !!v || 'Email is required',
                   (v) =>
@@ -34,33 +44,39 @@
                 ]"
                 required
                 validate-on-blur
-              ></v-text-field>
+              />
               <label class="d-block text-left">Password</label>
               <v-text-field
-                class="pt-0"
                 v-model="password"
+                class="pt-0"
                 type="password"
                 :rules="[(v) => !!v || 'Password is required']"
                 required
-              ></v-text-field>
+              />
               <p class="mt-4">
                 Forgot password?
-                <span @click="resetPW" class="reset">Reset</span>
+                <span
+                  class="reset"
+                  @click="resetPW"
+                >Reset</span>
               </p>
             </v-form>
           </v-card-text>
           <v-card-actions class="d-flex flex-column">
             <v-btn
               color="var(--mh-blue)"
-              @click="userLogin"
               :loading="loading"
               :disabled="loading"
               :dark="!loading"
               block
-              >Login</v-btn
+              @click="userLogin"
             >
+              Login
+            </v-btn>
             <p class="mt-4">
-              No account? <router-link to="/signup">Create Account</router-link>
+              No account? <router-link to="/signup">
+                Create Account
+              </router-link>
             </p>
           </v-card-actions>
           <!-- <v-img class="shrink" contain src="../assets/mh-logo.png" max-width="180"></v-img> -->

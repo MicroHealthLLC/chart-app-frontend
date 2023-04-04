@@ -1,13 +1,16 @@
 <template>
   <v-row>
-    <v-dialog v-model="showReportGroupForm" width="30%">
+    <v-dialog
+      v-model="showReportGroupForm"
+      width="30%"
+    >
       <v-card class="px-4 py-4">
         <v-text-field
-          label="Folder Name"
           v-model="reportGroup.title"
+          label="Folder Name"
           placeholder="Enter Folder Name"
           outlined
-        ></v-text-field>
+        />
         <!-- <span  v-if="channelReports.filter(t => !t.reportGroupId).length > 0">
      <v-divider></v-divider>  
      <v-select        
@@ -29,12 +32,16 @@
           large
           class="d-block margin-auto"
           @click.prevent="saveReportGroup"
-          >Save Folder</v-btn
         >
+          Save Folder
+        </v-btn>
       </v-card>
       <!-- <span v-else>NO DATA</span> -->
     </v-dialog>
-    <v-dialog v-model="showAddReportForm" width="50%">
+    <v-dialog
+      v-model="showAddReportForm"
+      width="50%"
+    >
       <v-card class="px-4 py-4">
         <ReportForm @closeAddReportForm="closeAddReportForm" />
       </v-card>
@@ -42,9 +49,12 @@
     <v-col class="col-11">
       <div class="d-flex justify-space-between">
         <h3>
-          <v-icon class="mr-2 pb-2" color="orange darken-2"
-            >mdi-chart-box-outline</v-icon
-          >Reports
+          <v-icon
+            class="mr-2 pb-2"
+            color="orange darken-2"
+          >
+            mdi-chart-box-outline
+          </v-icon>Reports
         </h3>
         <span>
           <v-btn
@@ -52,19 +62,20 @@
             color="primary"
             small
             @click.prevent="toNewReport"
-            >Add Report <v-icon small>mdi-plus</v-icon></v-btn
-          >
+          >Add Report <v-icon small>mdi-plus</v-icon></v-btn>
           <v-btn
             class="mb-2"
             color="success"
             small
             @click.prevent="createReportGroup"
-            >Create Folder
-            <v-icon small class="pl-1">mdi-folder-multiple</v-icon></v-btn
-          >
+          >Create Folder
+            <v-icon
+              small
+              class="pl-1"
+            >mdi-folder-multiple</v-icon></v-btn>
         </span>
       </div>
-      <v-divider class="mb-4"></v-divider>
+      <v-divider class="mb-4" />
       <h4>Folders</h4>
       <div
         v-if="channelReportGroups && channelReportGroups.length > 0"
@@ -75,7 +86,11 @@
           :key="item.id"
           :load="log(channelReportGroups)"
         >
-          <v-list-group :value="false" no-action sub-group>
+          <v-list-group
+            :value="false"
+            no-action
+            sub-group
+          >
             <template v-slot:activator>
               <v-list-item-content>
                 <v-list-item-title>
@@ -89,16 +104,14 @@
                       x-large
                       class="pr-1 file-icon"
                       color="yellow darken-2"
-                      >mdi-folder-open-outline</v-icon
-                    >
+                    >mdi-folder-open-outline</v-icon>
                   </span>
                   <span v-else>
                     <v-icon
                       x-large
                       class="pr-1 file-icon"
                       color="yellow darken-2"
-                      >mdi-folder-outline</v-icon
-                    >
+                    >mdi-folder-outline</v-icon>
                   </span>
                   {{ item.title }} ({{
                     channelReports.filter((t) => t.reportGroupId == item.id)
@@ -118,32 +131,45 @@
                 <v-icon color="orange darken-2">mdi-file-chart-outline</v-icon>
               </v-list-item-icon>
               <v-list-item-title
-                v-text="report.title"
                 @click.prevent="toReport(report.id)"
-              >
-              </v-list-item-title>
+                v-text="report.title"
+              />
             </v-list-item>
           </v-list-group>
         </span>
       </div>
-      <div v-else class="mt-4 mb-4">No Folders in this Channel</div>
-      <v-divider class="mb-4 mt-4"></v-divider>
-      <h4 class="mb-3">Reports</h4>
-      <div v-if="channelReports.length > 0" class="singleReportGrid pl-5">
+      <div
+        v-else
+        class="mt-4 mb-4"
+      >
+        No Folders in this Channel
+      </div>
+      <v-divider class="mb-4 mt-4" />
+      <h4 class="mb-3">
+        Reports
+      </h4>
+      <div
+        v-if="channelReports.length > 0"
+        class="singleReportGrid pl-5"
+      >
         <span
           v-for="report in channelReports.filter((t) => t && !t.reportGroupId)"
           :key="report.id"
         >
-          <span class="click" @click.prevent="toSingleReport(report.id)">
-            <v-icon x-large class="pl-2 file-icon" color="orange darken-2"
-              >mdi-file-chart-outline</v-icon
-            >
+          <span
+            class="click"
+            @click.prevent="toSingleReport(report.id)"
+          >
+            <v-icon
+              x-large
+              class="pl-2 file-icon"
+              color="orange darken-2"
+            >mdi-file-chart-outline</v-icon>
             {{ report.title }}
             <small
-              class="d-inline blu"
               v-if="report.reportGroup && report.reportGroup.title"
-              >({{ report.reportGroup.title }})</small
-            >
+              class="d-inline blu"
+            >({{ report.reportGroup.title }})</small>
           </span>
         </span>
         <!-- <div class="d-flex justify-end btn-container">
@@ -161,16 +187,32 @@
         v-else
         class="placeholder d-flex flex-column justify-center align-center"
       >
-        <p class="font-weight-light">No Reports on this Channel yet...</p>
-        <v-btn text small color="primary" :to="`reports/add-report`"
-          >Add a Report</v-btn
+        <p class="font-weight-light">
+          No Reports on this Channel yet...
+        </p>
+        <v-btn
+          text
+          small
+          color="primary"
+          :to="`reports/add-report`"
         >
+          Add a Report
+        </v-btn>
       </div>
     </v-col>
     <span class="views">
-      <v-icon x-large class="pl-2">mdi-view-dashboard-outline</v-icon>
-      <v-icon x-large class="pl-2">mdi-view-list-outline</v-icon>
-      <v-icon x-large class="pl-2">mdi-table-large</v-icon>
+      <v-icon
+        x-large
+        class="pl-2"
+      >mdi-view-dashboard-outline</v-icon>
+      <v-icon
+        x-large
+        class="pl-2"
+      >mdi-view-list-outline</v-icon>
+      <v-icon
+        x-large
+        class="pl-2"
+      >mdi-table-large</v-icon>
     </span>
   </v-row>
 </template>
@@ -269,12 +311,6 @@ export default {
       this.showReportGroupForm = true;
     },
   },
-  mounted() {
-    this.fetchReports();
-    this.fetchReportGroups();
-    this.fetchDataSets();
-    //  console.log(this.user)
-  },
   watch: {
     reports() {
       //console.log(this.channelReports)
@@ -283,6 +319,12 @@ export default {
     reportGroup() {
       //console.log(this.reportGroup.title)
     },
+  },
+  mounted() {
+    this.fetchReports();
+    this.fetchReportGroups();
+    this.fetchDataSets();
+    //  console.log(this.user)
   },
 };
 </script>

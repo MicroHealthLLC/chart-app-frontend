@@ -4,28 +4,40 @@
     <v-col class="col-12">
       <div class="d-flex justify-space-between">
         <h3 class="pr-2">
-          <v-icon class="gre pr-2 pb-1">mdi-television-classic</v-icon>
+          <v-icon class="gre pr-2 pb-1">
+            mdi-television-classic
+          </v-icon>
           <span v-if="channel.id">Update Channel</span>
           <span v-else>Create Channel</span>
         </h3>
         <div>
           <v-btn
-            @click="saveChannel"
             class="px-5 mr-2 mb-2"
             color="primary"
             depressed
             small
-            >Save</v-btn
+            @click="saveChannel"
           >
-          <v-btn class="mb-2" @click="resetAndGoBack" small outlined
-            >Close</v-btn
+            Save
+          </v-btn>
+          <v-btn
+            class="mb-2"
+            small
+            outlined
+            @click="resetAndGoBack"
           >
+            Close
+          </v-btn>
         </div>
       </div>
-      <v-divider class="mb-4"></v-divider>
+      <v-divider class="mb-4" />
       <!-- Form Fields -->
       <v-card class="pa-4">
-        <v-form v-model="formValid" ref="form" class="grid mt-4">
+        <v-form
+          ref="form"
+          v-model="formValid"
+          class="grid mt-4"
+        >
           <div>
             <v-text-field
               v-model="channel.title"
@@ -33,8 +45,7 @@
               dense
               required
               :rules="[(v) => !!v || 'Title is required']"
-            >
-            </v-text-field>
+            />
           </div>
           <div class="ml-auto">
             <el-select
@@ -52,8 +63,7 @@
                 :key="item.id"
                 :label="item.title"
                 :value="item"
-              >
-              </el-option>
+              />
             </el-select>
             <!-- JUAN TO DO (12/1/2023) :
           IF user selects Group, need to display a multi-select component where user can select users to save in group. -->
@@ -100,7 +110,7 @@
               auto-grow
               required
               :rules="[(v) => !!v || 'Description is required']"
-            ></v-textarea>
+            />
           </div>
         </v-form>
       </v-card>
@@ -210,10 +220,6 @@ export default {
       }
     },
   },
-  mounted() {
-    this.fetchChannelTypes();
-    this.fetchChannels();
-  },
   watch: {
     // statusCode() {
     //   if (this.statusCode == 201) {
@@ -235,6 +241,10 @@ export default {
       }
       // else this.$refs.form.reset();
     },
+  },
+  mounted() {
+    this.fetchChannelTypes();
+    this.fetchChannels();
   },
 };
 </script>

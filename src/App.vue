@@ -2,14 +2,25 @@
   <v-app>
     <Sidebar v-if="$route.name != 'Signin'" />
     <v-main class="main-container mx-auto">
-      <v-snackbar v-model="snackbar.show" color="success" outlined text top
-        >{{ snackbar.message
+      <v-snackbar
+        v-model="snackbar.show"
+        color="success"
+        outlined
+        text
+        top
+      >
+        {{ snackbar.message
         }}<template v-slot:action="{ attrs }">
-          <v-btn color="success" text v-bind="attrs" @click="CLOSE_SNACKBAR">
+          <v-btn
+            color="success"
+            text
+            v-bind="attrs"
+            @click="CLOSE_SNACKBAR"
+          >
             Close
           </v-btn>
-        </template></v-snackbar
-      >
+        </template>
+      </v-snackbar>
       <router-view class="pa-5" />
     </v-main>
   </v-app>
@@ -20,8 +31,8 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
 import Sidebar from "./components/Sidebar";
 
 export default {
-  components: { Sidebar },
   name: "App",
+  components: { Sidebar },
 
   data: () => ({
     //
@@ -33,12 +44,6 @@ export default {
   computed: {
     ...mapGetters(["channels", "snackbar", "statusCode", "user", "logout"]),
   },
-  async mounted() {
-    await this.fetchCurrentUser();
-    if (this.user) {
-      console.log(this.user);
-    }
-  },
   watch: {
     statusCode() {
       if (this.statusCode == 403) {
@@ -46,6 +51,12 @@ export default {
         this.SET_STATUS_CODE(0);
       }
     },
+  },
+  async mounted() {
+    await this.fetchCurrentUser();
+    if (this.user) {
+      console.log(this.user);
+    }
   },
 };
 </script>

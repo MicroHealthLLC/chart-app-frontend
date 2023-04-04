@@ -3,53 +3,135 @@
     <!-- Title -->
     <v-col class="col-12">
       <div class="d-flex justify-space-between">
-        <h3 v-if="!isReadOnly && dataSet.id">Update {{ dataSet.title }}</h3>
-        <h3 v-else-if="dataSet.id">View {{ dataSet.title }}</h3>
-        <h3 v-else>Add Data Set</h3>
+        <h3 v-if="!isReadOnly && dataSet.id">
+          Update {{ dataSet.title }}
+        </h3>
+        <h3 v-else-if="dataSet.id">
+          View {{ dataSet.title }}
+        </h3>
+        <h3 v-else>
+          Add Data Set
+        </h3>
         <div>
-          <v-btn v-if="!isReadOnly" @click="saveDataSet" class="px-5 mr-2 mb-2" color="primary" depressed
-            small>Save</v-btn>
-          <v-btn v-else @click="editForm" class="px-5 mr-2 mb-2" color="primary" depressed small>Edit</v-btn>
-          <v-btn v-if="isReadOnly" class="mb-2" @click="resetAndGoBack" small outlined>Close</v-btn>
-          <v-btn v-if="!isReadOnly" class="mb-2" @click="cancelForm" small outlined>Cancel</v-btn>
+          <v-btn
+            v-if="!isReadOnly"
+            class="px-5 mr-2 mb-2"
+            color="primary"
+            depressed
+            small
+            @click="saveDataSet"
+          >
+            Save
+          </v-btn>
+          <v-btn
+            v-else
+            class="px-5 mr-2 mb-2"
+            color="primary"
+            depressed
+            small
+            @click="editForm"
+          >
+            Edit
+          </v-btn>
+          <v-btn
+            v-if="isReadOnly"
+            class="mb-2"
+            small
+            outlined
+            @click="resetAndGoBack"
+          >
+            Close
+          </v-btn>
+          <v-btn
+            v-if="!isReadOnly"
+            class="mb-2"
+            small
+            outlined
+            @click="cancelForm"
+          >
+            Cancel
+          </v-btn>
         </div>
       </div>
-      <v-divider></v-divider>
+      <v-divider />
     </v-col>
     <v-col>
-      <v-alert v-if="!formValid && submitAttempted" type="error" dense dismissible>Please fix highlighted fields below
-        before sumbitting Report</v-alert>
+      <v-alert
+        v-if="!formValid && submitAttempted"
+        type="error"
+        dense
+        dismissible
+      >
+        Please fix highlighted fields below
+        before sumbitting Report
+      </v-alert>
       <!-- Form Fields -->
-      <v-form v-model="formValid" ref="form">
+      <v-form
+        ref="form"
+        v-model="formValid"
+      >
         <v-row>
           <v-col cols="6">
-            <v-text-field v-model="dataSet.title" label="Title" dense required :readonly="isReadOnly"
-              :rules="[(v) => !!v || 'Title is required']"></v-text-field>
+            <v-text-field
+              v-model="dataSet.title"
+              label="Title"
+              dense
+              required
+              :readonly="isReadOnly"
+              :rules="[(v) => !!v || 'Title is required']"
+            />
             <div class="d-flex">
-              <v-file-input v-show="dataSet.id != ''" placeholder="Please choose a file..." type="file"
-                @change.native="onChange" @click:clear="clearInput('file')" dense />
-              <xlsx-read :options="readOptions" :file="file">
-
-                <xlsx-json :options="readOptions" @parsed="setTableItems"></xlsx-json>
+              <v-file-input
+                v-show="dataSet.id != ''"
+                placeholder="Please choose a file..."
+                type="file"
+                dense
+                @change.native="onChange"
+                @click:clear="clearInput('file')"
+              />
+              <xlsx-read
+                :options="readOptions"
+                :file="file"
+              >
+                <xlsx-json
+                  :options="readOptions"
+                  @parsed="setTableItems"
+                />
               </xlsx-read>
-              <v-btn v-if="dataSet.id" :disabled="!file" class="mb-1 ml-2" elevation="4" small
-                @click="addNewDataValue"><v-icon>mdi-plus-circle-outline</v-icon>Add to Dataset</v-btn>
+              <v-btn
+                v-if="dataSet.id"
+                :disabled="!file"
+                class="mb-1 ml-2"
+                elevation="4"
+                small
+                @click="addNewDataValue"
+              >
+                <v-icon>mdi-plus-circle-outline</v-icon>Add to Dataset
+              </v-btn>
             </div>
           </v-col>
           <v-col cols="6">
-            <v-text-field v-model="dataSet.description" label="Description" dense :readonly="isReadOnly"></v-text-field>
+            <v-text-field
+              v-model="dataSet.description"
+              label="Description"
+              dense
+              :readonly="isReadOnly"
+            />
             <!-- <v-select v-if="dataSet.id" :items="choices" label="Add a column" outlined></v-select> -->
           </v-col>
         </v-row>
       </v-form>
     </v-col>
 
-    <v-col v-show="
-      dataSet.id &&
-      this.dataSet.dataValues &&
-      this.dataSet.dataValues.items &&
-      this.dataSet.dataValues.items.length > 0
-    " class="col-12">
+    <v-col
+      v-show="
+        dataSet.id &&
+          this.dataSet.dataValues &&
+          this.dataSet.dataValues.items &&
+          this.dataSet.dataValues.items.length > 0
+      "
+      class="col-12"
+    >
       <v-card class="d-flex flex-column preview-container justify-center">
         <!-- Table Preview -->
         <!-- <v-card-title>
@@ -65,23 +147,54 @@
           <v-progress-circular v-if="$store.getters.loading" :size="70" indeterminate color="primary"
             class="m-2"></v-progress-circular>
         </v-card-title> -->
-        <v-skeleton-loader v-if="$store.getters.loading || $store.getters.saving" class="mx-auto" type="table"
-          width="100%"></v-skeleton-loader>
+        <v-skeleton-loader
+          v-if="$store.getters.loading || $store.getters.saving"
+          class="mx-auto"
+          type="table"
+          width="100%"
+        />
 
 
-        <div class="ma-4" v-else>
+        <div
+          v-else
+          class="ma-4"
+        >
           <span class="d-flex justify-end">
-            <v-btn small class="mr-4 mb-4" @click="showRemoveColumn">
+            <v-btn
+              small
+              class="mr-4 mb-4"
+              @click="showRemoveColumn"
+            >
               Remove Columns
             </v-btn>
-            <v-btn small class="mb-4 mr-6" @click="showAddColumn"><v-icon>mdi-plus</v-icon><v-icon small
-                class="ml-2">mdi-function-variant</v-icon>
+            <v-btn
+              small
+              class="mb-4 mr-6"
+              @click="showAddColumn"
+            ><v-icon>mdi-plus</v-icon><v-icon
+              small
+              class="ml-2"
+            >mdi-function-variant</v-icon>
             </v-btn>
           </span>
-          <vue-excel-editor v-if="renderComponent" v-model="items" readonly :free-select="true" ref="grid" no-header-edit
-            @update="onUpdate">
-            <vue-excel-column autoFillWidth v-for="col, i in allKeys" :key="i" :field="col" :label="col"
-              :type="checkColType(col, items)" text-align="left" />
+          <vue-excel-editor
+            v-if="renderComponent"
+            ref="grid"
+            v-model="items"
+            readonly
+            :free-select="true"
+            no-header-edit
+            @update="onUpdate"
+          >
+            <vue-excel-column
+              v-for="col, i in allKeys"
+              :key="i"
+              auto-fill-width
+              :field="col"
+              :label="col"
+              :type="checkColType(col, items)"
+              text-align="left"
+            />
           </vue-excel-editor>
           <!-- <v-data-table :headers="headers" :items="items" :single-select="false" :search="search"
             :loading="$store.getters.loading" loading-text="Loading... Please wait">
@@ -89,33 +202,84 @@
         </div>
       </v-card>
     </v-col>
-    <v-dialog v-model="columnForm" width="20%">
+    <v-dialog
+      v-model="columnForm"
+      width="20%"
+    >
       <v-card class="pa-4">
-        <v-text-field v-model="newColumn.title" label="Column Name" outlined dense required
-          :rules="[(v) => !!v || 'Column name is required']"></v-text-field>
-        <v-select dense v-model="newColumn.action" v-if="dataSet.id" :items="choices" label="Choose an action"
-          outlined></v-select>
-        <v-select dense v-model="newColumn.col1" v-if="dataSet.id"
-          :items="allKeys.filter(k => checkColType(k, items) != 'string')" label="First column" outlined></v-select>
-        <v-select dense v-model="newColumn.col2" v-if="dataSet.id"
-          :items="allKeys.filter(k => checkColType(k, items) != 'string')" label="Second column" outlined></v-select>
+        <v-text-field
+          v-model="newColumn.title"
+          label="Column Name"
+          outlined
+          dense
+          required
+          :rules="[(v) => !!v || 'Column name is required']"
+        />
+        <v-select
+          v-if="dataSet.id"
+          v-model="newColumn.action"
+          dense
+          :items="choices"
+          label="Choose an action"
+          outlined
+        />
+        <v-select
+          v-if="dataSet.id"
+          v-model="newColumn.col1"
+          dense
+          :items="allKeys.filter(k => checkColType(k, items) != 'string')"
+          label="First column"
+          outlined
+        />
+        <v-select
+          v-if="dataSet.id"
+          v-model="newColumn.col2"
+          dense
+          :items="allKeys.filter(k => checkColType(k, items) != 'string')"
+          label="Second column"
+          outlined
+        />
         <span class="d-flex justify-end">
 
           <!-- <v-btn color="warning" class="mr-4" @click="cancelColumnForm" small>
             Cancel
           </v-btn> -->
-          <v-btn class="mr-4" small outlined @click="cancelColumnForm">Cancel</v-btn>
-          <v-btn color="primary" @click="addColumn" small>
+          <v-btn
+            class="mr-4"
+            small
+            outlined
+            @click="cancelColumnForm"
+          >Cancel</v-btn>
+          <v-btn
+            color="primary"
+            small
+            @click="addColumn"
+          >
             Add Column
           </v-btn>
         </span>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="rmColForm" width="20%">
+    <v-dialog
+      v-model="rmColForm"
+      width="20%"
+    >
       <v-card class="pa-4">
-        <v-select v-model="colsToRemove" :items="allKeys" label="Select" multiple chips
-          hint="Choose the columns you wish to remove" persistent-hint></v-select>
-        <v-btn class="mt-6" color="primary" @click="removeColumns" small>
+        <v-select
+          v-model="colsToRemove"
+          :items="allKeys"
+          label="Select"
+          multiple
+          chips
+          hint="Choose the columns you wish to remove"
+          persistent-hint
+        />
+        <v-btn
+          class="mt-6"
+          color="primary"
+          small
+          @click="removeColumns"
+        >
           Remove Columns
         </v-btn>
       </v-card>
@@ -136,6 +300,7 @@ export default {
     XlsxJson,
 
   },
+  mixins: [datasetMixin],
   data() {
     return {
       choices: ['Sum', 'Difference', 'Product', 'Quotient', 'Average'],
@@ -179,7 +344,6 @@ export default {
       colsToRemove: [],
     };
   },
-  mixins: [datasetMixin],
   computed: {
     ...mapGetters([
       "dataSet",
@@ -420,6 +584,29 @@ export default {
       console.log(records)
     }
   },
+  watch: {
+    dataSet() {
+      if (this.dataSet.id) {
+        this.isReadOnly = true;
+
+        if (this.dataSet.id !== this.$route.params.dataSetId) {
+          //console.log(this.dataSet)
+          this.clear();
+        }
+      } else this.isReadOnly = false;
+    },
+    /* selected() {
+      if (this.selected && this.selected.length > 0) {
+        console.log(this.selected)
+      } else console.log("no SELECTED data");
+    }, */
+    statusCode() {
+      if (this.statusCode == 201) {
+        this.$router.push(`/data-sets/${this.dataSet.id}`);
+        this.SET_STATUS_CODE(0);
+      }
+    },
+  },
   async mounted() {
     if (this.$route.path === `/${this.currentChannels[0].name}/data-sets`) {
       this.dataSet.id = "";
@@ -453,29 +640,6 @@ export default {
       this.dataSet.user = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
     }
     console.log(this.$refs)
-  },
-  watch: {
-    dataSet() {
-      if (this.dataSet.id) {
-        this.isReadOnly = true;
-
-        if (this.dataSet.id !== this.$route.params.dataSetId) {
-          //console.log(this.dataSet)
-          this.clear();
-        }
-      } else this.isReadOnly = false;
-    },
-    /* selected() {
-      if (this.selected && this.selected.length > 0) {
-        console.log(this.selected)
-      } else console.log("no SELECTED data");
-    }, */
-    statusCode() {
-      if (this.statusCode == 201) {
-        this.$router.push(`/data-sets/${this.dataSet.id}`);
-        this.SET_STATUS_CODE(0);
-      }
-    },
   },
 };
 </script>

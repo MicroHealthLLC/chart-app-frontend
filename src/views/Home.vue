@@ -1,23 +1,32 @@
 <template>
   <div>
     <v-row class="mt-3">
-      <v-divider></v-divider>
+      <v-divider />
       <v-col class="col-12 text-center">
-        <h4 class="mhOrange">Welcome to</h4>
+        <h4 class="mhOrange">
+          Welcome to
+        </h4>
         <span class="rmsLogoFont"> mRMS </span>
-        <v-icon color="orange darken-2" class="pb-5" x-large
-          >mdi-chart-box-outline</v-icon
+        <v-icon
+          color="orange darken-2"
+          class="pb-5"
+          x-large
         >
+          mdi-chart-box-outline
+        </v-icon>
       </v-col>
     </v-row>
     <v-row>
       <v-col class="col-12">
-        <div v-if="channels && channels.length > 0" class="grid">
+        <div
+          v-if="channels && channels.length > 0"
+          class="grid"
+        >
           <ChannelCard
             v-for="(ch, index) in channels"
-            :channel="ch"
             :key="index"
-          ></ChannelCard>
+            :channel="ch"
+          />
           <div class="d-flex justify-end btn-container">
             <v-btn
               v-if="channels.length >= 6"
@@ -25,15 +34,18 @@
               class="d-flex-end"
               color="primary"
               text
-              >View All</v-btn
             >
+              View All
+            </v-btn>
           </div>
         </div>
         <div
           v-else
           class="placeholder d-flex flex-column justify-center align-center"
         >
-          <p class="font-weight-light">No Channels to show...</p>
+          <p class="font-weight-light">
+            No Channels to show...
+          </p>
           <!-- <v-btn text small color="primary" to="/add-report">Add a Channel</v-btn> -->
         </div>
       </v-col>
@@ -75,10 +87,6 @@ export default {
       "removeCurrentChannel",
     ]),
   },
-  beforeMount() {
-    this.fetchChannels();
-    this.fetchCurrentChannels();
-  },
   watch: {
     currentChannels() {
       if (
@@ -96,6 +104,10 @@ export default {
     // dataSets() {
     //   console.log(this.dataSets)
     // },
+  },
+  beforeMount() {
+    this.fetchChannels();
+    this.fetchCurrentChannels();
   },
 };
 </script>

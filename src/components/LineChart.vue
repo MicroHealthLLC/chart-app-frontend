@@ -52,6 +52,33 @@ export default {
       },
     };
   },
+  computed: {},
+  watch: {
+    options() {
+      console.log("Options Changed...");
+    },
+    graphType() {
+      this.loadChart();
+    },
+    chartColors() {
+      this.loadChart();
+    },
+    chartData() {
+      this.loadChart();
+    },
+    height() {
+      setTimeout(() => {
+      this.loadChart();
+      }, 200);
+    }
+  },
+  mounted() {
+    
+    setTimeout(() => {
+      this.loadChart();
+      }, 150);
+    console.log(this.height)
+  },
   methods: {
     loadChart() {
       // console.log(this.chartData)
@@ -88,33 +115,6 @@ export default {
         );
       }
     },
-  },
-  computed: {},
-  mounted() {
-    
-    setTimeout(() => {
-      this.loadChart();
-      }, 150);
-    console.log(this.height)
-  },
-  watch: {
-    options() {
-      console.log("Options Changed...");
-    },
-    graphType() {
-      this.loadChart();
-    },
-    chartColors() {
-      this.loadChart();
-    },
-    chartData() {
-      this.loadChart();
-    },
-    height() {
-      setTimeout(() => {
-      this.loadChart();
-      }, 200);
-    }
   },
 };
 </script>

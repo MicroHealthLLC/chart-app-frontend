@@ -1,73 +1,142 @@
 <template>
   <div>
-    <fullscreen v-if="!fullscreen" v-model="fullscreenG">
-    <span class="d-flex">
-      <h4 class="pa-4">{{ gauge.title }}</h4>
-      <v-tooltip top>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn class="ml-0 mt-2" icon @click.prevent="toGauge(gauge.id)" v-bind="attrs" v-on="on"><v-icon small>fa-solid
+    <fullscreen
+      v-if="!fullscreen"
+      v-model="fullscreenG"
+    >
+      <span class="d-flex">
+        <h4 class="pa-4">{{ gauge.title }}</h4>
+        <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              class="ml-0 mt-2"
+              icon
+              v-bind="attrs"
+              @click.prevent="toGauge(gauge.id)"
+              v-on="on"
+            ><v-icon small>fa-solid
               fa-up-right-from-square</v-icon>
-          </v-btn>
-        </template>
-        <span>Go to KPI Gauge</span>
-      </v-tooltip>
-      <v-tooltip top v-if="!isReadOnly">
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn class="ml-4 mt-2" icon @click.prevent="$emit('deleteItem', gauge.id)" v-bind="attrs" v-on="on"><v-icon
-              small color="red">fa-trash</v-icon>
-          </v-btn>
-        </template>
-        <span>Remove from Dashboard</span>
-      </v-tooltip>
-    </span>
-    <!-- <fullscreen v-if="!fullscreen" v-model="fullscreenG"> -->
+            </v-btn>
+          </template>
+          <span>Go to KPI Gauge</span>
+        </v-tooltip>
+        <v-tooltip
+          v-if="!isReadOnly"
+          top
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              class="ml-4 mt-2"
+              icon
+              v-bind="attrs"
+              @click.prevent="$emit('deleteItem', gauge.id)"
+              v-on="on"
+            ><v-icon
+              small
+              color="red"
+            >fa-trash</v-icon>
+            </v-btn>
+          </template>
+          <span>Remove from Dashboard</span>
+        </v-tooltip>
+      </span>
+      <!-- <fullscreen v-if="!fullscreen" v-model="fullscreenG"> -->
       <span v-if="fullscreenG">
-        <v-btn @click="fullscreenGauge" class="chart-menu" icon>
+        <v-btn
+          class="chart-menu"
+          icon
+          @click="fullscreenGauge"
+        >
           <v-icon>mdi-fullscreen-exit</v-icon>
         </v-btn>
 
         <div class="d-flex gauge-wrap">
-          <KPIGauge :gauge="gauge" :width="1200"
-            :height="650" :segmentStops="activeSteps" ringWidth="150" class="pb-10 ml-10" />
-          <v-card v-if="gauge.notes" class="mr-2" style="height: 100%" max-width="190" elevation="1">
-            <v-card-text v-html="gauge.notes"></v-card-text>
+          <KPIGauge
+            :gauge="gauge"
+            :width="1200"
+            :height="650"
+            :segment-stops="activeSteps"
+            ring-width="150"
+            class="pb-10 ml-10"
+          />
+          <v-card
+            v-if="gauge.notes"
+            class="mr-2"
+            style="height: 100%"
+            max-width="190"
+            elevation="1"
+          >
+            <v-card-text v-html="gauge.notes" />
           </v-card>
         </div>
       </span>
       <span v-else>
-        <v-btn @click="fullscreenGauge" class="chart-menu" icon>
+        <v-btn
+          class="chart-menu"
+          icon
+          @click="fullscreenGauge"
+        >
           <v-icon>mdi-fullscreen</v-icon>
         </v-btn>
 
         <div class="d-flex gauge-wrap">
-          <KPIGauge :gauge="gauge" :width="gauge.notes ? parentWidth - 200 : parentWidth - 70"
-            :height="parentHeight - 144" :segmentStops="activeSteps" :ringWidth="dashboardRingWidth" class="pb-10 mr-2" />
-          <v-card v-if="gauge.notes" class="mr-2" style="height: 100%" max-width="190" elevation="1">
-            <v-card-text v-html="gauge.notes"></v-card-text>
+          <KPIGauge
+            :gauge="gauge"
+            :width="gauge.notes ? parentWidth - 200 : parentWidth - 70"
+            :height="parentHeight - 144"
+            :segment-stops="activeSteps"
+            :ring-width="dashboardRingWidth"
+            class="pb-10 mr-2"
+          />
+          <v-card
+            v-if="gauge.notes"
+            class="mr-2"
+            style="height: 100%"
+            max-width="190"
+            elevation="1"
+          >
+            <v-card-text v-html="gauge.notes" />
           </v-card>
         </div>
       </span>
     </fullscreen>
     <span v-else>
       <span class="d-flex">
-      <h4 class="pa-4">{{ gauge.title }}</h4>
-      <v-tooltip top>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn class="ml-0 mt-2" icon @click.prevent="toGauge(gauge.id)" v-bind="attrs" v-on="on"><v-icon small>fa-solid
+        <h4 class="pa-4">{{ gauge.title }}</h4>
+        <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              class="ml-0 mt-2"
+              icon
+              v-bind="attrs"
+              @click.prevent="toGauge(gauge.id)"
+              v-on="on"
+            ><v-icon small>fa-solid
               fa-up-right-from-square</v-icon>
-          </v-btn>
-        </template>
-        <span>Go to KPI Gauge</span>
-      </v-tooltip>
-    </span>
+            </v-btn>
+          </template>
+          <span>Go to KPI Gauge</span>
+        </v-tooltip>
+      </span>
       <!-- <v-btn @click="fullscreenDialog" class="chart-menu" icon>
         <v-icon>mdi-arrow-expand</v-icon>
       </v-btn> -->
       <div class="d-flex gauge-wrap">
-        <KPIGauge :gauge="gauge" :width="parentWidth - 320" :height="(parentWidth - 270) / 2" :segmentStops="activeSteps"
-          :ringWidth="dashboardRingWidth" class="pb-9 px-2 mr-2" />
-        <v-card v-if="gauge.notes" style="height: 100%" max-width="190" elevation="1">
-          <v-card-text v-html="gauge.notes"></v-card-text>
+        <KPIGauge
+          :gauge="gauge"
+          :width="parentWidth - 320"
+          :height="(parentWidth - 270) / 2"
+          :segment-stops="activeSteps"
+          :ring-width="dashboardRingWidth"
+          class="pb-9 px-2 mr-2"
+        />
+        <v-card
+          v-if="gauge.notes"
+          style="height: 100%"
+          max-width="190"
+          elevation="1"
+        >
+          <v-card-text v-html="gauge.notes" />
         </v-card>
       </div>
     </span>
@@ -116,15 +185,16 @@ import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "DashboardCardGauge",
+  components: {
+    KPIGauge,
+  },
+  mixins: [gaugeMixin],
   props: {
     gauge: Object,
     staged: Array,
     isReadOnly: Boolean,
     fullscreen: Boolean,
     resized: Boolean,
-  },
-  components: {
-    KPIGauge,
   },
   data() {
     return {
@@ -136,7 +206,6 @@ export default {
       reveal: false,
     };
   },
-  mixins: [gaugeMixin],
   computed: {
     ...mapGetters(["currentChannels", "user"]),
     dashboardGaugeHeight() {
@@ -251,28 +320,6 @@ export default {
       this.fullscreenD = this.fullscreenD ? false : true
     },
   },
-  /* afterMount() {
-    if (this.$parent.$el.clientHeight) { 
-      this.parentHeight = this.$parent.$el.clientHeight
-    }
-    if (this.$parent.$el.clientWidth) {
-      this.parentWidth = this.$parent.$el.clientWidth
-    }
-  }, */
-  mounted() {
-    if (this.gauge) {
-      console.log(this.gauge);
-      this.setChartType();
-    }
-    this.setParentDims();
-  },
-
-  created() {
-    window.addEventListener("resize", this.setParentDims);
-  },
-  destroyed() {
-    window.removeEventListener("resize", this.setParentDims);
-  },
   watch: {
     staged() {
       if (this.staged && this.staged.length > 0) {
@@ -295,6 +342,28 @@ export default {
       }
 
     }
+  },
+  /* afterMount() {
+    if (this.$parent.$el.clientHeight) { 
+      this.parentHeight = this.$parent.$el.clientHeight
+    }
+    if (this.$parent.$el.clientWidth) {
+      this.parentWidth = this.$parent.$el.clientWidth
+    }
+  }, */
+  mounted() {
+    if (this.gauge) {
+      console.log(this.gauge);
+      this.setChartType();
+    }
+    this.setParentDims();
+  },
+
+  created() {
+    window.addEventListener("resize", this.setParentDims);
+  },
+  destroyed() {
+    window.removeEventListener("resize", this.setParentDims);
   },
 };
 </script>

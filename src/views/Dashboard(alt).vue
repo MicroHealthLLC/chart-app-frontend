@@ -1,25 +1,26 @@
 <template>
   <v-row>
-    <v-col class="col-12"
-      ><h3>{{ activeDashboard.title }}</h3>
-      <v-divider></v-divider
-    ></v-col>
     <v-col
-      :class="[{ 'col-md-12': index === 0 }, 'col-md-6']"
+      class="col-12"
+    >
+      <h3>{{ activeDashboard.title }}</h3>
+      <v-divider />
+    </v-col>
+    <v-col
       v-for="(report, index) in activeDashboard.reports"
       :key="index"
+      :class="[{ 'col-md-12': index === 0 }, 'col-md-6']"
     >
       <v-card class="pa-4 mb-4">
         <Component
           :is="graphType(report)"
-          :chartData="report.data_set.data"
+          :chart-data="report.data_set.data"
           :options="chartOptions"
-          :graphType="report.chart_type"
+          :graph-type="report.chart_type"
           :height="350"
           :index="dataIndex"
           class="mb-4"
-        >
-        </Component>
+        />
       </v-card>
     </v-col>
   </v-row>
