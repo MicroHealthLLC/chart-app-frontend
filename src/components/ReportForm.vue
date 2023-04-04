@@ -14,8 +14,7 @@
 
       <v-divider class="mb-4"></v-divider>
 
-      <v-alert v-if="!formValid && submitAttempted" type="error" dense dismissible>Please fix highlighted fields below
-        before sumbitting Report</v-alert>
+      <v-alert v-if="!formValid && submitAttempted" type="error" dense dismissible>Please fix highlighted fields below before sumbitting Report</v-alert>
 
       <v-card v-if="
         data &&
@@ -129,6 +128,7 @@
           </div>
           <div>
             <v-select v-model="yAxisValue" :items="yAxisKeys" label="Y-Axis" dense @change="onChangeYAxis"></v-select>
+            <v-select v-if="yAxisValue && xAxisValue" v-model="yAction" label="Action" dense :items="['Count', 'Sum', 'Average']" @change="onChangeYAction"></v-select>
           </div>
           <!-- <div class="tags">
             <v-select
@@ -200,6 +200,8 @@ import Table from "../components/Table";
 import datasetMixin from "../mixins/dataset-mixin";
 import reportMixin from "../mixins/report-mixin";
 
+import collect from 'collect.js';
+
 export default {
   name: "ReportForm",
   data() {
@@ -229,6 +231,7 @@ export default {
       xAxisValue: "",
       yAxisKeys: [],
       yAxisValue: "",
+      yAction: ''
     };
   },
   mixins: [datasetMixin, reportMixin],
@@ -359,6 +362,8 @@ export default {
           chartType: this.activeReport.chartType,
           dataSetId: this.activeReport.dataSetId,
           xAxis: this.xAxisValue,
+          yAxis: this.yAxisValue,
+          yAction: this.yAction,
           columns: JSON.stringify(this.selectedHeaders),
           // dataSet: this.activeReport.dataSet,
           // tag_ids: this.activeReport.tags.map((tag) => tag.id),
@@ -379,21 +384,11 @@ export default {
         }
 
         this.resetAndGoBack();
-
-        // if (this.activeReport.id) {
-        //   let ids = this.channelReports.filter( r => r.reportGroupId == this.activeReport.reportGroupId).map(t => t.id)
-        //   ids.push(this.activeReport.id)
-
-        //   this.updateReportGroupById({
-        //     id: this.activeReport.reportGroupId,
-        //     reportIds:  ids
-        //   })
-        // }
       }
     },
     async updateChartData() {
       await this.fetchDataSet(this.activeReport.dataSetId);
-      console.log(this.dataSet.dataValues.items)
+
       /* GET KEYS FROM ALL DATA */
       let uniqueKeys = []
       let newKeys = this.dataSet.dataValues.items.map(s => Object.keys(s.data))
@@ -446,6 +441,18 @@ export default {
         this.selectedHeaders,
         this.createMasterData(this.dataSet.dataValues.items)
       );
+      console.log(this.data)
+
+        /* Need to change the structure of this.data
+         right now : 
+         {test1: 1, test2: 1, etc}
+         
+         need
+         
+         {
+          
+         }*/
+
       /* } */
     },
     onChangeXAxis() {
@@ -473,6 +480,29 @@ export default {
         this.selectedHeaders,
         this.createMasterData(this.dataSet.dataValues.items)
       );
+    },
+    onChangeYAction() {
+      if (this.yAction == 'Count') {
+        const data = collect(this.data)
+        console.log(this.xAxisValue)
+        const counted = data.countBy(row => row[this.xAxisValue])
+
+        const newArray = [];
+
+        for (const key in counted.items) {
+          let newObj = {
+            [this.xAxisValue]: key,
+            ["Count Unique Values(" + this.yAxisValue + ")"]: counted.items[key].toString()
+          };
+          newArray.push(newObj);
+        }
+
+        console.log(newArray);
+        console.log(counted.items)
+        console.log(this.selectedHeaders)
+        this.data = newArray
+      }
+      
     },
     moveArrByKey(keys, selected, axis) {
       keys.forEach((k, i) => {
@@ -530,11 +560,16 @@ export default {
         if (this.activeReport.xAxis) {
           this.xAxisValue = this.activeReport.xAxis;
         }
+        if (this.activeReport.xAxis) {
+          this.yAxisValue = this.activeReport.yAxis;
+        }
+        
         if (this.activeReport.columns) {
           this.selectedHeaders = this.activeReport.columns;
         }
+        this.xAxisKeys = this.selectedHeaders.map((h) => h.text || h);
+        this.yAxisKeys = this.selectedHeaders.map((h) => h.text || h);
         this.updateChartData();
-        this.onChangeSelected();
       }
       if (!this.activeReport) {
         this.SET_REPORT(this.newReport);
@@ -542,9 +577,8 @@ export default {
       }
     },
     selectedHeaders() {
-      if (this.selectedHeaders.length != 0) {
-        this.onChangeSelected();
-      }
+      /* if (this.selectedHeaders.length != 0) {
+      } */
     },
     dataSets() {
       //this.dataSetChoices = [...this.dataSets];

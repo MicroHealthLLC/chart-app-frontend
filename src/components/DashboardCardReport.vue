@@ -322,21 +322,27 @@ export default {
       }
     },
     async updateChartData() {
-      /* if (this.channelReports && this.channelReports.length) {
-        console.log(this.dataSet)
-        let dataSetIds = this.channelReports.map(t => t.dataSetId)
-        console.log(dataSetIds)
-        
-        for (var i = 0; i < this.channelReports.length; i++) { */
       await this.fetchDataSet(this.report.dataSetId);
-      let ds = this.dataSet;
-      let headers = Object.keys(ds.dataValues.items[0].data[0]);
-      //console.log(headers)
+
+      /* GET KEYS FROM ALL DATA */
+      let uniqueKeys = []
+      let newKeys = this.dataSet.dataValues.items.map(s => Object.keys(s.data))
+      console.log(newKeys)
+      newKeys.forEach(arr => {
+        arr.forEach(key => {
+          if (!uniqueKeys.includes(key)) {
+            uniqueKeys.push(key)
+          }
+        })
+      })
+      let headers = uniqueKeys.filter(k => k != '$id')
+
       headers.forEach((k, j) => {
         if (k == this.report.xAxis) {
-          /* console.log(k)
-          console.log("true", this.report.xAxis) */
           this.arrayMove(headers, j, 0);
+        }
+        if (k == this.report.yAxis) {
+          this.arrayMove(headers, j, 1);
         }
       });
       let newHeaders = [];
@@ -354,9 +360,9 @@ export default {
         value: item,
       })); */
       //console.log(newHeaders)
-      this.data = this.createMasterData(ds.dataValues.items);
+      this.data = this.createMasterData(this.dataSet.dataValues.items);
       this.data = this.filterData(newHeaders, this.data);
-      this.SET_REPORT_DATASET(ds);
+      this.SET_REPORT_DATASET(this.dataSet);
       //}
 
       //}

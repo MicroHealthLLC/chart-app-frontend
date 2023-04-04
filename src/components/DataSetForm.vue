@@ -65,20 +65,21 @@
           <v-progress-circular v-if="$store.getters.loading" :size="70" indeterminate color="primary"
             class="m-2"></v-progress-circular>
         </v-card-title> -->
-        <v-skeleton-loader v-if="$store.getters.loading || $store.getters.saving" class="mx-auto" type="table" width="100%"></v-skeleton-loader>
-        
+        <v-skeleton-loader v-if="$store.getters.loading || $store.getters.saving" class="mx-auto" type="table"
+          width="100%"></v-skeleton-loader>
+
 
         <div class="ma-4" v-else>
           <span class="d-flex justify-end">
-          <v-btn small class="mr-4 mb-4" @click="showRemoveColumn">
-            Remove Columns
-          </v-btn>
-          <v-btn small class="mb-4 mr-6" @click="showAddColumn"><v-icon>mdi-plus</v-icon><v-icon small
-              class="ml-2">mdi-function-variant</v-icon>
-          </v-btn>
-        </span>
-          <vue-excel-editor v-if="renderComponent" v-model="items" readonly :free-select="true" ref="grid"
-            no-header-edit @update="onUpdate">
+            <v-btn small class="mr-4 mb-4" @click="showRemoveColumn">
+              Remove Columns
+            </v-btn>
+            <v-btn small class="mb-4 mr-6" @click="showAddColumn"><v-icon>mdi-plus</v-icon><v-icon small
+                class="ml-2">mdi-function-variant</v-icon>
+            </v-btn>
+          </span>
+          <vue-excel-editor v-if="renderComponent" v-model="items" readonly :free-select="true" ref="grid" no-header-edit
+            @update="onUpdate">
             <vue-excel-column autoFillWidth v-for="col, i in allKeys" :key="i" :field="col" :label="col"
               :type="checkColType(col, items)" text-align="left" />
           </vue-excel-editor>

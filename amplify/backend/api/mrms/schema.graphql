@@ -14,6 +14,8 @@ type Report @model @auth(rules: [{ allow: public }]) {
   dataSet: DataSet @hasOne
   dataSetId: String
   xAxis: String
+  yAxis: String
+  yAction: String
   columns: String
   createdBy: String
   updatedBy: String  
@@ -110,4 +112,3 @@ type CurrentChannel @model @auth(rules: [{ allow: public }]) {
 }
 
 # Create simple table for currentChannel
-

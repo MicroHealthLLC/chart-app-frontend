@@ -5,7 +5,7 @@ let graphQLEndpoint =
 if (process.env.NODE_ENV == "development") {
   console.log(process.env);
   baseURL = "http://localhost:8080/";
-  graphQLEndpoint = "http://100.109.142.69:20002";
+  graphQLEndpoint = "http://100.74.60.127:20002";
   // graphQLEndpoint = process.env.VUE_APP_GRAPHQL_ENDPOINT
 }
 

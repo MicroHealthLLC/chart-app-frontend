@@ -27,14 +27,7 @@
         <v-divider></v-divider>
       </v-col>
     </v-row>
-    <div class="d-flex justify-end mt-4 mr-4">
-      <span v-if="staged.length == 0">
-        <h3>Drag and drop a chip from the right panel to add components</h3>
-      </span>
-      <!-- <span v-if="staged.length > 0 && !isReadOnly">
-        <h2>Drag and drop cards to reorder</h2>
-      </span> -->
-    </div>
+    
     <fullscreen v-model="fullscreen" :class="fullscreen ? 'fullscreen-window pa-5' : 'pa-5'">
       <v-row>
         <!-- DASHBOARD SELECT AREA -->
@@ -164,6 +157,14 @@
         </v-dialog>
       </v-row>
     </fullscreen>
+    <div class="ml-10">
+      <span v-if="staged.length == 0">
+        <h3>Drag and drop a chip from the right panel to add components</h3>
+      </span>
+      <!-- <span v-if="staged.length > 0 && !isReadOnly">
+        <h2>Drag and drop cards to reorder</h2>
+      </span> -->
+    </div>
   </v-container>
 </template>
 
@@ -342,7 +343,7 @@ export default {
               y: i * 2,
               width: 2,
               height: 2,
-              resizeEdges: "left bottom right",
+              resizeEdges: "left right",
             }))
             break;
           case 'xs':
@@ -352,7 +353,7 @@ export default {
               y: i * 2,
               width: 2,
               height: 2,
-              resizeEdges: "left bottom right",
+              resizeEdges: "left right",
             }))
             break;
           case 'sm':
@@ -367,7 +368,7 @@ export default {
                 y: countY,
                 width: 2,
                 height: 2,
-                resizeEdges: "left bottom right",
+                resizeEdges: "left right",
               }
               countX += 2;
             }
@@ -384,7 +385,7 @@ export default {
                 y: countY,
                 width: 4,
                 height: 4,
-                resizeEdges: "left bottom right",
+                resizeEdges: "left right",
               }
               countX += 4;
             }
@@ -401,7 +402,7 @@ export default {
                 y: countY,
                 width: 5,
                 height: 5,
-                resizeEdges: "left bottom right",
+                resizeEdges: "left right",
               }
               countX += 5;
             }
@@ -418,7 +419,7 @@ export default {
                 y: countY,
                 width: 3,
                 height: 3,
-                resizeEdges: "left bottom right",
+                resizeEdges: "left right",
               }
               countX += 3;
             }
