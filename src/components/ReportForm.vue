@@ -59,6 +59,11 @@
         >
           <v-icon>mdi-fullscreen</v-icon>
         </v-btn>
+        <span v-if="yAxisValue" class="d-flex">
+          <h5>Y-Axis</h5>
+            <v-btn @click="sortChart('asc', yAxisValue)" x-small class="mx-4"><v-icon dense>mdi-sort-ascending</v-icon></v-btn>
+            <v-btn @click="sortChart('desc', yAxisValue)" x-small><v-icon dense>mdi-sort-descending</v-icon></v-btn>
+        </span>
         <!-- Chart -->
         <Component
           :is="graphType"
@@ -70,6 +75,12 @@
           :title="activeReport.title"
           class="mb-4"
         />
+        <span v-if="xAxisValue" class="d-flex justify-end">
+            <h5>X-Axis</h5>
+            <v-btn @click="sortChart('asc', xAxisValue)" x-small class="mx-4"><v-icon dense>mdi-sort-ascending</v-icon></v-btn>
+            <v-btn @click="sortChart('desc', xAxisValue)" x-small><v-icon dense>mdi-sort-descending</v-icon></v-btn>
+        </span>
+        
         <!-- Placeholder -->
         <!-- This div has a v-else directive -->
         <!-- <div
@@ -230,6 +241,7 @@
               label="X-Axis"
               dense
               @change="onChangeXAxis"
+              clearable
             />
           </div>
           <div>
@@ -239,14 +251,17 @@
               label="Y-Axis"
               dense
               @change="onChangeYAxis"
+              clearable
             />
             <v-select
-              v-if="yAxisValue && xAxisValue"
+              v-if="yAxisValue || xAxisValue"
               v-model="yAction"
               label="Action"
               dense
-              :items="['Count', 'Sum', 'Average']"
+              clearable
+              :items="['Count', 'Count Unique Values', 'Sum', 'Average']"
               @change="onChangeYAction"
+              @click:clear="onClearYAction"
             />
           </div>
           <!-- <div class="tags">
@@ -474,20 +489,6 @@ export default {
     screenHeight() {
       return window.innerHeight - 200;
     },
-    /* createdBy() {
-      if (this.activeReport && this.activeReport.id && this.user && this.user.attributes) {
-        return `${this.user.attributes.given_name} ${this.user.attributes.family_name} on ${new Date(this.activeReport.createdAt).toLocaleString()}`;
-      } else {
-        return `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
-      }
-    },
-    updatedBy() {
-      if (this.activeReport && this.activeReport.id) {
-        return `${this.user.attributes.given_name}  ${this.user.attributes.family_name} on ${new Date(this.activeReport.updatedAt).toLocaleString()}`;
-      } else {
-        return `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
-      }
-    }, */
   },
   methods: {
     ...mapActions([
@@ -617,19 +618,6 @@ export default {
         this.selectedHeaders,
         this.createMasterData(this.dataSet.dataValues.items)
       );
-      console.log(this.data)
-
-        /* Need to change the structure of this.data
-         right now : 
-         {test1: 1, test2: 1, etc}
-         
-         need
-         
-         {
-          
-         }*/
-
-      /* } */
     },
     onChangeXAxis() {
       this.xAxisKeys = this.selectedHeaders.map((h) => h.text || h);
@@ -658,27 +646,48 @@ export default {
       );
     },
     onChangeYAction() {
-      if (this.yAction == 'Count') {
-        const data = collect(this.data)
-        console.log(this.xAxisValue)
+      const data = collect(this.data)
+      const newArray = [];
+      if (this.yAction == 'Count Unique Values') {
         const counted = data.countBy(row => row[this.xAxisValue])
-
-        const newArray = [];
 
         for (const key in counted.items) {
           let newObj = {
             [this.xAxisValue]: key,
-            ["Count Unique Values(" + this.yAxisValue + ")"]: counted.items[key].toString()
+            [`Count Unique Values (${this.yAxisValue})`]: counted.items[key].toString()
           };
           newArray.push(newObj);
         }
-
-        console.log(newArray);
-        console.log(counted.items)
-        console.log(this.selectedHeaders)
+        this.data = newArray
+      } else if (this.yAction == 'Sum') {
+        //
+      } else if (this.yAction == 'Average') {
+        //
+      } else if (this.yAction == 'Count') {
+        const counted = data.countBy(row => row[this.xAxisValue])
+        console.log(counted)
+        for (const key in counted.items) {
+          let newObj = {
+            [this.xAxisValue]: key,
+            [`Count (${this.xAxisValue})`]: counted.items[key].toString()
+          };
+          newArray.push(newObj);
+        }
         this.data = newArray
       }
-      
+    },
+    onClearYAction() {
+      this.updateChartData()
+    },
+    sortChart(direction, axis) {
+      const data = collect(this.data)
+      const newArray = [];
+
+      /* Sorts based on Axis and Direction */
+      let sorted = direction == 'asc' ? (axis == this.yAxisValue ? data.sortBy(item => parseFloat(item[`${this.yAction} (${axis})`])) : data.sortBy(item => parseFloat(item[axis]))) : (axis == this.yAxisValue ? data.sortByDesc(item => parseFloat(item[`${this.yAction} (${axis})`])) : data.sortByDesc(item => parseFloat(item[axis])))
+
+      sorted.items.forEach(item => newArray.push(item))
+      this.data = newArray
     },
     moveArrByKey(keys, selected, axis) {
       keys.forEach((k, i) => {
@@ -713,36 +722,27 @@ export default {
         if (this.activeReport.xAxis) {
           this.xAxisValue = this.activeReport.xAxis;
         }
-        if (this.activeReport.xAxis) {
+        if (this.activeReport.yAxis) {
           this.yAxisValue = this.activeReport.yAxis;
         }
-        
         if (this.activeReport.columns) {
           this.selectedHeaders = this.activeReport.columns;
         }
+       console.log(this.activeReport)
         this.xAxisKeys = this.selectedHeaders.map((h) => h.text || h);
         this.yAxisKeys = this.selectedHeaders.map((h) => h.text || h);
-        this.updateChartData();
+        this.updateChartData()
+        if (this.activeReport.yAction) {
+          setTimeout(() => {
+            this.yAction = this.activeReport.yAction;
+            this.onChangeYAction()
+          }, 200);
+        }
       }
       if (!this.activeReport) {
         this.SET_REPORT(this.newReport);
         console.log("No Active Report");
       }
-    },
-    selectedHeaders() {
-      /* if (this.selectedHeaders.length != 0) {
-      } */
-    },
-    dataSets() {
-      //this.dataSetChoices = [...this.dataSets];
-    },
-    /* dataSet() {
-      if (this.dataSet.xAxis) {
-        this.xAxisValue = this.dataSet.xAxis
-      }
-    }, */
-    data() {
-      //console.log(this.data)
     },
   },
   async beforeMount() {
@@ -752,17 +752,11 @@ export default {
   },
   async mounted() {
     await this.fetchDataSets();
-    //console.log(this.data)
-    /* if (this.$route.name == "Report") {
-      this.dataSetChoices = [...this.dataSets];
-    } else { */
     this.dataSetChoices = [
       ...this.dataSets.filter(
         (d) => d.channelId == this.currentChannels[0].channelId
       ),
-    ]; // was ...this.channelDataSets
-    /* } */
-
+    ];
     if (this.$route.params.reportId == "add-report") {
       this.activeReport.id = "";
       this.dataSet.id = "";

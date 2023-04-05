@@ -10,7 +10,7 @@
         v-model="fullscreenR"
         :class="fullscreenR ? 'pa-6' : ''"
       >
-        <span class="d-flex align-center">
+        <span :class="!report.yAxis ? 'd-flex align-center mb-5' : 'd-flex align-center'">
           <h4>{{ report.title }}</h4>
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
@@ -68,6 +68,11 @@
           >
             <v-icon>{{ fullscreenR ? 'mdi-fullscreen-exit' : 'mdi-fullscreen' }}</v-icon>
           </v-btn>
+          <span v-if="report.yAxis" class="d-flex mt-8 mb-0">
+            <h5>Y-Axis</h5>
+            <v-btn @click="sortChart('asc', report.yAxis)" x-small class="mx-4"><v-icon dense>mdi-sort-ascending</v-icon></v-btn>
+            <v-btn @click="sortChart('desc', report.yAxis)" x-small><v-icon dense>mdi-sort-descending</v-icon></v-btn>
+          </span>
           <Component
             :is="graphType(report)"
             ref="chart"
@@ -79,6 +84,11 @@
             class="mb-4"
             :height="screenHeight"
           />
+          <span v-if="report.xAxis" class="d-flex justify-end">
+            <h5>X-Axis</h5>
+            <v-btn @click="sortChart('asc', report.xAxis)" x-small class="mx-4"><v-icon dense>mdi-sort-ascending</v-icon></v-btn>
+            <v-btn @click="sortChart('desc', report.xAxis)" x-small><v-icon dense>mdi-sort-descending</v-icon></v-btn>
+          </span>
           <div class="d-flex justify-end mb-4">
             <v-btn
               v-if="circleChart"
@@ -98,6 +108,11 @@
           >
             <v-icon>{{ fullscreenR ? 'mdi-fullscreen-exit' : 'mdi-fullscreen' }}</v-icon>
           </v-btn>
+          <span v-if="report.yAxis" class="d-flex">
+            <h5>Y-Axis</h5>
+            <v-btn @click="sortChart('asc', report.yAxis)" x-small class="mx-4"><v-icon dense>mdi-sort-ascending</v-icon></v-btn>
+            <v-btn @click="sortChart('desc', report.yAxis)" x-small><v-icon dense>mdi-sort-descending</v-icon></v-btn>
+          </span>
           <Component
             :is="graphType(report)"
             ref="chart"
@@ -106,9 +121,13 @@
               colors.find((scheme) => scheme.id == report.colorSchemeId).scheme
             "
             :graph-type="report.chartType"
-            class="mb-4"
             :height="reportHeight"
           />
+          <span v-if="report.xAxis" class="d-flex justify-end">
+            <h5>X-Axis</h5>
+            <v-btn @click="sortChart('asc', report.xAxis)" x-small class="mx-4"><v-icon dense>mdi-sort-ascending</v-icon></v-btn>
+            <v-btn @click="sortChart('desc', report.xAxis)" x-small><v-icon dense>mdi-sort-descending</v-icon></v-btn>
+          </span>
           <div class="d-flex justify-end mb-4">
             <v-btn
               v-if="circleChart"
@@ -151,7 +170,13 @@
               </v-btn>
             </template>
             <span>See Notes</span>
-          </v-tooltip></span>
+          </v-tooltip>
+        </span>
+        <span v-if="report.yAxis" class="d-flex">
+            <h5>Y-Axis</h5>
+            <v-btn @click="sortChart('asc', report.yAxis)" x-small class="mx-4"><v-icon dense>mdi-sort-ascending</v-icon></v-btn>
+            <v-btn @click="sortChart('desc', report.yAxis)" x-small><v-icon dense>mdi-sort-descending</v-icon></v-btn>
+          </span>
         <!-- <v-btn @click="fullscreenDialog" class="chart-menu" icon>
           <v-icon>mdi-arrow-expand</v-icon>
         </v-btn> -->
@@ -166,6 +191,11 @@
           class="mb-4"
           :height="reportHeight"
         />
+        <span v-if="report.xAxis" class="d-flex justify-end">
+          <h5>X-Axis</h5>
+          <v-btn @click="sortChart('asc', report.xAxis)" x-small class="mx-4"><v-icon dense>mdi-sort-ascending</v-icon></v-btn>
+          <v-btn @click="sortChart('desc', report.xAxis)" x-small><v-icon dense>mdi-sort-descending</v-icon></v-btn>
+        </span>
         <div class="d-flex justify-end mb-4">
           <v-btn
             v-if="circleChart"
@@ -260,6 +290,8 @@ import PolarAreaChart from "../components/PolarAreaChart";
 import Table from "../components/Table";
 import datasetMixin from "../mixins/dataset-mixin";
 import reportMixin from "../mixins/report-mixin";
+
+import collect from 'collect.js';
 
 export default {
   name: "DashboardCardReport",
@@ -385,44 +417,13 @@ export default {
         return LineChart;
       }
     },
-    saveReport() {
-      this.$refs.form.validate();
-      this.submitAttempted = true;
-      if (this.formValid) {
-        let data = {
-          title: this.activeReport.title,
-          description: this.activeReport.description,
-          channelId: this.currentChannel.id,
-          chartType: this.activeReport.chartType,
-          dataSetId: this.activeReport.dataSetId,
-          // dataSet: this.activeReport.dataSet,
-          // tag_ids: this.activeReport.tags.map((tag) => tag.id),
-          colorSchemeId: this.activeReport.colorSchemeId,
-          // last_updated_by: `${this.user.first_name} ${this.user.last_name}`,
-        };
-
-        if (this.activeReport.id) {
-          data.id = this.activeReport.id;
-          this.updateReportById(data);
-
-          // this.updateChannelById({
-          //  id:  this.activeReport.channelId,
-          //  reports: [this.activeReport]
-          // });
-        } else {
-          console.log(data);
-          // data.user_id = this.user.id;
-          this.addReport(data);
-        }
-      }
-    },
     async updateChartData() {
       await this.fetchDataSet(this.report.dataSetId);
 
       /* GET KEYS FROM ALL DATA */
       let uniqueKeys = []
       let newKeys = this.dataSet.dataValues.items.map(s => Object.keys(s.data))
-      console.log(newKeys)
+
       newKeys.forEach(arr => {
         arr.forEach(key => {
           if (!uniqueKeys.includes(key)) {
@@ -450,17 +451,55 @@ export default {
           value: item,
         }));
       }
-      /* newHeaders = headers.map((item) => ({
-        text: item,
-        value: item,
-      })); */
-      //console.log(newHeaders)
+
       this.data = this.createMasterData(this.dataSet.dataValues.items);
       this.data = this.filterData(newHeaders, this.data);
+      if (this.report.yAction) {
+        this.onChangeYAction()
+      }
       this.SET_REPORT_DATASET(this.dataSet);
-      //}
+    },
+    onChangeYAction() {
+      const data = collect(this.data)
+      let xLabel = Object.keys(this.data[0])[0]
+      let yLabel = Object.keys(this.data[0])[1]
+      if (this.report.yAction == 'Count Unique Values') {
+        const counted = data.countBy(row => row[xLabel])
+        const newArray = [];
 
-      //}
+        for (const key in counted.items) {
+          let newObj = {
+            [xLabel]: key,
+            [`Count Unique Values (${yLabel})`]: counted.items[key].toString()
+          };
+          newArray.push(newObj);
+        }
+        this.data = newArray
+      } else if (this.report.yAction == 'Count') {
+        const counted = data.countBy(row => row[xLabel])
+        const newArray = [];
+
+        console.log(counted)
+        for (const key in counted.items) {
+          let newObj = {
+            [xLabel]: key,
+            [`Count (${xLabel})`]: counted.items[key].toString()
+          };
+          newArray.push(newObj);
+        }
+        this.data = newArray
+      }
+    },
+    sortChart(direction, axis) {
+      const data = collect(this.data)
+      const newArray = [];
+      console.log(direction)
+
+      /* Sorts based on Axis and Direction */
+      let sorted = direction === 'asc' ? (axis == this.report.yAxis ? data.sortBy(item => parseFloat(item[`${this.report.yAction} (${axis})`])) : data.sortBy(item => parseFloat(item[axis]))) : (axis == this.report.yAxis ? data.sortByDesc(item => parseFloat(item[`${this.report.yAction} (${axis})`])) : data.sortByDesc(item => parseFloat(item[axis])))
+
+      sorted.items.forEach(item => newArray.push(item))
+      this.data = newArray
     },
     fullscreenReport() {
       this.fullscreenR = this.fullscreenR ? false : true;
@@ -498,21 +537,15 @@ export default {
       } */
       this.updateChartData()
     },
-    reportHeight() {
-      //this.updateChartData();
-    }
   },
   mounted() {
-    // this.updateChartData();
     this.fetchReports();
     this.fetchDataSets();
     this.updateChartData();
-    console.log(this)
     setTimeout(() => {
         if (this.$parent.$parent.$el.clientHeight != 0) {
           this.reportHeight = this.$parent.$parent.$el.clientHeight - 100
         }
-        
         console.log(this.reportHeight)
       }, 100);
   },
