@@ -61,8 +61,10 @@
         </v-btn>
         <span v-if="yAxisValue" class="d-flex">
           <h5>Y-Axis</h5>
-            <v-btn @click="sortChart('asc', yAxisValue)" x-small class="mx-4"><v-icon dense>mdi-sort-ascending</v-icon></v-btn>
-            <v-btn @click="sortChart('desc', yAxisValue)" x-small><v-icon dense>mdi-sort-descending</v-icon></v-btn>
+            <v-btn @click="sortChart('asc', yAxisValue)" x-small class="mx-4"><v-icon   dense>mdi-sort-ascending</v-icon>
+            </v-btn>
+            <v-btn @click="sortChart('desc', yAxisValue)" x-small><v-icon dense>mdi-sort-descending</v-icon>
+            </v-btn>
         </span>
         <!-- Chart -->
         <Component
@@ -259,7 +261,7 @@
               label="Action"
               dense
               clearable
-              :items="['Count', 'Count Unique Values', 'Sum', 'Average']"
+              :items="['Count', 'Count Unique Values', 'Sum', 'Average', 'Median', 'Minimum', 'Maximum']"
               @change="onChangeYAction"
               @click:clear="onClearYAction"
             />
@@ -660,9 +662,31 @@ export default {
         }
         this.data = newArray
       } else if (this.yAction == 'Sum') {
-        //
+        let grouped = data.groupBy(this.xAxisValue)
+
+        for (const item in grouped.items) {
+          let newObj = {
+            [this.xAxisValue]: item,
+            [`Sum (${this.yAxisValue})`]: grouped.items[item].reduce((acc, item) => acc + parseFloat(item[this.yAxisValue]), 0)
+          };
+          newArray.push(newObj);
+        }
+        this.data = newArray
       } else if (this.yAction == 'Average') {
-        //
+        let grouped = data.groupBy(this.xAxisValue)
+  
+        for (const item in grouped.items) {
+          let sum = grouped.items[item].reduce((acc, item) => acc + parseFloat(item[this.yAxisValue]), 0);
+          let count = grouped.items[item].count();
+          let average = sum / count;
+          let newObj = {
+            [this.xAxisValue]: item,
+            [`Average (${this.yAxisValue})`]: average
+          };
+          newArray.push(newObj);
+        }
+        console.log(newArray)
+        this.data = newArray
       } else if (this.yAction == 'Count') {
         const counted = data.countBy(row => row[this.xAxisValue])
         console.log(counted)
@@ -673,6 +697,55 @@ export default {
           };
           newArray.push(newObj);
         }
+        this.data = newArray
+      } else if (this.yAction == 'Median') {
+        let grouped = data.groupBy(this.xAxisValue)
+              
+        for (const item in grouped.items) {
+          let values = grouped.items[item].pluck(this.yAxisValue).map(item => parseFloat(item)).toArray().sort((a, b) => b - a)
+          console.log(values)
+          let median = collect(values).median();
+          let newObj = {
+            [this.xAxisValue]: item,
+            [`Median (${this.yAxisValue})`]: median
+          };
+          newArray.push(newObj);
+        }
+        console.log(newArray)
+        this.data = newArray
+      } else if (this.yAction == 'Maximum') {
+        let grouped = data.groupBy(this.xAxisValue)
+
+        for (const item in grouped.items) {
+          let max = grouped.items[item].reduce((max, item) => {
+            let val = parseFloat(item[this.yAxisValue])
+            return val > max ? val : max
+          }, -Infinity)
+
+          let newObj = {
+            [this.xAxisValue]: item,
+            [`Maximum (${this.yAxisValue})`]: max
+          };
+          newArray.push(newObj);
+        }
+
+        this.data = newArray
+      } else if (this.yAction == 'Minimum') {
+        let grouped = data.groupBy(this.xAxisValue)
+
+        for (const item in grouped.items) {
+          let min = grouped.items[item].reduce((min, item) => {
+            let val = parseFloat(item[this.yAxisValue])
+            return val < min ? val : min
+          }, Infinity)
+
+          let newObj = {
+            [this.xAxisValue]: item,
+            [`Minimum (${this.yAxisValue})`]: min
+          };
+          newArray.push(newObj);
+        }
+
         this.data = newArray
       }
     },

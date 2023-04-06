@@ -496,7 +496,8 @@ export default {
       console.log(direction)
 
       /* Sorts based on Axis and Direction */
-      let sorted = direction === 'asc' ? (axis == this.report.yAxis ? data.sortBy(item => parseFloat(item[`${this.report.yAction} (${axis})`])) : data.sortBy(item => parseFloat(item[axis]))) : (axis == this.report.yAxis ? data.sortByDesc(item => parseFloat(item[`${this.report.yAction} (${axis})`])) : data.sortByDesc(item => parseFloat(item[axis])))
+      let sorted = direction === 'asc' ? (axis == this.report.yAxis ? data.sortBy(item => parseFloat(item[`${this.report.yAction} (${axis})`])) : data.sortBy(item => parseFloat(item[axis]))) :
+      direction === 'desc' ? (axis == this.report.yAxis ? data.sortByDesc(item => parseFloat(item[`${this.report.yAction} (${axis})`])) : data.sortByDesc(item => parseFloat(item[axis]))) : ''
 
       sorted.items.forEach(item => newArray.push(item))
       this.data = newArray
