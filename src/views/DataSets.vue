@@ -170,7 +170,7 @@ export default {
       ) {
         return this.dataSets.filter(
           (t) => t.channelId == this.currentChannels[0].channelId
-        );
+        ).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
       } else return [];
     },
   },

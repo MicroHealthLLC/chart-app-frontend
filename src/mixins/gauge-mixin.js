@@ -77,7 +77,7 @@ export default {
       ) {
         return this.gauges.filter(
           (t) => t.channelId == this.currentChannels[0].channelId
-        );
+        ).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
       } else return [];
     },
     channelHeatMaps() {
@@ -87,14 +87,9 @@ export default {
         this.currentChannels &&
         this.currentChannels[0].channelId
       ) {
-        console.log(
-          this.heatMaps.filter(
-            (t) => t.channelId == this.currentChannels[0].channelId
-          )
-        );
         return this.heatMaps.filter(
           (t) => t.channelId == this.currentChannels[0].channelId
-        );
+        ).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
       } else return [];
     },
   },

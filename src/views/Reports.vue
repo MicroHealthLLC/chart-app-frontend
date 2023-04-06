@@ -96,7 +96,7 @@
                 <v-list-item-title>
                   <span
                     v-if="
-                      channelReports.filter((t) => t.reportGroupId == item.id)
+                      sortedReports.filter((t) => t.reportGroupId == item.id)
                         .length > 0
                     "
                   >
@@ -114,14 +114,14 @@
                     >mdi-folder-outline</v-icon>
                   </span>
                   {{ item.title }} ({{
-                    channelReports.filter((t) => t.reportGroupId == item.id)
+                    sortedReports.filter((t) => t.reportGroupId == item.id)
                       .length
                   }})
                 </v-list-item-title>
               </v-list-item-content>
             </template>
             <v-list-item
-              v-for="report in channelReports.filter(
+              v-for="report in sortedReports.filter(
                 (t) => t.reportGroupId == item.id
               )"
               :key="report.id"
@@ -149,11 +149,11 @@
         Reports
       </h4>
       <div
-        v-if="channelReports.length > 0"
+        v-if="sortedReports.length > 0"
         class="singleReportGrid pl-5"
       >
         <span
-          v-for="report in channelReports.filter((t) => t && !t.reportGroupId)"
+          v-for="report in sortedReports"
           :key="report.id"
         >
           <span
@@ -268,6 +268,12 @@ export default {
             t.channelId == this.currentChannels[0].channelId && !t.reportGroupId
         );
     },
+    sortedReports() {
+      return this.channelReports
+        .filter((t) => t && !t.reportGroupId)
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    }
+
   },
   methods: {
     ...mapActions([
