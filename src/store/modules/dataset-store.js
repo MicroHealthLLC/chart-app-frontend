@@ -1,7 +1,7 @@
 import { API, graphqlOperation } from "aws-amplify";
 import { createDataSet, createDataValue } from "@/graphql/mutations";
 import { updateDataSet, updateDataValue } from "@/graphql/mutations";
-import { deleteDataSet } from "@/graphql/mutations";
+import { deleteDataSet, deleteDataValue } from "@/graphql/mutations";
 import { getDataSet } from "@/graphql/queries";
 import { listDataSets, listDataValues } from "@/graphql/queries";
 //import { onDeleteDataSet } from "../../graphql/subscriptions";
@@ -81,13 +81,49 @@ export default {
       }
       commit("TOGGLE_SAVING", false);
     },
-    async removeDataSet({ commit, dispatch }, id) {
+    /* async removeDataSet({ commit, dispatch }, id) {
       try {
         await API.graphql(graphqlOperation(deleteDataSet, { input: id }));
         dispatch("fetchDataSets");
         commit("SET_SNACKBAR", {
           show: true,
           message: "DataSet Successfully Removed",
+          color: "var(--mh-orange)",
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }, */
+    async removeDataSet({ commit, dispatch }, id) {
+      try {
+        // First, fetch the dataSet to get its associated dataValues
+        const response = await API.graphql(graphqlOperation(getDataSet, id));
+        const dataSet = response.data.getDataSet;
+        const dataValues = dataSet.dataValues.items;
+    
+        // Delete the dataSet and all associated dataValues
+        await Promise.all([
+          API.graphql(graphqlOperation(deleteDataSet, { input: id })),
+          ...dataValues.map((dataValue) => API.graphql(graphqlOperation(deleteDataValue, { input: { id: dataValue.id } })) ),
+        ]);
+    
+        dispatch("fetchDataSets");
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "DataSet Successfully Removed",
+          color: "var(--mh-orange)",
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },   
+    async removeDataValue({ commit, dispatch }, id) {
+      try {
+        await API.graphql(graphqlOperation(deleteDataValue, { input: id }));
+        dispatch("fetchDataValues");
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "DataValue Successfully Removed",
           color: "var(--mh-orange)",
         });
       } catch (error) {
