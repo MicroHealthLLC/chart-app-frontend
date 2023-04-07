@@ -61,10 +61,14 @@
         </v-btn>
         <span v-if="yAxisValue" class="d-flex">
           <h5>Y-Axis</h5>
-            <v-btn @click="sortChart('asc', yAxisValue)" x-small class="mx-4"><v-icon   dense>mdi-sort-ascending</v-icon>
+          <v-tooltip bottom>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn @click="toggleSortY" x-small class="ml-2" v-bind="attrs" v-on="on">
+              <v-icon dense>{{ sortDirectionY === 'asc' ? 'mdi-sort-descending' : 'mdi-sort-ascending' }}</v-icon>
             </v-btn>
-            <v-btn @click="sortChart('desc', yAxisValue)" x-small><v-icon dense>mdi-sort-descending</v-icon>
-            </v-btn>
+          </template>
+          <span>{{ sortDirectionY === 'asc' ? 'Sort Descending' : 'Sort Ascending' }}</span>
+          </v-tooltip>
         </span>
         <!-- Chart -->
         <Component
@@ -78,9 +82,15 @@
           class="mb-4"
         />
         <span v-if="xAxisValue" class="d-flex justify-end">
-            <h5>X-Axis</h5>
-            <v-btn @click="sortChart('asc', xAxisValue)" x-small class="mx-4"><v-icon dense>mdi-sort-ascending</v-icon></v-btn>
-            <v-btn @click="sortChart('desc', xAxisValue)" x-small><v-icon dense>mdi-sort-descending</v-icon></v-btn>
+          <h5>X-Axis</h5>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn @click="toggleSortX" x-small class="ml-2" v-bind="attrs" v-on="on">
+                <v-icon dense>{{ sortDirectionX === 'asc' ? 'mdi-sort-descending' : 'mdi-sort-ascending' }}</v-icon>
+            </v-btn>
+            </template>
+            <span>{{ sortDirectionX === 'asc' ? 'Sort Descending' : 'Sort Ascending' }}</span>
+          </v-tooltip>
         </span>
         
         <!-- Placeholder -->
@@ -425,7 +435,9 @@ export default {
       xAxisValue: "",
       yAxisKeys: [],
       yAxisValue: "",
-      yAction: ''
+      yAction: '',
+      sortDirectionY: 'asc',
+      sortDirectionX: 'asc',
     };
   },
 
@@ -685,11 +697,9 @@ export default {
           };
           newArray.push(newObj);
         }
-        console.log(newArray)
         this.data = newArray
       } else if (this.yAction == 'Count') {
         const counted = data.countBy(row => row[this.xAxisValue])
-        console.log(counted)
         for (const key in counted.items) {
           let newObj = {
             [this.xAxisValue]: key,
@@ -703,7 +713,6 @@ export default {
               
         for (const item in grouped.items) {
           let values = grouped.items[item].pluck(this.yAxisValue).map(item => parseFloat(item)).toArray().sort((a, b) => b - a)
-          console.log(values)
           let median = collect(values).median();
           let newObj = {
             [this.xAxisValue]: item,
@@ -711,7 +720,6 @@ export default {
           };
           newArray.push(newObj);
         }
-        console.log(newArray)
         this.data = newArray
       } else if (this.yAction == 'Maximum') {
         let grouped = data.groupBy(this.xAxisValue)
@@ -761,6 +769,14 @@ export default {
 
       sorted.items.forEach(item => newArray.push(item))
       this.data = newArray
+    },
+    toggleSortY() {
+      this.sortDirectionY = this.sortDirectionY === 'asc' ? 'desc' : 'asc';
+      this.sortChart(this.sortDirectionY, this.yAxisValue);
+    },
+    toggleSortX() {
+      this.sortDirectionX = this.sortDirectionX === 'asc' ? 'desc' : 'asc';
+      this.sortChart(this.sortDirectionX, this.xAxisValue);
     },
     moveArrByKey(keys, selected, axis) {
       keys.forEach((k, i) => {
