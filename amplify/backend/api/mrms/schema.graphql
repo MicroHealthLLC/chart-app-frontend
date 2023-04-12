@@ -4,16 +4,18 @@
 type Report @model @auth(rules: [{ allow: public }]) {
   id: ID!
   title: String!
-  channel: Channel @belongsTo(fields: ["channelId"])
   reportGroup: ReportGroup @belongsTo(fields: ["reportGroupId"])
   description: String,
   reportGroupId: ID @index(name: "byReportGroup")  
-  channelId: ID @index(name: "byChannel")  
+  channelId: ID @index(name: "byChannel")
+  # dashboards: [Dashboard] @manyToMany(relationName: "DashboardReports")
   colorSchemeId: Int
   chartType: String
   dataSet: DataSet @hasOne
   dataSetId: String
   xAxis: String
+  yAxis: String
+  yAction: String
   columns: String
   createdBy: String
   updatedBy: String  
@@ -24,16 +26,58 @@ type ReportGroup @model @auth(rules: [{ allow: public }]) {
   title: String!
   reports:[Report] @hasMany(indexName: "byReportGroup", fields: ["id"])
   reportIds: [String]
+  channelId: ID @index(name: "byChannel")
   createdBy: String
-  updatedBy: String  
-  channelId: ID @index(name: "byChannel")  
+  updatedBy: String   
+}
+
+type Gauge @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  title: String!
+  notes: String
+  value: Float!
+  segmentStops: String
+  chartType: String!
+  channelId: ID @index(name: "byChannel")
+  createdBy: String
+  updatedBy: String
+}
+
+type HeatMap @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  title: String!
+  dataSet: DataSet @hasOne(fields: ["dataSetId"])
+  dataSetId: ID
+  options: AWSJSON
+  leadCol: String
+  columns: String
+  notes: String
+  channelId: ID @index(name: "byChannel")
+  createdBy: String
+  updatedBy: String
+}
+
+type Dashboard @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  title: String!
+  description: String
+  cards: AWSJSON
+  background: String
+  # reports: [Report] @manyToMany(relationName: "DashboardReports")
+  channelId: ID @index(name: "byChannel")
+  createdBy: String
+  updatedBy: String
 }
 
 type Channel @model @auth(rules: [{ allow: public }]) {
   id: ID!
-  description: String,
+  description: String
   reports: [Report] @hasMany(indexName: "byChannel", fields: ["id"])
+  reportGroups: [ReportGroup] @hasMany(indexName: "byChannel", fields: ["id"])
   dataSets: [DataSet] @hasMany(indexName: "byChannel", fields: ["id"])
+  gauges: [Gauge] @hasMany(indexName: "byChannel", fields: ["id"])
+  heatMaps: [HeatMap] @hasMany(indexName: "byChannel", fields: ["id"])
+  dashboards: [Dashboard] @hasMany(indexName: "byChannel", fields: ["id"])
   # type: ChannelType @belongsTo(fields: ["channelTypeId"])
   type: String
   title: String!
@@ -44,10 +88,8 @@ type DataSet @model @auth(rules: [{ allow: public }]) {
   id: ID!
   title: String!
   description: String
-  channel: Channel @belongsTo(fields: ["channelId"])
   channelId: ID @index(name: "byChannel")  
   dataValues: [DataValue] @hasMany (indexName: "byDataSet", fields: ["id"])
-  
   user: String
 }
 type DataValue @model @auth(rules: [{ allow: public }]) {
@@ -70,4 +112,3 @@ type CurrentChannel @model @auth(rules: [{ allow: public }]) {
 }
 
 # Create simple table for currentChannel
-

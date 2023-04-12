@@ -3,15 +3,13 @@
 </template>
 
 <script>
-import DashboardForm from "./../components/DashboardForm.vue"
+import DashboardForm from "./../components/DashboardForm.vue";
 
 export default {
   components: {
-    DashboardForm
-  }
-}
+    DashboardForm,
+  },
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

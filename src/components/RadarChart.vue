@@ -27,6 +27,17 @@ export default {
       },
     };
   },
+  watch: {
+    chartData() {
+      this.loadChart();
+    },
+    chartColors() {
+      this.loadChart();
+    },
+  },
+  mounted() {
+    this.loadChart();
+  },
   methods: {
     loadChart() {
       const labels = this.chartData.map((item) => Object.values(item)[0]);
@@ -63,17 +74,6 @@ export default {
         },
         this.options
       );
-    },
-  },
-  mounted() {
-    this.loadChart();
-  },
-  watch: {
-    chartData() {
-      this.loadChart();
-    },
-    chartColors() {
-      this.loadChart();
     },
   },
 };

@@ -6,21 +6,6 @@ export const getReport = /* GraphQL */ `
     getReport(id: $id) {
       id
       title
-      channel {
-        id
-        description
-        reports {
-          nextToken
-        }
-        dataSets {
-          nextToken
-        }
-        type
-        title
-        channelTypeId
-        createdAt
-        updatedAt
-      }
       reportGroup {
         id
         title
@@ -28,9 +13,9 @@ export const getReport = /* GraphQL */ `
           nextToken
         }
         reportIds
+        channelId
         createdBy
         updatedBy
-        channelId
         createdAt
         updatedAt
       }
@@ -43,15 +28,6 @@ export const getReport = /* GraphQL */ `
         id
         title
         description
-        channel {
-          id
-          description
-          type
-          title
-          channelTypeId
-          createdAt
-          updatedAt
-        }
         channelId
         dataValues {
           nextToken
@@ -62,6 +38,8 @@ export const getReport = /* GraphQL */ `
       }
       dataSetId
       xAxis
+      yAxis
+      yAction
       columns
       createdBy
       updatedBy
@@ -81,22 +59,13 @@ export const listReports = /* GraphQL */ `
       items {
         id
         title
-        channel {
-          id
-          description
-          type
-          title
-          channelTypeId
-          createdAt
-          updatedAt
-        }
         reportGroup {
           id
           title
           reportIds
+          channelId
           createdBy
           updatedBy
-          channelId
           createdAt
           updatedAt
         }
@@ -116,6 +85,8 @@ export const listReports = /* GraphQL */ `
         }
         dataSetId
         xAxis
+        yAxis
+        yAction
         columns
         createdBy
         updatedBy
@@ -143,6 +114,8 @@ export const getReportGroup = /* GraphQL */ `
           chartType
           dataSetId
           xAxis
+          yAxis
+          yAction
           columns
           createdBy
           updatedBy
@@ -153,9 +126,9 @@ export const getReportGroup = /* GraphQL */ `
         nextToken
       }
       reportIds
+      channelId
       createdBy
       updatedBy
-      channelId
       createdAt
       updatedAt
     }
@@ -175,9 +148,153 @@ export const listReportGroups = /* GraphQL */ `
           nextToken
         }
         reportIds
+        channelId
         createdBy
         updatedBy
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getGauge = /* GraphQL */ `
+  query GetGauge($id: ID!) {
+    getGauge(id: $id) {
+      id
+      title
+      notes
+      value
+      segmentStops
+      chartType
+      channelId
+      createdBy
+      updatedBy
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listGauges = /* GraphQL */ `
+  query ListGauges(
+    $filter: ModelGaugeFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listGauges(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        title
+        notes
+        value
+        segmentStops
+        chartType
         channelId
+        createdBy
+        updatedBy
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getHeatMap = /* GraphQL */ `
+  query GetHeatMap($id: ID!) {
+    getHeatMap(id: $id) {
+      id
+      title
+      dataSet {
+        id
+        title
+        description
+        channelId
+        dataValues {
+          nextToken
+        }
+        user
+        createdAt
+        updatedAt
+      }
+      dataSetId
+      options
+      leadCol
+      columns
+      notes
+      channelId
+      createdBy
+      updatedBy
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listHeatMaps = /* GraphQL */ `
+  query ListHeatMaps(
+    $filter: ModelHeatMapFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listHeatMaps(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        title
+        dataSet {
+          id
+          title
+          description
+          channelId
+          user
+          createdAt
+          updatedAt
+        }
+        dataSetId
+        options
+        leadCol
+        columns
+        notes
+        channelId
+        createdBy
+        updatedBy
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getDashboard = /* GraphQL */ `
+  query GetDashboard($id: ID!) {
+    getDashboard(id: $id) {
+      id
+      title
+      description
+      cards
+      background
+      channelId
+      createdBy
+      updatedBy
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listDashboards = /* GraphQL */ `
+  query ListDashboards(
+    $filter: ModelDashboardFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listDashboards(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        title
+        description
+        cards
+        background
+        channelId
+        createdBy
+        updatedBy
         createdAt
         updatedAt
       }
@@ -201,12 +318,27 @@ export const getChannel = /* GraphQL */ `
           chartType
           dataSetId
           xAxis
+          yAxis
+          yAction
           columns
           createdBy
           updatedBy
           createdAt
           updatedAt
           reportDataSetId
+        }
+        nextToken
+      }
+      reportGroups {
+        items {
+          id
+          title
+          reportIds
+          channelId
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
         }
         nextToken
       }
@@ -217,6 +349,54 @@ export const getChannel = /* GraphQL */ `
           description
           channelId
           user
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      gauges {
+        items {
+          id
+          title
+          notes
+          value
+          segmentStops
+          chartType
+          channelId
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      heatMaps {
+        items {
+          id
+          title
+          dataSetId
+          options
+          leadCol
+          columns
+          notes
+          channelId
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      dashboards {
+        items {
+          id
+          title
+          description
+          cards
+          background
+          channelId
+          createdBy
+          updatedBy
           createdAt
           updatedAt
         }
@@ -243,7 +423,19 @@ export const listChannels = /* GraphQL */ `
         reports {
           nextToken
         }
+        reportGroups {
+          nextToken
+        }
         dataSets {
+          nextToken
+        }
+        gauges {
+          nextToken
+        }
+        heatMaps {
+          nextToken
+        }
+        dashboards {
           nextToken
         }
         type
@@ -262,21 +454,6 @@ export const getDataSet = /* GraphQL */ `
       id
       title
       description
-      channel {
-        id
-        description
-        reports {
-          nextToken
-        }
-        dataSets {
-          nextToken
-        }
-        type
-        title
-        channelTypeId
-        createdAt
-        updatedAt
-      }
       channelId
       dataValues {
         items {
@@ -305,15 +482,6 @@ export const listDataSets = /* GraphQL */ `
         id
         title
         description
-        channel {
-          id
-          description
-          type
-          title
-          channelTypeId
-          createdAt
-          updatedAt
-        }
         channelId
         dataValues {
           nextToken
@@ -336,15 +504,6 @@ export const getDataValue = /* GraphQL */ `
         id
         title
         description
-        channel {
-          id
-          description
-          type
-          title
-          channelTypeId
-          createdAt
-          updatedAt
-        }
         channelId
         dataValues {
           nextToken

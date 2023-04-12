@@ -1,7 +1,7 @@
 import { mapGetters, mapActions } from "vuex";
 export default {
   data() {
-    return {     
+    return {
       seedChannelTypes: [
         {
           title: "Public",
@@ -11,28 +11,26 @@ export default {
         },
         {
           title: "Group",
-        },       
+        },
       ],
     };
   },
   methods: {
     ...mapActions(["fetchChannelTypes"]),
-   
   },
   mounted() {
-   this.fetchChannelTypes()
+    this.fetchChannelTypes();
   },
   computed: {
     ...mapGetters(["channelTypes"]),
-  
   },
   watch: {
-    channelTypes(){
-      if(this.channelTypes.length == 0){      
+    channelTypes() {
+      if (this.channelTypes.length == 0) {
         this.seedChannelTypes.forEach((item) => {
-         this.addChannelType(item)
-        })             
-      } 
-    }
+          this.addChannelType(item);
+        });
+      }
+    },
   },
 };
