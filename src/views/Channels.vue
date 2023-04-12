@@ -1,26 +1,52 @@
 <template>
   <v-row>
     <v-col>
-      <div class="d-flex justify-space-between">      
-        <h3><v-icon class="mr-2 pb-2" color="green darken-2">mdi-television-classic</v-icon>Channels</h3>
-        <v-btn class="mb-2" color="primary" small to="/add-channel"
-          >Add Channel <v-icon small>mdi-plus</v-icon></v-btn
+      <div class="d-flex justify-space-between">
+        <h3>
+          <v-icon
+            class="mr-2 pb-2"
+            color="green darken-2"
+          >
+            mdi-television-classic
+          </v-icon>Channels
+        </h3>
+        <v-btn
+          class="mb-2"
+          color="primary"
+          small
+          to="/add-channel"
         >
+          Add Channel <v-icon small>
+            mdi-plus
+          </v-icon>
+        </v-btn>
       </div>
 
-      <v-divider class="mb-4"></v-divider>
+      <v-divider class="mb-4" />
 
       <v-card>
-        <v-data-table :headers="headers" :items="channels">
+        <v-data-table
+          :headers="headers"
+          :items="channels"
+        >
           <!-- Formatted Date -->
           <template v-slot:item.createdAt="{ item }">
             <span>{{ new Date(item.createdAt).toLocaleDateString() }}</span>
           </template>
           <template v-slot:item.actions="{ item }">
-            <v-icon color="primary" small class="mr-2" @click="editItem(item)">
+            <v-icon
+              color="primary"
+              small
+              class="mr-2"
+              @click="editItem(item)"
+            >
               mdi-pencil
             </v-icon>
-            <v-icon color="primary" small @click="deleteChannel(item)">
+            <v-icon
+              color="primary"
+              small
+              @click="deleteChannel(item)"
+            >
               mdi-delete
             </v-icon>
             <!-- <v-btn class="ml-2" depressed outlined x-small
@@ -77,9 +103,9 @@ export default {
   methods: {
     ...mapActions(["fetchChannel", "fetchChannels", "removeChannel"]),
     async editItem(item) {
-      let id = item.id
-      await this.fetchChannel(id)
-      this.$router.push(`/channels/${id}`) 
+      let id = item.id;
+      await this.fetchChannel(id);
+      this.$router.push(`/channels/${id}`);
     },
     deleteChannel(item) {
       this.$confirm(
@@ -90,9 +116,9 @@ export default {
           cancelButtonText: "Cancel",
           type: "warning",
         }
-       ).then(() => {
+      ).then(() => {
         this.removeChannel({ id: item.id });
-      });     
+      });
     },
   },
   beforeMount() {

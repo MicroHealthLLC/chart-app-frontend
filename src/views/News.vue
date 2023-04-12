@@ -3,36 +3,67 @@
     <v-col>
       <div class="d-flex justify-space-between">
         <h3>News</h3>
-        <v-btn class="mb-2" @click="openDialog" color="primary" small
-          >Add News <v-icon small>mdi-plus</v-icon></v-btn
+        <v-btn
+          class="mb-2"
+          color="primary"
+          small
+          @click="openDialog"
         >
+          Add News <v-icon small>
+            mdi-plus
+          </v-icon>
+        </v-btn>
       </div>
 
-      <v-divider class="mb-4"></v-divider>
+      <v-divider class="mb-4" />
 
       <v-card>
-        <v-data-table :headers="headers" :items="news">
+        <v-data-table
+          :headers="headers"
+          :items="news"
+        >
           <!-- Formatted Date -->
           <template v-slot:item.created_at="{ item }">
             <span>{{ new Date(item.created_at).toLocaleDateString() }}</span>
           </template>
           <!-- Action Buttons -->
           <template v-slot:item.actions="{ item }">
-            <v-icon color="primary" small class="mr-2" @click="editItem(item)">
+            <v-icon
+              color="primary"
+              small
+              class="mr-2"
+              @click="editItem(item)"
+            >
               mdi-pencil
             </v-icon>
-            <v-icon color="primary" small @click="openDeleteDialog(item)">
+            <v-icon
+              color="primary"
+              small
+              @click="openDeleteDialog(item)"
+            >
               mdi-delete
             </v-icon>
           </template>
         </v-data-table>
       </v-card>
       <!-- Modal form for news -->
-      <v-dialog v-model="dialog" @click:outside="closeDialog" width="50%">
+      <v-dialog
+        v-model="dialog"
+        width="50%"
+        @click:outside="closeDialog"
+      >
         <v-card>
-          <v-toolbar class="mb-4" color="info" dark>
-            <h3 v-if="activeNews.id">Update News</h3>
-            <h3 v-else>Add News</h3>
+          <v-toolbar
+            class="mb-4"
+            color="info"
+            dark
+          >
+            <h3 v-if="activeNews.id">
+              Update News
+            </h3>
+            <h3 v-else>
+              Add News
+            </h3>
           </v-toolbar>
           <v-card-text>
             <v-form ref="form">
@@ -41,42 +72,63 @@
                 label="Title"
                 required
                 :rules="[(v) => !!v || 'Title is required']"
-              ></v-text-field>
+              />
               <v-textarea
                 v-model="activeNews.body"
                 label="Body"
                 required
                 :rules="[(v) => !!v || 'Body is required']"
-              ></v-textarea>
+              />
             </v-form>
           </v-card-text>
           <v-card-actions class="justify-end">
-            <v-btn @click="closeDialog" outlined small>Close</v-btn>
-            <v-btn @click="saveNews" color="primary" depressed small
-              >Save</v-btn
+            <v-btn
+              outlined
+              small
+              @click="closeDialog"
             >
+              Close
+            </v-btn>
+            <v-btn
+              color="primary"
+              depressed
+              small
+              @click="saveNews"
+            >
+              Save
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
       <!-- Delete Prompt -->
       <v-dialog
         v-model="deleteDialog"
-        @click:outside="closeDeleteDialog"
         max-width="400"
+        @click:outside="closeDeleteDialog"
       >
         <v-card>
           <v-card-title>Delete {{ deleteableNews.title }}?</v-card-title>
-          <v-divider class="mx-4 mb-2"></v-divider>
-          <v-card-text
-            >Are you sure you would like to delete this News?</v-card-text
-          >
+          <v-divider class="mx-4 mb-2" />
+          <v-card-text>
+            Are you sure you would like to delete this News?
+          </v-card-text>
           <v-card-actions class="d-flex justify-end">
-            <v-btn @click="closeDeleteDialog" small outlined color="secondary"
-              >Cancel</v-btn
+            <v-btn
+              small
+              outlined
+              color="secondary"
+              @click="closeDeleteDialog"
             >
-            <v-btn @click="removeNews" small depressed color="error"
-              >Delete</v-btn
+              Cancel
+            </v-btn>
+            <v-btn
+              small
+              depressed
+              color="error"
+              @click="removeNews"
             >
+              Delete
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>

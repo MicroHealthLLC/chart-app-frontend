@@ -39,6 +39,26 @@ export default {
       index: 0,
     };
   },
+  watch: {
+    index() {
+      this.loadChart();
+    },
+    chartData() {
+      this.index = 0;
+      this.loadChart();
+    },
+    chartColors() {
+      this.loadChart();
+    },
+  },
+  mounted() {
+    this.addPlugin(ChartDatalabels);
+    this.loadChart();
+  },
+  beforeDestroy() {
+    this.options.title.text[1] = "";
+    this.options.tooltips = {};
+  },
   methods: {
     loadChart() {
       const labels = this.chartData.map((item) => Object.values(item)[0]);
@@ -77,26 +97,6 @@ export default {
         },
         this.options
       );
-    },
-  },
-  mounted() {
-    this.addPlugin(ChartDatalabels);
-    this.loadChart();
-  },
-  beforeDestroy() {
-    this.options.title.text[1] = "";
-    this.options.tooltips = {};
-  },
-  watch: {
-    index() {
-      this.loadChart();
-    },
-    chartData() {
-      this.index = 0;
-      this.loadChart();
-    },
-    chartColors() {
-      this.loadChart();
     },
   },
 };

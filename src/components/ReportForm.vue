@@ -2,51 +2,97 @@
   <v-row>
     <v-col>
       <div class="d-flex justify-space-between">
-        <h3 v-if="activeReport && activeReport.title" :load="log( reportGroups.filter(group => group.id == activeReport.reportGroupId)
-        )">{{ activeReport.title }}</h3>
-        <h3 v-else class="placeholder-title">(Report Title)</h3>
+        <h3 v-if="activeReport && activeReport.title">
+          {{ activeReport.title }}
+        </h3>
+        <h3
+          v-else
+          class="placeholder-title"
+        >
+          (Report Title)
+        </h3>
         <div>
           <v-btn
             class="px-5 mr-2 mb-2"
             color="primary"
-            @click="saveReport"
             depressed
             small
-            >Save</v-btn
+            @click="saveReport"
           >
-          <v-btn class="mb-2" @click="resetAndGoBack" outlined small
-            >Close</v-btn
+            Save
+          </v-btn>
+          <v-btn
+            class="mb-2"
+            outlined
+            small
+            @click="resetAndGoBack"
           >
+            Close
+          </v-btn>
         </div>
       </div>
 
-      <v-divider class="mb-4"></v-divider>
+      <v-divider class="mb-4" />
 
       <v-alert
         v-if="!formValid && submitAttempted"
         type="error"
         dense
         dismissible
-        >Please fix highlighted fields below before sumbitting Report</v-alert
       >
-      
+        Please fix highlighted fields below before sumbitting Report
+      </v-alert>
 
-      <v-card v-if="(data && data.length > 0)" class="pa-4 mb-4">
-        <v-btn @click="fullscreenReport" class="chart-menu" icon>
+      <v-card
+        v-if="
+          data &&
+            data.length > 0 &&
+            activeReport.colorSchemeId &&
+            activeReport.chartType
+        "
+        class="pa-4 mb-4"
+      >
+        <v-btn
+          class="chart-menu"
+          icon
+          @click="fullscreenReport"
+        >
           <v-icon>mdi-fullscreen</v-icon>
         </v-btn>
+        <span v-if="yAxisValue" class="d-flex">
+          <h5>Y-Axis</h5>
+          <v-tooltip bottom>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn @click="toggleSortY" x-small class="ml-2" v-bind="attrs" v-on="on">
+              <v-icon dense>{{ sortDirectionY === 'asc' ? 'mdi-sort-descending' : 'mdi-sort-ascending' }}</v-icon>
+            </v-btn>
+          </template>
+          <span>{{ sortDirectionY === 'asc' ? 'Sort Descending' : 'Sort Ascending' }}</span>
+          </v-tooltip>
+        </span>
         <!-- Chart -->
         <Component
-          ref="chart"
           :is="graphType"
-          :chartData="data"
-          :chartColors="colorScheme"
-          :graphType="activeReport.chartType"
+          ref="chart"
+          :chart-data="data"
+          :chart-colors="colorScheme"
+          :graph-type="activeReport.chartType"
           :height="350"
           :title="activeReport.title"
           class="mb-4"
-        >
-        </Component>
+        />
+        <span v-if="xAxisValue" class="d-flex justify-end">
+          <h5>X-Axis</h5>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn @click="toggleSortX" x-small class="ml-2" v-bind="attrs" v-on="on">
+                <v-icon dense>{{ sortDirectionX === 'asc' ? 'mdi-sort-descending' : 'mdi-sort-ascending' }}</v-icon>
+            </v-btn>
+            </template>
+            <span>{{ sortDirectionX === 'asc' ? 'Sort Descending' : 'Sort Ascending' }}</span>
+          </v-tooltip>
+        </span>
+        
         <!-- Placeholder -->
         <!-- This div has a v-else directive -->
         <!-- <div
@@ -62,11 +108,16 @@
         <div class="d-flex justify-end mb-4">
           <v-btn
             v-if="circleChart"
-            @click="changeChartData"
             outlined
             small
-            >Next Category <v-icon small>mdi-arrow-right</v-icon></v-btn
+            @click="changeChartData"
           >
+            Next Category <v-icon
+              small
+            >
+              mdi-arrow-right
+            </v-icon>
+          </v-btn>
           <!-- <v-btn
             v-if="
                activeReport.dataSet &&
@@ -81,17 +132,24 @@
           > -->
         </div>
       </v-card>
-      <v-card class="pa-4 mb-4 text-center" v-else>
-        <v-progress-circular v-if="$store.getters.loading" :size="70" indeterminate color="primary"
+      <!-- <v-card v-else-if="$store.getters.loading" class="pa-4 mb-4 text-center">
+        <v-progress-circular  :size="70" indeterminate color="primary"
           class="m-2">
         </v-progress-circular>
-      </v-card>
+      </v-card> -->
 
-      <h3>Report Details</h3>
-      <v-divider class="mb-8"></v-divider>
+      <span class="d-flex justify-space-between">
+        <h3>Report Details</h3>
+        <h5 v-if="activeReport.createdBy">By: {{ activeReport.createdBy }}</h5>
+      </span>
+      <v-divider class="mb-8" />
       <!-- Form Fields -->
-      <v-form v-if="activeReport" v-model="formValid" ref="form"
-        ><div class="grid">
+      <v-form
+        v-if="activeReport"
+        ref="form"
+        v-model="formValid"
+      >
+        <div class="grid">
           <div>
             <v-text-field
               v-model="activeReport.title"
@@ -99,20 +157,19 @@
               dense
               required
               :rules="[(v) => !!v || 'Title is required']"
-            ></v-text-field>
+            />
           </div>
           <div>
             <v-select
-              dense
               v-model="activeReport.reportGroupId"
+              dense
               label="Folder"
               :items="reportGroups"
               item-text="title"
-              item-value="id"         
-            ></v-select>
-
+              item-value="id"
+            />
           </div>
-           
+
           <div class="description">
             <v-textarea
               v-model="activeReport.description"
@@ -120,17 +177,12 @@
               rows="1"
               auto-grow
               dense
-            ></v-textarea>
+            />
           </div>
-          <div>
-            <v-text-field
-              v-if="activeReport.createdAt"
-              :value="activeReport.createdBy ? `${activeReport.createdBy} on ${new Date(this.activeReport.createdAt).toLocaleString()}` : `${new Date(this.activeReport.createdAt).toLocaleString()}`"
-              :label="activeReport.createdBy ? 'Created By' : 'Created On'"
-              dense
-              readonly
-            ></v-text-field>
-          </div>
+          <!-- <div>
+            <v-text-field v-if="activeReport.createdBy" :value="activeReport.createdBy" label="Created By" dense
+              readonly></v-text-field>
+          </div> -->
           <!-- <div>
             <v-select
               v-model="activeReport.channelId"
@@ -144,15 +196,10 @@
               :readonly="newChannelReport"
             ></v-select>
           </div> -->
-          <div>
-            <v-text-field
-              v-if="activeReport.updatedAt"
-              :value="`${activeReport.updatedBy} on ${new Date(this.activeReport.updatedAt).toLocaleString()}`"
-              label="Last Updated By"
-              dense
-              readonly
-            ></v-text-field>
-          </div>
+          <!-- <div>
+            <v-text-field v-if="activeReport.updatedBy" :value="activeReport.updatedBy" label="Last Updated By" dense
+              readonly></v-text-field>
+          </div> -->
           <div>
             <v-select
               v-model="activeReport.dataSetId"
@@ -161,10 +208,10 @@
               item-value="id"
               label="Data Set"
               dense
-              @change="updateChartData"
               required
               :rules="[(v) => !!v || 'Data Set is required']"
-            ></v-select>
+              @change="updateChartData"
+            />
           </div>
           <div>
             <v-select
@@ -174,7 +221,7 @@
               item-value="value"
               label="Chart Type"
               dense
-            ></v-select>
+            />
           </div>
           <div>
             <v-select
@@ -186,13 +233,49 @@
               dense
               return-object
               @change="onChangeSelected"
-            >
-            </v-select>
+            />
           </div>
           <div>
-            <v-select v-model="xAxisValue" :items="xAxisKeys" label="X-Axis" dense @change="onChangeAxis"></v-select>
+            <v-select
+              v-model="activeReport.colorSchemeId"
+              label="Color Scheme"
+              :items="colors"
+              item-text="title"
+              item-value="id"
+              dense
+              @change="updateColors"
+            />
           </div>
-          
+          <div>
+            <v-select
+              v-model="xAxisValue"
+              :items="xAxisKeys"
+              label="X-Axis"
+              dense
+              @change="onChangeXAxis"
+              clearable
+            />
+          </div>
+          <div>
+            <v-select
+              v-model="yAxisValue"
+              :items="yAxisKeys"
+              label="Y-Axis"
+              dense
+              @change="onChangeYAxis"
+              clearable
+            />
+            <v-select
+              v-if="yAxisValue || xAxisValue"
+              v-model="yAction"
+              label="Action"
+              dense
+              clearable
+              :items="['Count', 'Count Unique Values', 'Sum', 'Average', 'Median', 'Minimum', 'Maximum']"
+              @change="onChangeYAction"
+              @click:clear="onClearYAction"
+            />
+          </div>
           <!-- <div class="tags">
             <v-select
               v-model="activeReport.tags"
@@ -209,83 +292,98 @@
             >
             </v-select>
           </div> -->
-          <div>
-            <v-select
-              v-model="activeReport.colorSchemeId"
-              label="Color Scheme"
-              :items="colors"
-              item-text="title"
-              item-value="id"
-              dense
-              @change="updateColors"
-            ></v-select>
-          </div>
         </div>
       </v-form>
       <!-- Delete Button -->
-      <div v-if="activeReport && activeReport.id" class="d-flex justify-end mt-4">
+      <div
+        v-if="activeReport && activeReport.id"
+        class="d-flex justify-end mt-4"
+      >
         <v-btn
-          @click="deleteDialog = true"
           small
           color="error"
           depressed
           outlined
-          >Delete Report</v-btn
+          @click="deleteDialog = true"
         >
+          Delete Report
+        </v-btn>
       </div>
       <!-- Delete Prompt -->
-      <v-dialog v-model="deleteDialog" max-width="400">
+      <v-dialog
+        v-model="deleteDialog"
+        max-width="400"
+      >
         <v-card>
           <v-card-title>Delete this report?</v-card-title>
-          <v-divider class="mx-4 mb-2"></v-divider>
-          <v-card-text
-            >Are you sure you would like to delete this report?</v-card-text
-          >
+          <v-divider class="mx-4 mb-2" />
+          <v-card-text>Are you sure you would like to delete this report?</v-card-text>
           <v-card-actions class="d-flex justify-end">
             <v-btn
-              @click="deleteDialog = false"
               small
               outlined
               color="secondary"
-              >Cancel</v-btn
+              @click="deleteDialog = false"
             >
-            <v-btn @click="deleteReport" small depressed color="error"
-              >Delete</v-btn
+              Cancel
+            </v-btn>
+            <v-btn
+              small
+              depressed
+              color="error"
+              @click="deleteReport"
             >
+              Delete
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
       <!-- Fullscreen Report Modal -->
-      <v-dialog v-model="fullscreen" fullscreen eager>
+      <v-dialog
+        v-model="fullscreen"
+        fullscreen
+        eager
+      >
         <v-card>
-          <v-toolbar class="px-5" color="info" dark>
+          <v-toolbar
+            class="px-5"
+            color="info"
+            dark
+          >
             <h3>{{ activeReport.title }}</h3>
-            <v-spacer></v-spacer>
-            <v-btn @click="fullscreen = false" icon
-              ><v-icon>mdi-close-thick</v-icon></v-btn
+            <v-spacer />
+            <v-btn
+              icon
+              @click="fullscreen = false"
             >
+              <v-icon>mdi-close-thick</v-icon>
+            </v-btn>
           </v-toolbar>
           <Component
+            :is="graphType"
             v-if="fullscreen && colorScheme"
             ref="fullscreenchart"
-            :is="graphType"
-            :chartData="data"
-            :chartColors="colorScheme"
-            :graphType="activeReport.chartType"
+            :chart-data="data"
+            :chart-colors="colorScheme"
+            :graph-type="activeReport.chartType"
             :height="screenHeight"
             :title="activeReport.title"
             class="pa-6"
-          >
-          </Component>
+          />
           <!-- Category Toggle Button -->
           <div class="d-flex justify-end pr-6">
             <v-btn
               v-if="circleChart"
-              @click="changeFSChartData"
               outlined
               small
-              >Next Category <v-icon small>mdi-arrow-right</v-icon></v-btn
+              @click="changeFSChartData"
             >
+              Next Category <v-icon
+                small
+              >
+                mdi-arrow-right
+              </v-icon>
+            </v-btn>
           </div>
         </v-card>
       </v-dialog>
@@ -305,15 +403,18 @@ import Table from "../components/Table";
 import datasetMixin from "../mixins/dataset-mixin";
 import reportMixin from "../mixins/report-mixin";
 
+import collect from 'collect.js';
+
 export default {
   name: "ReportForm",
+  mixins: [datasetMixin, reportMixin],
   data() {
     return {
       formValid: true,
       submitAttempted: false,
       deleteDialog: false,
       fullscreen: false,
-      reportGroupIds:[],
+      reportGroupIds: [],
       chartTypes: [
         { text: "Line", value: "line" },
         { text: "Curve", value: "curve" },
@@ -332,10 +433,14 @@ export default {
       selectedHeaders: [],
       xAxisKeys: [],
       xAxisValue: "",
+      yAxisKeys: [],
+      yAxisValue: "",
+      yAction: '',
+      sortDirectionY: 'asc',
+      sortDirectionX: 'asc',
     };
   },
-  mixins: [datasetMixin, reportMixin],
- 
+
   computed: {
     ...mapGetters([
       "activeDataSet",
@@ -355,11 +460,17 @@ export default {
       "reportGroups",
       "user",
     ]),
-    channelReports(){
-        if (this.reports && this.reports.length > 0){
-          return this.reports.filter(t => t.channelId == this.currentChannels[0].channelId)
-        } else return  this.reports.filter(t => t.channelId == this.currentChannels[0].channelId && !t.reportGroupId)
-      },
+    channelReports() {
+      if (this.reports && this.reports.length > 0) {
+        return this.reports.filter(
+          (t) => t.channelId == this.currentChannels[0].channelId
+        );
+      } else
+        return this.reports.filter(
+          (t) =>
+            t.channelId == this.currentChannels[0].channelId && !t.reportGroupId
+        );
+    },
     graphType() {
       if (this.activeReport.chartType === "line") {
         return LineChart;
@@ -392,20 +503,6 @@ export default {
     screenHeight() {
       return window.innerHeight - 200;
     },
-    /* createdBy() {
-      if (this.activeReport && this.activeReport.id && this.user && this.user.attributes) {
-        return `${this.user.attributes.given_name} ${this.user.attributes.family_name} on ${new Date(this.activeReport.createdAt).toLocaleString()}`;
-      } else {
-        return `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
-      }
-    },
-    updatedBy() {
-      if (this.activeReport && this.activeReport.id) {
-        return `${this.user.attributes.given_name}  ${this.user.attributes.family_name} on ${new Date(this.activeReport.updatedAt).toLocaleString()}`;
-      } else {
-        return `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
-      }
-    }, */
   },
   methods: {
     ...mapActions([
@@ -417,7 +514,7 @@ export default {
       "updateReportById",
       "updateReportGroupById",
       "removeReport",
-      "updateChannelById"
+      "updateChannelById",
     ]),
     ...mapMutations(["SET_REPORT_DATASET", "SET_STATUS_CODE", "SET_REPORT"]),
     changeChartData() {
@@ -425,17 +522,23 @@ export default {
         (this.$refs.chart.index + 1) %
         (Object.keys(this.$refs.chart.chartData[0]).length - 1);
     },
-    log(e){
+    /* log(e){
     console.log(e)
-    }, 
+    },  */
     changeFSChartData() {
       this.$refs.fullscreenchart.index =
         (this.$refs.fullscreenchart.index + 1) %
         (Object.keys(this.$refs.fullscreenchart.chartData[0]).length - 1);
     },
-    resetAndGoBack(){
-      this.$router.go(-1)
+    resetAndGoBack() {
+      //this.$router.go(-1)
       this.$refs.form.reset();
+      if (this.$route.path === `/${this.currentChannels[0].name}/reports`) {
+        this.$emit("closeAddReportForm");
+      } else {
+        this.$router.go(-1);
+        //this.$router.push(`/${this.currentChannels[0].name}/reports`)
+      }
     },
     saveReport() {
       this.$refs.form.validate();
@@ -450,6 +553,8 @@ export default {
           chartType: this.activeReport.chartType,
           dataSetId: this.activeReport.dataSetId,
           xAxis: this.xAxisValue,
+          yAxis: this.yAxisValue,
+          yAction: this.yAction,
           columns: JSON.stringify(this.selectedHeaders),
           // dataSet: this.activeReport.dataSet,
           // tag_ids: this.activeReport.tags.map((tag) => tag.id),
@@ -459,91 +564,233 @@ export default {
 
         if (this.activeReport.id) {
           data.id = this.activeReport.id;
-          data.reportGroupId = this.activeReport.reportGroupId
-          data.updatedBy = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`
+          data.reportGroupId = this.activeReport.reportGroupId;
+          data.updatedBy = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
           this.updateReportById(data);
-
         } else {
-          console.log(data)
-          data.createdBy = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`
+          console.log(data);
+          data.createdBy = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
           // data.user_id = this.user.id;
-           this.addReport(data);
+          this.addReport(data);
         }
 
-          
-    // if (this.activeReport.id) {
-    //   let ids = this.channelReports.filter( r => r.reportGroupId == this.activeReport.reportGroupId).map(t => t.id)
-    //   ids.push(this.activeReport.id) 
-
-    //   this.updateReportGroupById({ 
-    //     id: this.activeReport.reportGroupId,
-    //     reportIds:  ids
-    //   })          
-    // }   
-
-      
-     
+        this.resetAndGoBack();
       }
     },
     async updateChartData() {
-      await this.fetchDataSet(this.activeReport.dataSetId)
-      let headers = Object.keys(this.dataSet.dataValues.items[0].data[0])
+      await this.fetchDataSet(this.activeReport.dataSetId);
+
+      /* GET KEYS FROM ALL DATA */
+      let uniqueKeys = []
+      let newKeys = this.dataSet.dataValues.items.map(s => Object.keys(s.data))
+      console.log(newKeys)
+      newKeys.forEach(arr => {
+        arr.forEach(key => {
+          if (!uniqueKeys.includes(key)) {
+            uniqueKeys.push(key)
+          }
+        })
+      })
+      let headers = uniqueKeys.filter(k => k != '$id')
 
       headers.forEach((k, i) => {
         if (k == this.xAxisValue) {
-          this.arrayMove(headers, i, 0)
+          this.arrayMove(headers, i, 0);
         }
-      })
-      this.headers = headers
-      let newHeaders = []
+        if (k == this.yAxisValue) {
+          this.arrayMove(headers, i, 1);
+        }
+      });
+      console.log(this.headers)
+      this.headers = headers;
+      let newHeaders = [];
       if (this.activeReport.columns && this.activeReport.columns.length > 0) {
-        newHeaders = this.activeReport.columns
+        newHeaders = this.activeReport.columns;
       } else {
         newHeaders = headers.map((item) => ({
           text: item,
           value: item,
         }));
       }
-      console.log(newHeaders)
-      this.data = this.createMasterData(this.dataSet.dataValues.items)
-      this.selectedHeaders = newHeaders
-      this.data = this.filterData(this.selectedHeaders, this.data)
-      this.updateColors(this.activeReport.colorSchemeId)
+      //console.log(newHeaders)
+      this.data = this.createMasterData(this.dataSet.dataValues.items);
+      this.selectedHeaders = newHeaders;
+      this.data = this.filterData(this.selectedHeaders, this.data);
+      this.updateColors(this.activeReport.colorSchemeId);
       this.SET_REPORT_DATASET(this.dataSet);
     },
     onChangeSelected() {
       this.selectedHeaders.forEach((s, i) => {
         if (typeof s == "string") {
-          this.selectedHeaders[i] = ({ text: s, value: s, })
+          this.selectedHeaders[i] = { text: s, value: s };
         }
-      })
-      this.xAxisKeys = this.selectedHeaders.map(h => h.text || h)
+      });
+      this.xAxisKeys = this.selectedHeaders.map((h) => h.text || h);
+      this.yAxisKeys = this.selectedHeaders.map((h) => h.text || h);
       /* if (this.dataSet && this.dataSet.dataValues && this.dataSet.dataValues.items && this.dataSet.dataValues.items.length > 0) { */
-        this.data = this.filterData(this.selectedHeaders, this.createMasterData(this.dataSet.dataValues.items))
-      /* } */
+      this.data = this.filterData(
+        this.selectedHeaders,
+        this.createMasterData(this.dataSet.dataValues.items)
+      );
     },
-    onChangeAxis() {
-      this.xAxisKeys = this.selectedHeaders.map(h => h.text || h)     
-      this.moveArrByKey(this.xAxisKeys, this.xAxisValue)
-      this.selectedHeaders = this.xAxisKeys.map(x => ({
+    onChangeXAxis() {
+      this.xAxisKeys = this.selectedHeaders.map((h) => h.text || h);
+      this.moveArrByKey(this.xAxisKeys, this.xAxisValue, 0);
+      this.selectedHeaders = this.xAxisKeys.map((x) => ({
         text: x,
-        value: x
-      }))
-      this.data = this.filterData(this.selectedHeaders, this.createMasterData(this.dataSet.dataValues.items))
+        value: x,
+      }));
+      this.data = this.filterData(
+        this.selectedHeaders,
+        this.createMasterData(this.dataSet.dataValues.items)
+      );
     },
-    moveArrByKey(keys, selected = "Date") {
+    onChangeYAxis() {
+      /* console.log(this.xAxisKeys, this.xAxisValue)
+      console.log(this.yAxisKeys, this.yAxisValue) */
+      this.yAxisKeys = this.selectedHeaders.map((h) => h.text || h);
+      this.moveArrByKey(this.yAxisKeys, this.yAxisValue, 1);
+      this.selectedHeaders = this.yAxisKeys.map((y) => ({
+        text: y,
+        value: y,
+      }));
+      this.data = this.filterData(
+        this.selectedHeaders,
+        this.createMasterData(this.dataSet.dataValues.items)
+      );
+    },
+    onChangeYAction() {
+      const data = collect(this.data)
+      const newArray = [];
+      if (this.yAction == 'Count Unique Values') {
+        const counted = data.countBy(row => row[this.xAxisValue])
+
+        for (const key in counted.items) {
+          let newObj = {
+            [this.xAxisValue]: key,
+            [`Count Unique Values (${this.yAxisValue})`]: counted.items[key].toString()
+          };
+          newArray.push(newObj);
+        }
+        this.data = newArray
+      } else if (this.yAction == 'Sum') {
+        let grouped = data.groupBy(this.xAxisValue)
+
+        for (const item in grouped.items) {
+          let newObj = {
+            [this.xAxisValue]: item,
+            [`Sum (${this.yAxisValue})`]: grouped.items[item].reduce((acc, item) => acc + parseFloat(item[this.yAxisValue]), 0)
+          };
+          newArray.push(newObj);
+        }
+        this.data = newArray
+      } else if (this.yAction == 'Average') {
+        let grouped = data.groupBy(this.xAxisValue)
+  
+        for (const item in grouped.items) {
+          let sum = grouped.items[item].reduce((acc, item) => acc + parseFloat(item[this.yAxisValue]), 0);
+          let count = grouped.items[item].count();
+          let average = sum / count;
+          let newObj = {
+            [this.xAxisValue]: item,
+            [`Average (${this.yAxisValue})`]: average
+          };
+          newArray.push(newObj);
+        }
+        this.data = newArray
+      } else if (this.yAction == 'Count') {
+        const counted = data.countBy(row => row[this.xAxisValue])
+        for (const key in counted.items) {
+          let newObj = {
+            [this.xAxisValue]: key,
+            [`Count (${this.xAxisValue})`]: counted.items[key].toString()
+          };
+          newArray.push(newObj);
+        }
+        this.data = newArray
+      } else if (this.yAction == 'Median') {
+        let grouped = data.groupBy(this.xAxisValue)
+              
+        for (const item in grouped.items) {
+          let values = grouped.items[item].pluck(this.yAxisValue).map(item => parseFloat(item)).toArray().sort((a, b) => b - a)
+          let median = collect(values).median();
+          let newObj = {
+            [this.xAxisValue]: item,
+            [`Median (${this.yAxisValue})`]: median
+          };
+          newArray.push(newObj);
+        }
+        this.data = newArray
+      } else if (this.yAction == 'Maximum') {
+        let grouped = data.groupBy(this.xAxisValue)
+
+        for (const item in grouped.items) {
+          let max = grouped.items[item].reduce((max, item) => {
+            let val = parseFloat(item[this.yAxisValue])
+            return val > max ? val : max
+          }, -Infinity)
+
+          let newObj = {
+            [this.xAxisValue]: item,
+            [`Maximum (${this.yAxisValue})`]: max
+          };
+          newArray.push(newObj);
+        }
+
+        this.data = newArray
+      } else if (this.yAction == 'Minimum') {
+        let grouped = data.groupBy(this.xAxisValue)
+
+        for (const item in grouped.items) {
+          let min = grouped.items[item].reduce((min, item) => {
+            let val = parseFloat(item[this.yAxisValue])
+            return val < min ? val : min
+          }, Infinity)
+
+          let newObj = {
+            [this.xAxisValue]: item,
+            [`Minimum (${this.yAxisValue})`]: min
+          };
+          newArray.push(newObj);
+        }
+
+        this.data = newArray
+      }
+    },
+    onClearYAction() {
+      this.updateChartData()
+    },
+    sortChart(direction, axis) {
+      const data = collect(this.data)
+      const newArray = [];
+
+      /* Sorts based on Axis and Direction */
+      let sorted = direction == 'asc' ? (axis == this.yAxisValue ? data.sortBy(item => parseFloat(item[`${this.yAction} (${axis})`])) : data.sortBy(item => parseFloat(item[axis]))) : (axis == this.yAxisValue ? data.sortByDesc(item => parseFloat(item[`${this.yAction} (${axis})`])) : data.sortByDesc(item => parseFloat(item[axis])))
+
+      sorted.items.forEach(item => newArray.push(item))
+      this.data = newArray
+    },
+    toggleSortY() {
+      this.sortDirectionY = this.sortDirectionY === 'asc' ? 'desc' : 'asc';
+      this.sortChart(this.sortDirectionY, this.yAxisValue);
+    },
+    toggleSortX() {
+      this.sortDirectionX = this.sortDirectionX === 'asc' ? 'desc' : 'asc';
+      this.sortChart(this.sortDirectionX, this.xAxisValue);
+    },
+    moveArrByKey(keys, selected, axis) {
       keys.forEach((k, i) => {
         if (k == selected) {
-          this.arrayMove(keys, i, 0)
+          this.arrayMove(keys, i, axis);
         }
-      })
+      });
     },
     deleteReport() {
       this.removeReport({ id: this.activeReport.id });
-      this.$router.push(`/channels/${this.$route.params.channelId}/reports`);
+      this.$router.push(`/${this.$route.params.channelId}/reports`);
     },
     fullscreenReport() {
-      console.log(this.$refs.fullscreenchart)
+      //console.log(this.$refs.fullscreenchart)
       this.fullscreen = true;
       setTimeout(() => {
         this.$refs.fullscreenchart.loadChart();
@@ -554,60 +801,54 @@ export default {
         (color) => selectedSchemeId == color.id
       ).scheme;
     },
-    
-  },
-  async beforeMount() {
-    if(this.dataSets && this.dataSets.length < 1){
-      await this.fetchDataSets();
-    } 
-    
-  },
-  async mounted() {
-    await this.fetchDataSets();
-    /* if (this.$route.name == "Report") {
-      this.dataSetChoices = [...this.dataSets];
-    } else { */
-      this.dataSetChoices = [...this.dataSets.filter(d => d.channelId == this.currentChannels[0].channelId)]; // was ...this.channelDataSets
-    /* } */
-    
-      if (this.$route.params.reportId == "add-report") {
-        this.activeReport.id = ""
-        this.dataSet.id = ""
-      }  
   },
   watch: {
     activeReport() {
-      if (this.$route.params.reportId != "add-report" && this.activeReport.id){ 
-        this.colorScheme = this.colors.find((scheme) => scheme.id == this.activeReport.colorSchemeId).scheme
+      if (this.$route.params.reportId != "add-report" && this.activeReport.id) {
+        this.colorScheme = this.colors.find(
+          (scheme) => scheme.id == this.activeReport.colorSchemeId
+        ).scheme;
         if (this.activeReport.xAxis) {
-        this.xAxisValue = this.activeReport.xAxis
-      }
-      if (this.activeReport.columns) {
-        this.selectedHeaders = this.activeReport.columns
-      }
-        this.updateChartData();
-        this.onChangeSelected()
+          this.xAxisValue = this.activeReport.xAxis;
+        }
+        if (this.activeReport.yAxis) {
+          this.yAxisValue = this.activeReport.yAxis;
+        }
+        if (this.activeReport.columns) {
+          this.selectedHeaders = this.activeReport.columns;
+        }
+       console.log(this.activeReport)
+        this.xAxisKeys = this.selectedHeaders.map((h) => h.text || h);
+        this.yAxisKeys = this.selectedHeaders.map((h) => h.text || h);
+        this.updateChartData()
+        if (this.activeReport.yAction) {
+          setTimeout(() => {
+            this.yAction = this.activeReport.yAction;
+            this.onChangeYAction()
+          }, 200);
+        }
       }
       if (!this.activeReport) {
-        this.SET_REPORT(this.newReport)
-        console.log("No Active Report")
+        this.SET_REPORT(this.newReport);
+        console.log("No Active Report");
       }
     },
-    selectedHeaders() {
-      if (this.selectedHeaders.length != 0) {
-        this.onChangeSelected()
-      }
-    },
-    dataSets() {
-      //this.dataSetChoices = [...this.dataSets];
-    },
-    /* dataSet() {
-      if (this.dataSet.xAxis) {
-        this.xAxisValue = this.dataSet.xAxis
-      }
-    }, */
-    data() {
-      console.log(this.data)
+  },
+  async beforeMount() {
+    if (this.dataSets && this.dataSets.length < 1) {
+      await this.fetchDataSets();
+    }
+  },
+  async mounted() {
+    await this.fetchDataSets();
+    this.dataSetChoices = [
+      ...this.dataSets.filter(
+        (d) => d.channelId == this.currentChannels[0].channelId
+      ),
+    ];
+    if (this.$route.params.reportId == "add-report") {
+      this.activeReport.id = "";
+      this.dataSet.id = "";
     }
   },
 };
@@ -619,20 +860,25 @@ export default {
   grid-template-columns: 1fr 1fr;
   grid-gap: 10px;
 }
+
 .description,
 .tags {
   grid-column: 1 / span 2;
 }
+
 .placeholder-title {
   color: gray;
 }
+
 .place-holder {
   height: 300px;
 }
+
 .placeholder-text,
 .placeholder-icon {
   color: #1976d2;
 }
+
 .chart-menu {
   position: absolute;
   top: 10px;

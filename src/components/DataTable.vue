@@ -1,5 +1,12 @@
 <template>
-  <v-data-table v-model="selected" :headers="headers" :items="items" :item-key="headers[0].text" :single-select="false" show-select></v-data-table>
+  <v-data-table
+    v-model="selected"
+    :headers="headers"
+    :items="items"
+    :item-key="headers[0].text"
+    :single-select="false"
+    show-select
+  />
 </template>
 
 <script>
@@ -13,7 +20,7 @@ export default {
     return {
       headers: [],
       items: [],
-      selected: []
+      selected: [],
     };
   },
   mounted() {

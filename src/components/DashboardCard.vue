@@ -1,7 +1,15 @@
 <template>
-  <v-card class="dashboard-card" @click="toDashboard">
+  <v-card
+    class="dashboard-card"
+    @click="toDashboard"
+  >
     <v-card-title>
-      <v-icon class="mr-4" color="info">mdi-monitor-dashboard</v-icon>
+      <v-icon
+        class="mr-4"
+        color="info"
+      >
+        mdi-monitor-dashboard
+      </v-icon>
       <span class="text-subtitle-2 font-weight-bold">
         {{ dashboard.title }}
       </span>
@@ -17,8 +25,9 @@
         class="mr-1"
         x-small
         color="info"
-        >{{ tag.title }}</v-chip
       >
+        {{ tag.title }}
+      </v-chip>
     </v-card-text>
   </v-card>
 </template>

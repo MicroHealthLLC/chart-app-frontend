@@ -3,37 +3,57 @@
     <!-- Title -->
     <v-col class="col-12">
       <div class="d-flex justify-space-between">
-        <h3 v-if="(!isReadOnly && dataSet.id)">Update {{ dataSet.title }}</h3>
-        <h3 v-else-if="dataSet.id">View {{ dataSet.title }}</h3>
-        <h3 v-else>Add Data Set</h3>
+        <h3 v-if="!isReadOnly && dataSet.id">
+          Update {{ dataSet.title }}
+        </h3>
+        <h3 v-else-if="dataSet.id">
+          View {{ dataSet.title }}
+        </h3>
+        <h3 v-else>
+          Add Data Set
+        </h3>
         <div>
           <v-btn
             v-if="!isReadOnly"
-            @click="saveDataSet"
             class="px-5 mr-2 mb-2"
             color="primary"
             depressed
             small
-            >Save</v-btn
+            @click="saveDataSet"
           >
+            Save
+          </v-btn>
           <v-btn
             v-else
-            @click="editForm"
             class="px-5 mr-2 mb-2"
             color="primary"
             depressed
             small
-            >Edit</v-btn
+            @click="editForm"
           >
-          <v-btn v-if="isReadOnly" class="mb-2" @click="resetAndGoBack" small outlined
-            >Close</v-btn
+            Edit
+          </v-btn>
+          <v-btn
+            v-if="isReadOnly"
+            class="mb-2"
+            small
+            outlined
+            @click="resetAndGoBack"
           >
-          <v-btn v-if="!isReadOnly" class="mb-2" @click="cancelForm" small outlined
-            >Cancel</v-btn
+            Close
+          </v-btn>
+          <v-btn
+            v-if="!isReadOnly"
+            class="mb-2"
+            small
+            outlined
+            @click="cancelForm"
           >
+            Cancel
+          </v-btn>
         </div>
       </div>
-      <v-divider></v-divider>
+      <v-divider />
     </v-col>
     <v-col>
       <v-alert
@@ -41,12 +61,17 @@
         type="error"
         dense
         dismissible
-        >Please fix highlighted fields below before sumbitting Report</v-alert
       >
+        Please fix highlighted fields below
+        before sumbitting Report
+      </v-alert>
       <!-- Form Fields -->
-      <v-form v-model="formValid" ref="form">
-        <div class="grid">
-          <div>
+      <v-form
+        ref="form"
+        v-model="formValid"
+      >
+        <v-row>
+          <v-col cols="6">
             <v-text-field
               v-model="dataSet.title"
               label="Title"
@@ -54,205 +79,231 @@
               required
               :readonly="isReadOnly"
               :rules="[(v) => !!v || 'Title is required']"
-            ></v-text-field>
-          </div>
-          <div>
-            <v-text-field :readonly="isReadOnly" v-model="dataSet.user" label="Created By" dense>
-            </v-text-field>
-          </div>
-          <div :class="{ description: dataSet.id }">
+            />
+            <div class="d-flex">
+              <v-file-input
+                v-show="dataSet.id != ''"
+                placeholder="Please choose a file..."
+                type="file"
+                dense
+                @change.native="onChange"
+                @click:clear="clearInput('file')"
+              />
+              <xlsx-read
+                :options="readOptions"
+                :file="file"
+              >
+                <xlsx-json
+                  :options="readOptions"
+                  @parsed="setTableItems"
+                />
+              </xlsx-read>
+              <v-btn
+                v-if="dataSet.id"
+                :disabled="!file"
+                class="mb-1 ml-2"
+                elevation="4"
+                small
+                @click="addNewDataValue"
+              >
+                <v-icon>mdi-plus-circle-outline</v-icon>Add to Dataset
+              </v-btn>
+            </div>
+          </v-col>
+          <v-col cols="6">
             <v-text-field
               v-model="dataSet.description"
               label="Description"
               dense
               :readonly="isReadOnly"
-            ></v-text-field>
-          </div>
-          <!-- <div d-flex flex-row>
-            <v-text-field type="number" v-model="dataValueInput" label="Add Data Value" clearable dense>
-              <template v-slot:append>
-              <v-tooltip
-                bottom
-              >
-                <template v-slot:activator="{ on }">
-                  
-                  <v-btn v-if="dataSet.id" class="mb-1" v-on="on" icon elevation="4" small @click="addNewDataValue"><v-icon>mdi-plus-circle-outline</v-icon></v-btn>
-                </template>
-                Add Value
-              </v-tooltip>
-            </template></v-text-field>
-          </div> -->
-          <!-- <v-btn v-if="dataSet.id" @click="showDataChart">Show Data</v-btn> -->
-          <div>
-            <v-file-input
-              v-show="dataSet.id != ''"
-              placeholder="Please choose a file..."
-              type="file"
-              @change.native="onChange"
-              @click:clear="clearInput('file')"
-              dense
-              required
-              :rules="[(v) => !!v || 'Data File is required']"
             />
-            <xlsx-read :options="readOptions" :file="file">
-              <xlsx-json
-                :options="readOptions"
-                @parsed="uploadData"
-              ></xlsx-json>
-            </xlsx-read>
-            <div>
-            <v-btn v-if="dataSet.id" :disabled="(!file)" class="mb-1" elevation="4" small @click="addNewDataValue"><v-icon>mdi-plus-circle-outline</v-icon> Add New Data</v-btn>
-        </div>
-          </div>
-          <!-- <div class="channels">
-            <v-select
-              v-model="dataSet.channels"
-              label="Channels"
-              :items="channels"
-              item-text="title"
-              item-value="id"
-              multiple
-              small-chips
-              dense
-              deletable-chips
-              return-object
-              required
-              :rules="[(v) => v.length > 0 || 'At least 1 Channel is required']"
-              hint="Please select all Channels that have access to this Data Set"
-              persistent-hint
-            ></v-select>
-          </div> -->
-        </div>
+            <!-- <v-select v-if="dataSet.id" :items="choices" label="Add a column" outlined></v-select> -->
+          </v-col>
+        </v-row>
       </v-form>
-    </v-col> 
-    <!-- Chart Preview -->
-    <v-col v-show="dataSet.id && this.dataSet.dataValues && this.dataSet.dataValues.items && this.dataSet.dataValues.items.length > 0" class="col-12">
-      <v-card  class="d-flex flex-column preview-container justify-center">
-        <!-- Chart Buttons -->
-        <!-- <v-btn-toggle class="ma-4" color="primary" mandatory>
-          <v-btn @click="toggleDataTable" small>Data Table</v-btn>
-          <v-btn @click="toggleLineChart" small>Line</v-btn>
-          <v-btn @click="toggleBarChart" small>Bar</v-btn>
-          <v-btn @click="toggleRadarChart" small>Radar</v-btn>
-          <v-btn @click="toggleDonutChart" small>Donut</v-btn>
-          <v-btn @click="togglePieChart" small>Pie</v-btn>
-          <v-btn @click="togglePolarAreaChart" small>Polar Area</v-btn>
-        </v-btn-toggle>
-        <small v-if="(dataSet.dataValues && dataSet.dataValues.items && dataSet.dataValues.items.length > 0)" class="ml-6 mb-2">{{xAxisLabel}}</small>
-        <v-row v-if="(dataSet.dataValues && dataSet.dataValues.items && dataSet.dataValues.items.length > 0)" class="ml-2">
-          <v-col class="d-inline-flex" cols="12" sm="4">
-            <v-select v-model="xAxisValue" :items="xAxisKeys" :label="xAxisLabel" solo dense @change="onChangeAxis"></v-select>
-            
-          </v-col>
-          <v-col class="d-inline-flex" cols="16" sm="4">
-            <v-select
-              v-model="selectedHeaders"
-              :items="headers"
-              label="Select"
-              multiple
-              small
-              solo
-              dense
-              hint="What are the target columns?"
-              persistent-hint
-              return-object
-              @change="onChangeSelected"
-            >
-          </v-select><v-btn v-if="xAxisValue" @click="saveAxis" class="ml-2">Save</v-btn>
-          </v-col>
-        </v-row> -->
+    </v-col>
+
+    <v-col
+      v-show="
+        dataSet.id &&
+          this.dataSet.dataValues &&
+          this.dataSet.dataValues.items &&
+          this.dataSet.dataValues.items.length > 0
+      "
+      class="col-12"
+    >
+      <v-card class="d-flex flex-column preview-container justify-center">
         <!-- Table Preview -->
-        <v-card-title>
-          <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
-        </v-card-title>
-        <v-card-title class="justify-center">
-          <!-- <v-progress-circular v-if="$store.getters.loading" :size="70" indeterminate color="primary"
-            class="m-2"></v-progress-circular> -->
-        </v-card-title>
-        <div class="ma-4" v-if="(chartType === 'Data Table')">
-          <v-data-table :headers="headers" :items="items" :single-select="false" :search="search" :loading="$store.getters.loading" loading-text="Loading... Please wait">
-            <!-- Action Buttons -->
-          <!-- <template v-slot:item.actions="{ item }">
-            <v-tooltip top>
-              <template v-slot:activator="{ on, attrs }">
-                <v-icon color="primary" small class="mr-2" @click="editItem(item)" v-bind="attrs" v-on="on">
-                  mdi-table-eye
-                </v-icon>
-              </template>
-              <span>View</span>
-            </v-tooltip>
-            <v-tooltip top>
-              <template v-slot:activator="{ on, attrs }">
-                <v-icon
-                  color="primary" small @click="deleteItem(item)" v-bind="attrs" v-on="on">
-                  mdi-delete
-                </v-icon>
-              </template>
-              <span>Delete</span>
-            </v-tooltip>
-          </template> -->
-          </v-data-table>
-        </div>
-        <!-- Chart Previews -->
-        <!-- <div
-          v-else-if="data.length > 0 && chartType !== 'Data Table'"
+        <!-- <v-card-title>
+          <v-text-field
+            v-model="search"
+            append-icon="mdi-magnify"
+            label="Search"
+            single-line
+            hide-details
+          ></v-text-field>
+        </v-card-title> -->
+        <!-- <v-card-title class="justify-center">
+          <v-progress-circular v-if="$store.getters.loading" :size="70" indeterminate color="primary"
+            class="m-2"></v-progress-circular>
+        </v-card-title> -->
+        <v-skeleton-loader
+          v-if="$store.getters.loading || $store.getters.saving"
+          class="mx-auto"
+          type="table"
+          width="100%"
+        />
+
+
+        <div
+          v-else
           class="ma-4"
         >
-          <Component
-            ref="chart"
-            :is="graphType"
-            :chartData="selected"
-            :chartColors="colors[0].scheme"
-            :height="600"
-          ></Component>
-          <v-btn
-            v-if="circleChart"
-            class="float-right"
-            @click="changeChartData"
-            outlined
-            small
-            >Next Category <v-icon small>mdi-arrow-right</v-icon></v-btn
+          <span class="d-flex justify-end">
+            <v-btn
+              small
+              class="mr-4 mb-4"
+              @click="showRemoveColumn"
+            >
+              Remove Columns
+            </v-btn>
+            <v-btn
+              small
+              class="mb-4 mr-6"
+              @click="showAddColumn"
+            ><v-icon>mdi-plus</v-icon><v-icon
+              small
+              class="ml-2"
+            >mdi-function-variant</v-icon>
+            </v-btn>
+          </span>
+          <vue-excel-editor
+            v-if="renderComponent"
+            ref="grid"
+            v-model="items"
+            readonly
+            :free-select="true"
+            no-header-edit
+            @update="onUpdate"
           >
-        </div> -->
-        <!-- Placeholder Message -->
-        <!-- <div v-else class="d-flex flex-grow-1 justify-center align-center ma-4">
-          <p class="text-center placeholder-text">
-            <v-icon class="placeholder-icon">mdi-chart-areaspline</v-icon>
-            Please load a data set to view preview...
-          </p>
-        </div> -->
+            <vue-excel-column
+              v-for="col, i in allKeys"
+              :key="i"
+              auto-fill-width
+              :field="col"
+              :label="col"
+              :type="checkColType(col, items)"
+              text-align="left"
+            />
+          </vue-excel-editor>
+          <!-- <v-data-table :headers="headers" :items="items" :single-select="false" :search="search"
+            :loading="$store.getters.loading" loading-text="Loading... Please wait">
+          </v-data-table> -->
+        </div>
       </v-card>
     </v-col>
+    <v-dialog
+      v-model="columnForm"
+      width="20%"
+    >
+      <v-card class="pa-4">
+        <v-text-field
+          v-model="newColumn.title"
+          label="Column Name"
+          outlined
+          dense
+          required
+          :rules="[(v) => !!v || 'Column name is required']"
+        />
+        <v-select
+          v-if="dataSet.id"
+          v-model="newColumn.action"
+          dense
+          :items="choices"
+          label="Choose an action"
+          outlined
+        />
+        <v-select
+          v-if="dataSet.id"
+          v-model="newColumn.col1"
+          dense
+          :items="allKeys.filter(k => checkColType(k, items) != 'string')"
+          label="First column"
+          outlined
+        />
+        <v-select
+          v-if="dataSet.id"
+          v-model="newColumn.col2"
+          dense
+          :items="allKeys.filter(k => checkColType(k, items) != 'string')"
+          label="Second column"
+          outlined
+        />
+        <span class="d-flex justify-end">
+
+          <!-- <v-btn color="warning" class="mr-4" @click="cancelColumnForm" small>
+            Cancel
+          </v-btn> -->
+          <v-btn
+            class="mr-4"
+            small
+            outlined
+            @click="cancelColumnForm"
+          >Cancel</v-btn>
+          <v-btn
+            color="primary"
+            small
+            @click="addColumn"
+          >
+            Add Column
+          </v-btn>
+        </span>
+      </v-card>
+    </v-dialog>
+    <v-dialog
+      v-model="rmColForm"
+      width="20%"
+    >
+      <v-card class="pa-4">
+        <v-select
+          v-model="colsToRemove"
+          :items="allKeys"
+          label="Select"
+          multiple
+          chips
+          hint="Choose the columns you wish to remove"
+          persistent-hint
+        />
+        <v-btn
+          class="mt-6"
+          color="primary"
+          small
+          @click="removeColumns"
+        >
+          Remove Columns
+        </v-btn>
+      </v-card>
+    </v-dialog>
   </v-row>
 </template>
 
 <script>
-// import DataTable from "../components/DataTable";
-/* import LineChart from "../components/LineChart";
-import BarChart from "../components/BarChart";
-import RadarChart from "../components/RadarChart";
-import DoughnutChart from "../components/DoughnutChart";
-import PieChart from "../components/PieChart";
-import PolarAreaChart from "../components/PolarAreaChart"; */
-import { XlsxRead } from "vue-xlsx";
-import { XlsxJson } from "vue-xlsx";
+import { XlsxRead, XlsxJson } from "vue-xlsx";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import datasetMixin from "../mixins/dataset-mixin";
+import moment from 'moment';
 
 export default {
   name: "DataSetForm",
   components: {
-    /* LineChart,
-    BarChart,
-    RadarChart,
-    DoughnutChart,
-    PieChart,
-    PolarAreaChart, */
     XlsxRead,
     XlsxJson,
+
   },
+  mixins: [datasetMixin],
   data() {
     return {
+      choices: ['Sum', 'Difference', 'Product', 'Quotient', 'Average'],
       file: null,
       //data: [],
       chartOptions: {
@@ -264,27 +315,35 @@ export default {
         },
         bezierCurve: false,
       },
-      chartType: "Data Table",
       readOptions: {
         cellDates: true,
         raw: false,
         dateNF: "mm/dd/yyyy",
       },
-      headers: [],
+      //headers: [],
       //selectedHeaders:[],
       value: [],
       items: [],
-      selected: [],
+      //selected: [],
       xAxisKeys: [],
       xAxisValue: "",
       formValid: true,
       submitAttempted: false,
-      dataValueInput: '',
+      dataValueInput: "",
       isReadOnly: false,
-      search: ''
+      search: "",
+      columnForm: false,
+      rmColForm: false,
+      newColumn: {
+        title: '',
+        action: '',
+        col1: '',
+        col2: '',
+      },
+      renderComponent: true,
+      colsToRemove: [],
     };
   },
-  mixins: [datasetMixin],
   computed: {
     ...mapGetters([
       "dataSet",
@@ -297,302 +356,290 @@ export default {
       "statusCode",
       "user",
     ]),
-    /*graphType() {
-      if (this.chartType === "Line") {
-        return LineChart;
-      } else if (this.chartType === "Bar") {
-        return BarChart;
-      } else if (this.chartType === "Radar") {
-        return RadarChart;
-      } else if (this.chartType === "Doughnut") {
-        return DoughnutChart;
-      } else if (this.chartType === "Pie") {
-        return PieChart;
-      } else if (this.chartType === "Polar Area") {
-        return PolarAreaChart;
-      } else {
-        return LineChart;
-      }
-    },
-    circleChart() {
-      return (
-        (this.chartType == "Doughnut" ||
-          this.chartType == "Pie" ||
-          this.chartType == "Polar Area") &&
-        this.data.length > 0
-      );
-    },
-    xAxisLabel (){
-      if (this.chartType === "Line" || this.chartType === "Bar") {
-        return 'X-Axis:'
-      } else return 'Align Data By:'
+    allKeys() {
+      if (this.items && this.items.length > 0) {
+        let uniqueKeys = []
+        let newKeys = this.items.map(s => Object.keys(s))
+        newKeys.forEach(arr => {
+          arr.forEach(key => {
+            if (!uniqueKeys.includes(key)) {
+              uniqueKeys.push(key)
+            }
+          })
+        })
+        console.log(uniqueKeys.filter(k => k != '$id'))
+        return uniqueKeys.filter(k => k != '$id')
+      } else return []
     }
-     createdBy() {
-      if (!this.dataSet.id && this.user && this.user.attributes) {
-        return `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
-      } else {
-        return `${this.dataSet.user}`
-      }
-    }, */
-    /* isReadOnly() {
-      if (this.dataSet.id) {
-        return true
-      } else return false
-    } */
   },
   methods: {
-    ...mapActions(["addDataSet", "addDataValue", "updateDataSetById", "updateDataSet", "fetchDataSet", "fetchDataSets", "fetchDataSetThenAddDataValue", "fetchChannels", "fetchDataValue", "fetchDataValues"]),
+    ...mapActions([
+      "addDataSet",
+      "addDataValue",
+      "updateDataSetById",
+      "updateDataValueById",
+      "fetchDataSet",
+      "fetchDataSets",
+      "fetchDataSetThenAddDataValue",
+      "fetchChannels",
+      "fetchDataValue",
+      "fetchDataValues",
+    ]),
     ...mapMutations(["SET_DATA_SET", "SET_STATUS_CODE"]),
     onChange(event) {
       this.file = event.target.files ? event.target.files[0] : null;
     },
-    resetAndGoBack(){
-      this.clear()
+    resetAndGoBack() {
+      this.clear();
       this.$refs.form.reset();
-      if (this.$route.path === "/it_apps/data-sets"){
-        this.$emit("closeDataSetForm")
+      if (this.$route.path === `/${this.currentChannels[0].name}/data-sets`) {
+        this.$emit("closeDataSetForm");
       } else {
-        this.$router.push(`/${this.currentChannels[0].name}/data-sets`)
+        this.$router.push(`/${this.currentChannels[0].name}/data-sets`);
       }
     },
     cancelForm() {
-      this.$route.path === '/it_apps/data-sets' ? this.resetAndGoBack() : this.isReadOnly = true
+      this.$route.path === `/${this.currentChannels[0].name}/data-sets`
+        ? this.resetAndGoBack()
+        : (this.isReadOnly = true);
     },
     clear() {
       this.$refs.form.reset();
       this.file = null;
       this.data = [];
-      this.selected = [];
-      this.headers = [];
+      //this.selected = [];
+      //this.headers = [];
       this.items = [];
-
     },
-    /* toggleDataTable() {
-      this.chartType = "Data Table";
-    },
-    toggleLineChart() {
-      this.chartType = "Line";
-    },
-    toggleBarChart() {
-      this.chartType = "Bar";
-    },
-    toggleRadarChart() {
-      this.chartType = "Radar";
-    },
-    toggleDonutChart() {
-      this.chartType = "Doughnut";
-    },
-    togglePieChart() {
-      this.chartType = "Pie";
-    },
-    togglePolarAreaChart() {
-      this.chartType = "Polar Area";
-    }, */
     async saveDataSet() {
       this.$refs.form.validate();
-      if (!this.isReadOnly && this.dataSet.id) {
-        await this.updateDataSetById({
-          id: this.dataSet.id,
-          title: this.dataSet.title,
-          description: this.dataSet.description,
-          user: this.dataSet.user,
-          channelId: this.currentChannels[0].channelId
-        }).then(this.isReadOnly = true)
-      } else {
-        let oldDataSetIds = this.dataSets.filter(d => this.currentChannels[0].channelId == d.channelId).map(f => f.id)
-        await this.addDataSet({
-          title: this.dataSet.title,
-          description: this.dataSet.description,
-          user: this.dataSet.user,
-          channelId: this.currentChannels[0].channelId
-        })
-        this.fetchDataSets().then(() => {
-          let lastAdded = this.dataSets.filter(d => this.currentChannels[0].channelId == d.channelId).filter(d => !oldDataSetIds.includes(d.id))
-          let id = lastAdded[0].id
-          /* this.$router.push(`/data-sets/${id}`) */
-          this.$router.push(`/:title/data-sets/${id}`)
-          console.log(this.selected)
-          /* console.log(this.selected)
-          this.fetchDataSetThenAddDataValue(id, this.selected) */
-          
-          this.dataSet.id = id
-        })
+      if (this.formValid) {
+        if (!this.isReadOnly && this.dataSet.id) {
+          await this.updateDataSetById({
+            id: this.dataSet.id,
+            title: this.dataSet.title,
+            description: this.dataSet.description,
+            user: this.dataSet.user,
+            channelId: this.currentChannels[0].channelId,
+          }).then((this.isReadOnly = true));
+        } else {
+          let oldDataSetIds = this.dataSets
+            .filter((d) => this.currentChannels[0].channelId == d.channelId)
+            .map((f) => f.id);
+          await this.addDataSet({
+            title: this.dataSet.title,
+            description: this.dataSet.description,
+            user: this.dataSet.user,
+            channelId: this.currentChannels[0].channelId,
+          });
+          this.fetchDataSets().then(() => {
+            let lastAdded = this.dataSets
+              .filter((d) => this.currentChannels[0].channelId == d.channelId)
+              .filter((d) => !oldDataSetIds.includes(d.id));
+            let id = lastAdded[0].id;
+            /* this.$router.push(`/data-sets/${id}`) */
+            this.$router.push(`/${this.currentChannels[0].name}/data-sets/${id}`);
+            //console.log(this.selected)
+            /* console.log(this.selected)
+            this.fetchDataSetThenAddDataValue(id, this.selected) */
+            this.dataSet.id = id;
+          });
+        }
+        this.resetAndGoBack();
       }
     },
-    async addNewDataValue() {
-      let objString = JSON.stringify(this.selected)
-      await this.addDataValue({
-        data: objString,
-        dataSetId: this.dataSet.id
-      });
-      this.showDataChart()
-      this.clearInput("file")
+    addNewDataValue() {
+      let objString = ''
+      this.items.forEach((item) => {
+        objString = JSON.stringify(item);
+        this.addDataValue({
+          data: objString,
+          dataSetId: this.dataSet.id,
+        })
+      })
+      this.showDataChart();
+      this.clearInput("file");
+    },
+    updateDataValues() {
+      let data = ''
+      this.dataSet.dataValues.items.forEach(item => {
+        data = JSON.stringify(item.data);
+        this.updateDataValueById({
+          id: item.id,
+          data: data,
+          dataSetId: this.dataSet.id,
+        })
+      })
     },
     clearInput(type) {
-      this.$refs.form.inputs.forEach(input => {
+      console.log(type);
+      this.$refs.form.inputs.forEach((input) => {
+        console.log(input);
         if (input.type == type) {
-          input.reset()
+          input = "";
         }
-      })
+      });
     },
     editForm() {
-      this.isReadOnly = false
+      this.isReadOnly = false;
     },
     async showDataChart() {
-      await this.fetchDataSet(this.$route.params.dataSetId)
-      console.log(this.dataSet)
-      //this.createMasterData(this.dataSet.dataValues.items)
-      this.uploadData(this.createMasterData(this.dataSet.dataValues.items))
+      await this.fetchDataSet(this.$route.params.dataSetId);
+      this.setTableItems(this.createMasterData(this.dataSet.dataValues.items));
     },
-    uploadData(data) {
-      console.log(data)
+    setTableItems(data) {
       this.items = data;
-      this.selected = data;
-      const keys = Object.keys(data[0])
-        this.headers = keys.map((item) => ({
-        text: item,
-        value: item,
-        }));
-      /* const keys = Object.keys(newData[0])
-      this.xAxisKeys = keys */
-      //this.moveArrByKey(this.xAxisKeys, this.xAxisValue)
-      //this.setDataTable(data)
-      //this.selectedHeaders = this.headers
+      this.fixNullVals()
     },
-    /* onChangeAxis() {
-      this.moveArrByKey(this.xAxisKeys, this.xAxisValue)
-      this.setDataTable(this.createMasterData(this.dataSet.dataValues.items))
-      //this.selectedHeaders = this.headers
-    }, */
-    /* setDataTable(data) {
-      let obj = this.xAxisKeys.map(x => ({
-        text: x,
-        value: x
-      })) 
-      let newData = this.filterData(obj, data)
-      console.log(data)
-      
-      //this.data = data;
-      //this.selectedHeaders = this.headers
-    }, */
-    /* moveArrByKey(keys, selected = "Date") {
-      keys.forEach((k, i) => {
-        if (k == selected) {
-          this.arrayMove(keys, i, 0)
+    fixNullVals() {
+      this.items.forEach(i => {
+        this.allKeys.forEach(k => {
+          if (i[k] == undefined) {
+            i[k] = ''
+          }
+        })
+      })
+    },
+    checkColType(col, items) {
+      return items.every(i => !isNaN(i[col])) ? 'number' :
+        items.every(i => moment(i[col]).isValid() && moment().diff(moment(i[col])) > 0) ? 'date' : 'string'
+    },
+    showAddColumn() {
+      this.columnForm = true
+    },
+    addColumn() {
+      this.items.forEach(item => {
+        switch (this.newColumn.action) {
+          case "Difference":
+            if (!isNaN(item[this.newColumn.col1]) && !isNaN(item[this.newColumn.col2])) {
+              item[this.newColumn.title] = item[this.newColumn.col2] - item[this.newColumn.col1]
+            } else if (moment(item[this.newColumn.col1]).isValid() && moment(item[this.newColumn.col2]).isValid())
+              item[this.newColumn.title] = (moment(item[this.newColumn.col2]) - moment(item[this.newColumn.col1])) / (1000 * 60 * 60 * 24)
+            break;
+          case "Sum":
+            if (!isNaN(item[this.newColumn.col1]) && !isNaN(item[this.newColumn.col2])) {
+              item[this.newColumn.title] = parseFloat(item[this.newColumn.col2]) + parseFloat(item[this.newColumn.col1])
+            } /* else if (moment(item[this.newColumn.col1]).isValid() && moment(item[this.newColumn.col2]).isValid())
+              item[this.newColumn.title] = (moment(item[this.newColumn.col2]) + moment(item[this.newColumn.col1])) / (1000 * 60 * 60 * 24) */
+            break;
+          case "Product":
+            if (!isNaN(item[this.newColumn.col1]) && !isNaN(item[this.newColumn.col2])) {
+              item[this.newColumn.title] = parseFloat(item[this.newColumn.col2]) * parseFloat(item[this.newColumn.col1])
+            } /* else if (moment(item[this.newColumn.col1]).isValid() && moment(item[this.newColumn.col2]).isValid())
+              item[this.newColumn.title] = (moment(item[this.newColumn.col2]) * moment(item[this.newColumn.col1])) / (1000 * 60 * 60 * 24) */
+            break;
+          case "Quotient":
+            if (!isNaN(item[this.newColumn.col1]) && !isNaN(item[this.newColumn.col2])) {
+              item[this.newColumn.title] = parseFloat(item[this.newColumn.col2]) / parseFloat(item[this.newColumn.col1])
+            } /* else if (moment(item[this.newColumn.col1]).isValid() && moment(item[this.newColumn.col2]).isValid())
+              item[this.newColumn.title] = (moment(item[this.newColumn.col2]) * moment(item[this.newColumn.col1])) / (1000 * 60 * 60 * 24) */
+            break;
+          case "Average":
+            if (!isNaN(item[this.newColumn.col1]) && !isNaN(item[this.newColumn.col2])) {
+              item[this.newColumn.title] = (parseFloat(item[this.newColumn.col2]) + parseFloat(item[this.newColumn.col1])) / 2
+              console.log(item[this.newColumn.title])
+            } else if (moment(item[this.newColumn.col1]).isValid() && moment(item[this.newColumn.col2]).isValid())
+              item[this.newColumn.title] = (moment(item[this.newColumn.col2]) + moment(item[this.newColumn.col1])) / (1000 * 60 * 60 * 24)
+            break;
+          default:
+            alert('Must be a valid number')
+            break;
         }
       })
-      this.headers = keys.map((item) => ({
-        text: item,
-        value: item,
-      }));
-    }, */
-    /* saveAxis() {
-      this.updateDataSetById({
-        id: this.dataSet.id,
-        xAxis: this.xAxisValue,
-        headers: this.xAxisKeys
-      });
-    }, */
-    /* onChangeSelected() {
-      console.log(this.xAxisKeys, this.selectedHeaders)
-      this.xAxisKeys = this.selectedHeaders.map(h => h.text)
-      console.log(this.xAxisKeys)
-      if (this.dataSet && this.dataSet.dataValues && this.dataSet.dataValues.items && this.dataSet.dataValues.items.length > 0) {
-        this.uploadData(this.createMasterData(this.dataSet.dataValues.items))
+      /* This force re-renders the table... */
+      this.items.push({})
+      this.cancelColumnForm()
+      this.items.pop()
+      this.updateDataValues()
+    },
+    cancelColumnForm() {
+      this.columnForm = false
+      this.newColumn = {
+        title: '',
+        action: '',
+        col1: '',
+        col2: '',
       }
-    }, */
-    /* changeChartData() {
-      this.$refs.chart.index =
-        (this.$refs.chart.index + 1) %
-        (Object.keys(this.$refs.chart.chartData[0]).length - 1);
-    }, */
-    /* checkForId() {
-      if (this.dataSet.id) {
-        return true
-      } else return false
-    }, */
+    },
+    showRemoveColumn() {
+      this.rmColForm = true
+    },
+    removeColumns() {
+      this.colsToRemove.forEach(col => {
+        this.items.forEach(item => {
+          delete item[col]
+        })
+      })
+      this.$refs.grid.fields.forEach((field, i) => {
+        if (this.colsToRemove.includes(field.name)) {
+          this.$refs.grid.fields.splice(i, 1)
+        }
+      })
+      this.items.push({})
+      this.rmColForm = false
+      this.items.pop()
+      this.updateDataValues()
+    },
+    onUpdate(records) {
+      console.log(records)
+    }
   },
-   /* beforeMount() {
-    if (this.$route.params.dataSetId != "add-data-set") {
-      await this.fetchDataSet(this.$route.params.dataSetId)
-    }
-  }, */
-  async mounted() {
-    if (this.$route.path === "/it_apps/data-sets"){ 
-      this.dataSet.id = ""
-      this.isReadOnly = false
-      this.clear()
-    } else {
-      await this.fetchDataSet(this.$route.params.dataSetId)
-      if (this.dataSet && this.dataSet.dataValues && this.dataSet.dataValues.items && this.dataSet.dataValues.items.length > 0) {
-        console.log(this.dataSet.dataValues)
-        const keys = Object.keys(this.createMasterData(this.dataSet.dataValues.items)[0])
-        //this.xAxisKeys = keys
-        this.headers = keys.map((item) => ({
-        text: item,
-        value: item,
-        }));
-        //this.selectedHeaders = this.headers
-        this.uploadData(this.createMasterData(this.dataSet.dataValues.items))
-      }
-      this.isReadOnly = true
-    }
-    this.fetchChannels();
-    this.fetchDataSets()
-    if (!this.dataSet.user) {
-      this.dataSet.user = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`
-    }
-    /* if (this.dataSet.xAxis) {
-      this.xAxisValue = this.dataSet.xAxis
-      this.onChangeAxis()
-    } */
-     
-    //console.log(this.currentChannels[0])
-  },
-  /* beforeMount() {
-    this.fetchDataSet(this.dataSet.id)
-    if (this.dataSet && this.dataSet.dataValues.items) {
-      console.log(this.dataSet)
-      this.uploadData(this.dataSet.dataValues.items[0].data)
-    }
-    
-  }, */
   watch: {
     dataSet() {
       if (this.dataSet.id) {
-        this.isReadOnly = true
-               
-        if (this.dataSet.id !== this.$route.params.dataSetId){
-          console.log(this.dataSet)
-        this.clear()
-        }
-      } else this.isReadOnly = false
+        this.isReadOnly = true;
 
+        if (this.dataSet.id !== this.$route.params.dataSetId) {
+          //console.log(this.dataSet)
+          this.clear();
+        }
+      } else this.isReadOnly = false;
     },
-    /* selectedHeaders() {
-      console.log(this.selectedHeaders)
+    /* selected() {
+      if (this.selected && this.selected.length > 0) {
+        console.log(this.selected)
+      } else console.log("no SELECTED data");
     }, */
-    headers() {
-      //console.log(this.headers)
-      /* this.headers.forEach(h => {
-        this.selectedHeaders.push(h.text)
-      }) */
-    },
-    /* value(val) {
-      console.log(val)
-      this.selectedHeaders = val;
-    }, */
-    selected(){
-      if (this.selected && this.selected.length > 0){
-        //console.log(this.selected)
-      } else (console.log("no SELECTED data"))
-    },
     statusCode() {
       if (this.statusCode == 201) {
         this.$router.push(`/data-sets/${this.dataSet.id}`);
         this.SET_STATUS_CODE(0);
       }
     },
+  },
+  async mounted() {
+    if (this.$route.path === `/${this.currentChannels[0].name}/data-sets`) {
+      this.dataSet.id = "";
+      this.isReadOnly = false;
+      this.clear();
+    } else {
+      await this.fetchDataSet(this.$route.params.dataSetId);
+      if (
+        this.dataSet &&
+        this.dataSet.dataValues &&
+        this.dataSet.dataValues.items &&
+        this.dataSet.dataValues.items.length > 0
+      ) {
+        //console.log(this.dataSet.dataValues)
+        /* const keys = Object.keys(
+          this.createMasterData(this.dataSet.dataValues.items)[0]
+        ); */
+        //this.xAxisKeys = keys
+        /* this.headers = keys.map((item) => ({
+          text: item,
+          value: item,
+        })); */
+        //this.selectedHeaders = this.headers
+        this.setTableItems(this.createMasterData(this.dataSet.dataValues.items));
+      }
+      this.isReadOnly = true;
+    }
+    this.fetchChannels();
+    this.fetchDataSets();
+    if (!this.dataSet.user) {
+      this.dataSet.user = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
+    }
+    console.log(this.$refs)
   },
 };
 </script>
@@ -605,24 +652,29 @@ export default {
 .placeholder-icon {
   color: #1976d2;
 }
+
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 10px;
 }
+
 .channels,
 .description {
   grid-column: 1 / span 2;
 }
-div >>> .v-select__selections {
+
+div>>>.v-select__selections {
   padding-top: 5px;
   padding-bottom: 5px;
 }
-div >>> .v-select__selections .v-chip {
+
+div>>>.v-select__selections .v-chip {
   color: white;
-  background-color: #2196F3;
+  background-color: #2196f3;
 }
-div >>> .v-select__selections .v-chip .v-icon {
+
+div>>>.v-select__selections .v-chip .v-icon {
   color: white;
 }
 </style>

@@ -1,11 +1,19 @@
 <template>
-  <v-data-table :headers="headers" :items="items"> </v-data-table>
+  <v-data-table
+    :headers="headers"
+    :items="items"
+  />
 </template>
 
 <script>
 import { mapGetters } from "vuex";
 
 export default {
+  props: {
+    chartData: {
+      type: Array,
+    },
+  },
   data() {
     return {
       headers: [],
@@ -14,7 +22,8 @@ export default {
   },
   methods: {
     loadTable() {
-      const data = this.activeReport.data_set.data;
+      console.log(this.activeReport);
+      const data = this.chartData;
 
       const keys = Object.keys(data[0]);
 
@@ -29,13 +38,13 @@ export default {
   computed: {
     ...mapGetters(["activeReport"]),
   },
-  mounted() {
-    this.loadTable();
-  },
   watch: {
     "activeReport.data_set"() {
       this.loadTable();
     },
+  },
+  mounted() {
+    this.loadTable();
   },
 };
 </script>

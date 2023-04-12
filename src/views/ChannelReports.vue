@@ -11,57 +11,81 @@
           color="primary"
           small
           :to="`/channels/${$route.params.channelId}/reports/new`"
-          >New Report <v-icon right dark>mdi-plus</v-icon></v-btn
         >
+          New Report <v-icon
+            right
+            dark
+          >
+            mdi-plus
+          </v-icon>
+        </v-btn>
       </div>
 
-      <v-divider class="mb-4"></v-divider>
+      <v-divider class="mb-4" />
 
-      <div v-if="channel.reports.length > 0" class="grid">
+      <div
+        v-if="channel.reports.length > 0"
+        class="grid"
+      >
         <ReportCard
           v-for="(report, index) in channel.reports"
-          :report="report"
           :key="index"
-        ></ReportCard>
+          :report="report"
+        />
       </div>
       <div
         v-else
         class="placeholder d-flex flex-column justify-center align-center"
       >
-        <p class="font-weight-light">No Reports to show...</p>
+        <p class="font-weight-light">
+          No Reports to show...
+        </p>
         <v-btn
           text
           small
           color="primary"
           :to="`/channels/${$route.params.channelId}/reports/new`"
-          >Add a Report</v-btn
         >
+          Add a Report
+        </v-btn>
       </div>
     </v-col>
     <!-- Details -->
     <v-col class="col-3">
       <div class="d-flex justify-space-between">
-        <h3 class="mb-2">Details</h3>
-        <v-btn @click="openForm" small color="primary" icon class="btn-bg"
-          ><v-icon small>mdi-pencil</v-icon></v-btn
+        <h3 class="mb-2">
+          Details
+        </h3>
+        <v-btn
+          small
+          color="primary"
+          icon
+          class="btn-bg"
+          @click="openForm"
         >
+          <v-icon small>
+            mdi-pencil
+          </v-icon>
+        </v-btn>
       </div>
 
-      <v-divider class="mb-4"></v-divider>
+      <v-divider class="mb-4" />
 
       <ChannelDetails
-        :reportCount="channel.reports.length"
+        :report-count="channel.reports.length"
         :description="channel.description"
         :category="channel.category"
-        :createdBy="`${channel.user.first_name} ${channel.user.last_name}`"
+        :created-by="`${channel.user.first_name} ${channel.user.last_name}`"
         :members="channel.members"
       />
       <!-- Dashboards -->
       <div class="d-flex justify-space-between mt-4">
         <h3 class="mb-2">
-          <router-link :to="`/channels/${$route.params.channelId}/dashboards`"
-            >Dashboards</router-link
+          <router-link
+            :to="`/channels/${$route.params.channelId}/dashboards`"
           >
+            Dashboards
+          </router-link>
         </h3>
         <v-btn
           class="btn-bg"
@@ -69,19 +93,29 @@
           icon
           color="primary"
           :to="`/channels/${$route.params.channelId}/dashboards/new`"
-          ><v-icon>mdi-plus</v-icon></v-btn
         >
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
       </div>
 
-      <v-divider class="mb-4"></v-divider>
+      <v-divider class="mb-4" />
 
       <ul>
-        <li v-for="(dashboard, index) in channel.dashboards" :key="index">
+        <li
+          v-for="(dashboard, index) in channel.dashboards"
+          :key="index"
+        >
           <router-link
             :to="`/channels/${$route.params.channelId}/dashboards/${dashboard.id}`"
-            ><v-icon small color="primary">mdi-monitor-dashboard</v-icon>
-            {{ dashboard.title }}</router-link
           >
+            <v-icon
+              small
+              color="primary"
+            >
+              mdi-monitor-dashboard
+            </v-icon>
+            {{ dashboard.title }}
+          </router-link>
         </li>
       </ul>
 
@@ -91,11 +125,15 @@
         small
         block
         :to="`/channels/${$route.params.channelId}/dashboards`"
-        >All Dashboards</v-btn
       >
+        All Dashboards
+      </v-btn>
     </v-col>
     <!-- Modal Form -->
-    <v-dialog v-model="showForm" width="50%">
+    <v-dialog
+      v-model="showForm"
+      width="50%"
+    >
       <ChannelModalForm @closeform="closeForm" />
     </v-dialog>
   </v-row>
@@ -109,21 +147,21 @@ import ReportCard from "./../components/ReportCard";
 
 export default {
   name: "ChannelReports",
-  data() {
-    return {
-      showForm: false,
-    };
-  },
   components: {
     ReportCard,
     ChannelModalForm,
     ChannelDetails,
   },
+  data() {
+    return {
+      showForm: false,
+    };
+  },
   computed: {
-    ...mapGetters(["channel", "dashboards"]),
+    ...mapGetters(["channel"]),
   },
   methods: {
-    ...mapActions(["fetchChannel", "fetchDashboards", "fetchUsers"]),
+    ...mapActions(["fetchChannel", "fetchUsers"]),
     openForm() {
       this.showForm = true;
     },
@@ -131,15 +169,14 @@ export default {
       this.showForm = false;
     },
   },
-  beforeMount() {
-    this.fetchChannel(this.$route.params.channelId);
-    this.fetchDashboards();
-    this.fetchUsers();
-  },
   watch: {
     $route() {
       this.fetchChannel(this.$route.params.channelId);
     },
+  },
+  beforeMount() {
+    this.fetchChannel(this.$route.params.channelId);
+    this.fetchUsers();
   },
 };
 </script>

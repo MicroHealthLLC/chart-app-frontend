@@ -16,13 +16,12 @@ import { deleteChannelType } from "@/graphql/mutations";
 import { getChannelType } from "@/graphql/queries";
 import { listChannelTypes } from "@/graphql/queries";
 
-
 export default {
   state: {
     channels: [],
     channel: {},
     channelTypes: [],
-    channelType:{},
+    channelType: {},
     current_channel: {},
     current_channels: [],
   },
@@ -44,7 +43,7 @@ export default {
       }
       commit("TOGGLE_SAVING", false);
     },
-    async updateChannelById({ commit, dispatch }, channel ) {
+    async updateChannelById({ commit, dispatch }, channel) {
       console.log(channel);
       commit("TOGGLE_SAVING", true);
       try {
@@ -78,7 +77,9 @@ export default {
       console.log(current_channel);
       commit("TOGGLE_SAVING", true);
       try {
-        await API.graphql(graphqlOperation(createCurrentChannel, { input: current_channel }));
+        await API.graphql(
+          graphqlOperation(createCurrentChannel, { input: current_channel })
+        );
         dispatch("fetchCurrentChannels");
         // commit("SET_SNACKBAR", {
         //   show: true,
@@ -91,11 +92,13 @@ export default {
       }
       commit("TOGGLE_SAVING", false);
     },
-    async updateCurrentChannelById({ commit, dispatch }, current_channel ) {
+    async updateCurrentChannelById({ commit, dispatch }, current_channel) {
       console.log(current_channel);
       commit("TOGGLE_SAVING", true);
       try {
-        await API.graphql(graphqlOperation(updateCurrentChannel, { input: current_channel }));
+        await API.graphql(
+          graphqlOperation(updateCurrentChannel, { input: current_channel })
+        );
         dispatch("fetchCurrentChannels");
         // commit("SET_SNACKBAR", {
         //   show: true,
@@ -109,7 +112,9 @@ export default {
     },
     async removeCurrentChannel({ dispatch }, id) {
       try {
-        await API.graphql(graphqlOperation(deleteCurrentChannel, { input: id }));
+        await API.graphql(
+          graphqlOperation(deleteCurrentChannel, { input: id })
+        );
         dispatch("fetchCurrentChannels");
         // commit("SET_SNACKBAR", {
         //   show: true,
@@ -121,8 +126,8 @@ export default {
       }
     },
     async fetchCurrentChannels({ commit }) {
-      try {     
-       const res = await API.graphql(graphqlOperation(listCurrentChannels));
+      try {
+        const res = await API.graphql(graphqlOperation(listCurrentChannels));
         commit("SET_CURRENT_CHANNELS", res.data.listCurrentChannels.items);
       } catch (error) {
         console.log(error);
@@ -130,8 +135,8 @@ export default {
     },
     // End currentChannel Actions
     async fetchChannels({ commit }) {
-      try {     
-       const res = await API.graphql(graphqlOperation(listChannels));
+      try {
+        const res = await API.graphql(graphqlOperation(listChannels));
         commit("SET_CHANNELS", res.data.listChannels.items);
       } catch (error) {
         console.log(error);
@@ -139,19 +144,21 @@ export default {
     },
     async fetchChannel({ commit }, id) {
       console.log(id);
-      try {     
-       const res = await API.graphql(graphqlOperation(getChannel, { id: id }));
+      try {
+        const res = await API.graphql(graphqlOperation(getChannel, { id: id }));
         commit("SET_CHANNEL", res.data.getChannel);
         console.log(res.data.getChannel);
       } catch (error) {
         console.log(error);
       }
     },
-//Channel Types
+    //Channel Types
     async addChannelType({ commit, dispatch }, channelType) {
       commit("TOGGLE_SAVING", true);
       try {
-        await API.graphql(graphqlOperation(createChannelType, { input: channelType }));
+        await API.graphql(
+          graphqlOperation(createChannelType, { input: channelType })
+        );
         dispatch("fetchChannelTypes");
         commit("SET_SNACKBAR", {
           show: true,
@@ -164,10 +171,12 @@ export default {
       }
       commit("TOGGLE_SAVING", false);
     },
-    async updateChannelTypeById({ commit, dispatch }, channelType ) {
+    async updateChannelTypeById({ commit, dispatch }, channelType) {
       commit("TOGGLE_SAVING", true);
       try {
-        await API.graphql(graphqlOperation(updateChannelType, { input: channelType }));
+        await API.graphql(
+          graphqlOperation(updateChannelType, { input: channelType })
+        );
         dispatch("fetchChannelTypes");
         commit("SET_SNACKBAR", {
           show: true,
@@ -193,16 +202,16 @@ export default {
       }
     },
     async fetchChannelTypes({ commit }) {
-      try {     
-       const res = await API.graphql(graphqlOperation(listChannelTypes));
+      try {
+        const res = await API.graphql(graphqlOperation(listChannelTypes));
         commit("SET_CHANNEL_TYPES", res.data.listChannelTypes.items);
       } catch (error) {
         console.log(error);
       }
     },
     async fetchChannelType({ commit }) {
-      try {     
-       const res = await API.graphql(graphqlOperation(getChannelType));
+      try {
+        const res = await API.graphql(graphqlOperation(getChannelType));
         commit("SET_CHANNEL_TYPE", res.data.getChannelType);
         console.log(res.data.getChannelType);
       } catch (error) {
@@ -215,23 +224,26 @@ export default {
     SET_CHANNELS: (state, channels) => (state.channels = channels),
     SET_CHANNEL: (state, channel) => (state.channel = channel),
     // Channel Types
-    ADD_CHANNEL_TYPE: (state, channelType) => state.channelTypes.push(channelType),
-    SET_CHANNEL_TYPES: (state, channelTypes) => (state.channelTypes = channelTypes),
+    ADD_CHANNEL_TYPE: (state, channelType) =>
+      state.channelTypes.push(channelType),
+    SET_CHANNEL_TYPES: (state, channelTypes) =>
+      (state.channelTypes = channelTypes),
     SET_CHANNEL_TYPE: (state, channelType) => (state.channelType = channelType),
     //currentChannel
-    ADD_CURRENT_CHANNEL: (state, current_channel) => state.current_channels.push(current_channel),
-    SET_CURRENT_CHANNEL: (state, current_channel) => (state.current_channel = current_channel),
-    SET_CURRENT_CHANNELS: (state, current_channels) => (state.current_channels = current_channels),
+    ADD_CURRENT_CHANNEL: (state, current_channel) =>
+      state.current_channels.push(current_channel),
+    SET_CURRENT_CHANNEL: (state, current_channel) =>
+      (state.current_channel = current_channel),
+    SET_CURRENT_CHANNELS: (state, current_channels) =>
+      (state.current_channels = current_channels),
   },
   getters: {
-    channels: (state) => state.channels,  
-    channel: (state) => state.channel, 
+    channels: (state) => state.channels,
+    channel: (state) => state.channel,
     // Channel Types
-    channelTypes: (state) => state.channelTypes,  
-    channelType: (state) => state.channelType, 
+    channelTypes: (state) => state.channelTypes,
+    channelType: (state) => state.channelType,
     currenttChannel: (state) => state.current_channel,
-    currentChannels: (state) => state.current_channels
+    currentChannels: (state) => state.current_channels,
   },
 };
-
-

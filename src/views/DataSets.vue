@@ -2,13 +2,31 @@
   <v-row>
     <v-col class="col-11">
       <div class="d-flex justify-space-between">
-        <h3><v-icon class="mr-2 pb-2" color="blue darken-2">mdi-equalizer</v-icon>Data Sets</h3>
-        <v-btn class="mb-2" color="primary" small @click.prevent="toNewDataSet">Add Data Set <v-icon
-            small>mdi-plus</v-icon></v-btn>
+        <h3>
+          <v-icon
+            class="mr-2 pb-2"
+            color="blue darken-2"
+          >
+            mdi-equalizer
+          </v-icon>Data Sets
+        </h3>
+        <v-btn
+          class="mb-2"
+          color="primary"
+          small
+          @click.prevent="toNewDataSet"
+        >
+          Add Data Set <v-icon small>
+            mdi-plus
+          </v-icon>
+        </v-btn>
       </div>
 
-      <v-dialog v-model="showAddDataSetForm" width="40%">
-        <v-card class="px-4 py-4 modal">
+      <v-dialog
+        v-model="showAddDataSetForm"
+        width="40%"
+      >
+        <v-card class="px-4 py-4">
           <!-- <v-form v-model="formValid" ref="form">
             <div class="grid">
               <div>
@@ -36,15 +54,17 @@
               </div>
             </div>
           </v-form> -->
-        <DataSetForm @closeDataSetForm="closeDataSetForm" />  
-      </v-card> 
-      <!-- <span v-else>NO DATA</span> -->
-    </v-dialog>
+          <DataSetForm @closeDataSetForm="closeDataSetForm" />
+        </v-card>
+        <!-- <span v-else>NO DATA</span> -->
+      </v-dialog>
 
-      <v-divider class="mb-4"></v-divider>
+      <v-divider class="mb-4" />
       <v-card>
-        <v-data-table :headers="headers" :items="channelDataSets">
-          
+        <v-data-table
+          :headers="headers"
+          :items="channelDataSets"
+        >
           <!-- Formatted Date -->
           <template v-slot:item.created_at="{ item }">
             <span>{{ new Date(item.createdAt).toLocaleDateString() }}</span>
@@ -57,7 +77,14 @@
           <template v-slot:item.actions="{ item }">
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
-                <v-icon color="primary" small class="mr-2" @click="editItem(item)" v-bind="attrs" v-on="on">
+                <v-icon
+                  color="primary"
+                  small
+                  class="mr-2"
+                  v-bind="attrs"
+                  @click="editItem(item)"
+                  v-on="on"
+                >
                   mdi-table-eye
                 </v-icon>
               </template>
@@ -70,7 +97,12 @@
                   mdi-delete
                 </v-icon> -->
                 <v-icon
-                  color="primary" small @click="deleteItem(item)" v-bind="attrs" v-on="on">
+                  color="primary"
+                  small
+                  v-bind="attrs"
+                  @click="deleteItem(item)"
+                  v-on="on"
+                >
                   mdi-delete
                 </v-icon>
               </template>
@@ -86,11 +118,12 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import DataSetForm from "../components/DataSetForm.vue";
+// and use it in your component like
 
 export default {
   name: "DataSets",
   components: {
-    DataSetForm
+    DataSetForm,
   },
   data() {
     return {
@@ -128,29 +161,36 @@ export default {
   },
   computed: {
     ...mapGetters(["dataSets", "user", "currentChannels"]),
-    channelDataSets(){
-        if (this.dataSets && this.dataSets.length > 0 && this.currentChannels && this.currentChannels[0].channelId){
-          return this.dataSets.filter(t => t.channelId == this.currentChannels[0].channelId)
-        } else return []
-      },
+    channelDataSets() {
+      if (
+        this.dataSets &&
+        this.dataSets.length > 0 &&
+        this.currentChannels &&
+        this.currentChannels[0].channelId
+      ) {
+        return this.dataSets.filter(
+          (t) => t.channelId == this.currentChannels[0].channelId
+        ).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+      } else return [];
+    },
   },
   methods: {
     ...mapActions(["fetchDataSets", "removeDataSet", "fetchDataSet"]),
     log(e) {
-      console.log(e)
+      console.log(e);
     },
-    toNewDataSet(){
-      this.showAddDataSetForm = true
-      //this.$router.push(`data-sets/add-data-set`); 
+    toNewDataSet() {
+      this.showAddDataSetForm = true;
+      //this.$router.push(`data-sets/add-data-set`);
     },
     closeDataSetForm() {
-      this.showAddDataSetForm = false
+      this.showAddDataSetForm = false;
     },
     async editItem(item) {
-      console.log(item)
-      let id = item.id
-      await this.fetchDataSet(id)
-      this.$router.push(`data-sets/${id}`)
+      console.log(item);
+      let id = item.id;
+      await this.fetchDataSet(id);
+      this.$router.push(`data-sets/${id}`);
     },
     deleteItem(item) {
       this.$confirm(
@@ -161,7 +201,7 @@ export default {
           cancelButtonText: "Cancel",
           type: "warning",
         }
-       ).then(() => {
+      ).then(() => {
         this.removeDataSet({ id: item.id });
       });
     },
@@ -172,7 +212,7 @@ export default {
   mounted() {
     //console.log(this.user)
     //console.log(this.dataSets)
-  }
+  },
 };
 </script>
 
