@@ -1,4 +1,4 @@
-# chart-app 
+# chart-app
 
 ## Project setup
 ```
