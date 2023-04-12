@@ -1,7 +1,9 @@
 <template>
   <ul class="text-caption">
     <li>
-      <strong><v-icon small>mdi-file-chart-outline</v-icon> Total Reports:</strong>
+      <strong
+        ><v-icon small>mdi-file-chart-outline</v-icon> Total Reports:</strong
+      >
       {{ reportCount }}
     </li>
     <li>

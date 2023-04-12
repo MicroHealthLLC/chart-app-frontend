@@ -1,13 +1,7 @@
 <template>
-  <v-card
-    class="report-card"
-    @click="toReport"
-  >
+  <v-card class="report-card" @click="toReport">
     <v-card-title>
-      <v-icon
-        class="mr-4"
-        color="info"
-      >
+      <v-icon class="mr-4" color="info">
         {{ chartIcon }}
       </v-icon>
       <span class="text-subtitle-2 font-weight-bold">
@@ -17,11 +11,10 @@
     <v-card-text>
       <ul class="mb-4 text-caption">
         <li v-if="report && report.dataSetId">
-          <strong>Data Set:</strong><span class="blueFont"> {{ dataSetTitle }}</span>
+          <strong>Data Set:</strong
+          ><span class="blueFont"> {{ dataSetTitle }}</span>
         </li>
-        <li v-else>
-          <strong>Data Set:</strong> None
-        </li>
+        <li v-else><strong>Data Set:</strong> None</li>
         <li><strong>Channel:</strong> {{ report.channel.title }}</li>
       </ul>
       <!-- <v-chip

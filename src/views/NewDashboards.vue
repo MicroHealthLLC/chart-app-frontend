@@ -3,31 +3,18 @@
     <v-col>
       <div class="d-flex justify-space-between">
         <h3>
-          <v-icon
-            class="mr-2 pb-2"
-            color="blue darken-2"
-          >
-            mdi-equalizer
-          </v-icon>Data Sets
+          <v-icon class="mr-2 pb-2" color="blue darken-2">
+            mdi-equalizer </v-icon
+          >Data Sets
         </h3>
-        <v-btn
-          class="mb-2"
-          color="primary"
-          small
-          to="/add-data-set"
-        >
-          Add Data Set <v-icon small>
-            mdi-plus
-          </v-icon>
+        <v-btn class="mb-2" color="primary" small to="/add-data-set">
+          Add Data Set <v-icon small> mdi-plus </v-icon>
         </v-btn>
       </div>
 
       <v-divider class="mb-4" />
       <v-card>
-        <v-data-table
-          :headers="headers"
-          :items="dataSets"
-        >
+        <v-data-table :headers="headers" :items="dataSets">
           <!-- Formatted Date -->
           <template v-slot:item.created_at="{ item }">
             <span>{{ new Date(item.createdAt).toLocaleDateString() }}</span>

@@ -4,12 +4,8 @@
       <!-- Title -->
       <v-col cols="11">
         <div class="d-flex justify-space-between">
-          <h3 v-if="heatMap.id">
-            Update {{ heatMap.title }}
-          </h3>
-          <h3 v-else>
-            Add Heat Map
-          </h3>
+          <h3 v-if="heatMap.id">Update {{ heatMap.title }}</h3>
+          <h3 v-else>Add Heat Map</h3>
           <div>
             <v-btn
               class="px-5 mr-2 mb-2"
@@ -20,12 +16,7 @@
             >
               Save
             </v-btn>
-            <v-btn
-              class="mb-2"
-              small
-              outlined
-              @click="resetAndGoBack"
-            >
+            <v-btn class="mb-2" small outlined @click="resetAndGoBack">
               Close
             </v-btn>
           </div>
@@ -41,15 +32,10 @@
           dense
           dismissible
         >
-          Please fix highlighted fields below before submitting Heat
-          Map
+          Please fix highlighted fields below before submitting Heat Map
         </v-alert>
         <!-- Form Fields -->
-        <v-form
-          ref="form"
-          v-model="formValid"
-          class="mt-2"
-        >
+        <v-form ref="form" v-model="formValid" class="mt-2">
           <div class="grid">
             <div>
               <v-text-field
@@ -97,7 +83,9 @@
             <div class="expansion">
               <v-expansion-panels @change="isExpanded">
                 <v-expansion-panel>
-                  <v-expansion-panel-header>{{ !expanded ? 'Click to reveal notes' : 'Click to hide notes' }}</v-expansion-panel-header>
+                  <v-expansion-panel-header>{{
+                    !expanded ? "Click to reveal notes" : "Click to hide notes"
+                  }}</v-expansion-panel-header>
                   <v-expansion-panel-content>
                     <vue-editor
                       v-model="heatMap.notes"
@@ -153,11 +141,7 @@
               :rules="[(v) => !!v || 'required']"
               @change="updateTableColors"
             >
-              <v-icon
-                slot="prepend-inner"
-                color="green lighten-1"
-                class="mr-1"
-              >
+              <v-icon slot="prepend-inner" color="green lighten-1" class="mr-1">
                 {{
                   !heatMap.options.cols[i].abs
                     ? "mdi-greater-than-or-equal"
@@ -180,11 +164,7 @@
               :rules="[(v) => !!v || 'required']"
               @change="updateTableColors"
             >
-              <v-icon
-                slot="prepend-inner"
-                color="amber lighten-1"
-                class="mr-1"
-              >
+              <v-icon slot="prepend-inner" color="amber lighten-1" class="mr-1">
                 {{
                   !heatMap.options.cols[i].abs
                     ? "mdi-greater-than-or-equal"
@@ -207,11 +187,7 @@
               :rules="[(v) => !!v || 'required']"
               @change="updateTableColors"
             >
-              <v-icon
-                slot="prepend-inner"
-                color="red lighten-1"
-                class="mr-1"
-              >
+              <v-icon slot="prepend-inner" color="red lighten-1" class="mr-1">
                 {{
                   heatMap.options.cols[i].abs
                     ? "mdi-greater-than"
@@ -230,10 +206,7 @@
     </v-row>
 
     <!-- Delete Button -->
-    <div
-      v-if="heatMap && heatMap.id"
-      class="d-flex justify-end mt-4"
-    >
+    <div v-if="heatMap && heatMap.id" class="d-flex justify-end mt-4">
       <v-btn
         small
         color="error"
@@ -245,10 +218,7 @@
       </v-btn>
     </div>
     <!-- Delete Prompt -->
-    <v-dialog
-      v-model="deleteDialog"
-      max-width="400"
-    >
+    <v-dialog v-model="deleteDialog" max-width="400">
       <v-card>
         <v-card-title>Delete this Heat Map?</v-card-title>
         <v-divider class="mx-4 mb-2" />
@@ -256,20 +226,10 @@
           Are you sure you would like to delete this heat map?
         </v-card-text>
         <v-card-actions class="d-flex justify-end">
-          <v-btn
-            small
-            outlined
-            color="secondary"
-            @click="deleteDialog = false"
-          >
+          <v-btn small outlined color="secondary" @click="deleteDialog = false">
             Cancel
           </v-btn>
-          <v-btn
-            small
-            depressed
-            color="error"
-            @click="deleteHeatMap"
-          >
+          <v-btn small depressed color="error" @click="deleteHeatMap">
             Delete
           </v-btn>
         </v-card-actions>
@@ -288,7 +248,7 @@ export default {
   name: "HeatMapForm",
   components: {
     KPIHeatMap,
-    VueEditor
+    VueEditor,
   },
   mixins: [datasetMixin],
   data() {
@@ -304,16 +264,15 @@ export default {
       leadCol: "",
       items: [],
       toolbarOptions: [
-        ['bold', 'italic', 'underline', 'strike'],   // toggled buttons
-        ['blockquote', 'code-block'],
-        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-        [{ 'align': [] }],    
-        [{ 'indent': '-1' }, { 'indent': '+1' }], // outdent/indent
-        [{ 'script': 'sub' }, { 'script': 'super' }],  // superscript/subscript
-        [{ 'font': [] }],
-        [{ 'header': [1, 2, 3, false] }],
-        [{ 'color': [] }, { 'background': [] }],    // dropdown with defaults from theme
-        
+        ["bold", "italic", "underline", "strike"], // toggled buttons
+        ["blockquote", "code-block"],
+        [{ list: "ordered" }, { list: "bullet" }],
+        [{ align: [] }],
+        [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
+        [{ script: "sub" }, { script: "super" }], // superscript/subscript
+        [{ font: [] }],
+        [{ header: [1, 2, 3, false] }],
+        [{ color: [] }, { background: [] }], // dropdown with defaults from theme
       ],
     };
   },
@@ -526,8 +485,8 @@ export default {
       }
     },
     isExpanded(event) {
-      return event == 0 ? this.expanded = true : this.expanded = false
-    }
+      return event == 0 ? (this.expanded = true) : (this.expanded = false);
+    },
   },
   watch: {
     headers() {
@@ -600,7 +559,7 @@ export default {
   grid-gap: 10px;
 }
 .expansion {
-  grid-column: 1 / span 2
+  grid-column: 1 / span 2;
 }
 
 div >>> .v-select__selections {

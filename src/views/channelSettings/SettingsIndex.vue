@@ -3,46 +3,33 @@
     <v-col class="col-11">
       <div class="d-flex justify-space-between">
         <h3>
-          <v-icon color="purple-grey darken-2 pr-2">
-            mdi-cog-outline
-          </v-icon>Channel Settings
+          <v-icon color="purple-grey darken-2 pr-2"> mdi-cog-outline </v-icon
+          >Channel Settings
         </h3>
         <!-- <v-btn class="mb-2" color="primary" small @click.prevent="toNewReport">Add Dashboard <v-icon
             small>mdi-plus</v-icon></v-btn> -->
       </div>
       <v-divider class="mb-4" />
       <v-card class="pa-4 mb-4 col-4">
-        <v-icon
-          color="blue-grey darken-2"
-          class="bigIcons"
-        >
+        <v-icon color="blue-grey darken-2" class="bigIcons">
           mdi-account
         </v-icon>
         PERSONAL INFO
       </v-card>
       <v-card class="pa-4 mb-4 col-4">
-        <v-icon
-          color="blue-grey darken-2"
-          class="bigIcons"
-        >
+        <v-icon color="blue-grey darken-2" class="bigIcons">
           mdi-account-group
         </v-icon>
         USERS
       </v-card>
       <v-card class="pa-4 mb-4 col-4">
-        <v-icon
-          color="blue-grey darken-2"
-          class="bigIcons"
-        >
+        <v-icon color="blue-grey darken-2" class="bigIcons">
           mdi-account-lock
         </v-icon>
         PERMISSIONS & ROLES
       </v-card>
       <v-card class="pa-4 mb-4 col-4">
-        <v-icon
-          color="blue-grey darken-2"
-          class="bigIcons"
-        >
+        <v-icon color="blue-grey darken-2" class="bigIcons">
           mdi-television-classic
         </v-icon>
         CHANNELS

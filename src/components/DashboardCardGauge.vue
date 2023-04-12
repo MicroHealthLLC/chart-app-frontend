@@ -1,9 +1,6 @@
 <template>
   <div>
-    <fullscreen
-      v-if="!fullscreen"
-      v-model="fullscreenG"
-    >
+    <fullscreen v-if="!fullscreen" v-model="fullscreenG">
       <span class="d-flex">
         <h4 class="pa-4">{{ gauge.title }}</h4>
         <v-tooltip top>
@@ -14,16 +11,12 @@
               v-bind="attrs"
               @click.prevent="toGauge(gauge.id)"
               v-on="on"
-            ><v-icon small>fa-solid
-              fa-up-right-from-square</v-icon>
+              ><v-icon small>fa-solid fa-up-right-from-square</v-icon>
             </v-btn>
           </template>
           <span>Go to KPI Gauge</span>
         </v-tooltip>
-        <v-tooltip
-          v-if="!isReadOnly"
-          top
-        >
+        <v-tooltip v-if="!isReadOnly" top>
           <template v-slot:activator="{ on, attrs }">
             <v-btn
               class="ml-4 mt-2"
@@ -31,10 +24,7 @@
               v-bind="attrs"
               @click.prevent="$emit('deleteItem', gauge.id)"
               v-on="on"
-            ><v-icon
-              small
-              color="red"
-            >fa-trash</v-icon>
+              ><v-icon small color="red">fa-trash</v-icon>
             </v-btn>
           </template>
           <span>Remove from Dashboard</span>
@@ -42,11 +32,7 @@
       </span>
       <!-- <fullscreen v-if="!fullscreen" v-model="fullscreenG"> -->
       <span v-if="fullscreenG">
-        <v-btn
-          class="chart-menu"
-          icon
-          @click="fullscreenGauge"
-        >
+        <v-btn class="chart-menu" icon @click="fullscreenGauge">
           <v-icon>mdi-fullscreen-exit</v-icon>
         </v-btn>
 
@@ -71,11 +57,7 @@
         </div>
       </span>
       <span v-else>
-        <v-btn
-          class="chart-menu"
-          icon
-          @click="fullscreenGauge"
-        >
+        <v-btn class="chart-menu" icon @click="fullscreenGauge">
           <v-icon>mdi-fullscreen</v-icon>
         </v-btn>
 
@@ -111,8 +93,7 @@
               v-bind="attrs"
               @click.prevent="toGauge(gauge.id)"
               v-on="on"
-            ><v-icon small>fa-solid
-              fa-up-right-from-square</v-icon>
+              ><v-icon small>fa-solid fa-up-right-from-square</v-icon>
             </v-btn>
           </template>
           <span>Go to KPI Gauge</span>
@@ -245,7 +226,7 @@ export default {
         return 80;
       } else if (this.parentWidth > 350) {
         return 30;
-      } else return 10
+      } else return 10;
       /* switch (this.parentWidth) {
         case 'xs': return 40
         case 'sm': return 50
@@ -259,7 +240,7 @@ export default {
   methods: {
     ...mapActions([]),
     checkLog(e) {
-      console.log(e)
+      console.log(e);
     },
     setChartType() {
       if (this.gauge && this.gauge.chartType) {
@@ -308,7 +289,6 @@ export default {
           this.parentWidth = this.$parent.$el.clientWidth;
         }
       }, 100);
-
     },
     toGauge(id) {
       this.$router.replace(`/${this.currentChannels[0].name}/gauges/${id}`);
@@ -317,7 +297,7 @@ export default {
       this.fullscreenG = this.fullscreenG ? false : true;
     },
     fullscreenDialog() {
-      this.fullscreenD = this.fullscreenD ? false : true
+      this.fullscreenD = this.fullscreenD ? false : true;
     },
   },
   watch: {
@@ -329,7 +309,7 @@ export default {
     },
     resized() {
       if (this.resized) {
-        this.setParentDims()
+        this.setParentDims();
       }
     },
     isReadOnly() {
@@ -338,10 +318,9 @@ export default {
     fullscreen() {
       if (this.fullscreen) {
         this.setChartType();
-        this.setParentDims()
+        this.setParentDims();
       }
-
-    }
+    },
   },
   /* afterMount() {
     if (this.$parent.$el.clientHeight) { 

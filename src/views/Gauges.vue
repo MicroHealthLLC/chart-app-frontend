@@ -3,12 +3,8 @@
     <v-col class="col-11">
       <div class="d-flex justify-space-between">
         <h3>
-          <v-icon
-            class="mr-2 pb-1"
-            color="red darken-2"
-          >
-            mdi-gauge
-          </v-icon>KPIs
+          <v-icon class="mr-2 pb-1" color="red darken-2"> mdi-gauge </v-icon
+          >KPIs
         </h3>
         <div>
           <v-btn
@@ -17,9 +13,7 @@
             small
             @click.prevent="toNewGauge"
           >
-            Add Gauge <v-icon small>
-              mdi-plus
-            </v-icon>
+            Add Gauge <v-icon small> mdi-plus </v-icon>
           </v-btn>
           <v-btn
             class="mb-2"
@@ -27,16 +21,11 @@
             small
             @click.prevent="toNewHeatMap"
           >
-            Add Heat Map <v-icon small>
-              mdi-plus
-            </v-icon>
+            Add Heat Map <v-icon small> mdi-plus </v-icon>
           </v-btn>
         </div>
       </div>
-      <v-dialog
-        v-model="showAddGaugeForm"
-        width="80%"
-      >
+      <v-dialog v-model="showAddGaugeForm" width="80%">
         <v-card class="px-4 py-4 modal">
           <GaugeForm
             :show-add-gauge-form="showAddGaugeForm"
@@ -44,10 +33,7 @@
           />
         </v-card>
       </v-dialog>
-      <v-dialog
-        v-model="showAddHeatMapForm"
-        width="60%"
-      >
+      <v-dialog v-model="showAddHeatMapForm" width="60%">
         <v-card class="px-2 py-2 modal">
           <HeatMapForm
             :show-add-heat-map-form="showAddHeatMapForm"
@@ -57,13 +43,8 @@
       </v-dialog>
       <v-divider class="mb-4" />
 
-      <v-container
-        v-if="channelGauges.length > 0"
-        class="pl-5"
-      >
-        <h4 class="mb-2">
-          GAUGES
-        </h4>
+      <v-container v-if="channelGauges.length > 0" class="pl-5">
+        <h4 class="mb-2">GAUGES</h4>
         <v-row>
           <v-col
             v-for="gauge in channelGauges"
@@ -106,17 +87,9 @@
         </div> -->
         </v-row>
       </v-container>
-      <v-divider
-        v-if="channelHeatMaps.length > 0"
-        class="my-4"
-      />
-      <v-container
-        v-if="channelHeatMaps.length > 0"
-        class="pl-5"
-      >
-        <h4 class="mb-2">
-          HEAT MAPS
-        </h4>
+      <v-divider v-if="channelHeatMaps.length > 0" class="my-4" />
+      <v-container v-if="channelHeatMaps.length > 0" class="pl-5">
+        <h4 class="mb-2">HEAT MAPS</h4>
         <v-row>
           <v-col
             v-for="heatMap in channelHeatMaps"
@@ -138,28 +111,15 @@
               <v-card-title class="pb-0">
                 {{ heatMap.title }}
               </v-card-title>
-              <v-card-text
-                v-if="heatMap.createdBy"
-                class="pb-0"
-              >
+              <v-card-text v-if="heatMap.createdBy" class="pb-0">
                 By: {{ heatMap.createdBy }}
               </v-card-text>
-              <v-card-text v-else>
-                By: John Smith
-              </v-card-text>
-              <v-card-text
-                v-if="heatMap.dataSet"
-                class="py-0"
-              >
+              <v-card-text v-else> By: John Smith </v-card-text>
+              <v-card-text v-if="heatMap.dataSet" class="py-0">
                 Dataset: {{ heatMap.dataSet.title }}
               </v-card-text>
               <v-row justify="center">
-                <v-icon
-                  class="pt-4"
-                  x-large
-                >
-                  mdi-table-large
-                </v-icon>
+                <v-icon class="pt-4" x-large> mdi-table-large </v-icon>
               </v-row>
             </v-card>
           </v-col>
@@ -169,9 +129,7 @@
         v-if="channelGauges.length == 0 && channelHeatMaps.length == 0"
         class="placeholder d-flex flex-column justify-center align-center"
       >
-        <p class="font-weight-light">
-          No KPIs on this Channel yet...
-        </p>
+        <p class="font-weight-light">No KPIs on this Channel yet...</p>
         <v-btn
           text
           small
@@ -181,15 +139,8 @@
         >
           Add a Gauge
         </v-btn>
-        <p class="font-weight-light">
-          OR
-        </p>
-        <v-btn
-          text
-          small
-          color="primary"
-          @click.prevent="toNewHeatMap"
-        >
+        <p class="font-weight-light">OR</p>
+        <v-btn text small color="primary" @click.prevent="toNewHeatMap">
           Add a Heat Map
         </v-btn>
       </div>

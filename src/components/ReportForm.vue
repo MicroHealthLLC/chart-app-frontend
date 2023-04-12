@@ -5,12 +5,7 @@
         <h3 v-if="activeReport && activeReport.title">
           {{ activeReport.title }}
         </h3>
-        <h3
-          v-else
-          class="placeholder-title"
-        >
-          (Report Title)
-        </h3>
+        <h3 v-else class="placeholder-title">(Report Title)</h3>
         <div>
           <v-btn
             class="px-5 mr-2 mb-2"
@@ -21,12 +16,7 @@
           >
             Save
           </v-btn>
-          <v-btn
-            class="mb-2"
-            outlined
-            small
-            @click="resetAndGoBack"
-          >
+          <v-btn class="mb-2" outlined small @click="resetAndGoBack">
             Close
           </v-btn>
         </div>
@@ -46,28 +36,36 @@
       <v-card
         v-if="
           data &&
-            data.length > 0 &&
-            activeReport.colorSchemeId &&
-            activeReport.chartType
+          data.length > 0 &&
+          activeReport.colorSchemeId &&
+          activeReport.chartType
         "
         class="pa-4 mb-4"
       >
-        <v-btn
-          class="chart-menu"
-          icon
-          @click="fullscreenReport"
-        >
+        <v-btn class="chart-menu" icon @click="fullscreenReport">
           <v-icon>mdi-fullscreen</v-icon>
         </v-btn>
         <span v-if="yAxisValue" class="d-flex">
           <h5>Y-Axis</h5>
           <v-tooltip bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn @click="toggleSortY" x-small class="ml-2" v-bind="attrs" v-on="on">
-              <v-icon dense>{{ sortDirectionY === 'asc' ? 'mdi-sort-descending' : 'mdi-sort-ascending' }}</v-icon>
-            </v-btn>
-          </template>
-          <span>{{ sortDirectionY === 'asc' ? 'Sort Descending' : 'Sort Ascending' }}</span>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                @click="toggleSortY"
+                x-small
+                class="ml-2"
+                v-bind="attrs"
+                v-on="on"
+              >
+                <v-icon dense>{{
+                  sortDirectionY === "asc"
+                    ? "mdi-sort-descending"
+                    : "mdi-sort-ascending"
+                }}</v-icon>
+              </v-btn>
+            </template>
+            <span>{{
+              sortDirectionY === "asc" ? "Sort Descending" : "Sort Ascending"
+            }}</span>
           </v-tooltip>
         </span>
         <!-- Chart -->
@@ -85,14 +83,26 @@
           <h5>X-Axis</h5>
           <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
-              <v-btn @click="toggleSortX" x-small class="ml-2" v-bind="attrs" v-on="on">
-                <v-icon dense>{{ sortDirectionX === 'asc' ? 'mdi-sort-descending' : 'mdi-sort-ascending' }}</v-icon>
-            </v-btn>
+              <v-btn
+                @click="toggleSortX"
+                x-small
+                class="ml-2"
+                v-bind="attrs"
+                v-on="on"
+              >
+                <v-icon dense>{{
+                  sortDirectionX === "asc"
+                    ? "mdi-sort-descending"
+                    : "mdi-sort-ascending"
+                }}</v-icon>
+              </v-btn>
             </template>
-            <span>{{ sortDirectionX === 'asc' ? 'Sort Descending' : 'Sort Ascending' }}</span>
+            <span>{{
+              sortDirectionX === "asc" ? "Sort Descending" : "Sort Ascending"
+            }}</span>
           </v-tooltip>
         </span>
-        
+
         <!-- Placeholder -->
         <!-- This div has a v-else directive -->
         <!-- <div
@@ -106,17 +116,8 @@
         </div> -->
         <!-- Category Toggle Button -->
         <div class="d-flex justify-end mb-4">
-          <v-btn
-            v-if="circleChart"
-            outlined
-            small
-            @click="changeChartData"
-          >
-            Next Category <v-icon
-              small
-            >
-              mdi-arrow-right
-            </v-icon>
+          <v-btn v-if="circleChart" outlined small @click="changeChartData">
+            Next Category <v-icon small> mdi-arrow-right </v-icon>
           </v-btn>
           <!-- <v-btn
             v-if="
@@ -144,11 +145,7 @@
       </span>
       <v-divider class="mb-8" />
       <!-- Form Fields -->
-      <v-form
-        v-if="activeReport"
-        ref="form"
-        v-model="formValid"
-      >
+      <v-form v-if="activeReport" ref="form" v-model="formValid">
         <div class="grid">
           <div>
             <v-text-field
@@ -271,7 +268,15 @@
               label="Action"
               dense
               clearable
-              :items="['Count', 'Count Unique Values', 'Sum', 'Average', 'Median', 'Minimum', 'Maximum']"
+              :items="[
+                'Count',
+                'Count Unique Values',
+                'Sum',
+                'Average',
+                'Median',
+                'Minimum',
+                'Maximum',
+              ]"
               @change="onChangeYAction"
               @click:clear="onClearYAction"
             />
@@ -310,14 +315,13 @@
         </v-btn>
       </div>
       <!-- Delete Prompt -->
-      <v-dialog
-        v-model="deleteDialog"
-        max-width="400"
-      >
+      <v-dialog v-model="deleteDialog" max-width="400">
         <v-card>
           <v-card-title>Delete this report?</v-card-title>
           <v-divider class="mx-4 mb-2" />
-          <v-card-text>Are you sure you would like to delete this report?</v-card-text>
+          <v-card-text
+            >Are you sure you would like to delete this report?</v-card-text
+          >
           <v-card-actions class="d-flex justify-end">
             <v-btn
               small
@@ -327,35 +331,19 @@
             >
               Cancel
             </v-btn>
-            <v-btn
-              small
-              depressed
-              color="error"
-              @click="deleteReport"
-            >
+            <v-btn small depressed color="error" @click="deleteReport">
               Delete
             </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
       <!-- Fullscreen Report Modal -->
-      <v-dialog
-        v-model="fullscreen"
-        fullscreen
-        eager
-      >
+      <v-dialog v-model="fullscreen" fullscreen eager>
         <v-card>
-          <v-toolbar
-            class="px-5"
-            color="info"
-            dark
-          >
+          <v-toolbar class="px-5" color="info" dark>
             <h3>{{ activeReport.title }}</h3>
             <v-spacer />
-            <v-btn
-              icon
-              @click="fullscreen = false"
-            >
+            <v-btn icon @click="fullscreen = false">
               <v-icon>mdi-close-thick</v-icon>
             </v-btn>
           </v-toolbar>
@@ -372,17 +360,8 @@
           />
           <!-- Category Toggle Button -->
           <div class="d-flex justify-end pr-6">
-            <v-btn
-              v-if="circleChart"
-              outlined
-              small
-              @click="changeFSChartData"
-            >
-              Next Category <v-icon
-                small
-              >
-                mdi-arrow-right
-              </v-icon>
+            <v-btn v-if="circleChart" outlined small @click="changeFSChartData">
+              Next Category <v-icon small> mdi-arrow-right </v-icon>
             </v-btn>
           </div>
         </v-card>
@@ -403,7 +382,7 @@ import Table from "../components/Table";
 import datasetMixin from "../mixins/dataset-mixin";
 import reportMixin from "../mixins/report-mixin";
 
-import collect from 'collect.js';
+import collect from "collect.js";
 
 export default {
   name: "ReportForm",
@@ -435,9 +414,9 @@ export default {
       xAxisValue: "",
       yAxisKeys: [],
       yAxisValue: "",
-      yAction: '',
-      sortDirectionY: 'asc',
-      sortDirectionX: 'asc',
+      yAction: "",
+      sortDirectionY: "asc",
+      sortDirectionX: "asc",
     };
   },
 
@@ -581,17 +560,19 @@ export default {
       await this.fetchDataSet(this.activeReport.dataSetId);
 
       /* GET KEYS FROM ALL DATA */
-      let uniqueKeys = []
-      let newKeys = this.dataSet.dataValues.items.map(s => Object.keys(s.data))
-      console.log(newKeys)
-      newKeys.forEach(arr => {
-        arr.forEach(key => {
+      let uniqueKeys = [];
+      let newKeys = this.dataSet.dataValues.items.map((s) =>
+        Object.keys(s.data)
+      );
+      console.log(newKeys);
+      newKeys.forEach((arr) => {
+        arr.forEach((key) => {
           if (!uniqueKeys.includes(key)) {
-            uniqueKeys.push(key)
+            uniqueKeys.push(key);
           }
-        })
-      })
-      let headers = uniqueKeys.filter(k => k != '$id')
+        });
+      });
+      let headers = uniqueKeys.filter((k) => k != "$id");
 
       headers.forEach((k, i) => {
         if (k == this.xAxisValue) {
@@ -601,7 +582,7 @@ export default {
           this.arrayMove(headers, i, 1);
         }
       });
-      console.log(this.headers)
+      console.log(this.headers);
       this.headers = headers;
       let newHeaders = [];
       if (this.activeReport.columns && this.activeReport.columns.length > 0) {
@@ -660,122 +641,144 @@ export default {
       );
     },
     onChangeYAction() {
-      const data = collect(this.data)
+      const data = collect(this.data);
       const newArray = [];
-      if (this.yAction == 'Count Unique Values') {
-        const counted = data.countBy(row => row[this.xAxisValue])
+      if (this.yAction == "Count Unique Values") {
+        const counted = data.countBy((row) => row[this.xAxisValue]);
 
         for (const key in counted.items) {
           let newObj = {
             [this.xAxisValue]: key,
-            [`Count Unique Values (${this.yAxisValue})`]: counted.items[key].toString()
+            [`Count Unique Values (${this.yAxisValue})`]:
+              counted.items[key].toString(),
           };
           newArray.push(newObj);
         }
-        this.data = newArray
-      } else if (this.yAction == 'Sum') {
-        let grouped = data.groupBy(this.xAxisValue)
+        this.data = newArray;
+      } else if (this.yAction == "Sum") {
+        let grouped = data.groupBy(this.xAxisValue);
 
         for (const item in grouped.items) {
           let newObj = {
             [this.xAxisValue]: item,
-            [`Sum (${this.yAxisValue})`]: grouped.items[item].reduce((acc, item) => acc + parseFloat(item[this.yAxisValue]), 0)
+            [`Sum (${this.yAxisValue})`]: grouped.items[item].reduce(
+              (acc, item) => acc + parseFloat(item[this.yAxisValue]),
+              0
+            ),
           };
           newArray.push(newObj);
         }
-        this.data = newArray
-      } else if (this.yAction == 'Average') {
-        let grouped = data.groupBy(this.xAxisValue)
-  
+        this.data = newArray;
+      } else if (this.yAction == "Average") {
+        let grouped = data.groupBy(this.xAxisValue);
+
         for (const item in grouped.items) {
-          let sum = grouped.items[item].reduce((acc, item) => acc + parseFloat(item[this.yAxisValue]), 0);
+          let sum = grouped.items[item].reduce(
+            (acc, item) => acc + parseFloat(item[this.yAxisValue]),
+            0
+          );
           let count = grouped.items[item].count();
           let average = sum / count;
           let newObj = {
             [this.xAxisValue]: item,
-            [`Average (${this.yAxisValue})`]: average
+            [`Average (${this.yAxisValue})`]: average,
           };
           newArray.push(newObj);
         }
-        this.data = newArray
-      } else if (this.yAction == 'Count') {
-        const counted = data.countBy(row => row[this.xAxisValue])
+        this.data = newArray;
+      } else if (this.yAction == "Count") {
+        const counted = data.countBy((row) => row[this.xAxisValue]);
         for (const key in counted.items) {
           let newObj = {
             [this.xAxisValue]: key,
-            [`Count (${this.xAxisValue})`]: counted.items[key].toString()
+            [`Count (${this.xAxisValue})`]: counted.items[key].toString(),
           };
           newArray.push(newObj);
         }
-        this.data = newArray
-      } else if (this.yAction == 'Median') {
-        let grouped = data.groupBy(this.xAxisValue)
-              
+        this.data = newArray;
+      } else if (this.yAction == "Median") {
+        let grouped = data.groupBy(this.xAxisValue);
+
         for (const item in grouped.items) {
-          let values = grouped.items[item].pluck(this.yAxisValue).map(item => parseFloat(item)).toArray().sort((a, b) => b - a)
+          let values = grouped.items[item]
+            .pluck(this.yAxisValue)
+            .map((item) => parseFloat(item))
+            .toArray()
+            .sort((a, b) => b - a);
           let median = collect(values).median();
           let newObj = {
             [this.xAxisValue]: item,
-            [`Median (${this.yAxisValue})`]: median
+            [`Median (${this.yAxisValue})`]: median,
           };
           newArray.push(newObj);
         }
-        this.data = newArray
-      } else if (this.yAction == 'Maximum') {
-        let grouped = data.groupBy(this.xAxisValue)
+        this.data = newArray;
+      } else if (this.yAction == "Maximum") {
+        let grouped = data.groupBy(this.xAxisValue);
 
         for (const item in grouped.items) {
           let max = grouped.items[item].reduce((max, item) => {
-            let val = parseFloat(item[this.yAxisValue])
-            return val > max ? val : max
-          }, -Infinity)
+            let val = parseFloat(item[this.yAxisValue]);
+            return val > max ? val : max;
+          }, -Infinity);
 
           let newObj = {
             [this.xAxisValue]: item,
-            [`Maximum (${this.yAxisValue})`]: max
+            [`Maximum (${this.yAxisValue})`]: max,
           };
           newArray.push(newObj);
         }
 
-        this.data = newArray
-      } else if (this.yAction == 'Minimum') {
-        let grouped = data.groupBy(this.xAxisValue)
+        this.data = newArray;
+      } else if (this.yAction == "Minimum") {
+        let grouped = data.groupBy(this.xAxisValue);
 
         for (const item in grouped.items) {
           let min = grouped.items[item].reduce((min, item) => {
-            let val = parseFloat(item[this.yAxisValue])
-            return val < min ? val : min
-          }, Infinity)
+            let val = parseFloat(item[this.yAxisValue]);
+            return val < min ? val : min;
+          }, Infinity);
 
           let newObj = {
             [this.xAxisValue]: item,
-            [`Minimum (${this.yAxisValue})`]: min
+            [`Minimum (${this.yAxisValue})`]: min,
           };
           newArray.push(newObj);
         }
 
-        this.data = newArray
+        this.data = newArray;
       }
     },
     onClearYAction() {
-      this.updateChartData()
+      this.updateChartData();
     },
     sortChart(direction, axis) {
-      const data = collect(this.data)
+      const data = collect(this.data);
       const newArray = [];
 
       /* Sorts based on Axis and Direction */
-      let sorted = direction == 'asc' ? (axis == this.yAxisValue ? data.sortBy(item => parseFloat(item[`${this.yAction} (${axis})`])) : data.sortBy(item => parseFloat(item[axis]))) : (axis == this.yAxisValue ? data.sortByDesc(item => parseFloat(item[`${this.yAction} (${axis})`])) : data.sortByDesc(item => parseFloat(item[axis])))
+      let sorted =
+        direction == "asc"
+          ? axis == this.yAxisValue
+            ? data.sortBy((item) =>
+                parseFloat(item[`${this.yAction} (${axis})`])
+              )
+            : data.sortBy((item) => parseFloat(item[axis]))
+          : axis == this.yAxisValue
+          ? data.sortByDesc((item) =>
+              parseFloat(item[`${this.yAction} (${axis})`])
+            )
+          : data.sortByDesc((item) => parseFloat(item[axis]));
 
-      sorted.items.forEach(item => newArray.push(item))
-      this.data = newArray
+      sorted.items.forEach((item) => newArray.push(item));
+      this.data = newArray;
     },
     toggleSortY() {
-      this.sortDirectionY = this.sortDirectionY === 'asc' ? 'desc' : 'asc';
+      this.sortDirectionY = this.sortDirectionY === "asc" ? "desc" : "asc";
       this.sortChart(this.sortDirectionY, this.yAxisValue);
     },
     toggleSortX() {
-      this.sortDirectionX = this.sortDirectionX === 'asc' ? 'desc' : 'asc';
+      this.sortDirectionX = this.sortDirectionX === "asc" ? "desc" : "asc";
       this.sortChart(this.sortDirectionX, this.xAxisValue);
     },
     moveArrByKey(keys, selected, axis) {
@@ -817,14 +820,14 @@ export default {
         if (this.activeReport.columns) {
           this.selectedHeaders = this.activeReport.columns;
         }
-       console.log(this.activeReport)
+        console.log(this.activeReport);
         this.xAxisKeys = this.selectedHeaders.map((h) => h.text || h);
         this.yAxisKeys = this.selectedHeaders.map((h) => h.text || h);
-        this.updateChartData()
+        this.updateChartData();
         if (this.activeReport.yAction) {
           setTimeout(() => {
             this.yAction = this.activeReport.yAction;
-            this.onChangeYAction()
+            this.onChangeYAction();
           }, 200);
         }
       }

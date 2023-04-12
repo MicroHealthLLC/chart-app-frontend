@@ -10,7 +10,11 @@
         v-model="fullscreenR"
         :class="fullscreenR ? 'pa-6' : ''"
       >
-        <span :class="!report.yAxis ? 'd-flex align-center mb-5' : 'd-flex align-center'">
+        <span
+          :class="
+            !report.yAxis ? 'd-flex align-center mb-5' : 'd-flex align-center'
+          "
+        >
           <h4>{{ report.title }}</h4>
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
@@ -34,15 +38,12 @@
                 v-bind="attrs"
                 @click="reveal = true"
                 v-on="on"
-              ><v-icon>mdi-chevron-up</v-icon>
+                ><v-icon>mdi-chevron-up</v-icon>
               </v-btn>
             </template>
             <span>See Notes</span>
           </v-tooltip>
-          <v-tooltip
-            v-if="!isReadOnly"
-            top
-          >
+          <v-tooltip v-if="!isReadOnly" top>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 class="ml-4"
@@ -50,10 +51,7 @@
                 v-bind="attrs"
                 @click.prevent="$emit('deleteItem', report.id)"
                 v-on="on"
-              ><v-icon
-                small
-                color="red"
-              >fa-trash</v-icon>
+                ><v-icon small color="red">fa-trash</v-icon>
               </v-btn>
             </template>
             <span>Remove from Dashboard</span>
@@ -61,22 +59,32 @@
         </span>
         <!-- <fullscreen v-if="!fullscreen" v-model="fullscreenR"> -->
         <span v-if="fullscreenR">
-          <v-btn
-            class="chart-menu"
-            icon
-            @click="fullscreenReport"
-          >
-            <v-icon>{{ fullscreenR ? 'mdi-fullscreen-exit' : 'mdi-fullscreen' }}</v-icon>
+          <v-btn class="chart-menu" icon @click="fullscreenReport">
+            <v-icon>{{
+              fullscreenR ? "mdi-fullscreen-exit" : "mdi-fullscreen"
+            }}</v-icon>
           </v-btn>
           <span v-if="report.yAxis" class="d-flex mt-8 mb-0">
             <h5>Y-Axis</h5>
             <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn @click="toggleSortY" x-small class="ml-2" v-bind="attrs" v-on="on">
-                <v-icon dense>{{ sortDirectionY === 'asc' ? 'mdi-sort-descending' : 'mdi-sort-ascending' }}</v-icon>
-              </v-btn>
-            </template>
-            <span>{{ sortDirectionY === 'asc' ? 'Sort Descending' : 'Sort Ascending' }}</span>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  @click="toggleSortY"
+                  x-small
+                  class="ml-2"
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  <v-icon dense>{{
+                    sortDirectionY === "asc"
+                      ? "mdi-sort-descending"
+                      : "mdi-sort-ascending"
+                  }}</v-icon>
+                </v-btn>
+              </template>
+              <span>{{
+                sortDirectionY === "asc" ? "Sort Descending" : "Sort Ascending"
+              }}</span>
             </v-tooltip>
           </span>
           <Component
@@ -94,41 +102,58 @@
             <h5>X-Axis</h5>
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
-                <v-btn @click="toggleSortX" x-small class="ml-2" v-bind="attrs" v-on="on">
-                  <v-icon dense>{{ sortDirectionX === 'asc' ? 'mdi-sort-descending' : 'mdi-sort-ascending' }}</v-icon>
-              </v-btn>
+                <v-btn
+                  @click="toggleSortX"
+                  x-small
+                  class="ml-2"
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  <v-icon dense>{{
+                    sortDirectionX === "asc"
+                      ? "mdi-sort-descending"
+                      : "mdi-sort-ascending"
+                  }}</v-icon>
+                </v-btn>
               </template>
-              <span>{{ sortDirectionX === 'asc' ? 'Sort Descending' : 'Sort Ascending' }}</span>
+              <span>{{
+                sortDirectionX === "asc" ? "Sort Descending" : "Sort Ascending"
+              }}</span>
             </v-tooltip>
           </span>
           <div class="d-flex justify-end mb-4">
-            <v-btn
-              v-if="circleChart"
-              outlined
-              small
-              @click="changeChartData"
-            >Next Category<v-icon
-              small
-            >mdi-arrow-right</v-icon></v-btn>
+            <v-btn v-if="circleChart" outlined small @click="changeChartData"
+              >Next Category<v-icon small>mdi-arrow-right</v-icon></v-btn
+            >
           </div>
         </span>
         <span v-else>
-          <v-btn
-            class="chart-menu"
-            icon
-            @click="fullscreenReport"
-          >
-            <v-icon>{{ fullscreenR ? 'mdi-fullscreen-exit' : 'mdi-fullscreen' }}</v-icon>
+          <v-btn class="chart-menu" icon @click="fullscreenReport">
+            <v-icon>{{
+              fullscreenR ? "mdi-fullscreen-exit" : "mdi-fullscreen"
+            }}</v-icon>
           </v-btn>
           <span v-if="report.yAxis" class="d-flex">
             <h5>Y-Axis</h5>
             <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn @click="toggleSortY" x-small class="ml-2" v-bind="attrs" v-on="on">
-                <v-icon dense>{{ sortDirectionY === 'asc' ? 'mdi-sort-descending' : 'mdi-sort-ascending' }}</v-icon>
-              </v-btn>
-            </template>
-            <span>{{ sortDirectionY === 'asc' ? 'Sort Descending' : 'Sort Ascending' }}</span>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  @click="toggleSortY"
+                  x-small
+                  class="ml-2"
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  <v-icon dense>{{
+                    sortDirectionY === "asc"
+                      ? "mdi-sort-descending"
+                      : "mdi-sort-ascending"
+                  }}</v-icon>
+                </v-btn>
+              </template>
+              <span>{{
+                sortDirectionY === "asc" ? "Sort Descending" : "Sort Ascending"
+              }}</span>
             </v-tooltip>
           </span>
           <Component
@@ -143,28 +168,35 @@
           />
           <span v-if="report.xAxis" class="d-flex justify-end">
             <h5>X-Axis</h5>
-              <v-tooltip bottom>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn @click="toggleSortX" x-small class="ml-2" v-bind="attrs" v-on="on">
-                    <v-icon dense>{{ sortDirectionX === 'asc' ? 'mdi-sort-descending' : 'mdi-sort-ascending' }}</v-icon>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  @click="toggleSortX"
+                  x-small
+                  class="ml-2"
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  <v-icon dense>{{
+                    sortDirectionX === "asc"
+                      ? "mdi-sort-descending"
+                      : "mdi-sort-ascending"
+                  }}</v-icon>
                 </v-btn>
-                </template>
-                <span>{{ sortDirectionX === 'asc' ? 'Sort Descending' : 'Sort Ascending' }}</span>
-              </v-tooltip>
+              </template>
+              <span>{{
+                sortDirectionX === "asc" ? "Sort Descending" : "Sort Ascending"
+              }}</span>
+            </v-tooltip>
           </span>
           <div class="d-flex justify-end mb-4">
-            <v-btn
-              v-if="circleChart"
-              outlined
-              small
-              @click="changeChartData"
-            >Next Category<v-icon
-              small
-            >mdi-arrow-right</v-icon></v-btn>
+            <v-btn v-if="circleChart" outlined small @click="changeChartData"
+              >Next Category<v-icon small>mdi-arrow-right</v-icon></v-btn
+            >
           </div>
         </span>
       </fullscreen>
-      
+
       <span v-else-if="fullscreen && !fullscreenD">
         <span class="d-flex align-center">
           <h4>{{ report.title }}</h4>
@@ -190,26 +222,38 @@
                 v-bind="attrs"
                 @click="reveal = true"
                 v-on="on"
-              ><v-icon>mdi-chevron-up</v-icon>
+                ><v-icon>mdi-chevron-up</v-icon>
               </v-btn>
             </template>
             <span>See Notes</span>
           </v-tooltip>
         </span>
         <span v-if="report.yAxis" class="d-flex">
-            <!-- <h5>Y-Axis</h5>
+          <!-- <h5>Y-Axis</h5>
             <v-btn @click="sortChart('asc', report.yAxis)" x-small class="mx-4"><v-icon dense>mdi-sort-ascending</v-icon></v-btn>
             <v-btn @click="sortChart('desc', report.yAxis)" x-small><v-icon dense>mdi-sort-descending</v-icon></v-btn> -->
-            <h5>Y-Axis</h5>
-            <v-tooltip bottom>
+          <h5>Y-Axis</h5>
+          <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
-              <v-btn @click="toggleSortY" x-small class="ml-2" v-bind="attrs" v-on="on">
-                <v-icon dense>{{ sortDirectionY === 'asc' ? 'mdi-sort-descending' : 'mdi-sort-ascending' }}</v-icon>
+              <v-btn
+                @click="toggleSortY"
+                x-small
+                class="ml-2"
+                v-bind="attrs"
+                v-on="on"
+              >
+                <v-icon dense>{{
+                  sortDirectionY === "asc"
+                    ? "mdi-sort-descending"
+                    : "mdi-sort-ascending"
+                }}</v-icon>
               </v-btn>
             </template>
-            <span>{{ sortDirectionY === 'asc' ? 'Sort Descending' : 'Sort Ascending' }}</span>
-            </v-tooltip>
-          </span>
+            <span>{{
+              sortDirectionY === "asc" ? "Sort Descending" : "Sort Ascending"
+            }}</span>
+          </v-tooltip>
+        </span>
         <!-- <v-btn @click="fullscreenDialog" class="chart-menu" icon>
           <v-icon>mdi-arrow-expand</v-icon>
         </v-btn> -->
@@ -231,22 +275,28 @@
           <h5>X-Axis</h5>
           <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
-              <v-btn @click="toggleSortX" x-small class="ml-2" v-bind="attrs" v-on="on">
-                <v-icon dense>{{ sortDirectionX === 'asc' ? 'mdi-sort-descending' : 'mdi-sort-ascending' }}</v-icon>
-            </v-btn>
+              <v-btn
+                @click="toggleSortX"
+                x-small
+                class="ml-2"
+                v-bind="attrs"
+                v-on="on"
+              >
+                <v-icon dense>{{
+                  sortDirectionX === "asc"
+                    ? "mdi-sort-descending"
+                    : "mdi-sort-ascending"
+                }}</v-icon>
+              </v-btn>
             </template>
-            <span>{{ sortDirectionX === 'asc' ? 'Sort Descending' : 'Sort Ascending' }}</span>
+            <span>{{
+              sortDirectionX === "asc" ? "Sort Descending" : "Sort Ascending"
+            }}</span>
           </v-tooltip>
         </span>
         <div class="d-flex justify-end mb-4">
-          <v-btn
-            v-if="circleChart"
-            outlined
-            small
-            @click="changeChartData"
-          >Next Category<v-icon
-            small
-          >mdi-arrow-right</v-icon>
+          <v-btn v-if="circleChart" outlined small @click="changeChartData"
+            >Next Category<v-icon small>mdi-arrow-right</v-icon>
           </v-btn>
         </div>
       </span>
@@ -309,7 +359,7 @@
               v-bind="attrs"
               @click="reveal = false"
               v-on="on"
-            ><v-icon>mdi-chevron-down</v-icon>
+              ><v-icon>mdi-chevron-down</v-icon>
             </v-btn>
           </template>
           <span>Hide Notes</span>
@@ -333,7 +383,7 @@ import Table from "../components/Table";
 import datasetMixin from "../mixins/dataset-mixin";
 import reportMixin from "../mixins/report-mixin";
 
-import collect from 'collect.js';
+import collect from "collect.js";
 
 export default {
   name: "DashboardCardReport",
@@ -369,8 +419,8 @@ export default {
       colorScheme: [],
       data: [],
       reveal: false,
-      sortDirectionY: 'asc',
-      sortDirectionX: 'asc',
+      sortDirectionY: "asc",
+      sortDirectionX: "asc",
     };
   },
   computed: {
@@ -402,7 +452,7 @@ export default {
       return this.$route.params.reportId == "new";
     },
     screenHeight() {
-      console.log(window)
+      console.log(window);
       return window.innerHeight - 110;
     },
   },
@@ -465,17 +515,19 @@ export default {
       await this.fetchDataSet(this.report.dataSetId);
 
       /* GET KEYS FROM ALL DATA */
-      let uniqueKeys = []
-      let newKeys = this.dataSet.dataValues.items.map(s => Object.keys(s.data))
+      let uniqueKeys = [];
+      let newKeys = this.dataSet.dataValues.items.map((s) =>
+        Object.keys(s.data)
+      );
 
-      newKeys.forEach(arr => {
-        arr.forEach(key => {
+      newKeys.forEach((arr) => {
+        arr.forEach((key) => {
           if (!uniqueKeys.includes(key)) {
-            uniqueKeys.push(key)
+            uniqueKeys.push(key);
           }
-        })
-      })
-      let headers = uniqueKeys.filter(k => k != '$id')
+        });
+      });
+      let headers = uniqueKeys.filter((k) => k != "$id");
 
       headers.forEach((k, j) => {
         if (k == this.report.xAxis) {
@@ -499,128 +551,149 @@ export default {
       this.data = this.createMasterData(this.dataSet.dataValues.items);
       this.data = this.filterData(newHeaders, this.data);
       if (this.report.yAction) {
-        this.onChangeYAction()
+        this.onChangeYAction();
       }
       this.SET_REPORT_DATASET(this.dataSet);
     },
     onChangeYAction() {
-      const data = collect(this.data)
-      let xLabel = Object.keys(this.data[0])[0]
-      let yLabel = Object.keys(this.data[0])[1]
+      const data = collect(this.data);
+      let xLabel = Object.keys(this.data[0])[0];
+      let yLabel = Object.keys(this.data[0])[1];
       let newArray = [];
-      if (this.report.yAction == 'Count Unique Values') {
-        const counted = data.countBy(row => row[xLabel])
+      if (this.report.yAction == "Count Unique Values") {
+        const counted = data.countBy((row) => row[xLabel]);
 
         for (const key in counted.items) {
           let newObj = {
             [xLabel]: key,
-            [`Count Unique Values (${yLabel})`]: +counted.items[key].toFixed(2)
+            [`Count Unique Values (${yLabel})`]: +counted.items[key].toFixed(2),
           };
           newArray.push(newObj);
         }
-        this.data = newArray
-      } else if (this.report.yAction == 'Count') {
-        const counted = data.countBy(row => row[xLabel])
+        this.data = newArray;
+      } else if (this.report.yAction == "Count") {
+        const counted = data.countBy((row) => row[xLabel]);
 
         for (const key in counted.items) {
           let newObj = {
             [xLabel]: key,
-            [`Count (${xLabel})`]: +counted.items[key].toFixed(2)
+            [`Count (${xLabel})`]: +counted.items[key].toFixed(2),
           };
           newArray.push(newObj);
         }
-        this.data = newArray
-      } else if (this.report.yAction == 'Sum') {
-        let grouped = data.groupBy(xLabel)
+        this.data = newArray;
+      } else if (this.report.yAction == "Sum") {
+        let grouped = data.groupBy(xLabel);
 
         for (const item in grouped.items) {
           let newObj = {
             [xLabel]: item,
-            [`Sum (${yLabel})`]: +grouped.items[item].reduce((acc, item) => acc + parseFloat(item[yLabel]), 0).toFixed(2)
+            [`Sum (${yLabel})`]: +grouped.items[item]
+              .reduce((acc, item) => acc + parseFloat(item[yLabel]), 0)
+              .toFixed(2),
           };
           newArray.push(newObj);
         }
-        this.data = newArray
-      } else if (this.report.yAction == 'Average') {
-        let grouped = data.groupBy(xLabel)
-  
+        this.data = newArray;
+      } else if (this.report.yAction == "Average") {
+        let grouped = data.groupBy(xLabel);
+
         for (const item in grouped.items) {
-          let sum = grouped.items[item].reduce((acc, item) => acc + parseFloat(item[yLabel]), 0);
+          let sum = grouped.items[item].reduce(
+            (acc, item) => acc + parseFloat(item[yLabel]),
+            0
+          );
           let count = grouped.items[item].count();
           let average = sum / count;
           let newObj = {
             [xLabel]: item,
-            [`Average (${yLabel})`]: +average.toFixed(2)
+            [`Average (${yLabel})`]: +average.toFixed(2),
           };
           newArray.push(newObj);
         }
-        this.data = newArray
-      } else if (this.report.yAction == 'Median') {
-        let grouped = data.groupBy(xLabel)
-              
+        this.data = newArray;
+      } else if (this.report.yAction == "Median") {
+        let grouped = data.groupBy(xLabel);
+
         for (const item in grouped.items) {
-          let values = grouped.items[item].pluck(yLabel).map(item => parseFloat(item)).toArray().sort((a, b) => b - a)
+          let values = grouped.items[item]
+            .pluck(yLabel)
+            .map((item) => parseFloat(item))
+            .toArray()
+            .sort((a, b) => b - a);
           let median = collect(values).median();
           let newObj = {
             [xLabel]: item,
-            [`Median (${yLabel})`]: +median.toFixed(2)
+            [`Median (${yLabel})`]: +median.toFixed(2),
           };
           newArray.push(newObj);
         }
-        this.data = newArray
-      } else if (this.report.yAction == 'Maximum') {
-        let grouped = data.groupBy(xLabel)
+        this.data = newArray;
+      } else if (this.report.yAction == "Maximum") {
+        let grouped = data.groupBy(xLabel);
 
         for (const item in grouped.items) {
           let max = grouped.items[item].reduce((max, item) => {
-            let val = parseFloat(item[yLabel])
-            return val > max ? val : max
-          }, -Infinity)
+            let val = parseFloat(item[yLabel]);
+            return val > max ? val : max;
+          }, -Infinity);
 
           let newObj = {
             [xLabel]: item,
-            [`Maximum (${yLabel})`]: +max.toFixed(2)
+            [`Maximum (${yLabel})`]: +max.toFixed(2),
           };
           newArray.push(newObj);
         }
 
-        this.data = newArray
-      } else if (this.report.yAction == 'Minimum') {
-        let grouped = data.groupBy(xLabel)
+        this.data = newArray;
+      } else if (this.report.yAction == "Minimum") {
+        let grouped = data.groupBy(xLabel);
 
         for (const item in grouped.items) {
           let min = grouped.items[item].reduce((min, item) => {
-            let val = parseFloat(item[yLabel])
-            return val < min ? val : min
-          }, Infinity)
+            let val = parseFloat(item[yLabel]);
+            return val < min ? val : min;
+          }, Infinity);
 
           let newObj = {
             [xLabel]: item,
-            [`Minimum (${yLabel})`]: +min.toFixed(2)
+            [`Minimum (${yLabel})`]: +min.toFixed(2),
           };
           newArray.push(newObj);
         }
 
-        this.data = newArray
+        this.data = newArray;
       }
     },
     sortChart(direction, axis) {
-      const data = collect(this.data)
+      const data = collect(this.data);
       const newArray = [];
 
       /* Sorts based on Axis and Direction */
-      let sorted = direction === 'asc' ? (axis == this.report.yAxis ? data.sortBy(item => parseFloat(item[`${this.report.yAction} (${axis})`])) : data.sortBy(item => parseFloat(item[axis]))) :
-      direction === 'desc' ? (axis == this.report.yAxis ? data.sortByDesc(item => parseFloat(item[`${this.report.yAction} (${axis})`])) : data.sortByDesc(item => parseFloat(item[axis]))) : ''
+      let sorted =
+        direction === "asc"
+          ? axis == this.report.yAxis
+            ? data.sortBy((item) =>
+                parseFloat(item[`${this.report.yAction} (${axis})`])
+              )
+            : data.sortBy((item) => parseFloat(item[axis]))
+          : direction === "desc"
+          ? axis == this.report.yAxis
+            ? data.sortByDesc((item) =>
+                parseFloat(item[`${this.report.yAction} (${axis})`])
+              )
+            : data.sortByDesc((item) => parseFloat(item[axis]))
+          : "";
 
-      sorted.items.forEach(item => newArray.push(item))
-      this.data = newArray
+      sorted.items.forEach((item) => newArray.push(item));
+      this.data = newArray;
     },
     toggleSortY() {
-      this.sortDirectionY = this.sortDirectionY === 'asc' ? 'desc' : 'asc';
+      this.sortDirectionY = this.sortDirectionY === "asc" ? "desc" : "asc";
       this.sortChart(this.sortDirectionY, this.report.yAxis);
     },
     toggleSortX() {
-      this.sortDirectionX = this.sortDirectionX === 'asc' ? 'desc' : 'asc';
+      this.sortDirectionX = this.sortDirectionX === "asc" ? "desc" : "asc";
       this.sortChart(this.sortDirectionX, this.report.xAxis);
     },
     fullscreenReport() {
@@ -630,7 +703,7 @@ export default {
       }, 100); */
     },
     fullscreenDialog() {
-      this.fullscreenD = true
+      this.fullscreenD = true;
     },
     updateColors(selectedSchemeId) {
       this.colorScheme = this.colors.find(
@@ -651,13 +724,13 @@ export default {
       this.updateChartData();
     },
     fullscreenR() {
-      console.log(this.fullscreenR)
+      console.log(this.fullscreenR);
       /* if (this.fullscreenR) {
         this.reportHeight = this.screenHeight
       } else {
         this.reportHeight = 400
       } */
-      this.updateChartData()
+      this.updateChartData();
     },
   },
   mounted() {
@@ -665,11 +738,11 @@ export default {
     this.fetchDataSets();
     this.updateChartData();
     setTimeout(() => {
-        if (this.$parent.$parent.$el.clientHeight != 0) {
-          this.reportHeight = this.$parent.$parent.$el.clientHeight - 100
-        }
-        console.log(this.reportHeight)
-      }, 100);
+      if (this.$parent.$parent.$el.clientHeight != 0) {
+        this.reportHeight = this.$parent.$parent.$el.clientHeight - 100;
+      }
+      console.log(this.reportHeight);
+    }, 100);
   },
 };
 </script>
@@ -678,7 +751,6 @@ export default {
 .chart-container {
   position: relative;
   height: 80vh;
-
 }
 
 .fullscreen {
@@ -739,4 +811,5 @@ export default {
   position: absolute;
   top: 10px;
   right: 10px;
-}</style>
+}
+</style>

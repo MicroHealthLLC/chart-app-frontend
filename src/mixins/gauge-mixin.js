@@ -6,7 +6,7 @@ export default {
         title: "",
         value: 0,
         chartType: "Traditional",
-        notes: ''
+        notes: "",
         //segmentStops: [0, 70, 90, 100]
       },
     };
@@ -75,9 +75,9 @@ export default {
         this.currentChannels &&
         this.currentChannels[0].channelId
       ) {
-        return this.gauges.filter(
-          (t) => t.channelId == this.currentChannels[0].channelId
-        ).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+        return this.gauges
+          .filter((t) => t.channelId == this.currentChannels[0].channelId)
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       } else return [];
     },
     channelHeatMaps() {
@@ -87,9 +87,9 @@ export default {
         this.currentChannels &&
         this.currentChannels[0].channelId
       ) {
-        return this.heatMaps.filter(
-          (t) => t.channelId == this.currentChannels[0].channelId
-        ).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+        return this.heatMaps
+          .filter((t) => t.channelId == this.currentChannels[0].channelId)
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       } else return [];
     },
   },

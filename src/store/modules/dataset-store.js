@@ -69,7 +69,9 @@ export default {
       console.log(dataValue);
       commit("TOGGLE_SAVING", true);
       try {
-        await API.graphql(graphqlOperation(updateDataValue, { input: dataValue }));
+        await API.graphql(
+          graphqlOperation(updateDataValue, { input: dataValue })
+        );
         dispatch("fetchDataValues");
         /* commit("SET_SNACKBAR", {
           show: true,
@@ -100,13 +102,17 @@ export default {
         const response = await API.graphql(graphqlOperation(getDataSet, id));
         const dataSet = response.data.getDataSet;
         const dataValues = dataSet.dataValues.items;
-    
+
         // Delete the dataSet and all associated dataValues
         await Promise.all([
           API.graphql(graphqlOperation(deleteDataSet, { input: id })),
-          ...dataValues.map((dataValue) => API.graphql(graphqlOperation(deleteDataValue, { input: { id: dataValue.id } })) ),
+          ...dataValues.map((dataValue) =>
+            API.graphql(
+              graphqlOperation(deleteDataValue, { input: { id: dataValue.id } })
+            )
+          ),
         ]);
-    
+
         dispatch("fetchDataSets");
         commit("SET_SNACKBAR", {
           show: true,
@@ -116,7 +122,7 @@ export default {
       } catch (error) {
         console.log(error);
       }
-    },   
+    },
     async removeDataValue({ commit, dispatch }, id) {
       try {
         await API.graphql(graphqlOperation(deleteDataValue, { input: id }));

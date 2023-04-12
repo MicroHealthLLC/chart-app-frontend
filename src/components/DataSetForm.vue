@@ -3,15 +3,9 @@
     <!-- Title -->
     <v-col class="col-12">
       <div class="d-flex justify-space-between">
-        <h3 v-if="!isReadOnly && dataSet.id">
-          Update {{ dataSet.title }}
-        </h3>
-        <h3 v-else-if="dataSet.id">
-          View {{ dataSet.title }}
-        </h3>
-        <h3 v-else>
-          Add Data Set
-        </h3>
+        <h3 v-if="!isReadOnly && dataSet.id">Update {{ dataSet.title }}</h3>
+        <h3 v-else-if="dataSet.id">View {{ dataSet.title }}</h3>
+        <h3 v-else>Add Data Set</h3>
         <div>
           <v-btn
             v-if="!isReadOnly"
@@ -62,14 +56,10 @@
         dense
         dismissible
       >
-        Please fix highlighted fields below
-        before sumbitting Report
+        Please fix highlighted fields below before sumbitting Report
       </v-alert>
       <!-- Form Fields -->
-      <v-form
-        ref="form"
-        v-model="formValid"
-      >
+      <v-form ref="form" v-model="formValid">
         <v-row>
           <v-col cols="6">
             <v-text-field
@@ -89,14 +79,8 @@
                 @change.native="onChange"
                 @click:clear="clearInput('file')"
               />
-              <xlsx-read
-                :options="readOptions"
-                :file="file"
-              >
-                <xlsx-json
-                  :options="readOptions"
-                  @parsed="setTableItems"
-                />
+              <xlsx-read :options="readOptions" :file="file">
+                <xlsx-json :options="readOptions" @parsed="setTableItems" />
               </xlsx-read>
               <v-btn
                 v-if="dataSet.id"
@@ -126,9 +110,9 @@
     <v-col
       v-show="
         dataSet.id &&
-          this.dataSet.dataValues &&
-          this.dataSet.dataValues.items &&
-          this.dataSet.dataValues.items.length > 0
+        this.dataSet.dataValues &&
+        this.dataSet.dataValues.items &&
+        this.dataSet.dataValues.items.length > 0
       "
       class="col-12"
     >
@@ -154,27 +138,14 @@
           width="100%"
         />
 
-
-        <div
-          v-else
-          class="ma-4"
-        >
+        <div v-else class="ma-4">
           <span class="d-flex justify-end">
-            <v-btn
-              small
-              class="mr-4 mb-4"
-              @click="showRemoveColumn"
-            >
+            <v-btn small class="mr-4 mb-4" @click="showRemoveColumn">
               Remove Columns
             </v-btn>
-            <v-btn
-              small
-              class="mb-4 mr-6"
-              @click="showAddColumn"
-            ><v-icon>mdi-plus</v-icon><v-icon
-              small
-              class="ml-2"
-            >mdi-function-variant</v-icon>
+            <v-btn small class="mb-4 mr-6" @click="showAddColumn"
+              ><v-icon>mdi-plus</v-icon
+              ><v-icon small class="ml-2">mdi-function-variant</v-icon>
             </v-btn>
           </span>
           <vue-excel-editor
@@ -187,7 +158,7 @@
             @update="onUpdate"
           >
             <vue-excel-column
-              v-for="col, i in allKeys"
+              v-for="(col, i) in allKeys"
               :key="i"
               auto-fill-width
               :field="col"
@@ -202,10 +173,7 @@
         </div>
       </v-card>
     </v-col>
-    <v-dialog
-      v-model="columnForm"
-      width="20%"
-    >
+    <v-dialog v-model="columnForm" width="20%">
       <v-card class="pa-4">
         <v-text-field
           v-model="newColumn.title"
@@ -227,7 +195,7 @@
           v-if="dataSet.id"
           v-model="newColumn.col1"
           dense
-          :items="allKeys.filter(k => checkColType(k, items) != 'string')"
+          :items="allKeys.filter((k) => checkColType(k, items) != 'string')"
           label="First column"
           outlined
         />
@@ -235,35 +203,22 @@
           v-if="dataSet.id"
           v-model="newColumn.col2"
           dense
-          :items="allKeys.filter(k => checkColType(k, items) != 'string')"
+          :items="allKeys.filter((k) => checkColType(k, items) != 'string')"
           label="Second column"
           outlined
         />
         <span class="d-flex justify-end">
-
           <!-- <v-btn color="warning" class="mr-4" @click="cancelColumnForm" small>
             Cancel
           </v-btn> -->
-          <v-btn
-            class="mr-4"
-            small
-            outlined
-            @click="cancelColumnForm"
-          >Cancel</v-btn>
-          <v-btn
-            color="primary"
-            small
-            @click="addColumn"
+          <v-btn class="mr-4" small outlined @click="cancelColumnForm"
+            >Cancel</v-btn
           >
-            Add Column
-          </v-btn>
+          <v-btn color="primary" small @click="addColumn"> Add Column </v-btn>
         </span>
       </v-card>
     </v-dialog>
-    <v-dialog
-      v-model="rmColForm"
-      width="20%"
-    >
+    <v-dialog v-model="rmColForm" width="20%">
       <v-card class="pa-4">
         <v-select
           v-model="colsToRemove"
@@ -274,12 +229,7 @@
           hint="Choose the columns you wish to remove"
           persistent-hint
         />
-        <v-btn
-          class="mt-6"
-          color="primary"
-          small
-          @click="removeColumns"
-        >
+        <v-btn class="mt-6" color="primary" small @click="removeColumns">
           Remove Columns
         </v-btn>
       </v-card>
@@ -291,19 +241,18 @@
 import { XlsxRead, XlsxJson } from "vue-xlsx";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import datasetMixin from "../mixins/dataset-mixin";
-import moment from 'moment';
+import moment from "moment";
 
 export default {
   name: "DataSetForm",
   components: {
     XlsxRead,
     XlsxJson,
-
   },
   mixins: [datasetMixin],
   data() {
     return {
-      choices: ['Sum', 'Difference', 'Product', 'Quotient', 'Average'],
+      choices: ["Sum", "Difference", "Product", "Quotient", "Average"],
       file: null,
       //data: [],
       chartOptions: {
@@ -335,10 +284,10 @@ export default {
       columnForm: false,
       rmColForm: false,
       newColumn: {
-        title: '',
-        action: '',
-        col1: '',
-        col2: '',
+        title: "",
+        action: "",
+        col1: "",
+        col2: "",
       },
       renderComponent: true,
       colsToRemove: [],
@@ -358,19 +307,19 @@ export default {
     ]),
     allKeys() {
       if (this.items && this.items.length > 0) {
-        let uniqueKeys = []
-        let newKeys = this.items.map(s => Object.keys(s))
-        newKeys.forEach(arr => {
-          arr.forEach(key => {
+        let uniqueKeys = [];
+        let newKeys = this.items.map((s) => Object.keys(s));
+        newKeys.forEach((arr) => {
+          arr.forEach((key) => {
             if (!uniqueKeys.includes(key)) {
-              uniqueKeys.push(key)
+              uniqueKeys.push(key);
             }
-          })
-        })
-        console.log(uniqueKeys.filter(k => k != '$id'))
-        return uniqueKeys.filter(k => k != '$id')
-      } else return []
-    }
+          });
+        });
+        console.log(uniqueKeys.filter((k) => k != "$id"));
+        return uniqueKeys.filter((k) => k != "$id");
+      } else return [];
+    },
   },
   methods: {
     ...mapActions([
@@ -438,7 +387,9 @@ export default {
               .filter((d) => !oldDataSetIds.includes(d.id));
             let id = lastAdded[0].id;
             /* this.$router.push(`/data-sets/${id}`) */
-            this.$router.push(`/${this.currentChannels[0].name}/data-sets/${id}`);
+            this.$router.push(
+              `/${this.currentChannels[0].name}/data-sets/${id}`
+            );
             //console.log(this.selected)
             /* console.log(this.selected)
             this.fetchDataSetThenAddDataValue(id, this.selected) */
@@ -449,27 +400,27 @@ export default {
       }
     },
     addNewDataValue() {
-      let objString = ''
+      let objString = "";
       this.items.forEach((item) => {
         objString = JSON.stringify(item);
         this.addDataValue({
           data: objString,
           dataSetId: this.dataSet.id,
-        })
-      })
+        });
+      });
       this.showDataChart();
       this.clearInput("file");
     },
     updateDataValues() {
-      let data = ''
-      this.dataSet.dataValues.items.forEach(item => {
+      let data = "";
+      this.dataSet.dataValues.items.forEach((item) => {
         data = JSON.stringify(item.data);
         this.updateDataValueById({
           id: item.id,
           data: data,
           dataSetId: this.dataSet.id,
-        })
-      })
+        });
+      });
     },
     clearInput(type) {
       console.log(type);
@@ -489,100 +440,142 @@ export default {
     },
     setTableItems(data) {
       this.items = data;
-      this.fixNullVals()
+      this.fixNullVals();
     },
     fixNullVals() {
-      this.items.forEach(i => {
-        this.allKeys.forEach(k => {
+      this.items.forEach((i) => {
+        this.allKeys.forEach((k) => {
           if (i[k] == undefined) {
-            i[k] = ''
+            i[k] = "";
           }
-        })
-      })
+        });
+      });
     },
     checkColType(col, items) {
-      return items.every(i => !isNaN(i[col])) ? 'number' :
-        items.every(i => moment(i[col]).isValid() && moment().diff(moment(i[col])) > 0) ? 'date' : 'string'
+      return items.every((i) => !isNaN(i[col]))
+        ? "number"
+        : items.every(
+            (i) => moment(i[col]).isValid() && moment().diff(moment(i[col])) > 0
+          )
+        ? "date"
+        : "string";
     },
     showAddColumn() {
-      this.columnForm = true
+      this.columnForm = true;
     },
     addColumn() {
-      this.items.forEach(item => {
+      this.items.forEach((item) => {
         switch (this.newColumn.action) {
           case "Difference":
-            if (!isNaN(item[this.newColumn.col1]) && !isNaN(item[this.newColumn.col2])) {
-              item[this.newColumn.title] = item[this.newColumn.col2] - item[this.newColumn.col1]
-            } else if (moment(item[this.newColumn.col1]).isValid() && moment(item[this.newColumn.col2]).isValid())
-              item[this.newColumn.title] = (moment(item[this.newColumn.col2]) - moment(item[this.newColumn.col1])) / (1000 * 60 * 60 * 24)
+            if (
+              !isNaN(item[this.newColumn.col1]) &&
+              !isNaN(item[this.newColumn.col2])
+            ) {
+              item[this.newColumn.title] =
+                item[this.newColumn.col2] - item[this.newColumn.col1];
+            } else if (
+              moment(item[this.newColumn.col1]).isValid() &&
+              moment(item[this.newColumn.col2]).isValid()
+            )
+              item[this.newColumn.title] =
+                (moment(item[this.newColumn.col2]) -
+                  moment(item[this.newColumn.col1])) /
+                (1000 * 60 * 60 * 24);
             break;
           case "Sum":
-            if (!isNaN(item[this.newColumn.col1]) && !isNaN(item[this.newColumn.col2])) {
-              item[this.newColumn.title] = parseFloat(item[this.newColumn.col2]) + parseFloat(item[this.newColumn.col1])
+            if (
+              !isNaN(item[this.newColumn.col1]) &&
+              !isNaN(item[this.newColumn.col2])
+            ) {
+              item[this.newColumn.title] =
+                parseFloat(item[this.newColumn.col2]) +
+                parseFloat(item[this.newColumn.col1]);
             } /* else if (moment(item[this.newColumn.col1]).isValid() && moment(item[this.newColumn.col2]).isValid())
               item[this.newColumn.title] = (moment(item[this.newColumn.col2]) + moment(item[this.newColumn.col1])) / (1000 * 60 * 60 * 24) */
             break;
           case "Product":
-            if (!isNaN(item[this.newColumn.col1]) && !isNaN(item[this.newColumn.col2])) {
-              item[this.newColumn.title] = parseFloat(item[this.newColumn.col2]) * parseFloat(item[this.newColumn.col1])
+            if (
+              !isNaN(item[this.newColumn.col1]) &&
+              !isNaN(item[this.newColumn.col2])
+            ) {
+              item[this.newColumn.title] =
+                parseFloat(item[this.newColumn.col2]) *
+                parseFloat(item[this.newColumn.col1]);
             } /* else if (moment(item[this.newColumn.col1]).isValid() && moment(item[this.newColumn.col2]).isValid())
               item[this.newColumn.title] = (moment(item[this.newColumn.col2]) * moment(item[this.newColumn.col1])) / (1000 * 60 * 60 * 24) */
             break;
           case "Quotient":
-            if (!isNaN(item[this.newColumn.col1]) && !isNaN(item[this.newColumn.col2])) {
-              item[this.newColumn.title] = parseFloat(item[this.newColumn.col2]) / parseFloat(item[this.newColumn.col1])
+            if (
+              !isNaN(item[this.newColumn.col1]) &&
+              !isNaN(item[this.newColumn.col2])
+            ) {
+              item[this.newColumn.title] =
+                parseFloat(item[this.newColumn.col2]) /
+                parseFloat(item[this.newColumn.col1]);
             } /* else if (moment(item[this.newColumn.col1]).isValid() && moment(item[this.newColumn.col2]).isValid())
               item[this.newColumn.title] = (moment(item[this.newColumn.col2]) * moment(item[this.newColumn.col1])) / (1000 * 60 * 60 * 24) */
             break;
           case "Average":
-            if (!isNaN(item[this.newColumn.col1]) && !isNaN(item[this.newColumn.col2])) {
-              item[this.newColumn.title] = (parseFloat(item[this.newColumn.col2]) + parseFloat(item[this.newColumn.col1])) / 2
-              console.log(item[this.newColumn.title])
-            } else if (moment(item[this.newColumn.col1]).isValid() && moment(item[this.newColumn.col2]).isValid())
-              item[this.newColumn.title] = (moment(item[this.newColumn.col2]) + moment(item[this.newColumn.col1])) / (1000 * 60 * 60 * 24)
+            if (
+              !isNaN(item[this.newColumn.col1]) &&
+              !isNaN(item[this.newColumn.col2])
+            ) {
+              item[this.newColumn.title] =
+                (parseFloat(item[this.newColumn.col2]) +
+                  parseFloat(item[this.newColumn.col1])) /
+                2;
+              console.log(item[this.newColumn.title]);
+            } else if (
+              moment(item[this.newColumn.col1]).isValid() &&
+              moment(item[this.newColumn.col2]).isValid()
+            )
+              item[this.newColumn.title] =
+                (moment(item[this.newColumn.col2]) +
+                  moment(item[this.newColumn.col1])) /
+                (1000 * 60 * 60 * 24);
             break;
           default:
-            alert('Must be a valid number')
+            alert("Must be a valid number");
             break;
         }
-      })
+      });
       /* This force re-renders the table... */
-      this.items.push({})
-      this.cancelColumnForm()
-      this.items.pop()
-      this.updateDataValues()
+      this.items.push({});
+      this.cancelColumnForm();
+      this.items.pop();
+      this.updateDataValues();
     },
     cancelColumnForm() {
-      this.columnForm = false
+      this.columnForm = false;
       this.newColumn = {
-        title: '',
-        action: '',
-        col1: '',
-        col2: '',
-      }
+        title: "",
+        action: "",
+        col1: "",
+        col2: "",
+      };
     },
     showRemoveColumn() {
-      this.rmColForm = true
+      this.rmColForm = true;
     },
     removeColumns() {
-      this.colsToRemove.forEach(col => {
-        this.items.forEach(item => {
-          delete item[col]
-        })
-      })
+      this.colsToRemove.forEach((col) => {
+        this.items.forEach((item) => {
+          delete item[col];
+        });
+      });
       this.$refs.grid.fields.forEach((field, i) => {
         if (this.colsToRemove.includes(field.name)) {
-          this.$refs.grid.fields.splice(i, 1)
+          this.$refs.grid.fields.splice(i, 1);
         }
-      })
-      this.items.push({})
-      this.rmColForm = false
-      this.items.pop()
-      this.updateDataValues()
+      });
+      this.items.push({});
+      this.rmColForm = false;
+      this.items.pop();
+      this.updateDataValues();
     },
     onUpdate(records) {
-      console.log(records)
-    }
+      console.log(records);
+    },
   },
   watch: {
     dataSet() {
@@ -630,7 +623,9 @@ export default {
           value: item,
         })); */
         //this.selectedHeaders = this.headers
-        this.setTableItems(this.createMasterData(this.dataSet.dataValues.items));
+        this.setTableItems(
+          this.createMasterData(this.dataSet.dataValues.items)
+        );
       }
       this.isReadOnly = true;
     }
@@ -639,7 +634,7 @@ export default {
     if (!this.dataSet.user) {
       this.dataSet.user = `${this.user.attributes.given_name} ${this.user.attributes.family_name}`;
     }
-    console.log(this.$refs)
+    console.log(this.$refs);
   },
 };
 </script>
@@ -664,17 +659,17 @@ export default {
   grid-column: 1 / span 2;
 }
 
-div>>>.v-select__selections {
+div >>> .v-select__selections {
   padding-top: 5px;
   padding-bottom: 5px;
 }
 
-div>>>.v-select__selections .v-chip {
+div >>> .v-select__selections .v-chip {
   color: white;
   background-color: #2196f3;
 }
 
-div>>>.v-select__selections .v-chip .v-icon {
+div >>> .v-select__selections .v-chip .v-icon {
   color: white;
 }
 </style>

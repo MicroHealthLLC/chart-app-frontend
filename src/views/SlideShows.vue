@@ -5,12 +5,7 @@
         <h3>Create Slide Show</h3>
         <div>
           <!-- <v-btn class="px-5 mr-2 mb-2" @click="saveDashboard" color="primary" depressed small>Save</v-btn> -->
-          <v-btn
-            class="mb-2"
-            small
-            outlined
-            @click="closeSlideShowForm"
-          >
+          <v-btn class="mb-2" small outlined @click="closeSlideShowForm">
             Close
           </v-btn>
         </div>
@@ -25,21 +20,19 @@
 
     <v-col cols="12">
       <fullscreen v-model="fullscreen">
-        <v-carousel
-          v-if="fullscreen"
-          v-model="model"
-          height="99vh"
-        >
+        <v-carousel v-if="fullscreen" v-model="model" height="99vh">
           <v-carousel-item
             v-for="(dashboard, i) in selectedDashboards"
             :key="i"
           >
-            <v-row :style="{ background: dashboard.background, height: 'max-content' }">
+            <v-row
+              :style="{
+                background: dashboard.background,
+                height: 'max-content',
+              }"
+            >
               <v-col cols="12">
-                <v-card
-                  width="max-content"
-                  class="px-2 mx-auto mt-4"
-                >
+                <v-card width="max-content" class="px-2 mx-auto mt-4">
                   <h2>{{ dashboard.title }}</h2>
                   <h4>By: {{ dashboard.createdBy }}</h4>
                 </v-card>
@@ -50,10 +43,7 @@
                 :key="index"
                 :cols="dashboardCols(JSON.parse(dashboard.cards), index)"
               >
-                <v-card
-                  :ref="`card${index}`"
-                  class="pa-4 ma-2"
-                >
+                <v-card :ref="`card${index}`" class="pa-4 ma-2">
                   <DashboardCardHeatMap
                     v-if="checkChartType(item) == 'heatMap'"
                     :heat-map="item"
@@ -98,9 +88,7 @@
             v-model="crossChanDB"
             label="See All Channels Dashboards"
           />
-          <v-btn @click="fullscreen = true">
-            Show Slide Show
-          </v-btn>
+          <v-btn @click="fullscreen = true"> Show Slide Show </v-btn>
         </v-col>
       </v-row>
     </v-col>
@@ -108,18 +96,18 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
-import dashboardMixin from '../mixins/dashboard-mixin';
-import DashboardCardHeatMap from '../components/DashboardCardHeatMap.vue';
-import DashboardCardGauge from '../components/DashboardCardGauge.vue';
-import DashboardCardReport from '../components/DashboardCardReport.vue';
+import { mapActions, mapGetters } from "vuex";
+import dashboardMixin from "../mixins/dashboard-mixin";
+import DashboardCardHeatMap from "../components/DashboardCardHeatMap.vue";
+import DashboardCardGauge from "../components/DashboardCardGauge.vue";
+import DashboardCardReport from "../components/DashboardCardReport.vue";
 
 export default {
   name: "SlideShows",
   components: {
     DashboardCardGauge,
     DashboardCardHeatMap,
-    DashboardCardReport
+    DashboardCardReport,
   },
   mixins: [dashboardMixin],
   props: {
@@ -132,31 +120,30 @@ export default {
       crossChanDB: false,
       model: 0,
       isReadOnly: true,
-    }
+    };
   },
   computed: {
-    ...mapGetters([
-      "dashboards",
-      "currentChannels",
-    ]),
+    ...mapGetters(["dashboards", "currentChannels"]),
     filteredDashboards() {
       if (this.dashboards) {
-        return this.crossChanDB ? this.dashboards : this.dashboards.filter((t) => t.channelId == this.currentChannels[0].channelId) 
+        return this.crossChanDB
+          ? this.dashboards
+          : this.dashboards.filter(
+              (t) => t.channelId == this.currentChannels[0].channelId
+            );
       } else {
-        return []
+        return [];
       }
-      
     },
-    
   },
   methods: {
     ...mapActions(["fetchDashboards"]),
     closeSlideShowForm() {
-      this.$emit("toggleSlideShow")
+      this.$emit("toggleSlideShow");
     },
     fullscreenSS() {
       this.fullscreen = true;
-      this.closeSlideShowForm()
+      this.closeSlideShowForm();
     },
   },
   /* async mounted() {
@@ -165,16 +152,15 @@ export default {
   }, */
   watch: {
     selectedDashboards() {
-      console.log(this.selectedDashboards)
-    }
-  }
-}
+      console.log(this.selectedDashboards);
+    },
+  },
+};
 </script>
 
 <style>
 .v-responsive {
   overflow-y: auto;
   overflow-x: hidden;
-
 }
 </style>
