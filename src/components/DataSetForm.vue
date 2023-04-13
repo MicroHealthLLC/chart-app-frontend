@@ -60,8 +60,8 @@
       </v-alert>
       <!-- Form Fields -->
       <v-form ref="form" v-model="formValid">
-        <v-row>
-          <v-col cols="6">
+        <v-row justify='space-around'>
+          <v-col cols="3">
             <v-text-field
               v-model="dataSet.title"
               label="Title"
@@ -70,6 +70,17 @@
               :readonly="isReadOnly"
               :rules="[(v) => !!v || 'Title is required']"
             />
+          </v-col>
+          <v-col cols="5">
+            <v-text-field
+              v-model="dataSet.description"
+              label="Description"
+              dense
+              :readonly="isReadOnly"
+            />
+            <!-- <v-select v-if="dataSet.id" :items="choices" label="Add a column" outlined></v-select> -->
+          </v-col>
+          <v-col cols="3">
             <div class="d-flex">
               <v-file-input
                 v-show="dataSet.id != ''"
@@ -78,30 +89,24 @@
                 dense
                 @change.native="onChange"
                 @click:clear="clearInput('file')"
-              />
+              >
+                <!-- Append item slot -->
+                <template v-slot:append>
+                  <v-btn
+                    v-if="dataSet.id"
+                    :disabled="!file"
+                    small
+                    class="mb-1"
+                    @click="addNewDataValue"
+                  >
+                    <v-icon>mdi-plus</v-icon>
+                  </v-btn>
+                </template>
+              </v-file-input>
               <xlsx-read :options="readOptions" :file="file">
                 <xlsx-json :options="readOptions" @parsed="setTableItems" />
               </xlsx-read>
-              <v-btn
-                v-if="dataSet.id"
-                :disabled="!file"
-                class="mb-1 ml-2"
-                elevation="4"
-                small
-                @click="addNewDataValue"
-              >
-                <v-icon>mdi-plus-circle-outline</v-icon>Add to Dataset
-              </v-btn>
             </div>
-          </v-col>
-          <v-col cols="6">
-            <v-text-field
-              v-model="dataSet.description"
-              label="Description"
-              dense
-              :readonly="isReadOnly"
-            />
-            <!-- <v-select v-if="dataSet.id" :items="choices" label="Add a column" outlined></v-select> -->
           </v-col>
         </v-row>
       </v-form>
@@ -140,13 +145,33 @@
 
         <div v-else class="ma-4">
           <span class="d-flex justify-end">
-            <v-btn small class="mr-4 mb-4" @click="showRemoveColumn">
-              Remove Columns
-            </v-btn>
-            <v-btn small class="mb-4 mr-6" @click="showAddColumn"
-              ><v-icon>mdi-plus</v-icon
-              ><v-icon small class="ml-2">mdi-function-variant</v-icon>
-            </v-btn>
+            <v-tooltip top>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  small
+                  class="mb-4 mr-4 px-2"
+                  @click="showAddColumn"
+                  v-bind="attrs"
+                  v-on="on"
+                  ><v-icon>mdi-table-column-plus-after</v-icon>
+                </v-btn>
+              </template>
+              <span>Add Function Column</span>
+            </v-tooltip>
+            <v-tooltip top>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  small
+                  class="mr-6 mb-4"
+                  @click="showRemoveColumn"
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  <v-icon>mdi-table-column-remove</v-icon>
+                </v-btn>
+              </template>
+              <span>Remove Column</span>
+            </v-tooltip>
           </span>
           <vue-excel-editor
             v-if="renderComponent"
@@ -175,6 +200,7 @@
     </v-col>
     <v-dialog v-model="columnForm" width="20%">
       <v-card class="pa-4">
+        <h4 class="mb-4">Add Function Column</h4>
         <v-text-field
           v-model="newColumn.title"
           label="Column Name"
@@ -191,22 +217,26 @@
           label="Choose an action"
           outlined
         />
-        <v-select
-          v-if="dataSet.id"
-          v-model="newColumn.col1"
-          dense
-          :items="allKeys.filter((k) => checkColType(k, items) != 'string')"
-          label="First column"
-          outlined
-        />
-        <v-select
-          v-if="dataSet.id"
-          v-model="newColumn.col2"
-          dense
-          :items="allKeys.filter((k) => checkColType(k, items) != 'string')"
-          label="Second column"
-          outlined
-        />
+        <h5 class="mb-2">Choose columns to compare</h5>
+        <div class="d-flex">
+          <v-select
+            v-if="dataSet.id"
+            v-model="newColumn.col1"
+            dense
+            :items="allKeys.filter((k) => checkColType(k, items) != 'string')"
+            label="First column"
+            outlined
+          />
+          <h3 class="mx-2 mt-2">{{ actionSign }}</h3>
+          <v-select
+            v-if="dataSet.id"
+            v-model="newColumn.col2"
+            dense
+            :items="allKeys.filter((k) => checkColType(k, items) != 'string')"
+            label="Second column"
+            outlined
+          />
+        </div>
         <span class="d-flex justify-end">
           <!-- <v-btn color="warning" class="mr-4" @click="cancelColumnForm" small>
             Cancel
@@ -220,6 +250,7 @@
     </v-dialog>
     <v-dialog v-model="rmColForm" width="20%">
       <v-card class="pa-4">
+        <h4 class="mb-4">Remove Columns</h4>
         <v-select
           v-model="colsToRemove"
           :items="allKeys"
@@ -228,10 +259,21 @@
           chips
           hint="Choose the columns you wish to remove"
           persistent-hint
+          outlined
         />
-        <v-btn class="mt-6" color="primary" small @click="removeColumns">
-          Remove Columns
-        </v-btn>
+        <span class="d-flex justify-end">
+          <v-btn
+            class="mr-4"
+            small
+            outlined
+            @click="
+              rmColForm = false;
+              colsToRemove = [];
+            "
+            >Cancel</v-btn
+          >
+          <v-btn color="primary" small @click="removeColumns"> Remove </v-btn>
+        </span>
       </v-card>
     </v-dialog>
   </v-row>
@@ -319,6 +361,24 @@ export default {
         console.log(uniqueKeys.filter((k) => k != "$id"));
         return uniqueKeys.filter((k) => k != "$id");
       } else return [];
+    },
+    actionSign() {
+      if (this.newColumn.action) {
+        switch (this.newColumn.action) {
+          case "Sum":
+            return "+";
+          case "Difference":
+            return "-";
+          case "Product":
+            return "x";
+          case "Quotient":
+            return "÷";
+          case "Average":
+            return "x̄";
+          default:
+            return "";
+        }
+      } else return "";
     },
   },
   methods: {
@@ -472,14 +532,14 @@ export default {
               !isNaN(item[this.newColumn.col2])
             ) {
               item[this.newColumn.title] =
-                item[this.newColumn.col2] - item[this.newColumn.col1];
+                item[this.newColumn.col1] - item[this.newColumn.col2];
             } else if (
               moment(item[this.newColumn.col1]).isValid() &&
               moment(item[this.newColumn.col2]).isValid()
             )
               item[this.newColumn.title] =
-                (moment(item[this.newColumn.col2]) -
-                  moment(item[this.newColumn.col1])) /
+                (moment(item[this.newColumn.col1]) -
+                  moment(item[this.newColumn.col2])) /
                 (1000 * 60 * 60 * 24);
             break;
           case "Sum":
