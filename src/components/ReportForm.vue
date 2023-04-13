@@ -32,7 +32,197 @@
       >
         Please fix highlighted fields below before sumbitting Report
       </v-alert>
+      <!-- <v-card v-else-if="$store.getters.loading" class="pa-4 mb-4 text-center">
+        <v-progress-circular  :size="70" indeterminate color="primary"
+          class="m-2">
+        </v-progress-circular>
+      </v-card> -->
 
+      <!-- <span class="d-flex justify-space-between">
+        <h3>Report Details</h3>
+        <h5 v-if="activeReport.createdBy">By: {{ activeReport.createdBy }}</h5>
+      </span>
+      <v-divider class="mb-8" /> -->
+
+      <!-- Form Fields -->
+      <v-form v-if="activeReport" ref="form" v-model="formValid" class="mt-6">
+        <v-row >
+          <v-col cols="2">
+            <v-text-field
+              v-model="activeReport.title"
+              label="Title"
+              dense
+              required
+              :rules="[(v) => !!v || 'Title is required']"
+            />
+          </v-col>
+          <v-col cols="4">
+            <v-textarea
+              v-model="activeReport.description"
+              label="Description"
+              rows="1"
+              auto-grow
+              dense
+            />
+          </v-col>
+          <v-col cols="2">
+            <v-select
+              v-model="activeReport.reportGroupId"
+              dense
+              label="Folder"
+              :items="reportGroups"
+              item-text="title"
+              item-value="id"
+            />
+          </v-col>
+          <v-col cols="3">
+            <v-select
+              v-model="activeReport.dataSetId"
+              :items="dataSetChoices"
+              item-text="title"
+              item-value="id"
+              label="Data Set"
+              dense
+              required
+              :rules="[(v) => !!v || 'Data Set is required']"
+              @change="updateChartData"
+            />
+          </v-col>
+        </v-row>
+        <!-- <div>
+            <v-text-field v-if="activeReport.createdBy" :value="activeReport.createdBy" label="Created By" dense
+              readonly></v-text-field>
+          </div> -->
+        <!-- <div>
+            <v-select
+              v-model="activeReport.channelId"
+              :items="channels"
+              item-text="title"
+              item-value="id"
+              label="Channel"
+              dense
+              required
+              :rules="[(v) => !!v || 'Channel is required']"
+              :readonly="newChannelReport"
+            ></v-select>
+          </div> -->
+        <!-- <div>
+            <v-text-field v-if="activeReport.updatedBy" :value="activeReport.updatedBy" label="Last Updated By" dense
+              readonly></v-text-field>
+          </div> -->
+        <v-row >
+          <v-col cols="2">
+            <v-select
+              v-model="activeReport.chartType"
+              :items="chartTypes"
+              item-text="text"
+              item-value="value"
+              label="Chart Type"
+              dense
+            />
+          </v-col>
+          <v-col cols="3">
+            <v-select
+              v-model="selectedHeaders"
+              :items="headers"
+              label="Target Columns"
+              multiple
+              small
+              dense
+              return-object
+              @change="onChangeSelected"
+            />
+          </v-col>
+          <v-col cols="2">
+            <v-select
+              v-model="activeReport.colorSchemeId"
+              label="Color Scheme"
+              :items="colors"
+              item-text="title"
+              item-value="id"
+              dense
+              @change="updateColors"
+            />
+          </v-col>
+          <v-col cols="2">
+            <v-select
+              v-if="yAxisValue || xAxisValue"
+              v-model="yAction"
+              label="Action"
+              dense
+              clearable
+              :items="[
+                'Count',
+                'Count Unique Values',
+                'Sum',
+                'Average',
+                'Median',
+                'Minimum',
+                'Maximum',
+              ]"
+              @change="onChangeYAction"
+              @click:clear="onClearYAction"
+            />
+          </v-col>
+          <!-- </v-row>
+          <v-row> -->
+          <!-- <v-col cols="2">
+            <v-select
+              v-model="xAxisValue"
+              :items="xAxisKeys"
+              label="X-Axis"
+              dense
+              @change="onChangeXAxis"
+              clearable
+            />
+          </v-col> -->
+          <!-- <v-col cols="2">
+            <v-select
+              v-model="yAxisValue"
+              :items="yAxisKeys"
+              label="Y-Axis"
+              dense
+              @change="onChangeYAxis"
+              clearable
+            />
+            <v-select
+              v-if="yAxisValue || xAxisValue"
+              v-model="yAction"
+              label="Action"
+              dense
+              clearable
+              :items="[
+                'Count',
+                'Count Unique Values',
+                'Sum',
+                'Average',
+                'Median',
+                'Minimum',
+                'Maximum',
+              ]"
+              @change="onChangeYAction"
+              @click:clear="onClearYAction"
+            />
+          </v-col> -->
+          <!-- <div class="tags">
+            <v-select
+              v-model="activeReport.tags"
+              :items="tags"
+              item-text="title"
+              item-value="id"
+              chips
+              color="info"
+              label="Tags"
+              multiple
+              deletable-chips
+              return-object
+              dense
+            >
+            </v-select>
+          </div> -->
+        </v-row>
+      </v-form>
+      <v-divider class="mb-8 mt-4" />
       <v-card
         v-if="
           data &&
@@ -68,6 +258,18 @@
             }}</span>
           </v-tooltip>
         </span>
+        <v-row class="mt-2">
+          <v-col cols="2">
+            <v-select
+              v-model="yAxisValue"
+              :items="yAxisKeys"
+              label="Y-Axis"
+              dense
+              @change="onChangeYAxis"
+              clearable
+            />
+          </v-col>
+        </v-row>
         <!-- Chart -->
         <Component
           :is="graphType"
@@ -102,7 +304,18 @@
             }}</span>
           </v-tooltip>
         </span>
-
+        <v-row justify="end" class="mt-2">
+          <v-col cols="2">
+            <v-select
+              v-model="xAxisValue"
+              :items="xAxisKeys"
+              label="X-Axis"
+              dense
+              @change="onChangeXAxis"
+              clearable
+            />
+          </v-col>
+        </v-row>
         <!-- Placeholder -->
         <!-- This div has a v-else directive -->
         <!-- <div
@@ -133,172 +346,6 @@
           > -->
         </div>
       </v-card>
-      <!-- <v-card v-else-if="$store.getters.loading" class="pa-4 mb-4 text-center">
-        <v-progress-circular  :size="70" indeterminate color="primary"
-          class="m-2">
-        </v-progress-circular>
-      </v-card> -->
-
-      <span class="d-flex justify-space-between">
-        <h3>Report Details</h3>
-        <h5 v-if="activeReport.createdBy">By: {{ activeReport.createdBy }}</h5>
-      </span>
-      <v-divider class="mb-8" />
-      <!-- Form Fields -->
-      <v-form v-if="activeReport" ref="form" v-model="formValid">
-        <div class="grid">
-          <div>
-            <v-text-field
-              v-model="activeReport.title"
-              label="Title"
-              dense
-              required
-              :rules="[(v) => !!v || 'Title is required']"
-            />
-          </div>
-          <div>
-            <v-select
-              v-model="activeReport.reportGroupId"
-              dense
-              label="Folder"
-              :items="reportGroups"
-              item-text="title"
-              item-value="id"
-            />
-          </div>
-
-          <div class="description">
-            <v-textarea
-              v-model="activeReport.description"
-              label="Description"
-              rows="1"
-              auto-grow
-              dense
-            />
-          </div>
-          <!-- <div>
-            <v-text-field v-if="activeReport.createdBy" :value="activeReport.createdBy" label="Created By" dense
-              readonly></v-text-field>
-          </div> -->
-          <!-- <div>
-            <v-select
-              v-model="activeReport.channelId"
-              :items="channels"
-              item-text="title"
-              item-value="id"
-              label="Channel"
-              dense
-              required
-              :rules="[(v) => !!v || 'Channel is required']"
-              :readonly="newChannelReport"
-            ></v-select>
-          </div> -->
-          <!-- <div>
-            <v-text-field v-if="activeReport.updatedBy" :value="activeReport.updatedBy" label="Last Updated By" dense
-              readonly></v-text-field>
-          </div> -->
-          <div>
-            <v-select
-              v-model="activeReport.dataSetId"
-              :items="dataSetChoices"
-              item-text="title"
-              item-value="id"
-              label="Data Set"
-              dense
-              required
-              :rules="[(v) => !!v || 'Data Set is required']"
-              @change="updateChartData"
-            />
-          </div>
-          <div>
-            <v-select
-              v-model="activeReport.chartType"
-              :items="chartTypes"
-              item-text="text"
-              item-value="value"
-              label="Chart Type"
-              dense
-            />
-          </div>
-          <div>
-            <v-select
-              v-model="selectedHeaders"
-              :items="headers"
-              label="Target Columns"
-              multiple
-              small
-              dense
-              return-object
-              @change="onChangeSelected"
-            />
-          </div>
-          <div>
-            <v-select
-              v-model="activeReport.colorSchemeId"
-              label="Color Scheme"
-              :items="colors"
-              item-text="title"
-              item-value="id"
-              dense
-              @change="updateColors"
-            />
-          </div>
-          <div>
-            <v-select
-              v-model="xAxisValue"
-              :items="xAxisKeys"
-              label="X-Axis"
-              dense
-              @change="onChangeXAxis"
-              clearable
-            />
-          </div>
-          <div>
-            <v-select
-              v-model="yAxisValue"
-              :items="yAxisKeys"
-              label="Y-Axis"
-              dense
-              @change="onChangeYAxis"
-              clearable
-            />
-            <v-select
-              v-if="yAxisValue || xAxisValue"
-              v-model="yAction"
-              label="Action"
-              dense
-              clearable
-              :items="[
-                'Count',
-                'Count Unique Values',
-                'Sum',
-                'Average',
-                'Median',
-                'Minimum',
-                'Maximum',
-              ]"
-              @change="onChangeYAction"
-              @click:clear="onClearYAction"
-            />
-          </div>
-          <!-- <div class="tags">
-            <v-select
-              v-model="activeReport.tags"
-              :items="tags"
-              item-text="title"
-              item-value="id"
-              chips
-              color="info"
-              label="Tags"
-              multiple
-              deletable-chips
-              return-object
-              dense
-            >
-            </v-select>
-          </div> -->
-        </div>
-      </v-form>
       <!-- Delete Button -->
       <div
         v-if="activeReport && activeReport.id"
@@ -858,16 +905,16 @@ export default {
 </script>
 
 <style scoped>
-.grid {
+/* .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 10px;
-}
+} */
 
-.description,
+/* .description,
 .tags {
   grid-column: 1 / span 2;
-}
+} */
 
 .placeholder-title {
   color: gray;
