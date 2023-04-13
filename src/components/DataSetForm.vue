@@ -121,7 +121,7 @@
       "
       class="col-12"
     >
-      <v-card class="d-flex flex-column preview-container justify-center">
+      <v-card class="d-flex flex-column preview-container justify-center mx-10">
         <!-- Table Preview -->
         <!-- <v-card-title>
           <v-text-field

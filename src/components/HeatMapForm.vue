@@ -36,8 +36,8 @@
         </v-alert>
         <!-- Form Fields -->
         <v-form ref="form" v-model="formValid" class="mt-2">
-          <div class="grid">
-            <div>
+          <v-row>
+            <v-col cols="3">
               <v-text-field
                 v-model="heatMap.title"
                 label="Title"
@@ -45,8 +45,8 @@
                 required
                 :rules="[(v) => !!v || 'Title is required']"
               />
-            </div>
-            <div>
+            </v-col>
+            <v-col cols="3">
               <v-select
                 v-model="heatMap.dataSet"
                 :items="dataSetChoices"
@@ -58,29 +58,8 @@
                 :rules="[(v) => !!v || 'Data Set is required']"
                 @change="loadTable"
               />
-            </div>
-            <div>
-              <v-select
-                v-model="selectedHeaders"
-                :items="headers"
-                label="Target Columns"
-                multiple
-                small
-                dense
-                return-object
-                @change="onChangeSelected"
-              />
-            </div>
-            <div>
-              <v-select
-                v-model="leadCol"
-                :items="leadColKeys"
-                label="Lead Column"
-                dense
-                @change="onChangeAxis"
-              />
-            </div>
-            <div class="expansion">
+            </v-col>
+            <v-col >
               <v-expansion-panels @change="isExpanded">
                 <v-expansion-panel>
                   <v-expansion-panel-header>{{
@@ -95,8 +74,31 @@
                   </v-expansion-panel-content>
                 </v-expansion-panel>
               </v-expansion-panels>
-            </div>
-          </div>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="4">
+              <v-select
+                v-model="selectedHeaders"
+                :items="headers"
+                label="Target Columns"
+                multiple
+                small
+                dense
+                return-object
+                @change="onChangeSelected"
+              />
+            </v-col>
+            <v-col cols="2">
+              <v-select
+                v-model="leadCol"
+                :items="leadColKeys"
+                label="Lead Column"
+                dense
+                @change="onChangeAxis"
+              />
+            </v-col>
+          </v-row>
         </v-form>
       </v-col>
     </v-row>
@@ -119,7 +121,8 @@
       <v-divider class="my-6" vertical></v-divider>
       <v-col
         v-if="heatMap.dataSet && heatMap.options && heatMap.options.cols"
-        cols="6" class="mt-6 ml-4" 
+        cols="6"
+        class="mt-6 ml-4"
       >
         <v-row>
           <v-col
@@ -196,7 +199,7 @@
                 }}
               </v-icon>
             </v-text-field>
-            <v-checkbox 
+            <v-checkbox
               small
               v-model="heatMap.options.cols[i].abs"
               label="Use Absolute Value"
@@ -563,9 +566,9 @@ export default {
   grid-template-columns: 1fr 1fr;
   grid-gap: 10px;
 }
-.expansion {
+/* .expansion {
   grid-column: 1 / span 1;
-}
+} */
 
 div >>> .v-select__selections {
   padding-top: 5px;

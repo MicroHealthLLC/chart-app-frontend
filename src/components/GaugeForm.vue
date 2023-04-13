@@ -21,31 +21,7 @@
         </div>
       </div>
       <v-divider class="mb-4" />
-      <v-row justify="center">
-        <v-col cols="11">
-          <v-card class="pa-4 mb-4">
-            <v-row>
-              <v-col cols="8">
-                <KPIGauge
-                  :gauge="gauge"
-                  :height="gaugeHeight"
-                  :width="gaugeWidth"
-                  :segment-stops="activeSteps"
-                  :ring-width="ringWidth"
-                />
-              </v-col>
-              <v-col cols="4">
-                <vue-editor
-                  v-model="gauge.notes"
-                  placeholder="Enter notes here"
-                  :editor-toolbar="toolbarOptions"
-                />
-                <!-- <v-textarea v-model="gauge.notes" solo auto-grow background-color="grey lighten-4" label="Enter notes here" rows="4"></v-textarea> -->
-              </v-col>
-            </v-row>
-          </v-card>
-        </v-col>
-      </v-row>
+
       <v-alert
         v-if="!formValid && submitAttempted"
         type="error"
@@ -183,6 +159,32 @@
           </v-row>
         </v-container>
       </v-form>
+
+      <v-row justify="center">
+        <v-col cols="11">
+          <v-card class="pa-4 mb-4">
+            <v-row>
+              <v-col cols="8">
+                <KPIGauge
+                  :gauge="gauge"
+                  :height="gaugeHeight"
+                  :width="gaugeWidth"
+                  :segment-stops="activeSteps"
+                  :ring-width="ringWidth"
+                />
+              </v-col>
+              <v-col cols="4">
+                <vue-editor
+                  v-model="gauge.notes"
+                  placeholder="Enter notes here"
+                  :editor-toolbar="toolbarOptions"
+                />
+                <!-- <v-textarea v-model="gauge.notes" solo auto-grow background-color="grey lighten-4" label="Enter notes here" rows="4"></v-textarea> -->
+              </v-col>
+            </v-row>
+          </v-card>
+        </v-col>
+      </v-row>
 
       <div v-if="gauge && gauge.id" class="d-flex justify-end mt-4">
         <v-btn

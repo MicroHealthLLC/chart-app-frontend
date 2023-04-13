@@ -230,7 +230,7 @@
           activeReport.colorSchemeId &&
           activeReport.chartType
         "
-        class="pa-4 mb-4"
+        class="pa-4 mb-4 mx-10"
       >
         <v-btn class="chart-menu" icon @click="fullscreenReport">
           <v-icon>mdi-fullscreen</v-icon>
