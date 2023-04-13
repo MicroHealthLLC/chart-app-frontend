@@ -3,12 +3,8 @@
     <!-- Title -->
     <v-col>
       <div class="d-flex justify-space-between">
-        <h3 v-if="gauge.id">
-          Update {{ gauge.title }}
-        </h3>
-        <h3 v-else>
-          Add KPI
-        </h3>
+        <h3 v-if="gauge.id">Update {{ gauge.title }}</h3>
+        <h3 v-else>Add KPI</h3>
         <div>
           <v-btn
             class="px-5 mr-2 mb-2"
@@ -19,42 +15,13 @@
           >
             Save
           </v-btn>
-          <v-btn
-            class="mb-2"
-            small
-            outlined
-            @click="resetAndGoBack"
-          >
+          <v-btn class="mb-2" small outlined @click="resetAndGoBack">
             Close
           </v-btn>
         </div>
       </div>
       <v-divider class="mb-4" />
-      <v-row justify="center">
-        <v-col cols="11">
-          <v-card class="pa-4 mb-4">
-            <v-row>
-              <v-col cols="8">
-                <KPIGauge
-                  :gauge="gauge"
-                  :height="gaugeHeight"
-                  :width="gaugeWidth"
-                  :segment-stops="activeSteps"
-                  :ring-width="ringWidth"
-                />
-              </v-col>
-              <v-col cols="4">
-                <vue-editor
-                  v-model="gauge.notes"
-                  placeholder="Enter notes here"
-                  :editor-toolbar="toolbarOptions"
-                />
-                <!-- <v-textarea v-model="gauge.notes" solo auto-grow background-color="grey lighten-4" label="Enter notes here" rows="4"></v-textarea> -->
-              </v-col>
-            </v-row>
-          </v-card>
-        </v-col>
-      </v-row>
+
       <v-alert
         v-if="!formValid && submitAttempted"
         type="error"
@@ -65,11 +32,7 @@
       </v-alert>
 
       <!-- Form Fields -->
-      <v-form
-        ref="form"
-        v-model="formValid"
-        class="px-4 mx-4"
-      >
+      <v-form ref="form" v-model="formValid" class="px-4 mx-4">
         <v-container class="px-4 mx-4">
           <v-row>
             <v-col cols="6">
@@ -108,8 +71,8 @@
             <v-col
               v-if="
                 gauge.chartType == 'Traditional' ||
-                  gauge.chartType == 'Middle' ||
-                  gauge.chartType == 'Left'
+                gauge.chartType == 'Middle' ||
+                gauge.chartType == 'Left'
               "
               cols="2"
             >
@@ -127,8 +90,8 @@
             <v-col
               v-if="
                 gauge.chartType == 'Traditional' ||
-                  gauge.chartType == 'Middle' ||
-                  gauge.chartType == 'Left'
+                gauge.chartType == 'Middle' ||
+                gauge.chartType == 'Left'
               "
               cols="2"
             >
@@ -143,10 +106,7 @@
                 ]"
               />
             </v-col>
-            <v-col
-              v-if="gauge.chartType == 'Middle'"
-              cols="2"
-            >
+            <v-col v-if="gauge.chartType == 'Middle'" cols="2">
               <v-text-field
                 v-model="activeSteps[3]"
                 label="3rd Stop"
@@ -158,10 +118,7 @@
                 ]"
               />
             </v-col>
-            <v-col
-              v-if="gauge.chartType == 'Middle'"
-              cols="2"
-            >
+            <v-col v-if="gauge.chartType == 'Middle'" cols="2">
               <v-text-field
                 v-model="activeSteps[4]"
                 label="4th Stop"
@@ -203,10 +160,33 @@
         </v-container>
       </v-form>
 
-      <div
-        v-if="gauge && gauge.id"
-        class="d-flex justify-end mt-4"
-      >
+      <v-row justify="center">
+        <v-col cols="11">
+          <v-card class="pa-4 mb-4">
+            <v-row>
+              <v-col cols="8">
+                <KPIGauge
+                  :gauge="gauge"
+                  :height="gaugeHeight"
+                  :width="gaugeWidth"
+                  :segment-stops="activeSteps"
+                  :ring-width="ringWidth"
+                />
+              </v-col>
+              <v-col cols="4">
+                <vue-editor
+                  v-model="gauge.notes"
+                  placeholder="Enter notes here"
+                  :editor-toolbar="toolbarOptions"
+                />
+                <!-- <v-textarea v-model="gauge.notes" solo auto-grow background-color="grey lighten-4" label="Enter notes here" rows="4"></v-textarea> -->
+              </v-col>
+            </v-row>
+          </v-card>
+        </v-col>
+      </v-row>
+
+      <div v-if="gauge && gauge.id" class="d-flex justify-end mt-4">
         <v-btn
           small
           color="error"
@@ -218,10 +198,7 @@
         </v-btn>
       </div>
 
-      <v-dialog
-        v-model="deleteDialog"
-        max-width="400"
-      >
+      <v-dialog v-model="deleteDialog" max-width="400">
         <v-card>
           <v-card-title>Delete this KPI?</v-card-title>
           <v-divider class="mx-4 mb-2" />
@@ -237,12 +214,7 @@
             >
               Cancel
             </v-btn>
-            <v-btn
-              small
-              depressed
-              color="error"
-              @click="deleteGauge"
-            >
+            <v-btn small depressed color="error" @click="deleteGauge">
               Delete
             </v-btn>
           </v-card-actions>
@@ -278,16 +250,15 @@ export default {
       maxValue: 100,
       activeSteps: [],
       toolbarOptions: [
-        ['bold', 'italic', 'underline', 'strike'],   // toggled buttons
-        ['blockquote', 'code-block'],
-        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-        [{ 'align': [] }],    
-        [{ 'indent': '-1' }, { 'indent': '+1' }], // outdent/indent
-        [{ 'script': 'sub' }, { 'script': 'super' }],  // superscript/subscript
-        [{ 'font': [] }],
-        [{ 'header': [1, 2, 3, false] }],
-        [{ 'color': [] }, { 'background': [] }],    // dropdown with defaults from theme
-        
+        ["bold", "italic", "underline", "strike"], // toggled buttons
+        ["blockquote", "code-block"],
+        [{ list: "ordered" }, { list: "bullet" }],
+        [{ align: [] }],
+        [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
+        [{ script: "sub" }, { script: "super" }], // superscript/subscript
+        [{ font: [] }],
+        [{ header: [1, 2, 3, false] }],
+        [{ color: [] }, { background: [] }], // dropdown with defaults from theme
       ],
       /* customToolbar: [
       ["bold", "italic", "underline"],

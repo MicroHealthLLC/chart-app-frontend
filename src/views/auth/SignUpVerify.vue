@@ -2,10 +2,7 @@
   <v-row>
     <v-col>
       <div class="d-flex justify-center align-center main-container">
-        <v-card
-          class="pa-5"
-          max-width="600"
-        >
+        <v-card class="pa-5" max-width="600">
           <v-alert
             v-model="hasError"
             type="error"
@@ -19,9 +16,7 @@
               <p class="text-body-1">Confirm Verification Code</p></v-card-title
             > -->
           <v-card-title class="d-flex flex-column">
-            <p class="text-body-1">
-              Confirm Verification Code
-            </p>
+            <p class="text-body-1">Confirm Verification Code</p>
           </v-card-title>
           <v-card-text>
             <v-form ref="verifyform">
@@ -61,9 +56,7 @@
               Resend Code
             </v-btn>
             <p class="mt-4">
-              Already Verified? <router-link to="/signin">
-                Login
-              </router-link>
+              Already Verified? <router-link to="/signin"> Login </router-link>
             </p>
           </v-card-actions>
         </v-card>

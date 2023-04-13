@@ -2,11 +2,7 @@
   <v-row>
     <v-col>
       <div class="d-flex justify-center align-center main-container">
-        <v-card
-          class="pt-0 pr-5 pb-5 pl-5"
-          max-width="600"
-          :loading="loading"
-        >
+        <v-card class="pt-0 pr-5 pb-5 pl-5" max-width="600" :loading="loading">
           <v-alert
             v-model="hasError"
             type="error"
@@ -21,10 +17,7 @@
             </p>
           </v-card-title>
           <v-card-text>
-            <v-form
-              ref="signupform"
-              v-model="valid"
-            >
+            <v-form ref="signupform" v-model="valid">
               <label class="d-block text-left">Email</label>
               <v-text-field
                 v-model="email"
@@ -94,9 +87,7 @@
             </v-btn>
             <p class="mt-4">
               Already have an account?
-              <router-link to="/signin">
-                Sign In
-              </router-link>
+              <router-link to="/signin"> Sign In </router-link>
             </p>
           </v-card-actions>
         </v-card>

@@ -13,12 +13,7 @@
           >
             Save
           </v-btn>
-          <v-btn
-            class="mb-2"
-            small
-            outlined
-            @click="resetAndGoBack"
-          >
+          <v-btn class="mb-2" small outlined @click="resetAndGoBack">
             Close
           </v-btn>
         </div>
@@ -33,19 +28,14 @@
         dense
         dismissible
       >
-        Please fix highlighted fields below before submitting
-        Dashboard
+        Please fix highlighted fields below before submitting Dashboard
       </v-alert>
     </v-col>
 
     <v-col class="col-12">
       <!-- <h3>Dashboard Details</h3>
       <v-divider class="mb-4"></v-divider> -->
-      <v-form
-        ref="form"
-        v-model="formValid"
-        @submit.prevent="saveDashboard"
-      >
+      <v-form ref="form" v-model="formValid" @submit.prevent="saveDashboard">
         <v-text-field
           v-model="dashboard.title"
           outlined

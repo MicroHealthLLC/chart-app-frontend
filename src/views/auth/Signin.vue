@@ -1,14 +1,8 @@
 <template>
   <v-row>
     <v-col>
-      <div
-        class=""
-        :load="log(user)"
-      >
-        <v-card
-          class="pt-0 pr-5 pb-5 pl-5 card"
-          :loading="loading"
-        >
+      <div class="" :load="log(user)">
+        <v-card class="pt-0 pr-5 pb-5 pl-5 card" :loading="loading">
           <v-alert
             v-model="hasError"
             type="error"
@@ -19,19 +13,16 @@
           </v-alert>
           <v-card-title class="d-flex flex-column">
             <h2 class="text-body-1">
-              <span
-                class="beWell"
-              >Welcome to mRMS
-                <v-icon
-                  color="orange darken-2"
-                >mdi-chart-box-outline</v-icon></span>
+              <span class="beWell"
+                >Welcome to mRMS
+                <v-icon color="orange darken-2"
+                  >mdi-chart-box-outline</v-icon
+                ></span
+              >
             </h2>
           </v-card-title>
           <v-card-text>
-            <v-form
-              ref="form"
-              v-model="valid"
-            >
+            <v-form ref="form" v-model="valid">
               <label class="d-block text-left">Email</label>
               <v-text-field
                 v-model="username"
@@ -55,10 +46,7 @@
               />
               <p class="mt-4">
                 Forgot password?
-                <span
-                  class="reset"
-                  @click="resetPW"
-                >Reset</span>
+                <span class="reset" @click="resetPW">Reset</span>
               </p>
             </v-form>
           </v-card-text>
@@ -74,9 +62,8 @@
               Login
             </v-btn>
             <p class="mt-4">
-              No account? <router-link to="/signup">
-                Create Account
-              </router-link>
+              No account?
+              <router-link to="/signup"> Create Account </router-link>
             </p>
           </v-card-actions>
           <!-- <v-img class="shrink" contain src="../assets/mh-logo.png" max-width="180"></v-img> -->

@@ -19,7 +19,7 @@ export default {
     },
     height: {
       type: Number,
-    }
+    },
   },
   data() {
     return {
@@ -68,16 +68,15 @@ export default {
     },
     height() {
       setTimeout(() => {
-      this.loadChart();
+        this.loadChart();
       }, 200);
-    }
+    },
   },
   mounted() {
-    
     setTimeout(() => {
       this.loadChart();
-      }, 150);
-    console.log(this.height)
+    }, 150);
+    console.log(this.height);
   },
   methods: {
     loadChart() {
@@ -120,6 +119,6 @@ export default {
 </script>
 <style>
 canvas {
-  height: v-bind('height');
+  height: v-bind("height");
 }
 </style>

@@ -1,8 +1,6 @@
 <template>
   <v-row>
-    <v-col
-      class="col-12"
-    >
+    <v-col class="col-12">
       <h3>{{ activeDashboard.title }}</h3>
       <v-divider />
     </v-col>

@@ -3,29 +3,16 @@
     <v-col class="col-11">
       <div class="d-flex justify-space-between">
         <h3>
-          <v-icon
-            class="mr-2 pb-2"
-            color="blue darken-2"
-          >
-            mdi-equalizer
-          </v-icon>Data Sets
+          <v-icon class="mr-2 pb-2" color="blue darken-2">
+            mdi-equalizer </v-icon
+          >Data Sets
         </h3>
-        <v-btn
-          class="mb-2"
-          color="primary"
-          small
-          @click.prevent="toNewDataSet"
-        >
-          Add Data Set <v-icon small>
-            mdi-plus
-          </v-icon>
+        <v-btn class="mb-2" color="primary" small @click.prevent="toNewDataSet">
+          Add Data Set <v-icon small> mdi-plus </v-icon>
         </v-btn>
       </div>
 
-      <v-dialog
-        v-model="showAddDataSetForm"
-        width="40%"
-      >
+      <v-dialog v-model="showAddDataSetForm" width="40%">
         <v-card class="px-4 py-4">
           <!-- <v-form v-model="formValid" ref="form">
             <div class="grid">
@@ -61,10 +48,7 @@
 
       <v-divider class="mb-4" />
       <v-card>
-        <v-data-table
-          :headers="headers"
-          :items="channelDataSets"
-        >
+        <v-data-table :headers="headers" :items="channelDataSets">
           <!-- Formatted Date -->
           <template v-slot:item.created_at="{ item }">
             <span>{{ new Date(item.createdAt).toLocaleDateString() }}</span>
@@ -85,10 +69,10 @@
                   @click="editItem(item)"
                   v-on="on"
                 >
-                  mdi-table-eye
+                  mdi-square-edit-outline
                 </v-icon>
               </template>
-              <span>View</span>
+              <span>Edit</span>
             </v-tooltip>
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
@@ -168,9 +152,9 @@ export default {
         this.currentChannels &&
         this.currentChannels[0].channelId
       ) {
-        return this.dataSets.filter(
-          (t) => t.channelId == this.currentChannels[0].channelId
-        ).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+        return this.dataSets
+          .filter((t) => t.channelId == this.currentChannels[0].channelId)
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       } else return [];
     },
   },

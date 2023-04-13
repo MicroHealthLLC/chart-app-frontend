@@ -1,17 +1,12 @@
 <template>
-  <div>
-    <v-dialog
-      v-model="showForm"
-      width="30%"
-    >
+  <v-row>
+    <v-col class="col-11">
+    <v-dialog v-model="showForm" width="30%">
       <v-card class="pa-4 modal">
         <DashboardForm @closeDashboardForm="closeDashboardForm" />
       </v-card>
     </v-dialog>
-    <v-dialog
-      v-model="showSlideShowForm"
-      width="50%"
-    >
+    <v-dialog v-model="showSlideShowForm" width="50%">
       <v-card class="pa-4">
         <SlideShows @toggleSlideShow="toggleSlideShow" />
       </v-card>
@@ -19,40 +14,21 @@
 
     <div class="d-flex justify-space-between">
       <h3>
-        <v-icon
-          class="mr-2 pb-2"
-          color="cyan"
-        >
-          mdi-monitor-dashboard
-        </v-icon>Dashboards
+        <v-icon class="mr-2 pb-2" color="cyan"> mdi-monitor-dashboard </v-icon
+        >Dashboards
       </h3>
-      <v-btn
-        class="mb-2"
-        color="success"
-        small
-        @click="toggleSlideShow"
-      >
+      <v-btn class="mb-2" color="success" small @click="toggleSlideShow">
         Create Slide Show
       </v-btn>
-      
+
       <!-- <v-switch v-model="switch1" label="Show My Dashboard"></v-switch> -->
-      <v-btn
-        class="mb-2"
-        color="primary"
-        small
-        @click="showAddDashboardForm"
-      >
-        Add Dashboard <v-icon small>
-          mdi-plus
-        </v-icon>
+      <v-btn class="mb-2" color="primary" small @click="showAddDashboardForm">
+        Add Dashboard <v-icon small> mdi-plus </v-icon>
       </v-btn>
     </div>
     <v-divider class="mb-4" />
 
-    <v-container
-      v-if="channelDashboards.length > 0"
-      class="pl-5"
-    >
+    <v-container v-if="channelDashboards.length > 0" class="pl-5 mt-10">
       <v-row>
         <v-col
           v-for="dashboard in channelDashboards"
@@ -73,16 +49,11 @@
             <v-card-title class="pb-0">
               {{ dashboard.title }}
             </v-card-title>
-            <v-card-text
-              v-if="dashboard.createdBy"
-            >
+            <v-card-text v-if="dashboard.createdBy">
               By: {{ dashboard.createdBy }}
             </v-card-text>
             <v-row justify="center">
-              <v-icon
-                class="pt-4 dashboard-icon"
-                x-large
-              >
+              <v-icon class="pt-4 dashboard-icon" x-large>
                 mdi-monitor-dashboard
               </v-icon>
             </v-row>
@@ -104,9 +75,7 @@
       v-if="channelDashboards.length == 0"
       class="placeholder d-flex flex-column justify-center align-center"
     >
-      <p class="font-weight-light">
-        No Dashboards on this Channel yet...
-      </p>
+      <p class="font-weight-light">No Dashboards on this Channel yet...</p>
       <v-btn
         text
         small
@@ -117,7 +86,8 @@
         Add a Dashboard
       </v-btn>
     </div>
-  </div>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
@@ -132,7 +102,7 @@ export default {
   name: "Dashboards",
   components: {
     DashboardForm,
-    SlideShows
+    SlideShows,
   },
   mixins: [datasetMixin, reportMixin, gaugeMixin],
 
@@ -214,14 +184,14 @@ export default {
         this.currentChannels &&
         this.currentChannels[0].channelId
       ) {
-        return this.dashboards.filter(
-          (t) => t.channelId == this.currentChannels[0].channelId
-        ).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        return this.dashboards
+          .filter((t) => t.channelId == this.currentChannels[0].channelId)
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       } else return [];
     },
   },
   watch: {},
-  
+
   async beforeMount() {
     await this.fetchDashboards();
     if (this.dataSets && this.dataSets.length < 1) {

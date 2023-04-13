@@ -3,26 +3,14 @@
     <v-row>
       <v-col>
         <div class="d-flex justify-space-between">
-          <h3
-            v-if="!isReadOnly && dashboard.id"
-            class="d-flex align-center"
-          >
+          <h3 v-if="!isReadOnly && dashboard.id" class="d-flex align-center">
             Update
-            <v-text-field
-              v-model="dashboard.title"
-              class="ml-2"
-            >
-              {{
-                dashboard.title
-              }}
+            <v-text-field v-model="dashboard.title" class="ml-2">
+              {{ dashboard.title }}
             </v-text-field>
           </h3>
-          <h3 v-else-if="dashboard.id">
-            View {{ dashboard.title }}
-          </h3>
-          <h3 v-else>
-            "Dashboard Title"
-          </h3>
+          <h3 v-else-if="dashboard.id">View {{ dashboard.title }}</h3>
+          <h3 v-else>"Dashboard Title"</h3>
           <div>
             <v-btn
               v-if="isReadOnly && staged.length > 0"
@@ -32,11 +20,7 @@
               small
               @click="fullscreenDashboard"
             >
-              View Presentation<v-icon
-                class="ml-2"
-              >
-                mdi-presentation
-              </v-icon>
+              View Presentation<v-icon class="ml-2"> mdi-presentation </v-icon>
             </v-btn>
             <v-btn
               v-if="!isReadOnly"
@@ -56,9 +40,7 @@
               small
               @click="editForm"
             >
-              {{
-                !dashboard.cards && staged.length == 0 ? "Add" : "Edit"
-              }}
+              {{ !dashboard.cards && staged.length == 0 ? "Add" : "Edit" }}
             </v-btn>
             <v-btn
               v-if="isReadOnly"
@@ -83,21 +65,16 @@
         <v-divider />
       </v-col>
     </v-row>
-    
+
     <fullscreen
       v-model="fullscreen"
       :class="fullscreen ? 'fullscreen-window pa-5' : 'pa-5'"
     >
       <v-row>
         <!-- DASHBOARD SELECT AREA -->
-        <v-col
-          v-if="!isReadOnly"
-          cols="12"
-        >
+        <v-col v-if="!isReadOnly" cols="12">
           <v-card height="max-content">
-            <h4 class="pt-4 pl-2">
-              Available Modules
-            </h4>
+            <h4 class="pt-4 pl-2">Available Modules</h4>
             <v-row>
               <v-col cols="4">
                 <v-list dense>
@@ -129,10 +106,7 @@
                   </v-list-item>
                 </v-list>
               </v-col>
-              <v-divider
-                class="my-6"
-                vertical
-              />
+              <v-divider class="my-6" vertical />
               <v-col cols="4">
                 <v-list dense>
                   <v-subheader>Gauges</v-subheader>
@@ -163,10 +137,7 @@
                   </v-list-item>
                 </v-list>
               </v-col>
-              <v-divider
-                class="my-6"
-                vertical
-              />
+              <v-divider class="my-6" vertical />
               <v-col cols="4">
                 <v-list dense>
                   <v-subheader>Heat Maps</v-subheader>
@@ -220,8 +191,7 @@
               class="ml-3 mb-3"
               @click="deleteDialog = true"
             >
-              Delete
-              Dashboard
+              Delete Dashboard
             </v-btn>
           </v-card>
         </v-col>
@@ -233,22 +203,19 @@
             :group="{
               name: 'universalGroup',
               pull: false,
-              put: true
+              put: true,
             }"
             :disabled="isReadOnly"
             class="drag-area"
           >
-            <dashboard
-              :id="'dashExample'"
-              @currentBreakpointUpdated="logBreak"
-            >
+            <dashboard :id="'dashExample'" @currentBreakpointUpdated="logBreak">
               <dash-layout
                 v-for="layout in dlayouts"
                 :key="layout.breakpoint"
                 v-bind="layout"
               >
                 <dash-item
-                  v-for="item, index in layout.items"
+                  v-for="(item, index) in layout.items"
                   :key="item.id"
                   v-bind.sync="item"
                   @resizeEnd="setResized"
@@ -257,7 +224,9 @@
                   <v-card
                     v-if="staged[index]"
                     :ref="`card${index}`"
-                    :class="checkChartType(staged[index]) == 'report' ? 'pa-4' : ''"
+                    :class="
+                      checkChartType(staged[index]) == 'report' ? 'pa-4' : ''
+                    "
                   >
                     <DashboardCardHeatMap
                       v-if="checkChartType(staged[index]) == 'heatMap'"
@@ -298,16 +267,15 @@
           </draggable> -->
         </v-col>
 
-
         <!-- Delete Prompt -->
-        <v-dialog
-          v-model="deleteDialog"
-          max-width="400"
-        >
+        <v-dialog v-model="deleteDialog" max-width="400">
           <v-card>
             <v-card-title>Delete this dashboard?</v-card-title>
             <v-divider class="mx-4 mb-2" />
-            <v-card-text>Are you sure you would like to delete this dashboard?</v-card-text>
+            <v-card-text
+              >Are you sure you would like to delete this
+              dashboard?</v-card-text
+            >
             <v-card-actions class="d-flex justify-end">
               <v-btn
                 small
@@ -317,12 +285,7 @@
               >
                 Cancel
               </v-btn>
-              <v-btn
-                small
-                depressed
-                color="error"
-                @click="deleteDashboard"
-              >
+              <v-btn small depressed color="error" @click="deleteDashboard">
                 Delete
               </v-btn>
             </v-card-actions>
@@ -364,7 +327,7 @@ export default {
     DashboardCardReport,
     Dashboard,
     DashLayout,
-    DashItem
+    DashItem,
   },
   mixins: [datasetMixin, reportMixin, gaugeMixin],
   data() {
@@ -374,7 +337,7 @@ export default {
       draggedItem: null,
       deleteDialog: false,
       fullscreen: false,
-      background: '#EEEEEEFF',
+      background: "#EEEEEEFF",
       resized: false,
       dlayouts: [
         {
@@ -394,7 +357,7 @@ export default {
             { id: "5", x: 3, y: 3, width: 3, height: 3 },
             { id: "6", x: 6, y: 3, width: 3, height: 3 },
             { id: "7", x: 0, y: 6, width: 3, height: 3 } */
-          ]
+          ],
         },
         {
           breakpoint: "lg",
@@ -415,7 +378,7 @@ export default {
             { id: "5", x: 3, y: 3, width: 3, height: 3 },
             { id: "6", x: 6, y: 3, width: 3, height: 3 },
             { id: "7", x: 0, y: 6, width: 3, height: 3 } */
-          ]
+          ],
         },
         {
           breakpoint: "md",
@@ -436,7 +399,7 @@ export default {
             { id: "5", x: 5, y: 0, width: 1, height: 2 },
             { id: "6", x: 6, y: 0, width: 2, height: 1 },
             { id: "7", x: 7, y: 1, width: 1, height: 1 } */
-          ]
+          ],
         },
         {
           breakpoint: "sm",
@@ -454,7 +417,7 @@ export default {
             { id: "3", x: 0, y: 1, width: 2, height: 1 },
             { id: "4", x: 3, y: 0, width: 1, height: 2 },
             { id: "5", x: 2, y: 1, width: 1, height: 1 } */
-          ]
+          ],
         },
         {
           breakpoint: "xs",
@@ -470,7 +433,7 @@ export default {
             },
             { id: "2", x: 1, y: 0, width: 1, height: 1 },
             { id: "3", x: 0, y: 1, width: 2, height: 1 } */
-          ]
+          ],
         },
         {
           breakpoint: "xxs",
@@ -485,9 +448,9 @@ export default {
               height: 1
             },
             { id: "2", x: 0, y: 1, width: 1, height: 1 } */
-          ]
-        }
-      ]
+          ],
+        },
+      ],
     };
   },
   methods: {
@@ -502,14 +465,14 @@ export default {
       "removeDashboard",
     ]),
     logBreak(event) {
-      console.log(event)
+      console.log(event);
     },
     setStagedLayouts() {
-      this.dlayouts.forEach(d => {
+      this.dlayouts.forEach((d) => {
         let countX = 0;
         let countY = 0;
         switch (d.breakpoint) {
-          case 'xxs':
+          case "xxs":
             d.items = this.staged.map((s, i) => ({
               id: i + 1,
               x: 0,
@@ -517,9 +480,9 @@ export default {
               width: 2,
               height: 2,
               resizeEdges: "left right",
-            }))
+            }));
             break;
-          case 'xs':
+          case "xs":
             d.items = this.staged.map((s, i) => ({
               id: i + 1,
               x: 0,
@@ -527,9 +490,9 @@ export default {
               width: 2,
               height: 2,
               resizeEdges: "left right",
-            }))
+            }));
             break;
-          case 'sm':
+          case "sm":
             for (let i = 0; i < this.staged.length; i++) {
               if (countX > 2) {
                 countX = 0;
@@ -542,11 +505,11 @@ export default {
                 width: 2,
                 height: 2,
                 resizeEdges: "left right",
-              }
+              };
               countX += 2;
             }
             break;
-          case 'md':
+          case "md":
             for (let i = 0; i < this.staged.length; i++) {
               if (countX > 4) {
                 countX = 0;
@@ -559,11 +522,11 @@ export default {
                 width: 4,
                 height: 4,
                 resizeEdges: "left right",
-              }
+              };
               countX += 4;
             }
             break;
-          case 'lg':
+          case "lg":
             for (let i = 0; i < this.staged.length; i++) {
               if (countX > 5) {
                 countX = 0;
@@ -576,11 +539,11 @@ export default {
                 width: 5,
                 height: 5,
                 resizeEdges: "left right",
-              }
+              };
               countX += 5;
             }
             break;
-          case 'xl':
+          case "xl":
             for (let i = 0; i < this.staged.length; i++) {
               if (countX > 9) {
                 countX = 0;
@@ -593,7 +556,7 @@ export default {
                 width: 3,
                 height: 3,
                 resizeEdges: "left right",
-              }
+              };
               countX += 3;
             }
             break;
@@ -601,7 +564,7 @@ export default {
           default:
             break;
         }
-      })
+      });
     },
     setResized() {
       this.resized = true;
@@ -626,7 +589,7 @@ export default {
       this.$router.push(`/${this.$route.params.channelId}/dashboards`);
     },
     deleteItem(id) {
-      this.staged = this.staged.filter(s => s.id !== id)
+      this.staged = this.staged.filter((s) => s.id !== id);
       //this.staged.splice(event.oldIndex, 1);
     },
     async cancelForm() {
@@ -669,14 +632,14 @@ export default {
       } else return "heatMap";
     },
     fullscreenDashboard() {
-      this.fullscreen = true
+      this.fullscreen = true;
     },
     generateReport() {
-      this.$refs.html2Pdf.generatePdf()
+      this.$refs.html2Pdf.generatePdf();
     },
     filterLayoutItems(items, idx) {
-      return items.filter(item => item && this.staged[idx])
-    }
+      return items.filter((item) => item && this.staged[idx]);
+    },
   },
   computed: {
     ...mapGetters([
@@ -722,23 +685,23 @@ export default {
       }
     },
     staged() {
-      this.setStagedLayouts()
+      this.setStagedLayouts();
     },
     dlayouts() {
-      console.log(this.dlayouts)
-    }
+      console.log(this.dlayouts);
+    },
   },
   async mounted() {
     if (this.$route.params.dashboardId) {
       await this.fetchDashboard(this.$route.params.dashboardId);
       this.staged = this.dashboard.cards ? this.dashboard.cards : [];
     }
-    this.setStagedLayouts()
+    this.setStagedLayouts();
     if (this.staged.length == 0) {
       this.isReadOnly = false;
     }
     if (this.dashboard.background) {
-      this.background = this.dashboard.background
+      this.background = this.dashboard.background;
     }
 
     this.fetchReports();
@@ -764,6 +727,6 @@ export default {
 .fullscreen-window {
   overflow-y: auto;
   overflow-x: hidden;
-  background: v-bind(background)
+  background: v-bind(background);
 }
 </style>

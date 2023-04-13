@@ -1,17 +1,8 @@
 <template>
   <v-card>
-    <v-toolbar
-      color="info"
-      dark
-    >
-      Edit Channel Details
-    </v-toolbar>
+    <v-toolbar color="info" dark> Edit Channel Details </v-toolbar>
     <v-card-text>
-      <v-form
-        ref="form"
-        v-model="formValid"
-        class="mt-4"
-      >
+      <v-form ref="form" v-model="formValid" class="mt-4">
         <v-text-field
           v-model="title"
           label="Title"
@@ -60,21 +51,8 @@
       </v-form>
     </v-card-text>
     <v-card-actions class="justify-end">
-      <v-btn
-        outlined
-        small
-        @click="closeForm"
-      >
-        Close
-      </v-btn>
-      <v-btn
-        color="primary"
-        depressed
-        small
-        @click="editChannel"
-      >
-        Save
-      </v-btn>
+      <v-btn outlined small @click="closeForm"> Close </v-btn>
+      <v-btn color="primary" depressed small @click="editChannel"> Save </v-btn>
     </v-card-actions>
   </v-card>
 </template>

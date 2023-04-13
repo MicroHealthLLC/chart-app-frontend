@@ -2,11 +2,7 @@
   <v-row>
     <v-col>
       <div class="d-flex justify-center align-center main-container">
-        <v-card
-          class="pt-0 pr-5 pb-5 pl-5"
-          max-width="600"
-          :loading="loading"
-        >
+        <v-card class="pt-0 pr-5 pb-5 pl-5" max-width="600" :loading="loading">
           <v-alert
             v-model="hasError"
             type="error"
@@ -15,14 +11,10 @@
           >
             {{ error }}
           </v-alert>
-          <v-card-title
-            class="d-flex flex-column"
-          >
+          <v-card-title class="d-flex flex-column">
             <h4 class="bold">
               mRMS
-              <v-icon
-                color="primary"
-              >
+              <v-icon color="primary">
                 mdi-chart-timeline-variant-shimmer
               </v-icon>
             </h4>
@@ -97,9 +89,7 @@
               Submit
             </v-btn>
             <p class="mt-4">
-              Return to <router-link to="/signin">
-                Login
-              </router-link>
+              Return to <router-link to="/signin"> Login </router-link>
             </p>
           </v-card-actions>
         </v-card>

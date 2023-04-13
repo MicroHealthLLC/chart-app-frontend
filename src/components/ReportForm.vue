@@ -5,12 +5,7 @@
         <h3 v-if="activeReport && activeReport.title">
           {{ activeReport.title }}
         </h3>
-        <h3
-          v-else
-          class="placeholder-title"
-        >
-          (Report Title)
-        </h3>
+        <h3 v-else class="placeholder-title">(Report Title)</h3>
         <div>
           <v-btn
             class="px-5 mr-2 mb-2"
@@ -21,12 +16,7 @@
           >
             Save
           </v-btn>
-          <v-btn
-            class="mb-2"
-            outlined
-            small
-            @click="resetAndGoBack"
-          >
+          <v-btn class="mb-2" outlined small @click="resetAndGoBack">
             Close
           </v-btn>
         </div>
@@ -42,115 +32,22 @@
       >
         Please fix highlighted fields below before sumbitting Report
       </v-alert>
-
-      <v-card
-        v-if="
-          data &&
-            data.length > 0 &&
-            activeReport.colorSchemeId &&
-            activeReport.chartType
-        "
-        class="pa-4 mb-4"
-      >
-        <v-btn
-          class="chart-menu"
-          icon
-          @click="fullscreenReport"
-        >
-          <v-icon>mdi-fullscreen</v-icon>
-        </v-btn>
-        <span v-if="yAxisValue" class="d-flex">
-          <h5>Y-Axis</h5>
-          <v-tooltip bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn @click="toggleSortY" x-small class="ml-2" v-bind="attrs" v-on="on">
-              <v-icon dense>{{ sortDirectionY === 'asc' ? 'mdi-sort-descending' : 'mdi-sort-ascending' }}</v-icon>
-            </v-btn>
-          </template>
-          <span>{{ sortDirectionY === 'asc' ? 'Sort Descending' : 'Sort Ascending' }}</span>
-          </v-tooltip>
-        </span>
-        <!-- Chart -->
-        <Component
-          :is="graphType"
-          ref="chart"
-          :chart-data="data"
-          :chart-colors="colorScheme"
-          :graph-type="activeReport.chartType"
-          :height="350"
-          :title="activeReport.title"
-          class="mb-4"
-        />
-        <span v-if="xAxisValue" class="d-flex justify-end">
-          <h5>X-Axis</h5>
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn @click="toggleSortX" x-small class="ml-2" v-bind="attrs" v-on="on">
-                <v-icon dense>{{ sortDirectionX === 'asc' ? 'mdi-sort-descending' : 'mdi-sort-ascending' }}</v-icon>
-            </v-btn>
-            </template>
-            <span>{{ sortDirectionX === 'asc' ? 'Sort Descending' : 'Sort Ascending' }}</span>
-          </v-tooltip>
-        </span>
-        
-        <!-- Placeholder -->
-        <!-- This div has a v-else directive -->
-        <!-- <div
-        
-          class="place-holder d-flex justify-center align-center ma-4"
-        >
-          <p class="text-center placeholder-text mb-0">
-            <v-icon class="placeholder-icon">mdi-chart-areaspline</v-icon>
-            Please load a data set to view preview...
-          </p>
-        </div> -->
-        <!-- Category Toggle Button -->
-        <div class="d-flex justify-end mb-4">
-          <v-btn
-            v-if="circleChart"
-            outlined
-            small
-            @click="changeChartData"
-          >
-            Next Category <v-icon
-              small
-            >
-              mdi-arrow-right
-            </v-icon>
-          </v-btn>
-          <!-- <v-btn
-            v-if="
-               activeReport.dataSet &&
-               activeReport.dataSet.dataValues && activeReport.dataSet.dataValues[0] &&
-              Object.keys(activeReport.dataSet.dataValues[0]).length > 2 &&
-              circleChart
-            "
-            @click="changeChartData"
-            outlined
-            small
-            >Next Category <v-icon small>mdi-arrow-right</v-icon></v-btn
-          > -->
-        </div>
-      </v-card>
       <!-- <v-card v-else-if="$store.getters.loading" class="pa-4 mb-4 text-center">
         <v-progress-circular  :size="70" indeterminate color="primary"
           class="m-2">
         </v-progress-circular>
       </v-card> -->
 
-      <span class="d-flex justify-space-between">
+      <!-- <span class="d-flex justify-space-between">
         <h3>Report Details</h3>
         <h5 v-if="activeReport.createdBy">By: {{ activeReport.createdBy }}</h5>
       </span>
-      <v-divider class="mb-8" />
+      <v-divider class="mb-8" /> -->
+
       <!-- Form Fields -->
-      <v-form
-        v-if="activeReport"
-        ref="form"
-        v-model="formValid"
-      >
-        <div class="grid">
-          <div>
+      <v-form v-if="activeReport" ref="form" v-model="formValid" class="mt-6">
+        <v-row >
+          <v-col cols="2">
             <v-text-field
               v-model="activeReport.title"
               label="Title"
@@ -158,8 +55,17 @@
               required
               :rules="[(v) => !!v || 'Title is required']"
             />
-          </div>
-          <div>
+          </v-col>
+          <v-col cols="4">
+            <v-textarea
+              v-model="activeReport.description"
+              label="Description"
+              rows="1"
+              auto-grow
+              dense
+            />
+          </v-col>
+          <v-col cols="2">
             <v-select
               v-model="activeReport.reportGroupId"
               dense
@@ -168,22 +74,26 @@
               item-text="title"
               item-value="id"
             />
-          </div>
-
-          <div class="description">
-            <v-textarea
-              v-model="activeReport.description"
-              label="Description"
-              rows="1"
-              auto-grow
+          </v-col>
+          <v-col cols="3">
+            <v-select
+              v-model="activeReport.dataSetId"
+              :items="dataSetChoices"
+              item-text="title"
+              item-value="id"
+              label="Data Set"
               dense
+              required
+              :rules="[(v) => !!v || 'Data Set is required']"
+              @change="updateChartData"
             />
-          </div>
-          <!-- <div>
+          </v-col>
+        </v-row>
+        <!-- <div>
             <v-text-field v-if="activeReport.createdBy" :value="activeReport.createdBy" label="Created By" dense
               readonly></v-text-field>
           </div> -->
-          <!-- <div>
+        <!-- <div>
             <v-select
               v-model="activeReport.channelId"
               :items="channels"
@@ -196,24 +106,12 @@
               :readonly="newChannelReport"
             ></v-select>
           </div> -->
-          <!-- <div>
+        <!-- <div>
             <v-text-field v-if="activeReport.updatedBy" :value="activeReport.updatedBy" label="Last Updated By" dense
               readonly></v-text-field>
           </div> -->
-          <div>
-            <v-select
-              v-model="activeReport.dataSetId"
-              :items="dataSetChoices"
-              item-text="title"
-              item-value="id"
-              label="Data Set"
-              dense
-              required
-              :rules="[(v) => !!v || 'Data Set is required']"
-              @change="updateChartData"
-            />
-          </div>
-          <div>
+        <v-row >
+          <v-col cols="2">
             <v-select
               v-model="activeReport.chartType"
               :items="chartTypes"
@@ -222,8 +120,8 @@
               label="Chart Type"
               dense
             />
-          </div>
-          <div>
+          </v-col>
+          <v-col cols="3">
             <v-select
               v-model="selectedHeaders"
               :items="headers"
@@ -234,8 +132,8 @@
               return-object
               @change="onChangeSelected"
             />
-          </div>
-          <div>
+          </v-col>
+          <v-col cols="2">
             <v-select
               v-model="activeReport.colorSchemeId"
               label="Color Scheme"
@@ -245,8 +143,30 @@
               dense
               @change="updateColors"
             />
-          </div>
-          <div>
+          </v-col>
+          <v-col cols="2">
+            <v-select
+              v-if="yAxisValue || xAxisValue"
+              v-model="yAction"
+              label="Action"
+              dense
+              clearable
+              :items="[
+                'Count',
+                'Count Unique Values',
+                'Sum',
+                'Average',
+                'Median',
+                'Minimum',
+                'Maximum',
+              ]"
+              @change="onChangeYAction"
+              @click:clear="onClearYAction"
+            />
+          </v-col>
+          <!-- </v-row>
+          <v-row> -->
+          <!-- <v-col cols="2">
             <v-select
               v-model="xAxisValue"
               :items="xAxisKeys"
@@ -255,8 +175,8 @@
               @change="onChangeXAxis"
               clearable
             />
-          </div>
-          <div>
+          </v-col> -->
+          <!-- <v-col cols="2">
             <v-select
               v-model="yAxisValue"
               :items="yAxisKeys"
@@ -271,11 +191,19 @@
               label="Action"
               dense
               clearable
-              :items="['Count', 'Count Unique Values', 'Sum', 'Average', 'Median', 'Minimum', 'Maximum']"
+              :items="[
+                'Count',
+                'Count Unique Values',
+                'Sum',
+                'Average',
+                'Median',
+                'Minimum',
+                'Maximum',
+              ]"
               @change="onChangeYAction"
               @click:clear="onClearYAction"
             />
-          </div>
+          </v-col> -->
           <!-- <div class="tags">
             <v-select
               v-model="activeReport.tags"
@@ -292,8 +220,132 @@
             >
             </v-select>
           </div> -->
-        </div>
+        </v-row>
       </v-form>
+      <v-divider class="mb-8 mt-4" />
+      <v-card
+        v-if="
+          data &&
+          data.length > 0 &&
+          activeReport.colorSchemeId &&
+          activeReport.chartType
+        "
+        class="pa-4 mb-4 mx-10"
+      >
+        <v-btn class="chart-menu" icon @click="fullscreenReport">
+          <v-icon>mdi-fullscreen</v-icon>
+        </v-btn>
+        <span v-if="yAxisValue" class="d-flex">
+          <h5>Y-Axis</h5>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                @click="toggleSortY"
+                x-small
+                class="ml-2"
+                v-bind="attrs"
+                v-on="on"
+              >
+                <v-icon dense>{{
+                  sortDirectionY === "asc"
+                    ? "mdi-sort-descending"
+                    : "mdi-sort-ascending"
+                }}</v-icon>
+              </v-btn>
+            </template>
+            <span>{{
+              sortDirectionY === "asc" ? "Sort Descending" : "Sort Ascending"
+            }}</span>
+          </v-tooltip>
+        </span>
+        <v-row class="mt-2">
+          <v-col cols="2">
+            <v-select
+              v-model="yAxisValue"
+              :items="yAxisKeys"
+              label="Y-Axis"
+              dense
+              @change="onChangeYAxis"
+              clearable
+            />
+          </v-col>
+        </v-row>
+        <!-- Chart -->
+        <Component
+          :is="graphType"
+          ref="chart"
+          :chart-data="data"
+          :chart-colors="colorScheme"
+          :graph-type="activeReport.chartType"
+          :height="350"
+          :title="activeReport.title"
+          class="mb-4"
+        />
+        <span v-if="xAxisValue" class="d-flex justify-end">
+          <h5>X-Axis</h5>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                @click="toggleSortX"
+                x-small
+                class="ml-2"
+                v-bind="attrs"
+                v-on="on"
+              >
+                <v-icon dense>{{
+                  sortDirectionX === "asc"
+                    ? "mdi-sort-descending"
+                    : "mdi-sort-ascending"
+                }}</v-icon>
+              </v-btn>
+            </template>
+            <span>{{
+              sortDirectionX === "asc" ? "Sort Descending" : "Sort Ascending"
+            }}</span>
+          </v-tooltip>
+        </span>
+        <v-row justify="end" class="mt-2">
+          <v-col cols="2">
+            <v-select
+              v-model="xAxisValue"
+              :items="xAxisKeys"
+              label="X-Axis"
+              dense
+              @change="onChangeXAxis"
+              clearable
+            />
+          </v-col>
+        </v-row>
+        <!-- Placeholder -->
+        <!-- This div has a v-else directive -->
+        <!-- <div
+        
+          class="place-holder d-flex justify-center align-center ma-4"
+        >
+          <p class="text-center placeholder-text mb-0">
+            <v-icon class="placeholder-icon">mdi-chart-areaspline</v-icon>
+            Please load a data set to view preview...
+          </p>
+        </div> -->
+        <!-- Category Toggle Button -->
+        <div class="d-flex justify-end mb-4">
+          <v-btn v-if="circleChart" outlined small @click="changeChartData">
+            Next Category <v-icon small> mdi-arrow-right </v-icon>
+          </v-btn>
+          <!-- <v-btn
+            v-if="
+               activeReport.dataSet &&
+               activeReport.dataSet.dataValues && activeReport.dataSet.dataValues[0] &&
+              Object.keys(activeReport.dataSet.dataValues[0]).length > 2 &&
+              circleChart
+            "
+            @click="changeChartData"
+            outlined
+            small
+            >Next Category <v-icon small>mdi-arrow-right</v-icon></v-btn
+          > -->
+        </div>
+      </v-card>
       <!-- Delete Button -->
       <div
         v-if="activeReport && activeReport.id"
@@ -310,14 +362,13 @@
         </v-btn>
       </div>
       <!-- Delete Prompt -->
-      <v-dialog
-        v-model="deleteDialog"
-        max-width="400"
-      >
+      <v-dialog v-model="deleteDialog" max-width="400">
         <v-card>
           <v-card-title>Delete this report?</v-card-title>
           <v-divider class="mx-4 mb-2" />
-          <v-card-text>Are you sure you would like to delete this report?</v-card-text>
+          <v-card-text
+            >Are you sure you would like to delete this report?</v-card-text
+          >
           <v-card-actions class="d-flex justify-end">
             <v-btn
               small
@@ -327,35 +378,19 @@
             >
               Cancel
             </v-btn>
-            <v-btn
-              small
-              depressed
-              color="error"
-              @click="deleteReport"
-            >
+            <v-btn small depressed color="error" @click="deleteReport">
               Delete
             </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
       <!-- Fullscreen Report Modal -->
-      <v-dialog
-        v-model="fullscreen"
-        fullscreen
-        eager
-      >
+      <v-dialog v-model="fullscreen" fullscreen eager>
         <v-card>
-          <v-toolbar
-            class="px-5"
-            color="info"
-            dark
-          >
+          <v-toolbar class="px-5" color="info" dark>
             <h3>{{ activeReport.title }}</h3>
             <v-spacer />
-            <v-btn
-              icon
-              @click="fullscreen = false"
-            >
+            <v-btn icon @click="fullscreen = false">
               <v-icon>mdi-close-thick</v-icon>
             </v-btn>
           </v-toolbar>
@@ -372,17 +407,8 @@
           />
           <!-- Category Toggle Button -->
           <div class="d-flex justify-end pr-6">
-            <v-btn
-              v-if="circleChart"
-              outlined
-              small
-              @click="changeFSChartData"
-            >
-              Next Category <v-icon
-                small
-              >
-                mdi-arrow-right
-              </v-icon>
+            <v-btn v-if="circleChart" outlined small @click="changeFSChartData">
+              Next Category <v-icon small> mdi-arrow-right </v-icon>
             </v-btn>
           </div>
         </v-card>
@@ -403,7 +429,7 @@ import Table from "../components/Table";
 import datasetMixin from "../mixins/dataset-mixin";
 import reportMixin from "../mixins/report-mixin";
 
-import collect from 'collect.js';
+import collect from "collect.js";
 
 export default {
   name: "ReportForm",
@@ -435,9 +461,9 @@ export default {
       xAxisValue: "",
       yAxisKeys: [],
       yAxisValue: "",
-      yAction: '',
-      sortDirectionY: 'asc',
-      sortDirectionX: 'asc',
+      yAction: "",
+      sortDirectionY: "asc",
+      sortDirectionX: "asc",
     };
   },
 
@@ -581,17 +607,19 @@ export default {
       await this.fetchDataSet(this.activeReport.dataSetId);
 
       /* GET KEYS FROM ALL DATA */
-      let uniqueKeys = []
-      let newKeys = this.dataSet.dataValues.items.map(s => Object.keys(s.data))
-      console.log(newKeys)
-      newKeys.forEach(arr => {
-        arr.forEach(key => {
+      let uniqueKeys = [];
+      let newKeys = this.dataSet.dataValues.items.map((s) =>
+        Object.keys(s.data)
+      );
+      console.log(newKeys);
+      newKeys.forEach((arr) => {
+        arr.forEach((key) => {
           if (!uniqueKeys.includes(key)) {
-            uniqueKeys.push(key)
+            uniqueKeys.push(key);
           }
-        })
-      })
-      let headers = uniqueKeys.filter(k => k != '$id')
+        });
+      });
+      let headers = uniqueKeys.filter((k) => k != "$id");
 
       headers.forEach((k, i) => {
         if (k == this.xAxisValue) {
@@ -601,7 +629,7 @@ export default {
           this.arrayMove(headers, i, 1);
         }
       });
-      console.log(this.headers)
+      console.log(this.headers);
       this.headers = headers;
       let newHeaders = [];
       if (this.activeReport.columns && this.activeReport.columns.length > 0) {
@@ -660,122 +688,144 @@ export default {
       );
     },
     onChangeYAction() {
-      const data = collect(this.data)
+      const data = collect(this.data);
       const newArray = [];
-      if (this.yAction == 'Count Unique Values') {
-        const counted = data.countBy(row => row[this.xAxisValue])
+      if (this.yAction == "Count Unique Values") {
+        const counted = data.countBy((row) => row[this.xAxisValue]);
 
         for (const key in counted.items) {
           let newObj = {
             [this.xAxisValue]: key,
-            [`Count Unique Values (${this.yAxisValue})`]: counted.items[key].toString()
+            [`Count Unique Values (${this.yAxisValue})`]:
+              counted.items[key].toString(),
           };
           newArray.push(newObj);
         }
-        this.data = newArray
-      } else if (this.yAction == 'Sum') {
-        let grouped = data.groupBy(this.xAxisValue)
+        this.data = newArray;
+      } else if (this.yAction == "Sum") {
+        let grouped = data.groupBy(this.xAxisValue);
 
         for (const item in grouped.items) {
           let newObj = {
             [this.xAxisValue]: item,
-            [`Sum (${this.yAxisValue})`]: grouped.items[item].reduce((acc, item) => acc + parseFloat(item[this.yAxisValue]), 0)
+            [`Sum (${this.yAxisValue})`]: grouped.items[item].reduce(
+              (acc, item) => acc + parseFloat(item[this.yAxisValue]),
+              0
+            ),
           };
           newArray.push(newObj);
         }
-        this.data = newArray
-      } else if (this.yAction == 'Average') {
-        let grouped = data.groupBy(this.xAxisValue)
-  
+        this.data = newArray;
+      } else if (this.yAction == "Average") {
+        let grouped = data.groupBy(this.xAxisValue);
+
         for (const item in grouped.items) {
-          let sum = grouped.items[item].reduce((acc, item) => acc + parseFloat(item[this.yAxisValue]), 0);
+          let sum = grouped.items[item].reduce(
+            (acc, item) => acc + parseFloat(item[this.yAxisValue]),
+            0
+          );
           let count = grouped.items[item].count();
           let average = sum / count;
           let newObj = {
             [this.xAxisValue]: item,
-            [`Average (${this.yAxisValue})`]: average
+            [`Average (${this.yAxisValue})`]: average,
           };
           newArray.push(newObj);
         }
-        this.data = newArray
-      } else if (this.yAction == 'Count') {
-        const counted = data.countBy(row => row[this.xAxisValue])
+        this.data = newArray;
+      } else if (this.yAction == "Count") {
+        const counted = data.countBy((row) => row[this.xAxisValue]);
         for (const key in counted.items) {
           let newObj = {
             [this.xAxisValue]: key,
-            [`Count (${this.xAxisValue})`]: counted.items[key].toString()
+            [`Count (${this.xAxisValue})`]: counted.items[key].toString(),
           };
           newArray.push(newObj);
         }
-        this.data = newArray
-      } else if (this.yAction == 'Median') {
-        let grouped = data.groupBy(this.xAxisValue)
-              
+        this.data = newArray;
+      } else if (this.yAction == "Median") {
+        let grouped = data.groupBy(this.xAxisValue);
+
         for (const item in grouped.items) {
-          let values = grouped.items[item].pluck(this.yAxisValue).map(item => parseFloat(item)).toArray().sort((a, b) => b - a)
+          let values = grouped.items[item]
+            .pluck(this.yAxisValue)
+            .map((item) => parseFloat(item))
+            .toArray()
+            .sort((a, b) => b - a);
           let median = collect(values).median();
           let newObj = {
             [this.xAxisValue]: item,
-            [`Median (${this.yAxisValue})`]: median
+            [`Median (${this.yAxisValue})`]: median,
           };
           newArray.push(newObj);
         }
-        this.data = newArray
-      } else if (this.yAction == 'Maximum') {
-        let grouped = data.groupBy(this.xAxisValue)
+        this.data = newArray;
+      } else if (this.yAction == "Maximum") {
+        let grouped = data.groupBy(this.xAxisValue);
 
         for (const item in grouped.items) {
           let max = grouped.items[item].reduce((max, item) => {
-            let val = parseFloat(item[this.yAxisValue])
-            return val > max ? val : max
-          }, -Infinity)
+            let val = parseFloat(item[this.yAxisValue]);
+            return val > max ? val : max;
+          }, -Infinity);
 
           let newObj = {
             [this.xAxisValue]: item,
-            [`Maximum (${this.yAxisValue})`]: max
+            [`Maximum (${this.yAxisValue})`]: max,
           };
           newArray.push(newObj);
         }
 
-        this.data = newArray
-      } else if (this.yAction == 'Minimum') {
-        let grouped = data.groupBy(this.xAxisValue)
+        this.data = newArray;
+      } else if (this.yAction == "Minimum") {
+        let grouped = data.groupBy(this.xAxisValue);
 
         for (const item in grouped.items) {
           let min = grouped.items[item].reduce((min, item) => {
-            let val = parseFloat(item[this.yAxisValue])
-            return val < min ? val : min
-          }, Infinity)
+            let val = parseFloat(item[this.yAxisValue]);
+            return val < min ? val : min;
+          }, Infinity);
 
           let newObj = {
             [this.xAxisValue]: item,
-            [`Minimum (${this.yAxisValue})`]: min
+            [`Minimum (${this.yAxisValue})`]: min,
           };
           newArray.push(newObj);
         }
 
-        this.data = newArray
+        this.data = newArray;
       }
     },
     onClearYAction() {
-      this.updateChartData()
+      this.updateChartData();
     },
     sortChart(direction, axis) {
-      const data = collect(this.data)
+      const data = collect(this.data);
       const newArray = [];
 
       /* Sorts based on Axis and Direction */
-      let sorted = direction == 'asc' ? (axis == this.yAxisValue ? data.sortBy(item => parseFloat(item[`${this.yAction} (${axis})`])) : data.sortBy(item => parseFloat(item[axis]))) : (axis == this.yAxisValue ? data.sortByDesc(item => parseFloat(item[`${this.yAction} (${axis})`])) : data.sortByDesc(item => parseFloat(item[axis])))
+      let sorted =
+        direction == "asc"
+          ? axis == this.yAxisValue
+            ? data.sortBy((item) =>
+                parseFloat(item[`${this.yAction} (${axis})`])
+              )
+            : data.sortBy((item) => parseFloat(item[axis]))
+          : axis == this.yAxisValue
+          ? data.sortByDesc((item) =>
+              parseFloat(item[`${this.yAction} (${axis})`])
+            )
+          : data.sortByDesc((item) => parseFloat(item[axis]));
 
-      sorted.items.forEach(item => newArray.push(item))
-      this.data = newArray
+      sorted.items.forEach((item) => newArray.push(item));
+      this.data = newArray;
     },
     toggleSortY() {
-      this.sortDirectionY = this.sortDirectionY === 'asc' ? 'desc' : 'asc';
+      this.sortDirectionY = this.sortDirectionY === "asc" ? "desc" : "asc";
       this.sortChart(this.sortDirectionY, this.yAxisValue);
     },
     toggleSortX() {
-      this.sortDirectionX = this.sortDirectionX === 'asc' ? 'desc' : 'asc';
+      this.sortDirectionX = this.sortDirectionX === "asc" ? "desc" : "asc";
       this.sortChart(this.sortDirectionX, this.xAxisValue);
     },
     moveArrByKey(keys, selected, axis) {
@@ -817,14 +867,14 @@ export default {
         if (this.activeReport.columns) {
           this.selectedHeaders = this.activeReport.columns;
         }
-       console.log(this.activeReport)
+        console.log(this.activeReport);
         this.xAxisKeys = this.selectedHeaders.map((h) => h.text || h);
         this.yAxisKeys = this.selectedHeaders.map((h) => h.text || h);
-        this.updateChartData()
+        this.updateChartData();
         if (this.activeReport.yAction) {
           setTimeout(() => {
             this.yAction = this.activeReport.yAction;
-            this.onChangeYAction()
+            this.onChangeYAction();
           }, 200);
         }
       }
@@ -855,16 +905,16 @@ export default {
 </script>
 
 <style scoped>
-.grid {
+/* .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 10px;
-}
+} */
 
-.description,
+/* .description,
 .tags {
   grid-column: 1 / span 2;
-}
+} */
 
 .placeholder-title {
   color: gray;

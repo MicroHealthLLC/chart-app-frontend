@@ -2,21 +2,10 @@
   <v-app>
     <Sidebar v-if="$route.name != 'Signin'" />
     <v-main class="main-container mx-auto">
-      <v-snackbar
-        v-model="snackbar.show"
-        color="success"
-        outlined
-        text
-        top
-      >
+      <v-snackbar v-model="snackbar.show" color="success" outlined text top>
         {{ snackbar.message
         }}<template v-slot:action="{ attrs }">
-          <v-btn
-            color="success"
-            text
-            v-bind="attrs"
-            @click="CLOSE_SNACKBAR"
-          >
+          <v-btn color="success" text v-bind="attrs" @click="CLOSE_SNACKBAR">
             Close
           </v-btn>
         </template>

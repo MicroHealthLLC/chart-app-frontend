@@ -1,9 +1,7 @@
 import { mapGetters, mapActions } from "vuex";
 export default {
   data() {
-    return {
-
-    };
+    return {};
   },
   methods: {
     ...mapActions([]),
@@ -19,7 +17,7 @@ export default {
       }
     },
     checkChartType(item) {
-      console.log(item)
+      console.log(item);
       let objs = Object.keys(item);
       if (objs.includes("reportGroup")) {
         return "report";

@@ -12,21 +12,13 @@
           small
           :to="`/channels/${$route.params.channelId}/dashboards/new`"
         >
-          New Dashboard <v-icon
-            right
-            dark
-          >
-            mdi-plus
-          </v-icon>
+          New Dashboard <v-icon right dark> mdi-plus </v-icon>
         </v-btn>
       </div>
 
       <v-divider class="mb-4" />
 
-      <div
-        v-if="channel.dashboards.length > 0"
-        class="grid"
-      >
+      <div v-if="channel.dashboards.length > 0" class="grid">
         <DashboardCard
           v-for="(dashboard, index) in channel.dashboards"
           :key="index"
@@ -37,34 +29,16 @@
         v-else
         class="placeholder d-flex flex-column justify-center align-center"
       >
-        <p class="font-weight-light">
-          No Dashboards to show...
-        </p>
-        <v-btn
-          text
-          small
-          color="primary"
-        >
-          Add a Dashboard
-        </v-btn>
+        <p class="font-weight-light">No Dashboards to show...</p>
+        <v-btn text small color="primary"> Add a Dashboard </v-btn>
       </div>
     </v-col>
     <!-- Details -->
     <v-col class="col-3">
       <div class="d-flex justify-space-between">
-        <h3 class="mb-2">
-          Details
-        </h3>
-        <v-btn
-          small
-          color="primary"
-          icon
-          class="btn-bg"
-          @click="openForm"
-        >
-          <v-icon small>
-            mdi-pencil
-          </v-icon>
+        <h3 class="mb-2">Details</h3>
+        <v-btn small color="primary" icon class="btn-bg" @click="openForm">
+          <v-icon small> mdi-pencil </v-icon>
         </v-btn>
       </div>
 
@@ -80,9 +54,7 @@
       <!-- Reports -->
       <div class="d-flex justify-space-between mt-4">
         <h3 class="mb-2">
-          <router-link
-            :to="`/channels/${$route.params.channelId}/reports`"
-          >
+          <router-link :to="`/channels/${$route.params.channelId}/reports`">
             Reports
           </router-link>
         </h3>
@@ -100,19 +72,11 @@
       <v-divider class="mb-4" />
 
       <ul>
-        <li
-          v-for="(report, index) in channel.reports"
-          :key="index"
-        >
+        <li v-for="(report, index) in channel.reports" :key="index">
           <router-link
             :to="`/channels/${$route.params.channelId}/reports/${report.id}`"
           >
-            <v-icon
-              small
-              color="primary"
-            >
-              mdi-file-chart-outline
-            </v-icon>
+            <v-icon small color="primary"> mdi-file-chart-outline </v-icon>
             {{ report.title }}
           </router-link>
         </li>
@@ -129,10 +93,7 @@
       </v-btn>
     </v-col>
     <!-- Modal Form -->
-    <v-dialog
-      v-model="showForm"
-      width="50%"
-    >
+    <v-dialog v-model="showForm" width="50%">
       <ChannelModalForm @closeform="closeForm" />
     </v-dialog>
   </v-row>

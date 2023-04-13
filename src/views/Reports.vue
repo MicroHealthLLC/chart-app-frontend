@@ -1,9 +1,6 @@
 <template>
   <v-row>
-    <v-dialog
-      v-model="showReportGroupForm"
-      width="30%"
-    >
+    <v-dialog v-model="showReportGroupForm" width="30%">
       <v-card class="px-4 py-4">
         <v-text-field
           v-model="reportGroup.title"
@@ -38,10 +35,7 @@
       </v-card>
       <!-- <span v-else>NO DATA</span> -->
     </v-dialog>
-    <v-dialog
-      v-model="showAddReportForm"
-      width="50%"
-    >
+    <v-dialog v-model="showAddReportForm" width="50%">
       <v-card class="px-4 py-4">
         <ReportForm @closeAddReportForm="closeAddReportForm" />
       </v-card>
@@ -49,12 +43,9 @@
     <v-col class="col-11">
       <div class="d-flex justify-space-between">
         <h3>
-          <v-icon
-            class="mr-2 pb-2"
-            color="orange darken-2"
-          >
-            mdi-chart-box-outline
-          </v-icon>Reports
+          <v-icon class="mr-2 pb-2" color="orange darken-2">
+            mdi-chart-box-outline </v-icon
+          >Reports
         </h3>
         <span>
           <v-btn
@@ -62,17 +53,16 @@
             color="primary"
             small
             @click.prevent="toNewReport"
-          >Add Report <v-icon small>mdi-plus</v-icon></v-btn>
+            >Add Report <v-icon small>mdi-plus</v-icon></v-btn
+          >
           <v-btn
             class="mb-2"
             color="success"
             small
             @click.prevent="createReportGroup"
-          >Create Folder
-            <v-icon
-              small
-              class="pl-1"
-            >mdi-folder-multiple</v-icon></v-btn>
+            >Create Folder
+            <v-icon small class="pl-1">mdi-folder-multiple</v-icon></v-btn
+          >
         </span>
       </div>
       <v-divider class="mb-4" />
@@ -86,11 +76,7 @@
           :key="item.id"
           :load="log(channelReportGroups)"
         >
-          <v-list-group
-            :value="false"
-            no-action
-            sub-group
-          >
+          <v-list-group :value="false" no-action sub-group>
             <template v-slot:activator>
               <v-list-item-content>
                 <v-list-item-title>
@@ -104,14 +90,16 @@
                       x-large
                       class="pr-1 file-icon"
                       color="yellow darken-2"
-                    >mdi-folder-open-outline</v-icon>
+                      >mdi-folder-open-outline</v-icon
+                    >
                   </span>
                   <span v-else>
                     <v-icon
                       x-large
                       class="pr-1 file-icon"
                       color="yellow darken-2"
-                    >mdi-folder-outline</v-icon>
+                      >mdi-folder-outline</v-icon
+                    >
                   </span>
                   {{ item.title }} ({{
                     sortedReports.filter((t) => t.reportGroupId == item.id)
@@ -128,7 +116,7 @@
               link
             >
               <v-list-item-icon>
-                <v-icon color="orange darken-2">mdi-file-chart-outline</v-icon>
+                <v-icon color="orange darken-2">{{ reportIcon(report.chartType) }}</v-icon>
               </v-list-item-icon>
               <v-list-item-title
                 @click.prevent="toReport(report.id)"
@@ -138,38 +126,21 @@
           </v-list-group>
         </span>
       </div>
-      <div
-        v-else
-        class="mt-4 mb-4"
-      >
-        No Folders in this Channel
-      </div>
+      <div v-else class="mt-4 mb-4">No Folders in this Channel</div>
       <v-divider class="mb-4 mt-4" />
-      <h4 class="mb-3">
-        Reports
-      </h4>
-      <div
-        v-if="sortedReports.length > 0"
-        class="singleReportGrid pl-5"
-      >
-        <span
-          v-for="report in sortedReports"
-          :key="report.id"
-        >
-          <span
-            class="click"
-            @click.prevent="toSingleReport(report.id)"
-          >
-            <v-icon
-              x-large
-              class="pl-2 file-icon"
-              color="orange darken-2"
-            >mdi-file-chart-outline</v-icon>
+      <h4 class="mb-3">Reports</h4>
+      <div v-if="sortedReports.length > 0" class="singleReportGrid pl-5">
+        <span v-for="report in sortedReports" :key="report.id">
+          <span class="click" @click.prevent="toSingleReport(report.id)">
+            <v-icon x-large class="pl-2 file-icon" color="orange darken-2"
+              >{{ reportIcon(report.chartType) }}</v-icon
+            >
             {{ report.title }}
             <small
               v-if="report.reportGroup && report.reportGroup.title"
               class="d-inline blu"
-            >({{ report.reportGroup.title }})</small>
+              >({{ report.reportGroup.title }})</small
+            >
           </span>
         </span>
         <!-- <div class="d-flex justify-end btn-container">
@@ -187,32 +158,16 @@
         v-else
         class="placeholder d-flex flex-column justify-center align-center"
       >
-        <p class="font-weight-light">
-          No Reports on this Channel yet...
-        </p>
-        <v-btn
-          text
-          small
-          color="primary"
-          :to="`reports/add-report`"
-        >
+        <p class="font-weight-light">No Reports on this Channel yet...</p>
+        <v-btn text small color="primary" :to="`reports/add-report`">
           Add a Report
         </v-btn>
       </div>
     </v-col>
     <span class="views">
-      <v-icon
-        x-large
-        class="pl-2"
-      >mdi-view-dashboard-outline</v-icon>
-      <v-icon
-        x-large
-        class="pl-2"
-      >mdi-view-list-outline</v-icon>
-      <v-icon
-        x-large
-        class="pl-2"
-      >mdi-table-large</v-icon>
+      <v-icon x-large class="pl-2">mdi-view-dashboard-outline</v-icon>
+      <v-icon x-large class="pl-2">mdi-view-list-outline</v-icon>
+      <v-icon x-large class="pl-2">mdi-table-large</v-icon>
     </span>
   </v-row>
 </template>
@@ -220,6 +175,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import ReportForm from "../components/ReportForm.vue";
+import reportMixin from "../mixins/report-mixin";
 // import NewsCard from "../components/NewsCard";
 // import ReportCard from "./../components/ReportCard";
 
@@ -235,6 +191,7 @@ export default {
       viewAllReports: true,
     };
   },
+  mixins: [reportMixin],
   computed: {
     ...mapGetters([
       "channels",
@@ -272,8 +229,7 @@ export default {
       return this.channelReports
         .filter((t) => t && !t.reportGroupId)
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    }
-
+    },
   },
   methods: {
     ...mapActions([

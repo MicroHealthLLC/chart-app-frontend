@@ -1,9 +1,6 @@
 <template>
   <v-row justify="center">
-    <v-col
-      :cols="isDashboard && heatMap.notes ? 8 : 11"
-      class="pt-0"
-    >
+    <v-col :cols="isDashboard && heatMap.notes ? 8 : 11" class="pt-0">
       <div
         v-if="$route.path != `/${this.currentChannels[0].name}/gauges`"
         class="d-flex"
@@ -57,11 +54,7 @@
           v-for="(h, i) in headers.slice(1)"
           v-slot:[`item.${h.text}`]="{ item }"
         >
-          <v-chip
-            :key="i"
-            :color="getColor(item, item[`${h.text}`], i)"
-            label
-          >
+          <v-chip :key="i" :color="getColor(item, item[`${h.text}`], i)" label>
             {{ item[`${h.text}`] }}
           </v-chip>
         </template>
@@ -86,15 +79,8 @@
             </template> -->
       </v-data-table>
     </v-col>
-    <v-col
-      v-if="isDashboard && heatMap.notes"
-      cols="3"
-      class="mr-2"
-    >
-      <v-card
-        color=""
-        elevation="1"
-      >
+    <v-col v-if="isDashboard && heatMap.notes" cols="3" class="mr-2">
+      <v-card color="" elevation="1">
         <v-card-text v-html="heatMap.notes" />
       </v-card>
     </v-col>
@@ -111,7 +97,7 @@ export default {
     heatMap: Object,
     headers: Array,
     dataItems: Array,
-    isDashboard: Boolean
+    isDashboard: Boolean,
     //options: Object,
   },
   data() {

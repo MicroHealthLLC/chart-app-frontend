@@ -15,17 +15,12 @@
               v-bind="attrs"
               @click.prevent="toHeatMap(heatMap.id)"
               v-on="on"
-            ><v-icon
-              small
-            >fa-solid fa-up-right-from-square</v-icon>
+              ><v-icon small>fa-solid fa-up-right-from-square</v-icon>
             </v-btn>
           </template>
           <span>Go to KPI Heat Map</span>
         </v-tooltip>
-        <v-tooltip
-          v-if="!isReadOnly"
-          top
-        >
+        <v-tooltip v-if="!isReadOnly" top>
           <template v-slot:activator="{ on, attrs }">
             <v-btn
               class="ml-4 mt-2"
@@ -33,27 +28,19 @@
               v-bind="attrs"
               @click.prevent="$emit('deleteItem', heatMap.id)"
               v-on="on"
-            ><v-icon
-              small
-              color="red"
-            >fa-trash</v-icon>
+              ><v-icon small color="red">fa-trash</v-icon>
             </v-btn>
           </template>
           <span>Remove from Dashboard</span>
         </v-tooltip>
       </span>
-      <v-btn
-        class="chart-menu"
-        icon
-        @click="fullscreenHeatMap"
-      >
-        <v-icon>{{ fullscreenHM ? 'mdi-fullscreen-exit' : 'mdi-fullscreen' }}</v-icon>
+      <v-btn class="chart-menu" icon @click="fullscreenHeatMap">
+        <v-icon>{{
+          fullscreenHM ? "mdi-fullscreen-exit" : "mdi-fullscreen"
+        }}</v-icon>
       </v-btn>
       <!-- <fullscreen v-if="!fullscreen" v-model="fullscreenHM"> -->
-      <span
-        v-if="fullscreenHM"
-        height="100vh"
-      >
+      <span v-if="fullscreenHM" height="100vh">
         <!-- <v-toolbar class="px-5" color="info" dark>
           <h3>{{ heatMap.title }}</h3>
           <v-spacer></v-spacer>
@@ -61,10 +48,7 @@
             <v-icon>mdi-close-thick</v-icon>
           </v-btn>
         </v-toolbar> -->
-        <v-row
-          justify="space-around"
-          class="mt-10"
-        >
+        <v-row justify="space-around" class="mt-10">
           <v-col :cols="heatMap.notes ? 8 : 12">
             <KPIHeatMap
               :heat-map="heatMap"
@@ -72,10 +56,7 @@
               :data-items="data"
             />
           </v-col>
-          <v-col
-            v-if="heatMap.notes"
-            cols="3"
-          >
+          <v-col v-if="heatMap.notes" cols="3">
             <v-card
               elevation="1"
               width="fit-content"
@@ -105,9 +86,7 @@
               v-bind="attrs"
               @click.prevent="toHeatMap(heatMap.id)"
               v-on="on"
-            ><v-icon
-              small
-            >fa-solid fa-up-right-from-square</v-icon>
+              ><v-icon small>fa-solid fa-up-right-from-square</v-icon>
             </v-btn>
           </template>
           <span>Go to KPI Heat Map</span>
@@ -115,16 +94,9 @@
       </span>
       <v-row justify="space-around">
         <v-col :cols="heatMap.notes ? 6 : 10">
-          <KPIHeatMap
-            :heat-map="heatMap"
-            :headers="cols"
-            :data-items="data"
-          />
+          <KPIHeatMap :heat-map="heatMap" :headers="cols" :data-items="data" />
         </v-col>
-        <v-col
-          v-if="heatMap.notes"
-          cols="4"
-        >
+        <v-col v-if="heatMap.notes" cols="4">
           <v-card
             elevation="1"
             width="fit-content"
@@ -151,7 +123,7 @@ export default {
   props: {
     heatMap: Object,
     isReadOnly: Boolean,
-    fullscreen: Boolean
+    fullscreen: Boolean,
   },
   data() {
     return {
@@ -184,7 +156,7 @@ export default {
       console.log(this.heatMap);
     },
     isReadOnly() {
-      console.log(this)
+      console.log(this);
     },
   },
   async mounted() {
@@ -201,7 +173,7 @@ export default {
     if (this.heatMap.options && typeof this.heatMap.options == "string") {
       this.heatMap.options = JSON.parse(this.heatMap.options);
     }
-    console.log(this)
+    console.log(this);
   },
 };
 </script>

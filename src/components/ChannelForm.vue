@@ -4,9 +4,7 @@
     <v-col class="col-12">
       <div class="d-flex justify-space-between">
         <h3 class="pr-2">
-          <v-icon class="gre pr-2 pb-1">
-            mdi-television-classic
-          </v-icon>
+          <v-icon class="gre pr-2 pb-1"> mdi-television-classic </v-icon>
           <span v-if="channel.id">Update Channel</span>
           <span v-else>Create Channel</span>
         </h3>
@@ -20,12 +18,7 @@
           >
             Save
           </v-btn>
-          <v-btn
-            class="mb-2"
-            small
-            outlined
-            @click="resetAndGoBack"
-          >
+          <v-btn class="mb-2" small outlined @click="resetAndGoBack">
             Close
           </v-btn>
         </div>
@@ -33,11 +26,7 @@
       <v-divider class="mb-4" />
       <!-- Form Fields -->
       <v-card class="pa-4">
-        <v-form
-          ref="form"
-          v-model="formValid"
-          class="grid mt-4"
-        >
+        <v-form ref="form" v-model="formValid" class="grid mt-4">
           <div>
             <v-text-field
               v-model="channel.title"
