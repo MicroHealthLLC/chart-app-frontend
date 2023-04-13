@@ -21,7 +21,7 @@
             </v-btn>
           </div>
         </div>
-        <v-divider />
+        <v-divider></v-divider>
       </v-col>
     </v-row>
     <v-row>
@@ -59,24 +59,6 @@
                 @change="loadTable"
               />
             </v-col>
-            <v-col >
-              <v-expansion-panels @change="isExpanded">
-                <v-expansion-panel>
-                  <v-expansion-panel-header>{{
-                    !expanded ? "Show notes" : "Hide notes"
-                  }}</v-expansion-panel-header>
-                  <v-expansion-panel-content>
-                    <vue-editor
-                      v-model="heatMap.notes"
-                      placeholder="Enter notes here"
-                      :editor-toolbar="toolbarOptions"
-                    />
-                  </v-expansion-panel-content>
-                </v-expansion-panel>
-              </v-expansion-panels>
-            </v-col>
-          </v-row>
-          <v-row>
             <v-col cols="4">
               <v-select
                 v-model="selectedHeaders"
@@ -102,6 +84,7 @@
         </v-form>
       </v-col>
     </v-row>
+    <v-divider class="ma-4"></v-divider>
     <!-- <v-row>
       <vue-editor v-model="heatMap.notes" placeholder="Enter notes here" :editor-toolbar="toolbarOptions" ></vue-editor>
     </v-row> -->
@@ -124,7 +107,9 @@
         cols="6"
         class="mt-6 ml-4"
       >
+      <h4 class="mb-6">Legend</h4>
         <v-row>
+          
           <v-col
             v-for="(col, i) in heatMap.options.cols"
             :key="i"
@@ -207,6 +192,25 @@
             />
           </v-col>
         </v-row>
+      </v-col>
+    </v-row>
+    <v-divider class="ma-4"></v-divider>
+    <v-row>
+      <v-col>
+        <v-expansion-panels @change="isExpanded">
+          <v-expansion-panel>
+            <v-expansion-panel-header>{{
+              !expanded ? "Show notes" : "Hide notes"
+            }}</v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <vue-editor
+                v-model="heatMap.notes"
+                placeholder="Enter notes here"
+                :editor-toolbar="toolbarOptions"
+              />
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
       </v-col>
     </v-row>
 
