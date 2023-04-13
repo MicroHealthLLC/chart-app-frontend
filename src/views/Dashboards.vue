@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <v-row>
+    <v-col class="col-11">
     <v-dialog v-model="showForm" width="30%">
       <v-card class="pa-4 modal">
         <DashboardForm @closeDashboardForm="closeDashboardForm" />
@@ -27,7 +28,7 @@
     </div>
     <v-divider class="mb-4" />
 
-    <v-container v-if="channelDashboards.length > 0" class="pl-5">
+    <v-container v-if="channelDashboards.length > 0" class="pl-5 mt-10">
       <v-row>
         <v-col
           v-for="dashboard in channelDashboards"
@@ -85,7 +86,8 @@
         Add a Dashboard
       </v-btn>
     </div>
-  </div>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
