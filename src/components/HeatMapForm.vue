@@ -84,7 +84,7 @@
               <v-expansion-panels @change="isExpanded">
                 <v-expansion-panel>
                   <v-expansion-panel-header>{{
-                    !expanded ? "Click to reveal notes" : "Click to hide notes"
+                    !expanded ? "Show notes" : "Hide notes"
                   }}</v-expansion-panel-header>
                   <v-expansion-panel-content>
                     <vue-editor
@@ -116,9 +116,10 @@
         />
         <!-- :options="options" -->
       </v-col>
+      <v-divider class="my-6" vertical></v-divider>
       <v-col
         v-if="heatMap.dataSet && heatMap.options && heatMap.options.cols"
-        cols="5"
+        cols="6" class="mt-6 ml-4" 
       >
         <v-row>
           <v-col
@@ -128,9 +129,9 @@
             md="3"
             sm="5"
             xs="6"
-            class="ml-2"
+            class="ml-2 col-opts"
           >
-            <v-card-subtitle>{{ col.name }}</v-card-subtitle>
+            <h5 class="mb-4">{{ col.name }}</h5>
             <v-text-field
               v-model="heatMap.options.cols[i].gre"
               solo
@@ -195,7 +196,8 @@
                 }}
               </v-icon>
             </v-text-field>
-            <v-checkbox
+            <v-checkbox 
+              small
               v-model="heatMap.options.cols[i].abs"
               label="Use Absolute Value"
               @change="updateTableColors"
@@ -548,6 +550,9 @@ export default {
 </script>
 
 <style scoped>
+.col-opts {
+  background-color: whitesmoke;
+}
 .placeholder-text,
 .placeholder-icon {
   color: #1976d2;
@@ -559,7 +564,7 @@ export default {
   grid-gap: 10px;
 }
 .expansion {
-  grid-column: 1 / span 2;
+  grid-column: 1 / span 1;
 }
 
 div >>> .v-select__selections {
