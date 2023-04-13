@@ -116,7 +116,7 @@
               link
             >
               <v-list-item-icon>
-                <v-icon color="orange darken-2">mdi-file-chart-outline</v-icon>
+                <v-icon color="orange darken-2">{{ reportIcon(report.chartType) }}</v-icon>
               </v-list-item-icon>
               <v-list-item-title
                 @click.prevent="toReport(report.id)"
@@ -133,7 +133,7 @@
         <span v-for="report in sortedReports" :key="report.id">
           <span class="click" @click.prevent="toSingleReport(report.id)">
             <v-icon x-large class="pl-2 file-icon" color="orange darken-2"
-              >mdi-file-chart-outline</v-icon
+              >{{ reportIcon(report.chartType) }}</v-icon
             >
             {{ report.title }}
             <small
@@ -175,6 +175,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import ReportForm from "../components/ReportForm.vue";
+import reportMixin from "../mixins/report-mixin";
 // import NewsCard from "../components/NewsCard";
 // import ReportCard from "./../components/ReportCard";
 
@@ -190,6 +191,7 @@ export default {
       viewAllReports: true,
     };
   },
+  mixins: [reportMixin],
   computed: {
     ...mapGetters([
       "channels",
