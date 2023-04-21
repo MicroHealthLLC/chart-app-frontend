@@ -72,20 +72,17 @@
         class="grid"
       >
         <!-- <draggable v-model="sortedReports" :group="{ name: 'reports', pull: false, put: true }" > -->
-        <span
-          v-for="item in channelReportGroups"
-          :key="item.id"
-        >
-          <v-list-group :value="false" no-action sub-group>
+        <span v-for="item in channelReportGroups" :key="item.id">
+          <v-list-group
+            :value="item.isExpanded"
+            @input="item.isExpanded = !item.isExpanded"
+            no-action
+            sub-group
+          >
             <template v-slot:activator>
               <v-list-item-content>
                 <v-list-item-title>
-                  <span
-                    v-if="
-                      channelReports.filter((t) => t.reportGroupId == item.id)
-                        .length > 0
-                    "
-                  >
+                  <span v-if="item.isExpanded">
                     <v-icon
                       x-large
                       class="pr-1 file-icon"
@@ -101,22 +98,19 @@
                       >mdi-folder-outline</v-icon
                     >
                   </span>
-                  {{ item.title }} ({{
-                    channelReports.filter((t) => t.reportGroupId == item.id)
-                      .length
-                  }})
+                  {{ item.title }} ({{ item.reports.items.length }})
                 </v-list-item-title>
               </v-list-item-content>
             </template>
             <draggable
-              v-model="channelReports"
-              :group="{ name: 'folderReports', pull: true, put: ['reports'] }"
+              v-model="item.reports.items"
+              :group="{ name: `${item.id}`, pull: true, put: ['reports'] }"
               :move="onMove"
+              @start="onStart"
             >
+              <v-list-item v-if="item.reports.items.length == 0"></v-list-item>
               <v-list-item
-                v-for="report in channelReports.filter(
-                  (t) => t.reportGroupId == item.id
-                )"
+                v-for="report in item.reports.items"
                 :key="report.id"
                 link
               >
@@ -142,8 +136,9 @@
         <draggable
           v-model="channelReports"
           class="singleReportGrid"
-          :group="{ name: 'reports', pull: true, put: ['folderReports'] }"
+          :group="{ name: 'reports', pull: true, put: true }"
           :move="onMove"
+          @start="onStart"
         >
           <span v-for="report in channelReports" :key="report.id">
             <span class="click" @click.prevent="toSingleReport(report.id)">
@@ -209,7 +204,7 @@ export default {
       showAddReportForm: false,
       viewAllReports: true,
       dragItem: {},
-      relatedItem: {}
+      relatedItem: {},
     };
   },
   mixins: [reportMixin],
@@ -236,16 +231,16 @@ export default {
       } else return [];
     },
     folderReports() {
-      let items = []
+      let items = [];
       this.reports.forEach((r) => {
         if (r.reportGroupId) {
-          items.push(r)
+          items.push(r);
         }
-      })
-      console.log(items)
-      return items
+      });
+      //console.log(items);
+      return items;
     },
-        /* channelReports() {
+    /* channelReports() {
       if (this.reports && this.reports.length > 0 && this.viewAllReports) {
         return this.reports.filter(
           (t) => t.channelId == this.currentChannels[0].channelId
@@ -257,34 +252,49 @@ export default {
         );
     }, */
     channelReports: {
-    get() {
-      if (this.reports && this.reports.length > 0 && this.viewAllReports) {
-        return this.reports.filter(
-          (t) => t.channelId == this.currentChannels[0].channelId
-        );
-      } else {
-        return this.reports.filter(
-          (t) =>
-            t.channelId == this.currentChannels[0].channelId && !t.reportGroupId
-        );
-      }
+      get() {
+        if (this.reports && this.reports.length > 0 && this.viewAllReports) {
+          return this.reports.filter(
+            (t) =>
+              t.channelId == this.currentChannels[0].channelId &&
+              !t.reportGroupId
+          );
+        } else {
+          return this.reports.filter(
+            (t) =>
+              t.channelId == this.currentChannels[0].channelId &&
+              !t.reportGroupId
+          );
+        }
+      },
+      set(value) {
+        // Update the reports array with the new value
+        console.log(value);
+        //console.log(this.dragItem, this.relatedItem);
+        let data = {
+          id: this.dragItem.id,
+          title: this.dragItem.title,
+        };
+        if (!this.relatedItem) {
+          // Look for the report in all report groups
+          this.channelReportGroups.forEach((g) => {
+            g.reports.items.forEach((r) => {
+              if (r.id === data.id) {
+                data.reportGroupId = g.id;
+              }
+            });
+          });
+        } else if (!this.relatedItem.reportGroupId) {
+          data.reportGroupId = null;
+        } else {
+          data.reportGroupId = this.relatedItem.reportGroupId;
+        }
+        console.log(data);
+        this.updateReportById(data);
+        this.dragItem = {}
+        this.relatedItem = {}
+      },
     },
-    set(value) {
-      // Update the reports array with the new value
-      console.log(value)
-      console.log(this.dragItem, this.relatedItem)
-      let data = {
-        id: this.dragItem.id,
-        title: this.dragItem.title,
-        reportGroupId: this.relatedItem.reportGroupId
-      }
-      if (!this.relatedItem.reportGroupId) {
-        data.reportGroupId = null
-      }
-      console.log(data)
-      this.updateReportById(data)
-    }
-  },
     sortedReports() {
       return this.channelReports
         .filter((t) => t && !t.reportGroupId)
@@ -336,13 +346,33 @@ export default {
     },
     onMove(e) {
       console.log(e)
-      this.dragItem = e.draggedContext.element
-      this.relatedItem = e.relatedContext.element
+      //this.dragItem = e.draggedContext.element;
+      this.relatedItem = e.relatedContext.element;
+    },
+    onStart(e) {
+      console.log(e)
+      this.dragItem = e.item._underlying_vm_;
+    },
+    onEnd(e) {
+      console.log(e);
+      console.log(this.dragItem)
+      let data = {
+        id: this.dragItem.id,
+      };
+      if (this.relatedItem.reportGroupId) {
+        data.reportGroupId = this.relatedItem.reportGroupId;
+      } else {
+        data.reportGroupId = null;
+      }
+      
+      this.updateReportById(data);
+      this.dragItem = {}
+        this.relatedItem = {}
     },
   },
   watch: {
     reports() {
-      console.log(this.channelReportGroups)
+      //console.log(this.channelReportGroups);
       //console.log(this.reportGroups)
     },
     reportGroup() {
@@ -351,7 +381,7 @@ export default {
   },
   mounted() {
     this.fetchReports();
-    this.fetchReportGroups2();
+    this.fetchReportGroups();
     this.fetchDataSets();
     //  console.log(this.user)
   },
