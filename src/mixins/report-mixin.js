@@ -16,7 +16,7 @@ export default {
   methods: {
     ...mapActions([]),
     reportIcon(chartType) {
-      console.log(chartType);
+      //console.log(chartType);
       switch (chartType) {
         case "line":
           return "mdi-chart-line";

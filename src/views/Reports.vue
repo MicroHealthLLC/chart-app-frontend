@@ -71,10 +71,10 @@
         v-if="channelReportGroups && channelReportGroups.length > 0"
         class="grid"
       >
+        <!-- <draggable v-model="sortedReports" :group="{ name: 'reports', pull: false, put: true }" > -->
         <span
           v-for="item in channelReportGroups"
           :key="item.id"
-          :load="log(channelReportGroups)"
         >
           <v-list-group :value="false" no-action sub-group>
             <template v-slot:activator>
@@ -82,7 +82,7 @@
                 <v-list-item-title>
                   <span
                     v-if="
-                      sortedReports.filter((t) => t.reportGroupId == item.id)
+                      channelReports.filter((t) => t.reportGroupId == item.id)
                         .length > 0
                     "
                   >
@@ -102,47 +102,63 @@
                     >
                   </span>
                   {{ item.title }} ({{
-                    sortedReports.filter((t) => t.reportGroupId == item.id)
+                    channelReports.filter((t) => t.reportGroupId == item.id)
                       .length
                   }})
                 </v-list-item-title>
               </v-list-item-content>
             </template>
-            <v-list-item
-              v-for="report in sortedReports.filter(
-                (t) => t.reportGroupId == item.id
-              )"
-              :key="report.id"
-              link
+            <draggable
+              v-model="channelReports"
+              :group="{ name: 'folderReports', pull: true, put: ['reports'] }"
+              :move="onMove"
             >
-              <v-list-item-icon>
-                <v-icon color="orange darken-2">{{ reportIcon(report.chartType) }}</v-icon>
-              </v-list-item-icon>
-              <v-list-item-title
-                @click.prevent="toReport(report.id)"
-                v-text="report.title"
-              />
-            </v-list-item>
+              <v-list-item
+                v-for="report in channelReports.filter(
+                  (t) => t.reportGroupId == item.id
+                )"
+                :key="report.id"
+                link
+              >
+                <v-list-item-icon>
+                  <v-icon color="orange darken-2">{{
+                    reportIcon(report.chartType)
+                  }}</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title
+                  @click.prevent="toReport(report.id)"
+                  v-text="report.title"
+                />
+              </v-list-item>
+            </draggable>
           </v-list-group>
         </span>
       </div>
       <div v-else class="mt-4 mb-4">No Folders in this Channel</div>
       <v-divider class="mb-4 mt-4" />
       <h4 class="mb-3">Reports</h4>
-      <div v-if="sortedReports.length > 0" class="singleReportGrid pl-5">
-        <span v-for="report in sortedReports" :key="report.id">
-          <span class="click" @click.prevent="toSingleReport(report.id)">
-            <v-icon x-large class="pl-2 file-icon" color="orange darken-2"
-              >{{ reportIcon(report.chartType) }}</v-icon
-            >
-            {{ report.title }}
-            <small
-              v-if="report.reportGroup && report.reportGroup.title"
-              class="d-inline blu"
-              >({{ report.reportGroup.title }})</small
-            >
+      <div v-if="channelReports.length > 0" class="pl-5">
+        <!--  singleReportGrid -->
+        <draggable
+          v-model="channelReports"
+          class="singleReportGrid"
+          :group="{ name: 'reports', pull: true, put: ['folderReports'] }"
+          :move="onMove"
+        >
+          <span v-for="report in channelReports" :key="report.id">
+            <span class="click" @click.prevent="toSingleReport(report.id)">
+              <v-icon x-large class="pl-2 file-icon" color="orange darken-2">{{
+                reportIcon(report.chartType)
+              }}</v-icon>
+              {{ report.title }}
+              <small
+                v-if="report.reportGroup && report.reportGroup.title"
+                class="d-inline blu"
+                >({{ report.reportGroup.title }})</small
+              >
+            </span>
           </span>
-        </span>
+        </draggable>
         <!-- <div class="d-flex justify-end btn-container">
           <v-btn
             v-if="reports.length >= 6"
@@ -154,6 +170,7 @@
           >
         </div> -->
       </div>
+
       <div
         v-else
         class="placeholder d-flex flex-column justify-center align-center"
@@ -178,17 +195,21 @@ import ReportForm from "../components/ReportForm.vue";
 import reportMixin from "../mixins/report-mixin";
 // import NewsCard from "../components/NewsCard";
 // import ReportCard from "./../components/ReportCard";
+import draggable from "vuedraggable";
 
 export default {
-  name: "Home",
+  name: "Reports",
   components: {
     ReportForm,
+    draggable,
   },
   data() {
     return {
       showReportGroupForm: false,
       showAddReportForm: false,
       viewAllReports: true,
+      dragItem: {},
+      relatedItem: {}
     };
   },
   mixins: [reportMixin],
@@ -214,7 +235,17 @@ export default {
         );
       } else return [];
     },
-    channelReports() {
+    folderReports() {
+      let items = []
+      this.reports.forEach((r) => {
+        if (r.reportGroupId) {
+          items.push(r)
+        }
+      })
+      console.log(items)
+      return items
+    },
+        /* channelReports() {
       if (this.reports && this.reports.length > 0 && this.viewAllReports) {
         return this.reports.filter(
           (t) => t.channelId == this.currentChannels[0].channelId
@@ -224,7 +255,36 @@ export default {
           (t) =>
             t.channelId == this.currentChannels[0].channelId && !t.reportGroupId
         );
+    }, */
+    channelReports: {
+    get() {
+      if (this.reports && this.reports.length > 0 && this.viewAllReports) {
+        return this.reports.filter(
+          (t) => t.channelId == this.currentChannels[0].channelId
+        );
+      } else {
+        return this.reports.filter(
+          (t) =>
+            t.channelId == this.currentChannels[0].channelId && !t.reportGroupId
+        );
+      }
     },
+    set(value) {
+      // Update the reports array with the new value
+      console.log(value)
+      console.log(this.dragItem, this.relatedItem)
+      let data = {
+        id: this.dragItem.id,
+        title: this.dragItem.title,
+        reportGroupId: this.relatedItem.reportGroupId
+      }
+      if (!this.relatedItem.reportGroupId) {
+        data.reportGroupId = null
+      }
+      console.log(data)
+      this.updateReportById(data)
+    }
+  },
     sortedReports() {
       return this.channelReports
         .filter((t) => t && !t.reportGroupId)
@@ -238,7 +298,9 @@ export default {
       "fetchCurrentUser",
       "fetchDataSets",
       "fetchReportGroups",
+      "fetchReportGroups2",
       "addReportGroup",
+      "updateReportById",
     ]),
     ...mapMutations(["SET_REPORT"]),
     toNewReport() {
@@ -272,10 +334,15 @@ export default {
     createReportGroup() {
       this.showReportGroupForm = true;
     },
+    onMove(e) {
+      console.log(e)
+      this.dragItem = e.draggedContext.element
+      this.relatedItem = e.relatedContext.element
+    },
   },
   watch: {
     reports() {
-      //console.log(this.channelReports)
+      console.log(this.channelReportGroups)
       //console.log(this.reportGroups)
     },
     reportGroup() {
@@ -284,7 +351,7 @@ export default {
   },
   mounted() {
     this.fetchReports();
-    this.fetchReportGroups();
+    this.fetchReportGroups2();
     this.fetchDataSets();
     //  console.log(this.user)
   },

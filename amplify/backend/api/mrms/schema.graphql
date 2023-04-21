@@ -4,9 +4,9 @@
 type Report @model @auth(rules: [{ allow: public }]) {
   id: ID!
   title: String!
-  reportGroup: ReportGroup @belongsTo(fields: ["reportGroupId"])
   description: String,
-  reportGroupId: ID @index(name: "byReportGroup")  
+  reportGroupId: ID @index(name: "byReportGroup")
+  reportGroup: ReportGroup @belongsTo(fields: ["reportGroupId"])
   channelId: ID @index(name: "byChannel")
   # dashboards: [Dashboard] @manyToMany(relationName: "DashboardReports")
   colorSchemeId: Int

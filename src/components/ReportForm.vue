@@ -69,6 +69,7 @@
             <v-select
               v-model="activeReport.reportGroupId"
               dense
+              clearable
               label="Folder"
               :items="reportGroups"
               item-text="title"

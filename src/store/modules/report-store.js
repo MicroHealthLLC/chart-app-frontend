@@ -9,6 +9,7 @@ import { updateReportGroup } from "@/graphql/mutations";
 import { deleteReportGroup } from "@/graphql/mutations";
 import { getReportGroup } from "@/graphql/queries";
 import { listReportGroups } from "@/graphql/queries";
+import { listReportGroupsWithReports } from "../../graphql/custom-query";
 
 export default {
   state: {
@@ -131,6 +132,15 @@ export default {
     async fetchReportGroups({ commit }) {
       try {
         const res = await API.graphql(graphqlOperation(listReportGroups));
+        console.log(res.data);
+        commit("SET_REPORT_GROUPS", res.data.listReportGroups.items);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async fetchReportGroups2({ commit }) {
+      try {
+        const res = await API.graphql(graphqlOperation(listReportGroupsWithReports));
         console.log(res.data);
         commit("SET_REPORT_GROUPS", res.data.listReportGroups.items);
       } catch (error) {
