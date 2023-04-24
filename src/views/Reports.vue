@@ -107,9 +107,10 @@
               :group="{ name: `${item.id}`, pull: true, put: ['reports'] }"
               :move="onMove"
               @start="onStart"
+              
             >
               <v-list-item v-if="item.reports.items.length == 0"></v-list-item>
-              <v-list-item
+              <v-list-item v-else
                 v-for="report in item.reports.items"
                 :key="report.id"
                 link
@@ -295,11 +296,11 @@ export default {
         this.relatedItem = {}
       },
     },
-    sortedReports() {
+    /* sortedReports() {
       return this.channelReports
         .filter((t) => t && !t.reportGroupId)
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    },
+    }, */
   },
   methods: {
     ...mapActions([
@@ -346,11 +347,11 @@ export default {
     },
     onMove(e) {
       console.log(e)
-      //this.dragItem = e.draggedContext.element;
+      this.dragItem = e.draggedContext.element;
       this.relatedItem = e.relatedContext.element;
     },
     onStart(e) {
-      console.log(e)
+      //console.log(e.item._underlying_vm_)
       this.dragItem = e.item._underlying_vm_;
     },
     onEnd(e) {
