@@ -3,12 +3,10 @@
     <!-- Title -->
     <v-col class="col-12">
       <div class="d-flex justify-space-between">
-        <h3 v-if="!isReadOnly && dataSet.id">Update {{ dataSet.title }}</h3>
-        <h3 v-else-if="dataSet.id">View {{ dataSet.title }}</h3>
+        <h3 v-if="dataSet.id">Update {{ dataSet.title }}</h3>
         <h3 v-else>Add Data Set</h3>
         <div>
           <v-btn
-            v-if="!isReadOnly"
             class="px-5 mr-2 mb-2"
             color="primary"
             depressed
@@ -17,7 +15,7 @@
           >
             Save
           </v-btn>
-          <v-btn
+          <!-- <v-btn
             v-else
             class="px-5 mr-2 mb-2"
             color="primary"
@@ -26,8 +24,8 @@
             @click="editForm"
           >
             Edit
-          </v-btn>
-          <v-btn
+          </v-btn> -->
+          <!-- <v-btn
             v-if="isReadOnly"
             class="mb-2"
             small
@@ -35,15 +33,14 @@
             @click="resetAndGoBack"
           >
             Close
-          </v-btn>
+          </v-btn> -->
           <v-btn
-            v-if="!isReadOnly"
             class="mb-2"
             small
             outlined
-            @click="cancelForm"
+            @click="resetAndGoBack"
           >
-            Cancel
+            Close
           </v-btn>
         </div>
       </div>
@@ -67,7 +64,6 @@
               label="Title"
               dense
               required
-              :readonly="isReadOnly"
               :rules="[(v) => !!v || 'Title is required']"
             />
           </v-col>
@@ -76,7 +72,6 @@
               v-model="dataSet.description"
               label="Description"
               dense
-              :readonly="isReadOnly"
             />
             <!-- <v-select v-if="dataSet.id" :items="choices" label="Add a column" outlined></v-select> -->
           </v-col>
@@ -181,6 +176,7 @@
             :free-select="true"
             no-header-edit
             @update="onUpdate"
+            filter-row
           >
             <vue-excel-column
               v-for="(col, i) in allKeys"
@@ -321,7 +317,6 @@ export default {
       formValid: true,
       submitAttempted: false,
       dataValueInput: "",
-      isReadOnly: false,
       search: "",
       columnForm: false,
       rmColForm: false,
@@ -407,11 +402,11 @@ export default {
         this.$router.push(`/${this.currentChannels[0].name}/data-sets`);
       }
     },
-    cancelForm() {
+    /* cancelForm() {
       this.$route.path === `/${this.currentChannels[0].name}/data-sets`
         ? this.resetAndGoBack()
         : (this.isReadOnly = true);
-    },
+    }, */
     clear() {
       this.$refs.form.reset();
       this.file = null;
@@ -423,14 +418,14 @@ export default {
     async saveDataSet() {
       this.$refs.form.validate();
       if (this.formValid) {
-        if (!this.isReadOnly && this.dataSet.id) {
+        if (this.dataSet.id) {
           await this.updateDataSetById({
             id: this.dataSet.id,
             title: this.dataSet.title,
             description: this.dataSet.description,
             user: this.dataSet.user,
             channelId: this.currentChannels[0].channelId,
-          }).then((this.isReadOnly = true));
+          })/* .then((this.isReadOnly = true)); */
         } else {
           let oldDataSetIds = this.dataSets
             .filter((d) => this.currentChannels[0].channelId == d.channelId)
@@ -491,9 +486,9 @@ export default {
         }
       });
     },
-    editForm() {
+    /* editForm() {
       this.isReadOnly = false;
-    },
+    }, */
     async showDataChart() {
       await this.fetchDataSet(this.$route.params.dataSetId);
       this.setTableItems(this.createMasterData(this.dataSet.dataValues.items));
@@ -640,13 +635,11 @@ export default {
   watch: {
     dataSet() {
       if (this.dataSet.id) {
-        this.isReadOnly = true;
-
         if (this.dataSet.id !== this.$route.params.dataSetId) {
           //console.log(this.dataSet)
           this.clear();
         }
-      } else this.isReadOnly = false;
+      }
     },
     /* selected() {
       if (this.selected && this.selected.length > 0) {
@@ -663,7 +656,6 @@ export default {
   async mounted() {
     if (this.$route.path === `/${this.currentChannels[0].name}/data-sets`) {
       this.dataSet.id = "";
-      this.isReadOnly = false;
       this.clear();
     } else {
       await this.fetchDataSet(this.$route.params.dataSetId);
@@ -687,7 +679,6 @@ export default {
           this.createMasterData(this.dataSet.dataValues.items)
         );
       }
-      this.isReadOnly = true;
     }
     this.fetchChannels();
     this.fetchDataSets();
