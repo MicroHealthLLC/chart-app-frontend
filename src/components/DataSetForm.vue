@@ -34,12 +34,7 @@
           >
             Close
           </v-btn> -->
-          <v-btn
-            class="mb-2"
-            small
-            outlined
-            @click="resetAndGoBack"
-          >
+          <v-btn class="mb-2" small outlined @click="resetAndGoBack">
             Close
           </v-btn>
         </div>
@@ -57,7 +52,7 @@
       </v-alert>
       <!-- Form Fields -->
       <v-form ref="form" v-model="formValid">
-        <v-row justify='space-around'>
+        <v-row justify="space-around">
           <v-col cols="3">
             <v-text-field
               v-model="dataSet.title"
@@ -139,44 +134,139 @@
         />
 
         <div v-else class="ma-4">
-          <span class="d-flex justify-end">
-            <v-tooltip top>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  small
-                  class="mb-4 mr-4 px-2"
-                  @click="showAddColumn"
-                  v-bind="attrs"
-                  v-on="on"
-                  ><v-icon>mdi-table-column-plus-after</v-icon>
-                </v-btn>
-              </template>
-              <span>Add Function Column</span>
-            </v-tooltip>
-            <v-tooltip top>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  small
-                  class="mr-6 mb-4"
-                  @click="showRemoveColumn"
-                  v-bind="attrs"
-                  v-on="on"
+          <v-row justify="space-between">
+            <v-col cols="5">
+              <v-row>
+                <v-col cols="1">
+                  <v-tooltip left v-if="
+                          filterKey || filterOperation || filterMin || filterMax
+                        ">
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        x-small
+                        class="ml-2 mt-2"
+                        @click="clearFilter"
+                        v-bind="attrs"
+                        v-on="on"
+                        icon
+                        ><v-icon>mdi-close</v-icon></v-btn
+                      >
+                    </template>
+                    <span>Clear Filter</span>
+                  </v-tooltip>
+                </v-col>
+                <v-col cols="4"
+                  ><v-select
+                    v-model="filterKey"
+                    label="Filter By"
+                    outlined
+                    dense
+                    :items="allKeys"
+                  ></v-select
+                ></v-col>
+                <v-col cols="3">
+                  <v-select v-if="filterKey"
+                    v-model="filterOperation"
+                    label="Operation"
+                    outlined
+                    dense
+                    @change="clearFilterValues"
+                    :items="[
+                      'Equal To',
+                      'Not Equal To',
+                      'Greater Than',
+                      'Greater Than or Equal To',
+                      'Less Than',
+                      'Less Than or Equal To',
+                      'Between',
+                    ]"
+                  >
+                  </v-select>
+                </v-col>
+                <v-col
+                  cols="2"
+                  v-if="
+                    [
+                      'Equal To',
+                      'Not Equal To',
+                      'Greater Than',
+                      'Greater Than or Equal To',
+                      'Between',
+                    ].includes(filterOperation)
+                  "
                 >
-                  <v-icon>mdi-table-column-remove</v-icon>
-                </v-btn>
-              </template>
-              <span>Remove Column</span>
-            </v-tooltip>
-          </span>
+                  <v-select
+                    v-model="filterMin"
+                    :label="
+                      ['Equal To', 'Not Equal To'].includes(filterOperation)
+                        ? 'Value'
+                        : 'Min'
+                    "
+                    outlined
+                    dense
+                    @change="calcFilter"
+                    :items="getItemValues(filterKey, items)"
+                  ></v-select>
+                </v-col>
+                <v-col
+                  cols="2"
+                  v-if="
+                    ['Less Than', 'Less Than or Equal To', 'Between'].includes(
+                      filterOperation
+                    )
+                  "
+                >
+                  <v-select
+                    v-model="filterMax"
+                    label="Max"
+                    outlined
+                    dense
+                    @change="calcFilter"
+                    :items="getItemValues(filterKey, items)"
+                  ></v-select>
+                </v-col>
+              </v-row>
+            </v-col>
+            <v-col cols="3">
+              <span class="d-flex justify-end">
+                <v-tooltip top>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      small
+                      class="mb-4 mr-4 px-2"
+                      @click="showAddColumn"
+                      v-bind="attrs"
+                      v-on="on"
+                      ><v-icon>mdi-table-column-plus-after</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Add Function Column</span>
+                </v-tooltip>
+                <v-tooltip top>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      small
+                      class="mr-6 mb-4"
+                      @click="showRemoveColumn"
+                      v-bind="attrs"
+                      v-on="on"
+                    >
+                      <v-icon>mdi-table-column-remove</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Remove Column</span>
+                </v-tooltip>
+              </span>
+            </v-col>
+          </v-row>
           <vue-excel-editor
             v-if="renderComponent"
             ref="grid"
-            v-model="items"
+            v-model="filteredItems"
             readonly
             :free-select="true"
             no-header-edit
             @update="onUpdate"
-            filter-row
           >
             <vue-excel-column
               v-for="(col, i) in allKeys"
@@ -311,6 +401,7 @@ export default {
       //selectedHeaders:[],
       value: [],
       items: [],
+      filteredItems: [],
       //selected: [],
       xAxisKeys: [],
       xAxisValue: "",
@@ -328,13 +419,16 @@ export default {
       },
       renderComponent: true,
       colsToRemove: [],
+      filterKey: "",
+      filterMin: null,
+      filterMax: null,
+      filterOperation: "",
     };
   },
   computed: {
     ...mapGetters([
       "dataSet",
       "dataSets",
-      "dataValue",
       "dataValues",
       "channels",
       "currentChannels",
@@ -425,7 +519,7 @@ export default {
             description: this.dataSet.description,
             user: this.dataSet.user,
             channelId: this.currentChannels[0].channelId,
-          })/* .then((this.isReadOnly = true)); */
+          }); /* .then((this.isReadOnly = true)); */
         } else {
           let oldDataSetIds = this.dataSets
             .filter((d) => this.currentChannels[0].channelId == d.channelId)
@@ -495,6 +589,7 @@ export default {
     },
     setTableItems(data) {
       this.items = data;
+      this.filteredItems = this.items;
       this.fixNullVals();
     },
     fixNullVals() {
@@ -630,6 +725,162 @@ export default {
     },
     onUpdate(records) {
       console.log(records);
+    },
+    calcFilter() {
+      if (this.filterKey && this.filterOperation) {
+        let colType = this.checkColType(this.filterKey, this.items);
+        //let firstItem = this.items[0][this.filterKey];
+        if (
+          this.filterOperation == "Between" &&
+          this.filterMin &&
+          this.filterMax
+        ) {
+          if (colType == "number") {
+            this.filteredItems = this.items.filter(
+              (i) =>
+                parseFloat(i[this.filterKey]) >= parseFloat(this.filterMin) &&
+                parseFloat(i[this.filterKey]) <= parseFloat(this.filterMax)
+            );
+          } else if (colType == "date") {
+            this.filteredItems = this.items.filter(
+              (i) =>
+                new Date(i[this.filterKey]) >= new Date(this.filterMin) &&
+                new Date(i[this.filterKey]) <= new Date(this.filterMax)
+            );
+          } else if (colType == "string") {
+            this.filteredItems = this.items.filter(
+              (i) =>
+                i[this.filterKey] >= this.filterMin &&
+                i[this.filterKey] <= this.filterMax
+            );
+          }
+        } else if (this.filterOperation == "Greater Than" && this.filterMin) {
+          if (colType == "number") {
+            this.filteredItems = this.items.filter(
+              (i) => parseFloat(i[this.filterKey]) > parseFloat(this.filterMin)
+            );
+          } else if (colType == "date") {
+            this.filteredItems = this.items.filter(
+              (i) => new Date(i[this.filterKey]) > new Date(this.filterMin)
+            );
+          } else if (colType == "string") {
+            this.filteredItems = this.items.filter(
+              (i) => i[this.filterKey] > this.filterMin
+            );
+          }
+        } else if (
+          this.filterOperation == "Greater Than or Equal To" &&
+          this.filterMin
+        ) {
+          if (colType == "number") {
+            this.filteredItems = this.items.filter(
+              (i) => parseFloat(i[this.filterKey]) >= parseFloat(this.filterMin)
+            );
+          } else if (colType == "date") {
+            this.filteredItems = this.items.filter(
+              (i) => new Date(i[this.filterKey]) >= new Date(this.filterMin)
+            );
+          } else if (colType == "string") {
+            this.filteredItems = this.items.filter(
+              (i) => i[this.filterKey] >= this.filterMin
+            );
+          }
+        } else if (this.filterOperation == "Less Than" && this.filterMax) {
+          if (colType == "number") {
+            this.filteredItems = this.items.filter(
+              (i) => parseFloat(i[this.filterKey]) < parseFloat(this.filterMax)
+            );
+          } else if (colType == "date") {
+            this.filteredItems = this.items.filter(
+              (i) => new Date(i[this.filterKey]) < new Date(this.filterMax)
+            );
+          } else if (colType == "string") {
+            this.filteredItems = this.items.filter(
+              (i) => i[this.filterKey] < this.filterMax
+            );
+          }
+        } else if (
+          this.filterOperation == "Less Than or Equal To" &&
+          this.filterMax
+        ) {
+          if (colType == "number") {
+            this.filteredItems = this.items.filter(
+              (i) => parseFloat(i[this.filterKey]) <= parseFloat(this.filterMax)
+            );
+          } else if (colType == "date") {
+            this.filteredItems = this.items.filter(
+              (i) => new Date(i[this.filterKey]) <= new Date(this.filterMax)
+            );
+          } else if (colType == "string") {
+            this.filteredItems = this.items.filter(
+              (i) => i[this.filterKey] <= this.filterMax
+            );
+          }
+        } else if (this.filterOperation == "Equal To" && this.filterMin) {
+          if (colType == "number") {
+            this.filteredItems = this.items.filter(
+              (i) => parseFloat(i[this.filterKey]) == parseFloat(this.filterMin)
+            );
+          } else if (colType == "date") {
+            this.filteredItems = this.items.filter(
+              (i) => new Date(i[this.filterKey]) == new Date(this.filterMin)
+            );
+          } else if (colType == "string") {
+            this.filteredItems = this.items.filter(
+              (i) => i[this.filterKey] == this.filterMin
+            );
+          }
+        } else if (this.filterOperation == "Not Equal To" && this.filterMin) {
+          if (colType == "number") {
+            this.filteredItems = this.items.filter(
+              (i) =>
+                parseFloat(i[this.filterKey]) !== parseFloat(this.filterMin)
+            );
+          } else if (colType == "date") {
+            this.filteredItems = this.items.filter(
+              (i) => new Date(i[this.filterKey]) !== new Date(this.filterMin)
+            );
+          } else if (colType == "string") {
+            this.filteredItems = this.items.filter(
+              (i) => i[this.filterKey] !== this.filterMin
+            );
+          }
+        }
+      }
+    },
+    isDate(str) {
+      return new Date(str) !== "Invalid Date" && !isNaN(new Date(str));
+    },
+    getItemValues(key, items) {
+      let colType = this.checkColType(key, items);
+      if (colType == "number") {
+        return items
+          .map((i) => parseFloat(i[key]))
+          .sort((a, b) => parseFloat(a) - parseFloat(b));
+      } else if (colType == "date") {
+        return items
+          .map((i) => moment(new Date(i[key])).format('ll'))
+          .sort((a, b) => new Date(a) - new Date(b));
+      } else if (colType == "string") {
+        let strItems = items.map((i) => i[key]);
+        if (/\d/.test(strItems[0])) {
+          return strItems.sort(
+            (a, b) => parseInt(a.match(/\d+/)[0]) - parseInt(b.match(/\d+/)[0])
+          );
+        } else {
+          return strItems.sort((a, b) => a.localeCompare(b));
+        }
+      }
+    },
+    clearFilterValues() {
+      this.filterMin = null;
+      this.filterMax = null;
+    },
+    clearFilter() {
+      this.filterKey = "";
+      this.filterOperation = "";
+      this.clearFilterValues();
+      this.filteredItems = this.items;
     },
   },
   watch: {
