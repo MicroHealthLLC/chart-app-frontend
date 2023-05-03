@@ -1,119 +1,108 @@
 <template>
-  <v-row>
-    <!-- Title -->
-    <v-col class="col-12">
-      <div class="d-flex justify-space-between">
-        <h3 v-if="dataSet.id">Update {{ dataSet.title }}</h3>
-        <h3 v-else>Add Data Set</h3>
-        <div>
-          <v-btn
-            class="px-5 mr-2 mb-2"
-            color="primary"
-            depressed
-            small
-            @click="saveDataSet"
-          >
-            Save
-          </v-btn>
-          <!-- <v-btn
-            v-else
-            class="px-5 mr-2 mb-2"
-            color="primary"
-            depressed
-            small
-            @click="editForm"
-          >
-            Edit
-          </v-btn> -->
-          <!-- <v-btn
-            v-if="isReadOnly"
-            class="mb-2"
-            small
-            outlined
-            @click="resetAndGoBack"
-          >
-            Close
-          </v-btn> -->
-          <v-btn class="mb-2" small outlined @click="resetAndGoBack">
-            Close
-          </v-btn>
+  <v-container fluid>
+    <v-row>
+      <!-- Title -->
+      <v-col cols="12">
+        <div class="d-flex justify-space-between">
+          <h3 v-if="dataSet.id">Update {{ dataSet.title }}</h3>
+          <h3 v-else>Add Data Set</h3>
+          <div>
+            <v-btn
+              class="px-5 mr-2 mb-2"
+              color="primary"
+              depressed
+              small
+              @click="saveDataSet"
+            >
+              Save
+            </v-btn>
+            <v-btn class="mb-2" small outlined @click="resetAndGoBack">
+              Close
+            </v-btn>
+          </div>
         </div>
-      </div>
-      <v-divider />
-    </v-col>
-    <v-col>
-      <v-alert
-        v-if="!formValid && submitAttempted"
-        type="error"
-        dense
-        dismissible
-      >
-        Please fix highlighted fields below before sumbitting Report
-      </v-alert>
-      <!-- Form Fields -->
-      <v-form ref="form" v-model="formValid">
-        <v-row justify="space-around">
-          <v-col cols="3">
-            <v-text-field
-              v-model="dataSet.title"
-              label="Title"
-              dense
-              required
-              :rules="[(v) => !!v || 'Title is required']"
-            />
-          </v-col>
-          <v-col cols="5">
-            <v-text-field
-              v-model="dataSet.description"
-              label="Description"
-              dense
-            />
-            <!-- <v-select v-if="dataSet.id" :items="choices" label="Add a column" outlined></v-select> -->
-          </v-col>
-          <v-col cols="3">
-            <div class="d-flex">
-              <v-file-input
-                v-show="dataSet.id != ''"
-                placeholder="Please choose a file..."
-                type="file"
+        <v-divider />
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="12">
+        <v-alert
+          v-if="!formValid && submitAttempted"
+          type="error"
+          dense
+          dismissible
+        >
+          Please fix highlighted fields below before sumbitting Report
+        </v-alert>
+        <!-- Form Fields -->
+        <v-form ref="form" v-model="formValid">
+          <v-row justify="space-around">
+            <v-col cols="3">
+              <v-text-field
+                v-model="dataSet.title"
+                label="Title"
                 dense
-                @change.native="onChange"
-                @click:clear="clearInput('file')"
-              >
-                <!-- Append item slot -->
-                <template v-slot:append>
-                  <v-btn
-                    v-if="dataSet.id"
-                    :disabled="!file"
-                    small
-                    class="mb-1"
-                    @click="addNewDataValue"
-                  >
-                    <v-icon>mdi-plus</v-icon>
-                  </v-btn>
-                </template>
-              </v-file-input>
-              <xlsx-read :options="readOptions" :file="file">
-                <xlsx-json :options="readOptions" @parsed="setTableItems" />
-              </xlsx-read>
-            </div>
-          </v-col>
-        </v-row>
-      </v-form>
-    </v-col>
-
-    <v-col
-      v-show="
-        dataSet.id &&
-        this.dataSet.dataValues &&
-        this.dataSet.dataValues.items &&
-        this.dataSet.dataValues.items.length > 0
-      "
-      class="col-12"
-    >
-      <v-card class="d-flex flex-column preview-container justify-center mx-10">
-        <!-- Table Preview -->
-        <!-- <v-card-title>
+                required
+                :rules="[(v) => !!v || 'Title is required']"
+              />
+            </v-col>
+            <v-col cols="5">
+              <v-text-field
+                v-model="dataSet.description"
+                label="Description"
+                dense
+              />
+              <!-- <v-select v-if="dataSet.id" :items="choices" label="Add a column" outlined></v-select> -->
+            </v-col>
+            <v-col cols="3">
+              <div class="d-flex">
+                <v-file-input
+                  v-show="dataSet.id != ''"
+                  placeholder="Please choose a file..."
+                  type="file"
+                  dense
+                  @change.native="onChange"
+                  @click:clear="clearInput('file')"
+                >
+                  <!-- Append item slot -->
+                  <template v-slot:append>
+                    <v-btn
+                      v-if="dataSet.id"
+                      :disabled="!file"
+                      small
+                      icon
+                      class="mb-1"
+                      @click="addNewDataValue"
+                      title="Add Data"
+                    >
+                      <v-icon>mdi-plus</v-icon>
+                    </v-btn>
+                  </template>
+                </v-file-input>
+                <xlsx-read :options="readOptions" :file="file">
+                  <xlsx-json :options="readOptions" @parsed="setTableItems" />
+                </xlsx-read>
+              </div>
+            </v-col>
+          </v-row>
+        </v-form>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col
+        v-show="
+          dataSet.id &&
+          this.dataSet.dataValues &&
+          this.dataSet.dataValues.items &&
+          this.dataSet.dataValues.items.length > 0
+        "
+        cols="12"
+      >
+        <v-card
+          class="d-flex flex-column preview-container justify-center mx-10"
+        >
+          <!-- Table Preview -->
+          <!-- <v-card-title>
           <v-text-field
             v-model="search"
             append-icon="mdi-magnify"
@@ -122,253 +111,330 @@
             hide-details
           ></v-text-field>
         </v-card-title> -->
-        <!-- <v-card-title class="justify-center">
+          <!-- <v-card-title class="justify-center">
           <v-progress-circular v-if="$store.getters.loading" :size="70" indeterminate color="primary"
             class="m-2"></v-progress-circular>
         </v-card-title> -->
-        <v-skeleton-loader
-          v-if="$store.getters.loading || $store.getters.saving"
-          class="mx-auto"
-          type="table"
-          width="100%"
-        />
+          <v-skeleton-loader
+            v-if="$store.getters.loading || $store.getters.saving"
+            class="mx-auto"
+            type="table"
+            width="100%"
+          />
 
-        <div v-else class="ma-4">
-          <v-row justify="space-between">
-            <v-col cols="5">
-              <v-row>
-                <v-col cols="1">
-                  <v-tooltip left v-if="
-                          filterKey || filterOperation || filterMin || filterMax
-                        ">
+          <div v-else class="ma-4">
+            <v-row justify="space-between" class="mb-4">
+              <v-col cols="10">
+                <FilterBar :filters="filters" :items="items" :dataSet="dataSet" :allKeys="allKeys" @changeFilteredItems="(items) => filteredItems = items" />
+                <!-- <v-expansion-panels>
+                  <v-expansion-panel>
+                    <v-expansion-panel-header>Filters</v-expansion-panel-header>
+                    <v-expansion-panel-content>
+                      <v-row>
+                        <v-col cols="6">
+                          <v-select
+                            v-model="selectedFilter"
+                            :items="filters"
+                            item-text="title"
+                            @change="setFilter"
+                            dense
+                            outlined
+                            clearable
+                            return-object
+                            label="Saved Filters"
+                            class="mr-4"
+                            @click:clear="clearFilter"
+                          ></v-select>
+                        </v-col>
+                        <v-col cols="2">
+                          <v-btn icon @click="addFilter" title="Add Filter">
+                            <v-icon>mdi-plus</v-icon>
+                          </v-btn>
+                        </v-col>
+                      </v-row>
+                      <v-row v-if="showNewFilterForm">
+                        <v-col cols="3">
+                          <span class="d-flex">
+                            <v-tooltip
+                              left
+                              v-if="
+                                filterName ||
+                                filterKey ||
+                                filterOperation ||
+                                filterMin ||
+                                filterMax
+                              "
+                            >
+                              <template v-slot:activator="{ on, attrs }">
+                                <v-btn
+                                  x-small
+                                  class="mr-2 mt-2"
+                                  @click="clearFilter"
+                                  v-bind="attrs"
+                                  v-on="on"
+                                  icon
+                                  title="Clear Filter"
+                                  ><v-icon>mdi-close</v-icon></v-btn
+                                >
+                              </template>
+                              <span>Clear Filter</span>
+                            </v-tooltip>
+                            <v-text-field
+                              v-model="filterName"
+                              label="Filter Name"
+                              dense
+                              outlined
+                            />
+                          </span>
+                        </v-col>
+                        <v-col cols="3"
+                          ><v-select
+                            v-model="filterKey"
+                            label="Filter By"
+                            outlined
+                            dense
+                            :items="allKeys"
+                          ></v-select
+                        ></v-col>
+                        <v-col cols="3">
+                          <v-select
+                            v-if="filterKey"
+                            v-model="filterOperation"
+                            label="Operation"
+                            outlined
+                            dense
+                            @change="changeFilterOperation"
+                            :items="filterOperationKeys"
+                          >
+                          </v-select>
+                        </v-col>
+                        <v-col
+                          cols="2"
+                          v-if="
+                            [
+                              'Equal To',
+                              'Not Equal To',
+                              'Greater Than',
+                              'Greater Than or Equal To',
+                              'Between',
+                            ].includes(filterOperation)
+                          "
+                        >
+                          <v-select
+                            v-model="filterMin"
+                            :label="
+                              ['Equal To', 'Not Equal To'].includes(
+                                filterOperation
+                              )
+                                ? 'Value'
+                                : 'Min'
+                            "
+                            outlined
+                            dense
+                            @change="calcFilter"
+                            :items="getItemValues(filterKey, items)"
+                          ></v-select>
+                        </v-col>
+                        <v-col
+                          cols="2"
+                          v-if="
+                            [
+                              'Less Than',
+                              'Less Than or Equal To',
+                              'Between',
+                            ].includes(filterOperation)
+                          "
+                        >
+                          <v-select
+                            v-model="filterMax"
+                            label="Max"
+                            outlined
+                            dense
+                            @change="calcFilter"
+                            :items="getItemValues(filterKey, items)"
+                          ></v-select>
+                        </v-col>
+                        <v-col cols="1">
+                          <v-btn
+                            v-if="
+                              (filterName &&
+                                filterKey &&
+                                (filterOperation == 'Current Quarter' ||
+                                  filterOperation == 'Last Quarter')) ||
+                              ([
+                                'Equal To',
+                                'Not Equal To',
+                                'Greater Than',
+                                'Greater Than or Equal To',
+                              ].includes(filterOperation) &&
+                                filterMin) ||
+                              (['Less Than', 'Less Than or Equal To'].includes(
+                                filterOperation
+                              ) &&
+                                filterMax) ||
+                              (filterOperation == 'Between' &&
+                                filterMin &&
+                                filterMax)
+                            "
+                            icon
+                            @click="saveFilter"
+                          >
+                            <v-icon small color="primary"
+                              >mdi-content-save</v-icon
+                            >
+                          </v-btn>
+                        </v-col>
+                      </v-row>
+                    </v-expansion-panel-content>
+                  </v-expansion-panel>
+                </v-expansion-panels> -->
+              </v-col>
+              <v-col cols="2">
+                <span class="d-flex justify-end">
+                  <v-tooltip top>
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn
-                        x-small
-                        class="ml-2 mt-2"
-                        @click="clearFilter"
+                        small
+                        class="mb-4 mr-4 mt-1 px-2"
+                        @click="showAddColumn"
                         v-bind="attrs"
                         v-on="on"
-                        icon
-                        ><v-icon>mdi-close</v-icon></v-btn
-                      >
+                        title="Add Calculated Column"
+                        ><v-icon>mdi-table-column-plus-after</v-icon>
+                      </v-btn>
                     </template>
-                    <span>Clear Filter</span>
+                    <span>Add Calculated Column</span>
                   </v-tooltip>
-                </v-col>
-                <v-col cols="4"
-                  ><v-select
-                    v-model="filterKey"
-                    label="Filter By"
-                    outlined
-                    dense
-                    :items="allKeys"
-                  ></v-select
-                ></v-col>
-                <v-col cols="3">
-                  <v-select v-if="filterKey"
-                    v-model="filterOperation"
-                    label="Operation"
-                    outlined
-                    dense
-                    @change="clearFilterValues"
-                    :items="[
-                      'Equal To',
-                      'Not Equal To',
-                      'Greater Than',
-                      'Greater Than or Equal To',
-                      'Less Than',
-                      'Less Than or Equal To',
-                      'Between',
-                    ]"
-                  >
-                  </v-select>
-                </v-col>
-                <v-col
-                  cols="2"
-                  v-if="
-                    [
-                      'Equal To',
-                      'Not Equal To',
-                      'Greater Than',
-                      'Greater Than or Equal To',
-                      'Between',
-                    ].includes(filterOperation)
-                  "
-                >
-                  <v-select
-                    v-model="filterMin"
-                    :label="
-                      ['Equal To', 'Not Equal To'].includes(filterOperation)
-                        ? 'Value'
-                        : 'Min'
-                    "
-                    outlined
-                    dense
-                    @change="calcFilter"
-                    :items="getItemValues(filterKey, items)"
-                  ></v-select>
-                </v-col>
-                <v-col
-                  cols="2"
-                  v-if="
-                    ['Less Than', 'Less Than or Equal To', 'Between'].includes(
-                      filterOperation
-                    )
-                  "
-                >
-                  <v-select
-                    v-model="filterMax"
-                    label="Max"
-                    outlined
-                    dense
-                    @change="calcFilter"
-                    :items="getItemValues(filterKey, items)"
-                  ></v-select>
-                </v-col>
-              </v-row>
-            </v-col>
-            <v-col cols="3">
-              <span class="d-flex justify-end">
-                <v-tooltip top>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      small
-                      class="mb-4 mr-4 px-2"
-                      @click="showAddColumn"
-                      v-bind="attrs"
-                      v-on="on"
-                      ><v-icon>mdi-table-column-plus-after</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Add Function Column</span>
-                </v-tooltip>
-                <v-tooltip top>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      small
-                      class="mr-6 mb-4"
-                      @click="showRemoveColumn"
-                      v-bind="attrs"
-                      v-on="on"
-                    >
-                      <v-icon>mdi-table-column-remove</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Remove Column</span>
-                </v-tooltip>
-              </span>
-            </v-col>
-          </v-row>
-          <vue-excel-editor
-            v-if="renderComponent"
-            ref="grid"
-            v-model="filteredItems"
-            readonly
-            :free-select="true"
-            no-header-edit
-            @update="onUpdate"
-          >
-            <vue-excel-column
-              v-for="(col, i) in allKeys"
-              :key="i"
-              auto-fill-width
-              :field="col"
-              :label="col"
-              :type="checkColType(col, items)"
-              text-align="left"
-            />
-          </vue-excel-editor>
-          <!-- <v-data-table :headers="headers" :items="items" :single-select="false" :search="search"
+                  <v-tooltip top>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        small
+                        class="mr-6 mb-4 mt-1"
+                        @click="showRemoveColumn"
+                        v-bind="attrs"
+                        v-on="on"
+                        title="Remove Column"
+                      >
+                        <v-icon>mdi-table-column-remove</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Remove Column</span>
+                  </v-tooltip>
+                </span>
+              </v-col>
+            </v-row>
+            <vue-excel-editor
+              v-if="renderComponent"
+              ref="grid"
+              v-model="filteredItems"
+              readonly
+              :free-select="true"
+              no-header-edit
+              @update="onUpdate"
+            >
+              <vue-excel-column
+                v-for="(col, i) in allKeys"
+                :key="i"
+                auto-fill-width
+                :field="col"
+                :label="col"
+                :type="checkColType(col, items)"
+                text-align="left"
+              />
+            </vue-excel-editor>
+            <!-- <v-data-table :headers="headers" :items="items" :single-select="false" :search="search"
             :loading="$store.getters.loading" loading-text="Loading... Please wait">
           </v-data-table> -->
-        </div>
-      </v-card>
-    </v-col>
-    <v-dialog v-model="columnForm" width="20%">
-      <v-card class="pa-4">
-        <h4 class="mb-4">Add Function Column</h4>
-        <v-text-field
-          v-model="newColumn.title"
-          label="Column Name"
-          outlined
-          dense
-          required
-          :rules="[(v) => !!v || 'Column name is required']"
-        />
-        <v-select
-          v-if="dataSet.id"
-          v-model="newColumn.action"
-          dense
-          :items="choices"
-          label="Choose an action"
-          outlined
-        />
-        <h5 class="mb-2">Choose columns to compare</h5>
-        <div class="d-flex">
+          </div>
+        </v-card>
+      </v-col>
+      <v-dialog v-model="columnForm" width="20%">
+        <v-card class="pa-4">
+          <h4 class="mb-4">Add Function Column</h4>
+          <v-text-field
+            v-model="newColumn.title"
+            label="Column Name"
+            outlined
+            dense
+            required
+            :rules="[(v) => !!v || 'Column name is required']"
+          />
           <v-select
             v-if="dataSet.id"
-            v-model="newColumn.col1"
+            v-model="newColumn.action"
             dense
-            :items="allKeys.filter((k) => checkColType(k, items) != 'string')"
-            label="First column"
+            :items="mathChoices"
+            label="Choose an action"
             outlined
           />
-          <h3 class="mx-2 mt-2">{{ actionSign }}</h3>
-          <v-select
-            v-if="dataSet.id"
-            v-model="newColumn.col2"
-            dense
-            :items="allKeys.filter((k) => checkColType(k, items) != 'string')"
-            label="Second column"
-            outlined
-          />
-        </div>
-        <span class="d-flex justify-end">
-          <!-- <v-btn color="warning" class="mr-4" @click="cancelColumnForm" small>
+          <h5 class="mb-2">Choose columns to compare</h5>
+          <div class="d-flex">
+            <v-select
+              v-if="dataSet.id"
+              v-model="newColumn.col1"
+              dense
+              :items="allKeys.filter((k) => checkColType(k, items) != 'string')"
+              label="First column"
+              outlined
+            />
+            <h3 class="mx-2 mt-2">{{ actionSign }}</h3>
+            <v-select
+              v-if="dataSet.id"
+              v-model="newColumn.col2"
+              dense
+              :items="allKeys.filter((k) => checkColType(k, items) != 'string')"
+              label="Second column"
+              outlined
+            />
+          </div>
+          <span class="d-flex justify-end">
+            <!-- <v-btn color="warning" class="mr-4" @click="cancelColumnForm" small>
             Cancel
           </v-btn> -->
-          <v-btn class="mr-4" small outlined @click="cancelColumnForm"
-            >Cancel</v-btn
-          >
-          <v-btn color="primary" small @click="addColumn"> Add Column </v-btn>
-        </span>
-      </v-card>
-    </v-dialog>
-    <v-dialog v-model="rmColForm" width="20%">
-      <v-card class="pa-4">
-        <h4 class="mb-4">Remove Columns</h4>
-        <v-select
-          v-model="colsToRemove"
-          :items="allKeys"
-          label="Select"
-          multiple
-          chips
-          hint="Choose the columns you wish to remove"
-          persistent-hint
-          outlined
-        />
-        <span class="d-flex justify-end">
-          <v-btn
-            class="mr-4"
-            small
+            <v-btn class="mr-4" small outlined @click="cancelColumnForm"
+              >Cancel</v-btn
+            >
+            <v-btn color="primary" small @click="addColumn"> Add Column </v-btn>
+          </span>
+        </v-card>
+      </v-dialog>
+      <v-dialog v-model="rmColForm" width="20%">
+        <v-card class="pa-4">
+          <h4 class="mb-4">Remove Columns</h4>
+          <v-select
+            v-model="colsToRemove"
+            :items="allKeys"
+            label="Select"
+            multiple
+            chips
+            hint="Choose the columns you wish to remove"
+            persistent-hint
             outlined
-            @click="
-              rmColForm = false;
-              colsToRemove = [];
-            "
-            >Cancel</v-btn
-          >
-          <v-btn color="primary" small @click="removeColumns"> Remove </v-btn>
-        </span>
-      </v-card>
-    </v-dialog>
-  </v-row>
+          />
+          <span class="d-flex justify-end">
+            <v-btn
+              class="mr-4"
+              small
+              outlined
+              @click="
+                rmColForm = false;
+                colsToRemove = [];
+              "
+              >Cancel</v-btn
+            >
+            <v-btn color="primary" small @click="removeColumns"> Remove </v-btn>
+          </span>
+        </v-card>
+      </v-dialog>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
 import { XlsxRead, XlsxJson } from "vue-xlsx";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import datasetMixin from "../mixins/dataset-mixin";
+import FilterBar from "./FilterBar.vue";
 import moment from "moment";
 
 export default {
@@ -376,11 +442,12 @@ export default {
   components: {
     XlsxRead,
     XlsxJson,
+    FilterBar,
   },
   mixins: [datasetMixin],
   data() {
     return {
-      choices: ["Sum", "Difference", "Product", "Quotient", "Average"],
+      mathChoices: ["Sum", "Difference", "Product", "Quotient", "Average"],
       file: null,
       //data: [],
       chartOptions: {
@@ -419,10 +486,26 @@ export default {
       },
       renderComponent: true,
       colsToRemove: [],
+      filters: [],
+      /* showNewFilterForm: false,
+      
+      selectedFilter: null,
       filterKey: "",
+      filterName: "",
       filterMin: null,
       filterMax: null,
       filterOperation: "",
+      filterOperationKeys: [
+        "Equal To",
+        "Not Equal To",
+        "Greater Than",
+        "Greater Than or Equal To",
+        "Less Than",
+        "Less Than or Equal To",
+        "Between",
+        "Current Quarter",
+        "Last Quarter",
+      ], */
     };
   },
   computed: {
@@ -571,6 +654,33 @@ export default {
         });
       });
     },
+    /* async saveFilter() {
+      let data = {
+        title: this.filterName,
+        key: this.filterKey,
+        operation: this.filterOperation,
+        min: this.filterMin,
+        max: this.filterMax,
+      };
+      this.filters.push(data);
+      await this.updateDataSetById({
+        id: this.dataSet.id,
+        filters: JSON.stringify(this.filters),
+      });
+    },
+    setFilter() {
+      this.filterName = this.selectedFilter.title;
+      this.filterKey = this.selectedFilter.key;
+      this.filterOperation = this.selectedFilter.operation;
+      this.filterMax = this.selectedFilter.max;
+      this.filterMin = this.selectedFilter.min;
+      this.calcFilter();
+    },
+    addFilter() {
+      this.showNewFilterForm = true;
+      this.selectedFilter = null;
+      this.clearFilter();
+    }, */
     clearInput(type) {
       console.log(type);
       this.$refs.form.inputs.forEach((input) => {
@@ -601,15 +711,7 @@ export default {
         });
       });
     },
-    checkColType(col, items) {
-      return items.every((i) => !isNaN(i[col]))
-        ? "number"
-        : items.every(
-            (i) => moment(i[col]).isValid() && moment().diff(moment(i[col])) > 0
-          )
-        ? "date"
-        : "string";
-    },
+    
     showAddColumn() {
       this.columnForm = true;
     },
@@ -726,7 +828,7 @@ export default {
     onUpdate(records) {
       console.log(records);
     },
-    calcFilter() {
+    /* calcFilter() {
       if (this.filterKey && this.filterOperation) {
         let colType = this.checkColType(this.filterKey, this.items);
         //let firstItem = this.items[0][this.filterKey];
@@ -845,31 +947,64 @@ export default {
               (i) => i[this.filterKey] !== this.filterMin
             );
           }
+        } else if (
+          this.filterOperation == "Current Quarter" &&
+          colType == "date"
+        ) {
+          let currentDate = new Date();
+          let currentQuarter = Math.floor(currentDate.getMonth() / 3) + 1; // current quarter
+          let currentYear = currentDate.getFullYear();
+          let startQuarter = new Date(currentYear, (currentQuarter - 1) * 3, 1);
+          let endQuarter = new Date(
+            startQuarter.getFullYear(),
+            startQuarter.getMonth() + 3,
+            0,
+            23,
+            59,
+            59,
+            999
+          );
+          this.filteredItems = this.items.filter(
+            (i) =>
+              new Date(i[this.filterKey]) >= startQuarter &&
+              new Date(i[this.filterKey]) <= endQuarter
+          );
+        } else if (
+          this.filterOperation == "Last Quarter" &&
+          colType == "date"
+        ) {
+          let currentDate = new Date();
+          let currentQuarter = Math.floor(currentDate.getMonth() / 3) + 1; // current quarter
+          let currentYear = currentDate.getFullYear();
+          let lastQuarter = currentQuarter == 1 ? 4 : currentQuarter - 1; // last quarter
+          console.log(lastQuarter);
+          let lastYear = currentQuarter == 1 ? currentYear - 1 : currentYear;
+          let startQuarter = new Date(lastYear, (lastQuarter - 1) * 3, 1);
+          console.log(startQuarter);
+          let endQuarter = new Date(
+            startQuarter.getFullYear(),
+            startQuarter.getMonth() + 3,
+            0,
+            23,
+            59,
+            59,
+            999
+          );
+          this.filteredItems = this.items.filter(
+            (i) =>
+              new Date(i[this.filterKey]) >= startQuarter &&
+              new Date(i[this.filterKey]) <= endQuarter
+          );
         }
       }
-    },
+    }, */
     isDate(str) {
       return new Date(str) !== "Invalid Date" && !isNaN(new Date(str));
     },
-    getItemValues(key, items) {
-      let colType = this.checkColType(key, items);
-      if (colType == "number") {
-        return items
-          .map((i) => parseFloat(i[key]))
-          .sort((a, b) => parseFloat(a) - parseFloat(b));
-      } else if (colType == "date") {
-        return items
-          .map((i) => moment(new Date(i[key])).format('ll'))
-          .sort((a, b) => new Date(a) - new Date(b));
-      } else if (colType == "string") {
-        let strItems = items.map((i) => i[key]);
-        if (/\d/.test(strItems[0])) {
-          return strItems.sort(
-            (a, b) => parseInt(a.match(/\d+/)[0]) - parseInt(b.match(/\d+/)[0])
-          );
-        } else {
-          return strItems.sort((a, b) => a.localeCompare(b));
-        }
+    /* changeFilterOperation() {
+      this.clearFilterValues();
+      if (this.checkColType(this.filterKey, this.items) == "date") {
+        this.calcFilter();
       }
     },
     clearFilterValues() {
@@ -877,11 +1012,12 @@ export default {
       this.filterMax = null;
     },
     clearFilter() {
+      this.filterName = "";
       this.filterKey = "";
       this.filterOperation = "";
       this.clearFilterValues();
       this.filteredItems = this.items;
-    },
+    }, */
   },
   watch: {
     dataSet() {
@@ -892,10 +1028,33 @@ export default {
         }
       }
     },
-    /* selected() {
-      if (this.selected && this.selected.length > 0) {
-        console.log(this.selected)
-      } else console.log("no SELECTED data");
+    /* filterKey() {
+      if (this.filterKey) {
+        let colType = this.checkColType(this.filterKey, this.items);
+        if (colType == "date") {
+          this.filterOperationKeys = [
+            "Equal To",
+            "Not Equal To",
+            "Greater Than",
+            "Greater Than or Equal To",
+            "Less Than",
+            "Less Than or Equal To",
+            "Between",
+            "Current Quarter",
+            "Last Quarter",
+          ];
+        } else if (colType == "number" || colType == "string") {
+          this.filterOperationKeys = [
+            "Equal To",
+            "Not Equal To",
+            "Greater Than",
+            "Greater Than or Equal To",
+            "Less Than",
+            "Less Than or Equal To",
+            "Between",
+          ];
+        }
+      }
     }, */
     statusCode() {
       if (this.statusCode == 201) {
@@ -916,20 +1075,13 @@ export default {
         this.dataSet.dataValues.items &&
         this.dataSet.dataValues.items.length > 0
       ) {
-        //console.log(this.dataSet.dataValues)
-        /* const keys = Object.keys(
-          this.createMasterData(this.dataSet.dataValues.items)[0]
-        ); */
-        //this.xAxisKeys = keys
-        /* this.headers = keys.map((item) => ({
-          text: item,
-          value: item,
-        })); */
-        //this.selectedHeaders = this.headers
         this.setTableItems(
           this.createMasterData(this.dataSet.dataValues.items)
         );
       }
+    }
+    if (this.dataSet.filters) {
+      this.filters = this.dataSet.filters;
     }
     this.fetchChannels();
     this.fetchDataSets();
