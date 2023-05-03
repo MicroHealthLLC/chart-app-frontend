@@ -160,6 +160,9 @@ export default {
       commit("TOGGLE_LOADING", true);
       try {
         const res = await API.graphql(graphqlOperation(getDataSet, { id: id }));
+        if (res.data.getDataSet.filters && res.data.getDataSet.filters.length > 0) {
+          res.data.getDataSet.filters = JSON.parse(res.data.getDataSet.filters)
+        }
         if (
           res.data.getDataSet.dataValues.items &&
           res.data.getDataSet.dataValues.items.length > 0

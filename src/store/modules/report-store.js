@@ -158,6 +158,9 @@ export default {
         ) {
           res.data.getReport.columns = JSON.parse(res.data.getReport.columns);
         }
+        if (res.data.getReport.filter && typeof res.data.getReport.filter == "string") {
+          res.data.getReport.filter = JSON.parse(res.data.getReport.filter)
+        }
         commit("SET_REPORT", res.data.getReport);
         console.log(res.data.getReport);
       } catch (error) {

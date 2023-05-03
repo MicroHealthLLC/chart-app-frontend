@@ -10,6 +10,7 @@ export default {
     items: Array,
     dataSet: Object,
     allKeys: Array,
+    report: Object
   },
   data() {
     return {
@@ -255,7 +256,16 @@ export default {
       this.$emit('changeFilteredItems', this.items)
     },
   },
+  mounted() {
+    if (this.report.filter) {
+      this.selectedFilter = this.report.filter
+      this.setFilter()
+    }
+  },
   watch: {
+    selectedFilter() {
+      this.$emit('changeSelectedFilter', this.selectedFilter)
+    },
     filterKey() {
       if (this.filterKey) {
         let colType = this.checkColType(this.filterKey, this.items);

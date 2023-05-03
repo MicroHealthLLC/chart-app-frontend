@@ -1,4 +1,6 @@
 import { mapGetters, mapActions } from "vuex";
+import moment from "moment";
+
 export default {
   data() {
     return {
@@ -63,6 +65,37 @@ export default {
       }
       arr.splice(newIdx, 0, arr.splice(oldIdx, 1)[0]);
       return arr;
+    },
+    checkColType(col, items) {
+      //console.log(items)
+      return items.every((i) => !isNaN(i[col]))
+        ? "number"
+        : items.every(
+            (i) => moment(i[col]).isValid() && moment().diff(moment(i[col])) > 0
+          )
+        ? "date"
+        : "string";
+    },
+    getItemValues(key, items) {
+      let colType = this.checkColType(key, items);
+      if (colType == "number") {
+        return items
+          .map((i) => parseFloat(i[key]))
+          .sort((a, b) => parseFloat(a) - parseFloat(b));
+      } else if (colType == "date") {
+        return items
+          .map((i) => moment(new Date(i[key])).format("ll"))
+          .sort((a, b) => new Date(a) - new Date(b));
+      } else if (colType == "string") {
+        let strItems = items.map((i) => i[key]);
+        if (/\d/.test(strItems[0])) {
+          return strItems.sort(
+            (a, b) => parseInt(a.match(/\d+/)[0]) - parseInt(b.match(/\d+/)[0])
+          );
+        } else {
+          return strItems.sort((a, b) => a.localeCompare(b));
+        }
+      }
     },
   },
   mounted() {},
